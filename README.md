@@ -9,6 +9,7 @@ messages.
 - Markdown in the tag message body is supported.
 - The release will be marked as a pre-release unless the tag is a
   [stable SemVer version].
+- Releases will be edited if the tag is updated.
 
 <!-- References -->
 

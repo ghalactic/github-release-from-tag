@@ -29,10 +29,16 @@ fi
 
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG")"
 
+if hub release show "$TAG"; then
+  COMMAND=edit
+else
+  COMMAND=create
+fi
+
 if [[ -n "$IS_STABLE" ]]; then
   echo "Creating stable release for tag $TAG"
-  hub release create --message "$MESSAGE" "$TAG"
+  hub release "$COMMAND" --message "$MESSAGE" "$TAG"
 else
   echo "Creating pre-release for tag $TAG"
-  hub release create --prerelease --message "$MESSAGE" "$TAG"
+  hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG"
 fi
