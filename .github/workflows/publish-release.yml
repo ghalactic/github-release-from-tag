@@ -1,4 +1,4 @@
-name: Dogfood
+name: Publish release
 on:
   push:
     tags:
@@ -6,7 +6,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    name: Dogfood
+    name: Publish release
     steps:
     - name: Checkout
       uses: actions/checkout@v2
