@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -v
 
 TAG_PATTERN="^refs/tags/(.*)$"
 SEMVER_PATTERN="^v?((0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\-([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?(\\+([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?)$"
@@ -11,7 +11,7 @@ else
 fi
 
 # fetch the annotated tag, GHA creates a fake lightweight tag
-git fetch origin --force "$GITHUB_REF:$GITHUB_REF"
+git fetch origin --force "$GITHUB_REF:$GITHUB_REF" >/dev/null
 
 if [[ "$(git describe "$TAG")" != "$TAG" ]]; then
   echo Cannot create a release from a lightweight tag >/dev/stderr
@@ -40,9 +40,9 @@ fi
 if [[ -n "$IS_STABLE" ]]; then
   echo "$ACTION stable release for tag $TAG"
   hub release "$COMMAND" --message "$MESSAGE" "$TAG" >/dev/null
-  echo "Release is available at $(hub release show --format '%U' non-semver)"
+  echo "Published $(hub release show --format '%U' non-semver)"
 else
   echo "$ACTION pre-release for tag $TAG"
   hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" >/dev/null
-  echo "Release is available at $(hub release show --format '%U' non-semver)"
+  echo "Published $(hub release show --format '%U' non-semver)"
 fi
