@@ -12,6 +12,8 @@ else
   exit 1
 fi
 
+echo "TAG is $TAG"
+
 if [[ "$(git describe "$TAG")" != "$TAG" ]]; then
   echo Cannot create a release from a lightweight tag >/dev/stderr
   exit 1
