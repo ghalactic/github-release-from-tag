@@ -13,7 +13,7 @@ fi
 # fetch the annotated tag, GHA creates a fake lightweight tag
 git fetch origin --force "$GITHUB_REF:$GITHUB_REF" >/dev/null 2>&1
 
-if [[ "$(git describe "$TAG")" != "$TAG" ]]; then
+if [[ "$(git describe --match "$(echo "$TAG" | sed 's/./\\&/g')" "$TAG")" != "$TAG" ]]; then
   echo Cannot create a release from a lightweight tag >/dev/stderr
   exit 1
 fi
