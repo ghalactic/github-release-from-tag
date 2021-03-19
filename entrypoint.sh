@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -v
+#!/usr/bin/env bash
 
 TAG_PATTERN="^refs/tags/(.*)$"
 SEMVER_PATTERN="^v?((0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\-([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?(\\+([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?)$"
