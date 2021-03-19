@@ -11,7 +11,7 @@ else
 fi
 
 # fetch the annotated tag, GHA creates a fake lightweight tag
-git fetch origin --force "$GITHUB_REF:$GITHUB_REF" >/dev/null
+git fetch origin --force "$GITHUB_REF:$GITHUB_REF" >/dev/null 2>&1
 
 if [[ "$(git describe "$TAG")" != "$TAG" ]]; then
   echo Cannot create a release from a lightweight tag >/dev/stderr
@@ -29,7 +29,7 @@ fi
 
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG")"
 
-if hub release show "$TAG" >/dev/null; then
+if hub release show "$TAG" >/dev/null 2>&1; then
   COMMAND=edit
   ACTION=Editing
 else
