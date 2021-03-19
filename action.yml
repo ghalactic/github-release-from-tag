@@ -2,7 +2,7 @@ name: 'GitHub Release from Tag'
 author: 'Eloquent'
 branding:
   icon: 'tag'
-  color: '#6bc46d'
+  color: 'green'
 description: 'Publish GitHub releases from tags, supporting Markdown and SemVer'
 env:
   GITHUB_TOKEN: 'A GitHub token'
