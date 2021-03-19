@@ -40,9 +40,9 @@ fi
 if [[ -n "$IS_STABLE" ]]; then
   echo "$ACTION stable release for tag $TAG"
   hub release "$COMMAND" --message "$MESSAGE" "$TAG" >/dev/null
-  echo "Published $(hub release show --format '%U' non-semver)"
+  echo "Published $(hub release show --format '%U' "$TAG")"
 else
   echo "$ACTION pre-release for tag $TAG"
   hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" >/dev/null
-  echo "Published $(hub release show --format '%U' non-semver)"
+  echo "Published $(hub release show --format '%U' "$TAG")"
 fi
