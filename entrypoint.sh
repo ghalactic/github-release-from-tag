@@ -29,7 +29,7 @@ fi
 
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG")"
 
-if hub release show "$TAG"; then
+if hub release show "$TAG" >/dev/null; then
   COMMAND=edit
   ACTION=Editing
 else
