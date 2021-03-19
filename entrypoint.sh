@@ -3,8 +3,6 @@
 TAG_PATTERN="^refs/tags/(.*)$"
 SEMVER_PATTERN="^v?((0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\-([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?(\\+([0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*))?)$"
 
-echo "GITHUB_REF is $GITHUB_REF"
-
 if [[ "$GITHUB_REF" =~ $TAG_PATTERN ]]; then
   TAG=${BASH_REMATCH[1]}
 else
@@ -12,7 +10,8 @@ else
   exit 1
 fi
 
-echo "TAG is $TAG"
+# fetch the annotated tag, GHA creates a fake lightweight tag
+git fetch origin --force "$GITHUB_REF:$GITHUB_REF"
 
 if [[ "$(git describe "$TAG")" != "$TAG" ]]; then
   echo Cannot create a release from a lightweight tag >/dev/stderr
@@ -31,7 +30,9 @@ fi
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG")"
 
 if [[ -n "$IS_STABLE" ]]; then
+  echo "Creating stable release for tag $TAG"
   hub release create --message "$MESSAGE" "$TAG"
 else
+  echo "Creating pre-release for tag $TAG"
   hub release create --prerelease --message "$MESSAGE" "$TAG"
 fi
