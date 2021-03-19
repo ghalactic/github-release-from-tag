@@ -1,0 +1,16 @@
+name: Dogfood
+on:
+  push:
+    tags:
+    - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Dogfood
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Publish release
+      uses: eloquent/github-release-action#master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
