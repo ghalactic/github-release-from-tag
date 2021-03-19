@@ -11,6 +11,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Publish release
-      uses: eloquent/github-release-action#master
+      uses: eloquent/github-release-action@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
