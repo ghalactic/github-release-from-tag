@@ -27,7 +27,7 @@ if [[ "$TAG" =~ $SEMVER_PATTERN ]]; then
   fi
 fi
 
-MESSAGE="$(git tag -ln --format "%(contents)" "$TAG")"
+MESSAGE="$(git tag -ln --format "%(contents)" "$TAG" | sed "/-----BEGIN PGP SIGNATURE-----/,/-----END PGP SIGNATURE-----\n/d")"
 
 if hub release show "$TAG" >/dev/null 2>&1; then
   COMMAND=edit
