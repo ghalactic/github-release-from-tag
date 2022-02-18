@@ -46,7 +46,11 @@ fi
 
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG" | sed "/-----BEGIN PGP SIGNATURE-----/,/-----END PGP SIGNATURE-----\n/d")"
 
-if hub release show "$TAG" >/dev/null 2>&1; then
+function exec-hub {
+  GITHUB_TOKEN="$_TOKEN" hub "$@"
+}
+
+if exec-hub release show "$TAG" >/dev/null 2>&1; then
   COMMAND=edit
   ACTION=Editing
 else
@@ -57,16 +61,16 @@ fi
 if [[ -n "$IS_STABLE" ]]; then
   echo "$ACTION stable release for tag $TAG"
 
-  if OUTPUT="$(hub release "$COMMAND" --message "$MESSAGE" "$TAG" 2>&1)"; then
-    echo "Published $(hub release show --format '%U' "$TAG")"
+  if OUTPUT="$(exec-hub release "$COMMAND" --message "$MESSAGE" "$TAG" 2>&1)"; then
+    echo "Published $(exec-hub release show --format '%U' "$TAG")"
   else
     die "Unable to publish: $OUTPUT"
   fi
 else
   echo "$ACTION pre-release for tag $TAG"
 
-  if OUTPUT="$(hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" 2>&1)"; then
-    echo "Published $(hub release show --format '%U' "$TAG")"
+  if OUTPUT="$(exec-hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" 2>&1)"; then
+    echo "Published $(exec-hub release show --format '%U' "$TAG")"
   else
     die "Unable to publish: $OUTPUT"
   fi
