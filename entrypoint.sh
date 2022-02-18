@@ -10,6 +10,18 @@ function die {
   exit 1
 }
 
+if [[ -n "$DEBUG" ]]; then
+  printenv
+fi
+
+if [[ -n "$GITHUB_TOKEN" ]]; then
+  _TOKEN="$GITHUB_TOKEN"
+else if [[ -n "$ACTIONS_RUNTIME_TOKEN" ]]; then
+  _TOKEN="$ACTIONS_RUNTIME_TOKEN"
+else
+  die Cannot create a release without a GitHub token
+fi
+
 if [[ "$GITHUB_REF" =~ $TAG_PATTERN ]]; then
   TAG=${BASH_REMATCH[1]}
 else
@@ -40,10 +52,6 @@ if hub release show "$TAG" >/dev/null 2>&1; then
 else
   COMMAND=create
   ACTION=Creating
-fi
-
-if [[ -n "$DEBUG" ]]; then
-  printenv
 fi
 
 if [[ -n "$IS_STABLE" ]]; then
