@@ -42,6 +42,10 @@ else
   ACTION=Creating
 fi
 
+if [[ -n "$DEBUG" ]]; then
+  printenv
+fi
+
 if [[ -n "$IS_STABLE" ]]; then
   echo "$ACTION stable release for tag $TAG"
 
