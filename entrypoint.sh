@@ -16,7 +16,7 @@ fi
 
 if [[ -n "$GITHUB_TOKEN" ]]; then
   _TOKEN="$GITHUB_TOKEN"
-else if [[ -n "$ACTIONS_RUNTIME_TOKEN" ]]; then
+elif [[ -n "$ACTIONS_RUNTIME_TOKEN" ]]; then
   _TOKEN="$ACTIONS_RUNTIME_TOKEN"
 else
   die Cannot create a release without a GitHub token
