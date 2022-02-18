@@ -4,8 +4,6 @@ branding:
   icon: 'tag'
   color: 'green'
 description: 'Publish GitHub releases from tags, supporting Markdown and SemVer'
-env:
-  GITHUB_TOKEN: 'A GitHub token'
 runs:
   using: 'docker'
   image: 'Dockerfile'
