@@ -10,10 +10,6 @@ function die {
   exit 1
 }
 
-if [[ -n "$DEBUG" ]]; then
-  printenv
-fi
-
 if [[ -n "$INPUT_TOKEN" ]]; then
   export GITHUB_TOKEN="$INPUT_TOKEN"
 fi
