@@ -19,58 +19,57 @@ async function main () {
   }
 
   const [, tag] = tagMatch
-  const quotedTag = JSON.stringify(tag)
+  info(`Detected tag ${JSON.stringify(tag)}`)
 
-  const fetchTagExitCode = await group(`Fetching the tag annotation for ${quotedTag}`, async () => {
+  const fetchTagExitCode = await group('Fetching the tag annotation', async () => {
     // fetch the real tag, because GHA creates a fake lightweight tag, and we need
     // the tag annotation to build our release content
     return exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
   })
 
   if (fetchTagExitCode !== 0) {
-    setFailed(`Unable to fetch the tag annotation for ${quotedTag}`)
+    setFailed('Unable to fetch the tag annotation')
 
     return
   }
 
-  const tagTypeResult = await group(`Determining the tag type for ${quotedTag}`, async () => {
+  const tagTypeResult = await group('Determining the tag type', async () => {
     return getExecOutput('git', ['cat-file', '-t', tag])
   })
 
   if (tagTypeResult.exitCode !== 0) {
-    setFailed(`Unable to determine the tag type for ${quotedTag}`)
+    setFailed('Unable to determine the tag type')
 
     return
   }
 
   if (tagTypeResult.stdout.trim() !== 'tag') {
-    setFailed(`Unable to create a release from lightweight tag ${quotedTag}`)
+    setFailed('Unable to create a release from a lightweight tag')
 
     return
   }
 
   const {isSemVer, isPreRelease} = parseTag(tag)
   info(
-    `${isSemVer ? 'SemVer' : 'Non-Semver'} tag ${quotedTag} ` +
-    `will be treated as a ${isPreRelease ? 'pre-release' : 'stable release'}`
+    `${isSemVer ? 'SemVer' : 'Non-Semver'} tag will be treated as a ${isPreRelease ? 'pre-release' : 'stable release'}`
   )
 
-  const tagSubjectResult = await group(`Reading the tag annotation subject for ${quotedTag}`, async () => {
+  const tagSubjectResult = await group('Reading the tag annotation subject', async () => {
     return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:subject)', tag])
   })
 
   if (tagSubjectResult.exitCode !== 0) {
-    setFailed(`Unable to read the tag annotation subject for ${quotedTag}`)
+    setFailed('Unable to read the tag annotation subject')
 
     return
   }
 
-  const tagBodyResult = await group(`Reading the tag annotation body for ${quotedTag}`, async () => {
+  const tagBodyResult = await group('Reading the tag annotation body', async () => {
     return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:body)', tag])
   })
 
   if (tagBodyResult.exitCode !== 0) {
-    setFailed(`Unable to read the tag annotation body for ${quotedTag}`)
+    setFailed('Unable to read the tag annotation body')
 
     return
   }
@@ -95,7 +94,7 @@ async function main () {
    * but thankfully it seems like GitHub Releases will render them even inside
    * the pre-rendered HTML.
    */
-  const renderedTagBody = await group(`Rendering tag annotation body for ${quotedTag}`, async () => {
+  const renderedTagBody = await group('Rendering tag annotation body', async () => {
     const {data} = await markdown.render({mode: 'markdown', text: tagBody})
     info(data)
 
@@ -115,7 +114,6 @@ ${renderedTagBody}`
 }
 
 async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
-  const quotedTag = JSON.stringify(tag)
   const {repo: {owner, repo}} = context
 
   const params = {
@@ -130,7 +128,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
 
   // attempt to create a new release first, as it will usually succeed first
   // time during normal operation
-  const createdRelease = await group(`Attempting to create release for ${quotedTag}`, async () => {
+  const createdRelease = await group('Attempting to create a release', async () => {
     try {
       const {data} = await repos.createRelease(params)
       info(JSON.stringify(data, null, 2))
@@ -151,7 +149,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   info('Existing release detected')
 
   // fetch the existing release, we need its ID
-  const existingRelease = await group(`Fetching the existing release for ${quotedTag}`, async () => {
+  const existingRelease = await group('Fetching the existing release', async () => {
     const {data} = await repos.getReleaseByTag({owner, repo, tag})
     info(JSON.stringify(data, null, 2))
 
@@ -159,7 +157,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   })
 
   // update the existing release
-  const updatedRelease = await group(`Updating the existing release for ${quotedTag}`, async () => {
+  const updatedRelease = await group('Updating the existing release', async () => {
     const {data} = await repos.updateRelease({...params, release_id: existingRelease.id})
     info(JSON.stringify(data, null, 2))
 
