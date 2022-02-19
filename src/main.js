@@ -41,7 +41,7 @@ async function main () {
     return
   }
 
-  if (tagTypeResult.stdout !== 'tag') {
+  if (tagTypeResult.stdout.trim() !== 'tag') {
     setFailed(red(`Unable to create a release from lightweight tag ${quotedTag}`))
 
     return
