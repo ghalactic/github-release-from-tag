@@ -1,4 +1,4 @@
-import {endGroup, getInput, info, setFailed, startGroup} from '@actions/core'
+import {getInput, group, info, setFailed} from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
@@ -21,7 +21,7 @@ async function main () {
   const [, tag] = tagMatch
   const quotedTag = JSON.stringify(tag)
 
-  const fetchTagExitCode = await logGroup(`Fetching the tag annotation for ${quotedTag}`, async () => {
+  const fetchTagExitCode = await group(`Fetching the tag annotation for ${quotedTag}`, async () => {
     // fetch the real tag, because GHA creates a fake lightweight tag, and we need
     // the tag annotation to build our release content
     return exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
@@ -33,7 +33,7 @@ async function main () {
     return
   }
 
-  const tagTypeResult = await logGroup(`Determining the tag type for ${quotedTag}`, async () => {
+  const tagTypeResult = await group(`Determining the tag type for ${quotedTag}`, async () => {
     return getExecOutput('git', ['cat-file', '-t', tag])
   })
 
@@ -55,7 +55,7 @@ async function main () {
     `will be treated as a ${isStable ? 'stable release' : 'pre-release'}`
   )
 
-  const tagAnnotationResult = await logGroup(`Reading the tag annotation for ${quotedTag}`, async () => {
+  const tagAnnotationResult = await group(`Reading the tag annotation for ${quotedTag}`, async () => {
     return getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag])
   })
 
@@ -88,14 +88,4 @@ function parseTag (tag) {
 
 function logFailure (message) {
   setFailed(`\u001b[31m${content}\u001b[0m`)
-}
-
-async function logGroup(message, fn) {
-  startGroup(message)
-
-  try {
-    return await fn()
-  } finally {
-    endGroup()
-  }
 }
