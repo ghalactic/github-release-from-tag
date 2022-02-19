@@ -63,7 +63,7 @@ async function main () {
   }
 
   const {stdout: originalAnnotation} = tagAnnotationResult
-  const annotation = originalAnnotation.replace(/-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----\R/, '')
+  const annotation = originalAnnotation.replace(/-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----\n/s, '')
   if (annotation !== originalAnnotation) info(`PGP signature detected in tag annotation for ${quotedTag}`)
 
   info(`Would publish release with annotation ${JSON.stringify(annotation)}`)
