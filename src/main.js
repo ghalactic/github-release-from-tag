@@ -9,7 +9,7 @@ try {
 }
 
 async function main () {
-  const {ref, repo: {owner, repo}} = context
+  const {ref} = context
   const tagMatch = ref.match(/^refs\/tags\/(.*)$/)
 
   if (tagMatch == null) {
@@ -72,22 +72,12 @@ async function main () {
 
   const {rest: {markdown}} = getOctokit(getInput('token'))
 
-  const markdownContext = `${owner}/${repo}`
-  info(`context is ${JSON.stringify(markdownContext)}`)
+  const renderedAnnotation = await group(`Rendering tag annotation for ${quotedTag}`, async () => {
+    const rendered = await markdown.render({mode: 'markdown', text: trimmedAnnotation})
+    info(rendered)
 
-  const [
-    renderedMarkdown,
-    renderedGfm,
-    renderedRaw,
-  ] = await Promise.all([
-    markdown.render({text: trimmedAnnotation, mode: 'markdown', context: markdownContext}),
-    markdown.render({text: trimmedAnnotation, mode: 'gfm', context: markdownContext}),
-    markdown.renderRaw({data: trimmedAnnotation})
-  ])
-
-  await group('rendered annotation (markdown)', () => { info(renderedMarkdown.data) })
-  await group('rendered annotation (gfm)', () => { info(renderedGfm.data) })
-  await group('rendered annotation (raw)', () => { info(renderedRaw.data) })
+    return rendered
+  })
 }
 
 function parseTag (tag) {
