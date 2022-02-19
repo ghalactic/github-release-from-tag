@@ -83,7 +83,7 @@ async function main () {
   ])
 
   await group('rendered annotation (markdown)', () => { info(renderedMarkdown.data) })
-  await group('rendered annotation (gfm)', () => { info(renderedGfm.data) })
+  await group('rendered annotation (gfm)', () => { info(`context was ${JSON.stringify(repository)}`); info(renderedGfm.data) })
   await group('rendered annotation (raw)', () => { info(renderedRaw.data) })
 }
 
