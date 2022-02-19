@@ -148,5 +148,5 @@ function parseTag (tag) {
 }
 
 function logFailure (message) {
-  setFailed(`\u001b[31m${content}\u001b[0m`)
+  setFailed(`\u001b[31m${message}\u001b[0m`)
 }
