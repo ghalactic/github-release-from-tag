@@ -139,6 +139,8 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
       const isExisting = errors.some(({resource, code}) => resource === 'Release' && code === 'already_exists')
 
       if (!isExisting) throw error
+
+      info(JSON.stringify(error.response.data, null, 2))
     }
 
     return undefined
