@@ -21,7 +21,7 @@ async function main () {
   const [, tag] = tagMatch
   const quotedTag = JSON.stringify(tag)
 
-  const fetchTagExitCode = await logGroup(`Fetching the tag annotation for ${quotedTag}...`, async () => {
+  const fetchTagExitCode = await logGroup(`Fetching the tag annotation for ${quotedTag}`, async () => {
     // fetch the real tag, because GHA creates a fake lightweight tag, and we need
     // the tag annotation to build our release content
     return exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
