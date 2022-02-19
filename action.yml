@@ -7,7 +7,7 @@ description: 'Publish GitHub releases from tags, supporting Markdown and SemVer'
 inputs:
   token:
     description: The GitHub token to use when managing releases
-    default: ${{github.token}}
+    default: ${{ github.token }}
 runs:
   using: 'docker'
   image: 'Dockerfile'

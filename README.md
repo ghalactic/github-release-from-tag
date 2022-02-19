@@ -29,10 +29,35 @@ jobs:
       uses: actions/checkout@v2
     - name: Publish release
       uses: eloquent/github-release-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Custom tokens
+
+By default, this action will use [automatic token authentication] to obtain the
+token used to manage releases. To use a different token, you must specify the
+`token` input:
+
+```yaml
+# .github/workflows/publish-release.yml
+name: Publish release
+on:
+  push:
+    tags:
+    - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish release
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Publish release
+      uses: eloquent/github-release-action@v1
+      with:
+        token: ${{ secrets.PUBLISH_RELEASE_TOKEN }}
 ```
 
 <!-- References -->
 
+[automatic token authentication]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
 [stable semver version]: https://semver.org/#semantic-versioning-specification-semver
