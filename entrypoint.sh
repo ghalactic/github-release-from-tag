@@ -14,6 +14,10 @@ if [[ -n "$DEBUG" ]]; then
   printenv
 fi
 
+if [[ -n "$INPUT_TOKEN" ]]; then
+  export GITHUB_TOKEN="$INPUT_TOKEN"
+fi
+
 if [[ "$GITHUB_REF" =~ $TAG_PATTERN ]]; then
   TAG=${BASH_REMATCH[1]}
 else
