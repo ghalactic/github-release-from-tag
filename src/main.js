@@ -4,8 +4,8 @@ import {context, getOctokit} from '@actions/github'
 
 try {
   await main()
-} catch (e) {
-  logFailure(e.stack)
+} catch (error) {
+  logFailure(error.stack)
 }
 
 async function main () {
@@ -49,10 +49,10 @@ async function main () {
     return
   }
 
-  const {isSemVer, isStable} = parseTag(tag)
+  const {isSemVer, isPreRelease} = parseTag(tag)
   info(
     `${isSemVer ? 'SemVer' : 'Non-Semver'} tag ${quotedTag} ` +
-    `will be treated as a ${isStable ? 'stable release' : 'pre-release'}`
+    `will be treated as a ${isPreRelease ? 'pre-release' : 'stable release'}`
   )
 
   const tagSubjectResult = await group(`Reading the tag annotation subject for ${quotedTag}`, async () => {
@@ -75,10 +75,10 @@ async function main () {
     return
   }
 
-  const {stdout: tagSubject} = tagSubjectResult
-  const {stdout: tagBody} = tagBodyResult
+  const tagSubject = tagSubjectResult.stdout.trim()
+  const tagBody = tagBodyResult.stdout.trim()
 
-  const {rest: {markdown}} = getOctokit(getInput('token'))
+  const {rest: {markdown, repos}} = getOctokit(getInput('token'))
 
   /**
    * Pre-render the body using CommonMark, because tag annotations are often
@@ -101,6 +101,38 @@ async function main () {
 
     return data
   })
+
+  const releaseBody = `<!-- original tag annotation body
+
+${tagBody}
+
+-->
+
+${renderedTagBody}`
+
+  await updateRelease(repos, tag, tagSubject, renderedTagBody, isPreRelease)
+}
+
+async function updateRelease (repos, tag, name, body, isPreRelease) {
+  const {repo: {owner, repo}} = context
+
+  const params = {
+    owner,
+    repo,
+    tag_name: tag,
+    name,
+    body,
+    draft: false,
+    prerelease: isPreRelease,
+  }
+
+  // try to create a new release first
+  try {
+    const response = await repos.createRelease(params)
+    info(`Release created: ${JSON.stringify(response.data, null, 2)}`)
+  } catch (error) {
+    logFailure(`Unable to create release: ${error.message}: ${JSON.stringify(error.response, null, 2)}`)
+  }
 }
 
 function parseTag (tag) {
@@ -108,11 +140,11 @@ function parseTag (tag) {
   // modified to allow for an optional prefix of "v"
   const semVerMatch = tag.match(/^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/)
 
-  if (!semVerMatch) return {isSemVer: false, isStable: false}
+  if (!semVerMatch) return {isSemVer: false, isPreRelease: true}
 
   const [/*full*/, major, /*minor*/, /*patch*/, prerelease] = semVerMatch
 
-  return {isSemVer: true, isStable: major !== '0' && prerelease == null}
+  return {isSemVer: true, isPreRelease: major === '0' || prerelease != null}
 }
 
 function logFailure (message) {
