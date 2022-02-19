@@ -14,14 +14,6 @@ if [[ -n "$DEBUG" ]]; then
   printenv
 fi
 
-if [[ -n "$GITHUB_TOKEN" ]]; then
-  _TOKEN="$GITHUB_TOKEN"
-elif [[ -n "$ACTIONS_RUNTIME_TOKEN" ]]; then
-  _TOKEN="$ACTIONS_RUNTIME_TOKEN"
-else
-  die Cannot create a release without a GitHub token
-fi
-
 if [[ "$GITHUB_REF" =~ $TAG_PATTERN ]]; then
   TAG=${BASH_REMATCH[1]}
 else
@@ -46,11 +38,7 @@ fi
 
 MESSAGE="$(git tag -ln --format "%(contents)" "$TAG" | sed "/-----BEGIN PGP SIGNATURE-----/,/-----END PGP SIGNATURE-----\n/d")"
 
-function exec-hub {
-  GITHUB_TOKEN="$_TOKEN" hub "$@"
-}
-
-if exec-hub release show "$TAG" >/dev/null 2>&1; then
+if hub release show "$TAG" >/dev/null 2>&1; then
   COMMAND=edit
   ACTION=Editing
 else
@@ -61,16 +49,16 @@ fi
 if [[ -n "$IS_STABLE" ]]; then
   echo "$ACTION stable release for tag $TAG"
 
-  if OUTPUT="$(exec-hub release "$COMMAND" --message "$MESSAGE" "$TAG" 2>&1)"; then
-    echo "Published $(exec-hub release show --format '%U' "$TAG")"
+  if OUTPUT="$(hub release "$COMMAND" --message "$MESSAGE" "$TAG" 2>&1)"; then
+    echo "Published $(hub release show --format '%U' "$TAG")"
   else
     die "Unable to publish: $OUTPUT"
   fi
 else
   echo "$ACTION pre-release for tag $TAG"
 
-  if OUTPUT="$(exec-hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" 2>&1)"; then
-    echo "Published $(exec-hub release show --format '%U' "$TAG")"
+  if OUTPUT="$(hub release "$COMMAND" --prerelease --message "$MESSAGE" "$TAG" 2>&1)"; then
+    echo "Published $(hub release show --format '%U' "$TAG")"
   else
     die "Unable to publish: $OUTPUT"
   fi
