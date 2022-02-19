@@ -73,10 +73,10 @@ async function main () {
   const {rest: {markdown}} = getOctokit(getInput('token'))
 
   const renderedAnnotation = await group(`Rendering tag annotation for ${quotedTag}`, async () => {
-    const rendered = await markdown.render({mode: 'markdown', text: trimmedAnnotation})
-    info(rendered)
+    const {data} = await markdown.render({mode: 'markdown', text: trimmedAnnotation})
+    info(data)
 
-    return rendered
+    return data
   })
 }
 
