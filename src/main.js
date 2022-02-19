@@ -24,7 +24,7 @@ async function main () {
 
   // fetch the real tag, because GHA creates a fake lightweight tag, and we need
   // the tag annotation to build our release content
-  const fetchTagExitCode = await exec('git' ['fetch', 'origin', '--force', `${ref}:${ref}`])
+  const fetchTagExitCode = await exec('git', ['fetch', 'origin', '--force', `${ref}:${ref}`])
 
   if (fetchTagExitCode !== 0) {
     setFailed(red(`Unable to fetch the tag annotation for ${quotedTag}`))
