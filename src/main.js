@@ -54,7 +54,7 @@ async function main () {
   )
 
   info(`Reading the tag annotation for ${quotedTag}...`)
-  const tagAnnotationResult = await getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag])
+  const tagAnnotationResult = await getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag], {silent: true})
 
   if (tagAnnotationResult.exitCode !== 0) {
     setFailed(red(`Unable to read the tag annotation for ${quotedTag}`))
