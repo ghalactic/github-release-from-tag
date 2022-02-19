@@ -5,7 +5,7 @@ import {context, getOctokit} from '@actions/github'
 try {
   await main()
 } catch (error) {
-  logFailure(error.stack)
+  setFailed(error.stack)
 }
 
 async function main () {
@@ -13,7 +13,7 @@ async function main () {
   const tagMatch = ref.match(/^refs\/tags\/(.*)$/)
 
   if (tagMatch == null) {
-    logFailure('Cannot create a release from a non-tag')
+    setFailed('Cannot create a release from a non-tag')
 
     return
   }
@@ -28,7 +28,7 @@ async function main () {
   })
 
   if (fetchTagExitCode !== 0) {
-    logFailure(`Unable to fetch the tag annotation for ${quotedTag}`)
+    setFailed(`Unable to fetch the tag annotation for ${quotedTag}`)
 
     return
   }
@@ -38,13 +38,13 @@ async function main () {
   })
 
   if (tagTypeResult.exitCode !== 0) {
-    logFailure(`Unable to determine the tag type for ${quotedTag}`)
+    setFailed(`Unable to determine the tag type for ${quotedTag}`)
 
     return
   }
 
   if (tagTypeResult.stdout.trim() !== 'tag') {
-    logFailure(`Unable to create a release from lightweight tag ${quotedTag}`)
+    setFailed(`Unable to create a release from lightweight tag ${quotedTag}`)
 
     return
   }
@@ -60,7 +60,7 @@ async function main () {
   })
 
   if (tagSubjectResult.exitCode !== 0) {
-    logFailure(`Unable to read the tag annotation subject for ${quotedTag}`)
+    setFailed(`Unable to read the tag annotation subject for ${quotedTag}`)
 
     return
   }
@@ -70,7 +70,7 @@ async function main () {
   })
 
   if (tagBodyResult.exitCode !== 0) {
-    logFailure(`Unable to read the tag annotation body for ${quotedTag}`)
+    setFailed(`Unable to read the tag annotation body for ${quotedTag}`)
 
     return
   }
@@ -179,8 +179,4 @@ function parseTag (tag) {
   const [/*full*/, major, /*minor*/, /*patch*/, prerelease] = semVerMatch
 
   return {isSemVer: true, isPreRelease: major === '0' || prerelease != null}
-}
-
-function logFailure (message) {
-  setFailed(`\u001b[31m${message}\u001b[0m`)
 }
