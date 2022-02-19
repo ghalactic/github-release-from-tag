@@ -55,25 +55,33 @@ async function main () {
     `will be treated as a ${isStable ? 'stable release' : 'pre-release'}`
   )
 
-  const tagAnnotationResult = await group(`Reading the tag annotation for ${quotedTag}`, async () => {
-    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag])
+  const tagSubjectResult = await group(`Reading the tag annotation subject for ${quotedTag}`, async () => {
+    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:subject)', tag])
   })
 
-  if (tagAnnotationResult.exitCode !== 0) {
-    logFailure(`Unable to read the tag annotation for ${quotedTag}`)
+  if (tagSubjectResult.exitCode !== 0) {
+    logFailure(`Unable to read the tag annotation subject for ${quotedTag}`)
 
     return
   }
 
-  const {stdout: annotation} = tagAnnotationResult
-  const unsignedAnnotation = annotation.replace(/-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----/s, '')
-  if (unsignedAnnotation !== annotation) info(`PGP signature detected in tag annotation for ${quotedTag}`)
-  const trimmedAnnotation = unsignedAnnotation.trim()
+  const tagBodyResult = await group(`Reading the tag annotation body for ${quotedTag}`, async () => {
+    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:body)', tag])
+  })
+
+  if (tagBodyResult.exitCode !== 0) {
+    logFailure(`Unable to read the tag annotation body for ${quotedTag}`)
+
+    return
+  }
+
+  const {stdout: tagSubject} = tagSubjectResult
+  const {stdout: tagBody} = tagBodyResult
 
   const {rest: {markdown}} = getOctokit(getInput('token'))
 
-  const renderedAnnotation = await group(`Rendering tag annotation for ${quotedTag}`, async () => {
-    const {data} = await markdown.render({mode: 'markdown', text: trimmedAnnotation})
+  const renderedTagBody = await group(`Rendering tag annotation body for ${quotedTag}`, async () => {
+    const {data} = await markdown.render({mode: 'markdown', text: tagBody})
     info(data)
 
     return data
