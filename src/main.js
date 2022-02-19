@@ -1,11 +1,11 @@
-import {getInput, info, setFailed, warning} from '@actions/core'
+import {endGroup, getInput, info, setFailed, startGroup} from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
 try {
   await main()
 } catch (e) {
-  setFailed(red(e.stack))
+  logFailure(e.stack)
 }
 
 async function main () {
@@ -13,36 +13,38 @@ async function main () {
   const tagMatch = ref.match(/^refs\/tags\/(.*)$/)
 
   if (tagMatch == null) {
-    setFailed(red('Cannot create a release from a non-tag'))
+    logFailure('Cannot create a release from a non-tag')
 
     return
   }
 
   const [, tag] = tagMatch
   const quotedTag = JSON.stringify(tag)
-  info(`Fetching the tag annotation for ${quotedTag}...`)
 
-  // fetch the real tag, because GHA creates a fake lightweight tag, and we need
-  // the tag annotation to build our release content
-  const fetchTagExitCode = await exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
+  const fetchTagExitCode = await logGroup(`Fetching the tag annotation for ${quotedTag}...`, async () => {
+    // fetch the real tag, because GHA creates a fake lightweight tag, and we need
+    // the tag annotation to build our release content
+    return exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
+  })
 
   if (fetchTagExitCode !== 0) {
-    setFailed(red(`Unable to fetch the tag annotation for ${quotedTag}`))
+    logFailure(`Unable to fetch the tag annotation for ${quotedTag}`)
 
     return
   }
 
-  info(`Determining the tag type for ${quotedTag}...`)
-  const tagTypeResult = await getExecOutput('git', ['cat-file', '-t', tag])
+  const tagTypeResult = await logGroup(`Determining the tag type for ${quotedTag}`, async () => {
+    return getExecOutput('git', ['cat-file', '-t', tag])
+  })
 
   if (tagTypeResult.exitCode !== 0) {
-    setFailed(red(`Unable to determine the tag type for ${quotedTag}`))
+    logFailure(`Unable to determine the tag type for ${quotedTag}`)
 
     return
   }
 
   if (tagTypeResult.stdout.trim() !== 'tag') {
-    setFailed(red(`Unable to create a release from lightweight tag ${quotedTag}`))
+    logFailure(`Unable to create a release from lightweight tag ${quotedTag}`)
 
     return
   }
@@ -53,11 +55,12 @@ async function main () {
     `will be treated as a ${isStable ? 'stable release' : 'pre-release'}`
   )
 
-  info(`Reading the tag annotation for ${quotedTag}...`)
-  const tagAnnotationResult = await getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag], {silent: true})
+  const tagAnnotationResult = await logGroup(`Reading the tag annotation for ${quotedTag}`, async () => {
+    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents)', tag])
+  })
 
   if (tagAnnotationResult.exitCode !== 0) {
-    setFailed(red(`Unable to read the tag annotation for ${quotedTag}`))
+    logFailure(`Unable to read the tag annotation for ${quotedTag}`)
 
     return
   }
@@ -83,10 +86,16 @@ function parseTag (tag) {
   return {isSemVer: true, isStable: major !== '0' && prerelease == null}
 }
 
-function red (content) {
-  return `\u001b[31m${content}\u001b[0m`
+function logFailure (message) {
+  setFailed(`\u001b[31m${content}\u001b[0m`)
 }
 
-// function yellow (content) {
-//   return `\u001b[33m${content}\u001b[0m`
-// }
+async function logGroup(message, fn) {
+  startGroup(message)
+
+  try {
+    return await fn()
+  } finally {
+    endGroup()
+  }
+}
