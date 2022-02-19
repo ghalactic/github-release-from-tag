@@ -110,7 +110,7 @@ ${tagBody}
 ${renderedTagBody}`
 
   const [release, wasCreated] = await createOrUpdateRelease(repos, tag, tagSubject, releaseBody, isPreRelease)
-  notice(`Release ${wasCreated ? 'created' : 'updated'}: ${release.html_url}`)
+  notice(`Release ${wasCreated ? 'created' : 'updated'}: ${release.html_url}`, {title: `Published release: ${tagSubject}`})
 }
 
 async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
