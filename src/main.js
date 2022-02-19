@@ -65,11 +65,12 @@ async function main () {
     return
   }
 
-  const {stdout: originalAnnotation} = tagAnnotationResult
-  const annotation = originalAnnotation.replace(/-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----\n/s, '')
-  if (annotation !== originalAnnotation) info(`PGP signature detected in tag annotation for ${quotedTag}`)
+  const {stdout: annotation} = tagAnnotationResult
+  const unsignedAnnotation = annotation.replace(/-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----/s, '')
+  if (unsignedAnnotation !== annotation) info(`PGP signature detected in tag annotation for ${quotedTag}`)
+  const trimmedAnnotation = unsignedAnnotation.trim()
 
-  info(`Would publish release with annotation ${JSON.stringify(annotation)}`)
+  info(`Would publish release with annotation ${JSON.stringify(trimmedAnnotation)}`)
 
   // const octokit = getOctokit(getInput('token'))
 }
