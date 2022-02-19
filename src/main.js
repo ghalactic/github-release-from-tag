@@ -82,9 +82,9 @@ async function main () {
     markdown.renderRaw({data: trimmedAnnotation})
   ])
 
-  await group('rendered annotation (markdown)', () => { info(renderedMarkdown) })
-  await group('rendered annotation (gfm)', () => { info(renderedGfm) })
-  await group('rendered annotation (raw)', () => { info(renderedRaw) })
+  await group('rendered annotation (markdown)', () => { info(JSON.stringify(renderedMarkdown)) })
+  await group('rendered annotation (gfm)', () => { info(JSON.stringify(renderedGfm)) })
+  await group('rendered annotation (raw)', () => { info(JSON.stringify(renderedRaw)) })
 }
 
 function parseTag (tag) {
