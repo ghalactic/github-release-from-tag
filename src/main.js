@@ -9,7 +9,7 @@ try {
 }
 
 async function main () {
-  const {ref} = context
+  const {ref, repository} = context
   const tagMatch = ref.match(/^refs\/tags\/(.*)$/)
 
   if (tagMatch == null) {
@@ -70,9 +70,21 @@ async function main () {
   if (unsignedAnnotation !== annotation) info(`PGP signature detected in tag annotation for ${quotedTag}`)
   const trimmedAnnotation = unsignedAnnotation.trim()
 
-  info(`Would publish release with annotation ${JSON.stringify(trimmedAnnotation)}`)
+  const {rest: {markdown}} = getOctokit(getInput('token'))
 
-  // const octokit = getOctokit(getInput('token'))
+  const [
+    renderedMarkdown,
+    renderedGfm,
+    renderedRaw,
+  ] = await Promise.all([
+    markdown.render({text: trimmedAnnotation, mode: 'markdown'}),
+    markdown.render({text: trimmedAnnotation, mode: 'gfm', context: repository}),
+    markdown.renderRaw({data: trimmedAnnotation})
+  ])
+
+  await group('rendered annotation (markdown)', () => { info(renderedMarkdown) })
+  await group('rendered annotation (gfm)', () => { info(renderedGfm) })
+  await group('rendered annotation (raw)', () => { info(renderedRaw) })
 }
 
 function parseTag (tag) {
