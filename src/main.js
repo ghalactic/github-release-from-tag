@@ -1,4 +1,4 @@
-import {getInput, group, info, setFailed} from '@actions/core'
+import {getInput, group, info, notice, setFailed} from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
@@ -110,10 +110,12 @@ ${tagBody}
 
 ${renderedTagBody}`
 
-  await updateRelease(repos, tag, tagSubject, renderedTagBody, isPreRelease)
+  const [release, wasCreated] = await createOrUpdateRelease(repos, tag, tagSubject, renderedTagBody, isPreRelease)
+  notice(`Release ${wasCreated ? 'created' : 'updated'}: ${release.html_url}`)
 }
 
-async function updateRelease (repos, tag, name, body, isPreRelease) {
+async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
+  const quotedTag = JSON.stringify(tag)
   const {repo: {owner, repo}} = context
 
   const params = {
@@ -126,13 +128,45 @@ async function updateRelease (repos, tag, name, body, isPreRelease) {
     prerelease: isPreRelease,
   }
 
-  // try to create a new release first
-  try {
-    const response = await repos.createRelease(params)
-    info(`Release created: ${JSON.stringify(response.data, null, 2)}`)
-  } catch (error) {
-    logFailure(`Unable to create release: ${error.message}: ${JSON.stringify(error.response, null, 2)}`)
-  }
+  // attempt to create a new release first, as it will usually succeed first
+  // time during normal operation
+  const createdRelease = await group(`Attempting to create release for ${quotedTag}`, async () => {
+    try {
+      const response = await repos.createRelease(params)
+      info(JSON.stringify(response.data, null, 2))
+
+      return response.data
+    } catch (error) {
+      const errors = error.response?.data?.errors ?? []
+      const isExisting = errors.some(({resource, code}) => resource === 'Release' && code === 'already_exists')
+
+      if (!isExisting) throw error
+    }
+
+    return undefined
+  })
+
+  if (createdRelease) return [createdRelease, true]
+
+  info('Existing release detected')
+
+  // fetch the existing release, we need its ID
+  const existingRelease = await group(`Fetching the existing release for ${quotedTag}`, async () => {
+    const {data} = await repos.getReleaseByTag({owner, repo, tag})
+    info(JSON.stringify(response.data, null, 2))
+
+    return data
+  })
+
+  // update the existing release
+  const updatedRelease = await group(`Updating the existing release for ${quotedTag}`, async () => {
+    const {data} = await repos.updateRelease({...params, release_id: existingRelease.id})
+    info(JSON.stringify(response.data, null, 2))
+
+    return data
+  })
+
+  return [updatedRelease, false]
 }
 
 function parseTag (tag) {
