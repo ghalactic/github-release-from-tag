@@ -132,10 +132,10 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   // time during normal operation
   const createdRelease = await group(`Attempting to create release for ${quotedTag}`, async () => {
     try {
-      const response = await repos.createRelease(params)
-      info(JSON.stringify(response.data, null, 2))
+      const {data} = await repos.createRelease(params)
+      info(JSON.stringify(data, null, 2))
 
-      return response.data
+      return data
     } catch (error) {
       const errors = error.response?.data?.errors ?? []
       const isExisting = errors.some(({resource, code}) => resource === 'Release' && code === 'already_exists')
@@ -153,7 +153,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   // fetch the existing release, we need its ID
   const existingRelease = await group(`Fetching the existing release for ${quotedTag}`, async () => {
     const {data} = await repos.getReleaseByTag({owner, repo, tag})
-    info(JSON.stringify(response.data, null, 2))
+    info(JSON.stringify(data, null, 2))
 
     return data
   })
@@ -161,7 +161,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   // update the existing release
   const updatedRelease = await group(`Updating the existing release for ${quotedTag}`, async () => {
     const {data} = await repos.updateRelease({...params, release_id: existingRelease.id})
-    info(JSON.stringify(response.data, null, 2))
+    info(JSON.stringify(data, null, 2))
 
     return data
   })
