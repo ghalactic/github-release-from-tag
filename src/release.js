@@ -1,6 +1,7 @@
 export async function createOrUpdateRelease ({
   body,
   group,
+  info,
   isStable,
   name,
   owner,

@@ -67,6 +67,7 @@ async function main () {
 
   const [release, wasCreated] = await createOrUpdateRelease({
     group,
+    info,
     isStable,
     owner,
     releaseBody,
