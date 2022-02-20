@@ -3,7 +3,7 @@ import {getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
 import {renderReleaseBody} from './body.js'
-import {fetchTagAnnotation} from './git.js'
+import {fetchTagAnnotation, readTagAnnotation} from './git.js'
 import {parseRef} from './ref.js'
 
 try {
@@ -48,28 +48,13 @@ async function main () {
 
   info(`${isSemVer ? 'SemVer' : 'Non-Semver'} tag will be treated as a ${isStable ? 'stable release' : 'pre-release'}`)
 
-  const tagSubjectResult = await group('Reading the tag annotation subject', async () => {
-    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:subject)', tag])
-  })
+  const [isTagAnnotationReadSuccess, tagSubject, tagBody] = await readTagAnnotation({group, tag})
 
-  if (tagSubjectResult.exitCode !== 0) {
-    setFailed('Unable to read the tag annotation subject')
+  if (!isTagAnnotationReadSuccess) {
+    setFailed('Unable to read the tag annotation')
 
     return
   }
-
-  const tagBodyResult = await group('Reading the tag annotation body', async () => {
-    return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:body)', tag])
-  })
-
-  if (tagBodyResult.exitCode !== 0) {
-    setFailed('Unable to read the tag annotation body')
-
-    return
-  }
-
-  const tagSubject = tagSubjectResult.stdout.trim()
-  const tagBody = tagBodyResult.stdout.trim()
 
   const {rest: {markdown, repos}} = getOctokit(getInput('token'))
 
