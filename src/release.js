@@ -1,20 +1,20 @@
 export async function createOrUpdateRelease ({
-  body,
   group,
   info,
   isStable,
-  name,
   owner,
+  releaseBody,
   repo,
   repos,
   tag,
+  tagSubject,
 }) {
   const params = {
     owner,
     repo,
     tag_name: tag,
-    name,
-    body,
+    name: tagSubject,
+    body: releaseBody,
     draft: false,
     prerelease: !isStable,
   }
