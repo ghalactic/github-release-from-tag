@@ -1,6 +1,8 @@
 export default {
   preset: 'es-jest',
-  transformIgnorePatterns: [],
+  transformIgnorePatterns: [
+    'src/main.js',
+  ],
   collectCoverageFrom: [
     'src/**/*',
   ],
