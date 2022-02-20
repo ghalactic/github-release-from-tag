@@ -1,4 +1,4 @@
-import {parseRef} from '../../src/refs.js'
+import {parseRef} from '../../src/ref.js'
 
 /**
  * SemVer fixtures taken from https://regex101.com/r/vkijKf/1/ - which is linked
