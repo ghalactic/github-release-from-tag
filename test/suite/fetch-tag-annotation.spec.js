@@ -8,8 +8,10 @@ import {fetchTagAnnotation} from '../../src/git.js'
 import {group} from '../mocks/actions-core.js'
 
 const {chdir, cwd} = process
-const execGit = async (...args) => exec('git', args, {silent: false})
-const getExecGitOutput = async (...args) => (await getExecOutput('git', args, {silent: false})).stdout.trim()
+
+const silent = true
+const execGit = async (...args) => exec('git', args, {silent})
+const getExecGitOutput = async (...args) => (await getExecOutput('git', args, {silent})).stdout.trim()
 
 describe('fetchTagAnnotation()', () => {
   let originalCwd
@@ -54,7 +56,7 @@ describe('fetchTagAnnotation()', () => {
       expect(await getExecGitOutput('cat-file', '-t', 'tag-a')).toBe('commit')
 
       // fetch should succeed
-      expect(await fetchTagAnnotation({group, tag: 'tag-a', silent: false})).toBe(true)
+      expect(await fetchTagAnnotation({group, tag: 'tag-a', silent})).toBe(true)
 
       // the tag should now be annotated
       expect(await getExecGitOutput('cat-file', '-t', 'tag-a')).toBe('tag')
@@ -84,7 +86,7 @@ describe('fetchTagAnnotation()', () => {
     })
 
     it('should fail to fetch the annotated tag from origin', async () => {
-      expect(await fetchTagAnnotation({group, tag: 'tag-a', silent: false})).toBe(false)
+      expect(await fetchTagAnnotation({group, tag: 'tag-a', silent})).toBe(false)
     })
   })
 })
