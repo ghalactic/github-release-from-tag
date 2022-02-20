@@ -2,6 +2,8 @@ import {getInput, group, info, notice, setFailed} from '@actions/core'
 import {exec, getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
+import {parseRef} from './refs.js'
+
 try {
   await main()
 } catch (error) {
@@ -11,15 +13,14 @@ try {
 async function main () {
   const {GITHUB_ACTION_REPOSITORY: actionSlug} = process.env
   const {ref} = context
-  const tagMatch = ref.match(/^refs\/tags\/(.*)$/)
+  const {isTag, isSemVer, isStable, tag} = parseRef(ref)
 
-  if (tagMatch == null) {
+  if (!isTag) {
     setFailed('Cannot create a release from a non-tag')
 
     return
   }
 
-  const [, tag] = tagMatch
   info(`Detected tag ${JSON.stringify(tag)}`)
 
   const fetchTagExitCode = await group('Fetching the tag annotation', async () => {
@@ -50,10 +51,7 @@ async function main () {
     return
   }
 
-  const {isSemVer, isPreRelease} = parseTag(tag)
-  info(
-    `${isSemVer ? 'SemVer' : 'Non-Semver'} tag will be treated as a ${isPreRelease ? 'pre-release' : 'stable release'}`
-  )
+  info(`${isSemVer ? 'SemVer' : 'Non-Semver'} tag will be treated as a ${isStable ? 'stable release' : 'pre-release'}`)
 
   const tagSubjectResult = await group('Reading the tag annotation subject', async () => {
     return getExecOutput('git', ['tag', '-n1', '--format', '%(contents:subject)', tag])
@@ -109,11 +107,11 @@ ${tagBody}
 
 ${renderedTagBody}`
 
-  const [release, wasCreated] = await createOrUpdateRelease(repos, tag, tagSubject, releaseBody, isPreRelease)
+  const [release, wasCreated] = await createOrUpdateRelease(repos, tag, tagSubject, releaseBody, isStable)
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
 }
 
-async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
+async function createOrUpdateRelease (repos, tag, name, body, isStable) {
   const {repo: {owner, repo}} = context
 
   const params = {
@@ -123,7 +121,7 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
     name,
     body,
     draft: false,
-    prerelease: isPreRelease,
+    prerelease: !isStable,
   }
 
   // attempt to create a new release first, as it will usually succeed first
@@ -167,16 +165,4 @@ async function createOrUpdateRelease (repos, tag, name, body, isPreRelease) {
   })
 
   return [updatedRelease, false]
-}
-
-function parseTag (tag) {
-  // from https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-  // modified to allow for an optional prefix of "v"
-  const semVerMatch = tag.match(/^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/)
-
-  if (!semVerMatch) return {isSemVer: false, isPreRelease: true}
-
-  const [/*full*/, major, /*minor*/, /*patch*/, prerelease] = semVerMatch
-
-  return {isSemVer: true, isPreRelease: major === '0' || prerelease != null}
 }
