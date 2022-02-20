@@ -1,5 +1,21 @@
 import {exec, getExecOutput} from '@actions/exec'
 
+export async function determineTagType ({
+  group,
+  silent = false,
+  tag,
+}) {
+  try {
+    const {stdout: type} = await group('Determining the tag type', async () => {
+      return getExecOutput('git', ['cat-file', '-t', tag], {silent})
+    })
+
+    return [true, type.trim()]
+  } catch {
+    return [false, '']
+  }
+}
+
 /**
  * Fetch the real tag, because GHA creates a fake lightweight tag, and we need
  * the tag annotation to build our release content.
@@ -10,13 +26,16 @@ export async function fetchTagAnnotation ({
   tag,
 }) {
   try {
-    const fetchTagExitCode = await group(
+    const exitCode = await group(
       'Fetching the tag annotation',
-      async () =>
-        exec('git', ['fetch', 'origin', '--no-tags', '--force', `refs/tags/${tag}:refs/tags/${tag}`], {silent}),
+      async () => exec(
+        'git',
+        ['fetch', 'origin', '--no-tags', '--force', `refs/tags/${tag}:refs/tags/${tag}`],
+        {silent},
+      ),
     )
 
-    return fetchTagExitCode === 0
+    return exitCode === 0
   } catch {
     return false
   }

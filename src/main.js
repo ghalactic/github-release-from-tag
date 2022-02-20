@@ -1,9 +1,8 @@
 import {getInput, group, info, notice, setFailed} from '@actions/core'
-import {getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
 import {renderReleaseBody} from './body.js'
-import {fetchTagAnnotation, readTagAnnotation} from './git.js'
+import {determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
 import {parseRef} from './ref.js'
 
 try {
@@ -30,17 +29,15 @@ async function main () {
     return
   }
 
-  const tagTypeResult = await group('Determining the tag type', async () => {
-    return getExecOutput('git', ['cat-file', '-t', tag])
-  })
+  const [isTagTypeSuccess, tagType] = await determineTagType({group, tag})
 
-  if (tagTypeResult.exitCode !== 0) {
+  if (!isTagTypeSuccess) {
     setFailed('Unable to determine the tag type')
 
     return
   }
 
-  if (tagTypeResult.stdout.trim() !== 'tag') {
+  if (tagType !== 'tag') {
     setFailed('Unable to create a release from a lightweight tag')
 
     return
