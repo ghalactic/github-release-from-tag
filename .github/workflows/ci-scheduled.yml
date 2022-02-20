@@ -1,0 +1,19 @@
+name: CI (scheduled)
+on:
+  schedule:
+  - cron: 0 14 * * 0 # Sunday 2PM UTC = Monday 12AM AEST
+jobs:
+  ci:
+    name: CI (scheduled)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Install dependencies
+      run: make node_modules
+    - name: Make
+      run: make ci

@@ -5,5 +5,9 @@
     "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "es-jest": "^1.5.0",
+    "jest": "^27.5.1"
   }
 }
