@@ -1,4 +1,5 @@
 import {exec, getExecOutput} from '@actions/exec'
+import fileUrl from 'file-url'
 import {mkdtemp, rm} from 'fs/promises'
 import {tmpdir} from 'os'
 import {join} from 'path'
@@ -32,12 +33,16 @@ describe('fetchTagAnnotation()', () => {
     beforeEach(async () => {
       // create an origin repo with annotated tags
       await execGit('-C', paths.main, 'init', '--quiet', '--initial-branch=main', paths.origin)
+      await execGit('-C', paths.origin, 'config', 'user.email', 'user@example.org')
+      await execGit('-C', paths.origin, 'config', 'user.name', 'User')
       await execGit('-C', paths.origin, 'commit', '--quiet', '--allow-empty', '--message=commit-message-a')
       await execGit('-C', paths.origin, 'tag', '--annotate', '--message=tag-message-a', 'tag-a')
       await execGit('-C', paths.origin, 'tag', '--annotate', '--message=tag-message-b', 'tag-b')
 
       // create a shallow clone repo with a single lightweight tag, and switch to it
-      await execGit('-C', paths.main, 'clone', '--quiet', '--depth=1', '--no-tags', paths.origin, paths.clone)
+      await execGit('-C', paths.main, 'clone', '--quiet', '--depth=1', '--no-tags', fileUrl(paths.origin), paths.clone)
+      await execGit('-C', paths.clone, 'config', 'user.email', 'user@example.org')
+      await execGit('-C', paths.clone, 'config', 'user.name', 'User')
       await execGit('-C', paths.clone, 'tag', '--no-sign', 'tag-a') // signing would create annotated tags
       await execGit('-C', paths.clone, 'switch', '--quiet', '--detach', 'tag-a')
 
@@ -64,10 +69,14 @@ describe('fetchTagAnnotation()', () => {
     beforeEach(async () => {
       // create an origin repo with no tags
       await execGit('-C', paths.main, 'init', '--quiet', '--initial-branch=main', paths.origin)
+      await execGit('-C', paths.origin, 'config', 'user.email', 'user@example.org')
+      await execGit('-C', paths.origin, 'config', 'user.name', 'User')
       await execGit('-C', paths.origin, 'commit', '--quiet', '--allow-empty', '--message=commit-message-a')
 
       // create a shallow clone repo with a single lightweight tag, and switch to it
-      await execGit('-C', paths.main, 'clone', '--quiet', '--depth=1', '--no-tags', paths.origin, paths.clone)
+      await execGit('-C', paths.main, 'clone', '--quiet', '--depth=1', '--no-tags', fileUrl(paths.origin), paths.clone)
+      await execGit('-C', paths.clone, 'config', 'user.email', 'user@example.org')
+      await execGit('-C', paths.clone, 'config', 'user.name', 'User')
       await execGit('-C', paths.clone, 'tag', '--no-sign', 'tag-a') // signing would create annotated tags
       await execGit('-C', paths.clone, 'switch', '--quiet', '--detach', 'tag-a')
 
