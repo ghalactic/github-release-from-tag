@@ -1,9 +1,10 @@
 import {getInput, group, info, notice, setFailed} from '@actions/core'
-import {exec, getExecOutput} from '@actions/exec'
+import {getExecOutput} from '@actions/exec'
 import {context, getOctokit} from '@actions/github'
 
-import {parseRef} from './ref.js'
 import {renderReleaseBody} from './body.js'
+import {fetchTagAnnotation} from './git.js'
+import {parseRef} from './ref.js'
 
 try {
   await main()
@@ -13,8 +14,7 @@ try {
 
 async function main () {
   const {env} = process
-  const {ref} = context
-  const {isTag, isSemVer, isStable, tag} = parseRef(ref)
+  const {isTag, isSemVer, isStable, tag} = parseRef(context.ref)
 
   if (!isTag) {
     setFailed('Cannot create a release from a non-tag')
@@ -24,13 +24,7 @@ async function main () {
 
   info(`Detected tag ${JSON.stringify(tag)}`)
 
-  const fetchTagExitCode = await group('Fetching the tag annotation', async () => {
-    // fetch the real tag, because GHA creates a fake lightweight tag, and we need
-    // the tag annotation to build our release content
-    return exec('git', ['fetch', 'origin', '--no-tags', '--force', `${ref}:${ref}`])
-  })
-
-  if (fetchTagExitCode !== 0) {
+  if (!(await fetchTagAnnotation({group, tag}))) {
     setFailed('Unable to fetch the tag annotation')
 
     return
