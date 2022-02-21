@@ -17,3 +17,5 @@ jobs:
       run: make node_modules
     - name: Make
       run: make ci
+      env:
+        FIXTURE_GITHUB_TOKEN: ${{ secrets.FIXTURE_GITHUB_TOKEN }}
