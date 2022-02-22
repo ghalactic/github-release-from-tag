@@ -21,7 +21,7 @@ export async function createFile (branch, path, content) {
     branch,
     path,
     message: `Create ${path}`,
-    content,
+    content: Buffer.from(content).toString('base64'),
   })
 }
 
