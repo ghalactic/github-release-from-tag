@@ -12,6 +12,19 @@ export function createOctokit () {
   return octokit
 }
 
+export async function createFile (branch, path, content) {
+  const octokit = createOctokit()
+
+  return octokit.rest.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    branch,
+    path,
+    message: `Create ${path}`,
+    content,
+  })
+}
+
 export async function createOrphanBranch (branch) {
   const octokit = createOctokit()
 
@@ -37,7 +50,31 @@ export async function createOrphanBranchForCi (suffix) {
     GITHUB_RUN_ID: runId = 'x',
     GITHUB_RUN_NUMBER: runNumber = 'x',
     GITHUB_RUN_ATTEMPT: runAttempt = 'x',
+    GITHUB_SHA: sha = 'main',
   } = process.env
 
-  return createOrphanBranch(`ci-${runId}.${runNumber}.${runAttempt}-${suffix}`)
+  const branch = `ci-${runId}.${runNumber}.${runAttempt}-${suffix}`
+  const {commit, ref} = await createOrphanBranch(branch)
+
+  const workflow = await createFile(
+    branch,
+    '.github/workflows/publish-release.yml',
+    `name: Publish release
+  on:
+    push:
+      tags:
+      - '*'
+  jobs:
+    publish:
+      runs-on: ubuntu-latest
+      name: Publish release
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Publish release
+        uses: eloquent/github-release-action@${sha}
+`
+  )
+
+  return {commit, ref, workflow}
 }
