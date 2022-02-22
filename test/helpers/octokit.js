@@ -60,19 +60,19 @@ export async function createOrphanBranchForCi (suffix) {
     branch,
     '.github/workflows/publish-release.yml',
     `name: Publish release
-  on:
-    push:
-      tags:
-      - '*'
-  jobs:
-    publish:
-      runs-on: ubuntu-latest
-      name: Publish release
-      steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Publish release
-        uses: eloquent/github-release-action@${sha}
+on:
+  push:
+    tags:
+    - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish release
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Publish release
+      uses: eloquent/github-release-action@${sha}
 `
   )
 
