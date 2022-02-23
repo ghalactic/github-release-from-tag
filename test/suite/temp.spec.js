@@ -1,5 +1,5 @@
 import {readRunId} from '../helpers/gha.js'
-import {createOrphanBranchForCi} from '../helpers/octokit.js'
+import {createAnnotatedTag, createLightweightTag, createOrphanBranchForCi} from '../helpers/octokit.js'
 
 describe('Temporary', () => {
   it('should be able to create stuff', async () => {
