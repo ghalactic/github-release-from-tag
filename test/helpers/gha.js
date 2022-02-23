@@ -1,6 +1,6 @@
 let runId
 
-export async function readRunId (suffix) {
+export function readRunId (suffix) {
   if (runId == null) {
     const {
       GITHUB_RUN_ID: id = 'x',
