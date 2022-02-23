@@ -1,5 +1,6 @@
 import {Octokit} from 'octokit'
 
+import {readRunId} from './gha.js'
 import {readEmptyTreeHash} from './git.js'
 
 const owner = 'eloquent-fixtures'
@@ -46,14 +47,9 @@ export async function createOrphanBranch (branch) {
 }
 
 export async function createOrphanBranchForCi (suffix) {
-  const {
-    GITHUB_RUN_ID: runId = 'x',
-    GITHUB_RUN_NUMBER: runNumber = 'x',
-    GITHUB_RUN_ATTEMPT: runAttempt = 'x',
-    GITHUB_SHA: sha = 'main',
-  } = process.env
+  const {GITHUB_SHA: sha = 'main'} = process.env
 
-  const branch = `ci-${runId}.${runNumber}.${runAttempt}-${suffix}`
+  const branch = `ci-${readRunId()}-${suffix}`
   const {commit, ref} = await createOrphanBranch(branch)
 
   const workflow = await createFile(
@@ -77,4 +73,28 @@ jobs:
   )
 
   return {commit, ref, workflow}
+}
+
+export async function createAnnotatedTag (sha, tag, message) {
+  const object = await octokit.rest.git.createTag({
+    owner,
+    repo,
+    type: 'commit',
+    object: sha,
+    tag,
+    message,
+  })
+
+  const ref = await createLightweightTag(object.data.sha, tag)
+
+  return {object, ref}
+}
+
+export async function createLightweightTag (sha, tag) {
+  return octokit.rest.git.createRef({
+    owner,
+    repo,
+    ref: `refs/tags/${tag}`,
+    sha,
+  })
 }
