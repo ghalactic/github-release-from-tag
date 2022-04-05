@@ -115,7 +115,7 @@ export async function findWorkflow () {
   )
 
   for await (const workflows of workflowPages) {
-    console.log({workflows})
+    console.log(JSON.stringify({workflows}, null, 2))
   }
 }
 
