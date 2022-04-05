@@ -11,5 +11,5 @@ describe('Temporary', () => {
     const checkRuns = await waitForTagCheckRuns(tag)
 
     console.log(JSON.stringify({checkRuns}, null, 2))
-  })
+  }, 60000)
 })
