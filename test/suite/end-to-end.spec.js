@@ -28,11 +28,15 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     lightweightTagWorkflowRun = workflowRuns[1]
   }, SETUP_TIMEOUT)
 
-  it('should conclude in success for annotated tags', () => {
-    expect(annotatedTagWorkflowRun.conclusion).toBe('success')
+  describe('for lightweight tags', () => {
+    it('should conclude in failure', () => {
+      expect(lightweightTagWorkflowRun.conclusion).toBe('failure')
+    })
   })
 
-  it('should conclude in failure for lightweight tags', () => {
-    expect(lightweightTagWorkflowRun.conclusion).toBe('failure')
+  describe('for annotated tags', () => {
+    it('should conclude in success', () => {
+      expect(annotatedTagWorkflowRun.conclusion).toBe('success')
+    })
   })
 })
