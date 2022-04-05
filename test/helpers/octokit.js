@@ -99,10 +99,30 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
-export async function listTagCheckRuns (tag) {
-  return octokit.rest.checks.listForRef({
-    owner,
-    repo,
-    ref: `refs/tags/${tag}`,
+export async function waitForTagCheckRuns (tag) {
+  for (let i = 0; i < 10; ++i) {
+    if (i > 0) {
+      console.log(`No checks detected for tag ${JSON.stringify(tag)}. Trying again in 3 seconds.`)
+      await sleep(3000)
+    }
+
+    console.log(`Detecting checks for tag ${JSON.stringify(tag)}.`)
+
+    const checks = await octokit.rest.checks.listForRef({
+      owner,
+      repo,
+      ref: `refs/tags/${tag}`,
+    })
+    const count = checks?.data?.total_count ?? 0
+
+    if (count > 0) return checks
+  }
+
+  throw new Error(`No checks detected for tag ${JSON.stringify(tag)}.`)
+}
+
+function sleep (delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => { resolve() }, delay)
   })
 }
