@@ -14,8 +14,11 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     const {workflowFile} = await createOrphanBranchForCi('a')
     const headSha = workflowFile.data.commit.sha
-    await createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n')
-    await createLightweightTag(headSha, lightweightTagName)
+
+    await Promise.all([
+      createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n'),
+      createLightweightTag(headSha, lightweightTagName),
+    ])
 
     const workflowRuns = await Promise.all([
       waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName),
