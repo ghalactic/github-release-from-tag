@@ -2,6 +2,7 @@ import {Octokit} from 'octokit'
 
 import {readRunId} from './gha.js'
 import {readEmptyTreeHash} from './git.js'
+import {sleep} from './timers.js'
 
 const owner = 'eloquent-fixtures'
 const repo = 'github-release-action-ci'
@@ -106,13 +107,8 @@ export async function createLightweightTag (sha, tag) {
 export async function waitForTagWorkflowRun (fileName, tag) {
   const octokit = createOctokit()
 
-  for (let i = 0; i < 10; ++i) {
-    if (i > 0) {
-      console.log(`No ${JSON.stringify(fileName)} workflow runs detected for tag ${JSON.stringify(tag)}. Trying again in 1 second.`)
-      await sleep(1000)
-    }
-
-    console.log(`Detecting ${JSON.stringify(fileName)} workflow runs for tag ${JSON.stringify(tag)}.`)
+  for (let i = 0; i < 5; ++i) {
+    if (i > 0) await sleep(3000)
 
     const runs = await octokit.rest.actions.listWorkflowRuns({
       owner,
@@ -123,14 +119,10 @@ export async function waitForTagWorkflowRun (fileName, tag) {
       per_page: 1, // pagination is not needed because we only want one result
     })
 
-    if (runs.data.total_count > 0) return runs.data.workflow_runs[0]
+    if (runs.data.total_count > 0) {
+      return {workflowRun: runs.data.workflow_runs[0], retryCount: i}
+    }
   }
 
   throw new Error(`No ${JSON.stringify(fileName)} workflow runs detected for tag ${JSON.stringify(tag)}.`)
-}
-
-function sleep (delay) {
-  return new Promise((resolve) => {
-    setTimeout(() => { resolve() }, delay)
-  })
 }
