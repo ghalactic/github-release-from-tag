@@ -1,15 +1,11 @@
-let runId
+export function readRunId () {
+  const {
+    GITHUB_RUN_ID: id = '',
+    GITHUB_RUN_NUMBER: number = '',
+    GITHUB_RUN_ATTEMPT: attempt = '',
+  } = process.env
 
-export function readRunId (suffix) {
-  if (runId == null) {
-    const {
-      GITHUB_RUN_ID: id = 'x',
-      GITHUB_RUN_NUMBER: number = 'x',
-      GITHUB_RUN_ATTEMPT: attempt = 'x',
-    } = process.env
+  if (id === '' || number === '' || attempt === '') return undefined
 
-    runId = `${id}.${number}.${attempt}`
-  }
-
-  return runId
+  runId = `${id}.${number}.${attempt}`
 }
