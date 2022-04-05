@@ -52,7 +52,7 @@ export async function createOrphanBranchForCi (suffix) {
   const branch = `ci-${readRunId()}-${suffix}`
   const {commit, ref} = await createOrphanBranch(branch)
 
-  const workflow = await createFile(
+  const workflowFile = await createFile(
     branch,
     '.github/workflows/publish-release.yml',
     `name: Publish release
@@ -72,7 +72,7 @@ jobs:
 `
   )
 
-  return {commit, ref, workflow}
+  return {commit, ref, workflowFile}
 }
 
 export async function createAnnotatedTag (sha, tag, message) {
@@ -103,50 +103,34 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
-export async function findWorkflowByPath (path) {
+export async function waitForTagWorkflowRun (fileName, tag) {
   const octokit = createOctokit()
 
-  const workflowPages = octokit.paginate.iterator(
-    octokit.rest.actions.listRepoWorkflows,
-    {
+  for (let i = 0; i < 10; ++i) {
+    if (i > 0) {
+      console.log(`No ${JSON.stringify(fileName)} workflow runs detected for tag ${JSON.stringify(tag)}. Trying again in 1 second.`)
+      await sleep(1000)
+    }
+
+    console.log(`Detecting ${JSON.stringify(fileName)} workflow runs for tag ${JSON.stringify(tag)}.`)
+
+    const runs = await octokit.rest.actions.listWorkflowRuns({
       owner,
       repo,
-    },
-  )
+      workflow_id: fileName, // fileName does not include a path
+      branch: tag, // this seems to work, despite not being a branch
+      event: 'push',
+      per_page: 1, // pagination is not needed because we only want one result
+    })
 
-  for await (const {data} of workflowPages) {
-    for (const workflow of data) {
-      if (workflow.path === path) return workflow
-    }
+    if (runs.data.total_count > 0) return runs.data.workflow_runs[0]
   }
 
-  throw new Error(`Unable to find a workflow with the path ${JSON.stringify(path)}`)
+  throw new Error(`No ${JSON.stringify(fileName)} workflow runs detected for tag ${JSON.stringify(tag)}.`)
 }
 
-// export async function waitForTagCheckRuns (tag) {
-//   for (let i = 0; i < 10; ++i) {
-//     if (i > 0) {
-//       console.log(`No checks detected for tag ${JSON.stringify(tag)}. Trying again in 1 second.`)
-//       await sleep(1000)
-//     }
-
-//     console.log(`Detecting checks for tag ${JSON.stringify(tag)}.`)
-
-//     const checks = await octokit.rest.checks.listForRef({
-//       owner,
-//       repo,
-//       ref: `refs/tags/${tag}`,
-//     })
-//     const count = checks?.data?.total_count ?? 0
-
-//     if (count > 0) return checks
-//   }
-
-//   throw new Error(`No checks detected for tag ${JSON.stringify(tag)}.`)
-// }
-
-// function sleep (delay) {
-//   return new Promise((resolve) => {
-//     setTimeout(() => { resolve() }, delay)
-//   })
-// }
+function sleep (delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => { resolve() }, delay)
+  })
+}
