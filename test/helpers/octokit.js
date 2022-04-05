@@ -109,7 +109,7 @@ export async function waitForCompletedTagWorkflowRun (fileName, tag) {
   let retryCount = 0
 
   while (true) {
-    await sleep(5 * 1000)
+    await sleep(15 * 1000)
 
     const runs = await octokit.rest.actions.listWorkflowRuns({
       owner,
