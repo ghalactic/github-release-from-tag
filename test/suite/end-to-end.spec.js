@@ -5,7 +5,7 @@ const SETUP_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
-  let workflowRun
+  let annotatedTagWorkflowRun, lightweightTagWorkflowRun
 
   beforeAll(async () => {
     const runId = readRunId()
@@ -17,10 +17,22 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     await createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n')
     await createLightweightTag(headSha, lightweightTagName)
 
-    workflowRun = await waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName)
+    (
+      [
+        annotatedTagWorkflowRun,
+        lightweightTagWorkflowRun,
+      ] = await Promise.all([
+        waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName),
+        waitForCompletedTagWorkflowRun('publish-release.yml', lightweightTagName),
+      ])
+    )
   }, SETUP_TIMEOUT)
 
-  it('should complete successfully', () => {
-    expect(workflowRun.conclusion).toBe('success')
+  it('should conclude in success for annotated tags', () => {
+    expect(annotatedTagWorkflowRun.conclusion).toBe('success')
+  })
+
+  it('should conclude in failure for lightweight tags', () => {
+    expect(lightweightTagWorkflowRun.conclusion).toBe('failure')
   })
 })
