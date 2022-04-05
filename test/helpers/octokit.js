@@ -98,3 +98,11 @@ export async function createLightweightTag (sha, tag) {
     sha,
   })
 }
+
+export async function listTagCheckRuns (tag) {
+  return octokit.rest.checks.listForRef({
+    owner,
+    repo,
+    ref: `refs/tags/${tag}`,
+  })
+}
