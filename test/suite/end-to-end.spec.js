@@ -1,19 +1,26 @@
 import {readRunId} from '../helpers/gha.js'
 import {createAnnotatedTag, createLightweightTag, createOrphanBranchForCi, waitForCompletedTagWorkflowRun} from '../helpers/octokit.js'
 
+const SETUP_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
-  it('should be able to create stuff', async () => {
+  let workflowRun
+
+  beforeAll(async () => {
     const runId = readRunId()
-    const tag = `0.1.0+ci-${runId}-a`
-    const {commit, ref, workflowFile} = await createOrphanBranchForCi('a')
+    const annotatedTagName = `0.1.0+ci-${runId}-annotated`
+    const lightweightTagName = `0.1.0+ci-${runId}-lightweight`
+
+    const {workflowFile} = await createOrphanBranchForCi('a')
     const headSha = workflowFile.data.commit.sha
-    const annotatedTag = await createAnnotatedTag(headSha, tag, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n')
-    // const lightweightTag = await createLightweightTag(headSha, `0.1.0+ci-${runId}-b`)
+    await createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n')
+    await createLightweightTag(headSha, lightweightTagName)
 
-    const {workflowRun, retryCount} = await waitForCompletedTagWorkflowRun('publish-release.yml', tag)
+    workflowRun = await waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName)
+  }, SETUP_TIMEOUT)
 
-    console.log(JSON.stringify({workflowRun, retryCount}, null, 2))
-  }, 5 * 60 * 1000)
+  it('should complete successfully', () => {
+    expect(workflowRun.conclusion).toBe('success')
+  })
 })

@@ -106,7 +106,6 @@ export async function createLightweightTag (sha, tag) {
 
 export async function waitForCompletedTagWorkflowRun (fileName, tag) {
   const octokit = createOctokit()
-  let retryCount = 0
 
   while (true) {
     await sleep(15 * 1000)
@@ -121,10 +120,6 @@ export async function waitForCompletedTagWorkflowRun (fileName, tag) {
       per_page: 1, // pagination is not needed because we only want one result
     })
 
-    if (runs.data.total_count > 0) {
-      return {workflowRun: runs.data.workflow_runs[0], retryCount}
-    }
-
-    ++retryCount
+    if (runs.data.total_count > 0) return runs.data.workflow_runs[0]
   }
 }
