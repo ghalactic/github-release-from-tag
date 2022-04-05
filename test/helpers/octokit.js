@@ -103,7 +103,7 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
-export async function findWorkflow () {
+export async function findWorkflowByPath (path) {
   const octokit = createOctokit()
 
   const workflowPages = octokit.paginate.iterator(
@@ -114,9 +114,13 @@ export async function findWorkflow () {
     },
   )
 
-  for await (const workflows of workflowPages) {
-    console.log(JSON.stringify({workflows}, null, 2))
+  for await (const {data} of workflowPages) {
+    for (const workflow of data) {
+      if (workflow.path === path) return workflow
+    }
   }
+
+  throw new Error(`Unable to find a workflow with the path ${JSON.stringify(path)}`)
 }
 
 // export async function waitForTagCheckRuns (tag) {
