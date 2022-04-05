@@ -17,15 +17,12 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     await createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n')
     await createLightweightTag(headSha, lightweightTagName)
 
-    (
-      [
-        annotatedTagWorkflowRun,
-        lightweightTagWorkflowRun,
-      ] = await Promise.all([
-        waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName),
-        waitForCompletedTagWorkflowRun('publish-release.yml', lightweightTagName),
-      ])
-    )
+    const workflowRuns = await Promise.all([
+      waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName),
+      waitForCompletedTagWorkflowRun('publish-release.yml', lightweightTagName),
+    ])
+    annotatedTagWorkflowRun = workflowRuns[0]
+    lightweightTagWorkflowRun = workflowRuns[1]
   }, SETUP_TIMEOUT)
 
   it('should conclude in success for annotated tags', () => {
