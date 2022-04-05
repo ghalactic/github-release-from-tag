@@ -1,11 +1,11 @@
 import {readRunId} from '../helpers/gha.js'
 import {createAnnotatedTag, createLightweightTag, createOrphanBranchForCi, waitForCompletedTagWorkflowRun} from '../helpers/octokit.js'
 
-const runId = readRunId()
-const describeOrSkip = runId ? describe : describe.skip
+const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
   it('should be able to create stuff', async () => {
+    const runId = readRunId()
     const tag = `0.1.0+ci-${runId}-a`
     const {commit, ref, workflowFile} = await createOrphanBranchForCi('a')
     const headSha = workflowFile.data.commit.sha

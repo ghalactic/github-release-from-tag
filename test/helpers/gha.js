@@ -7,5 +7,5 @@ export function readRunId () {
 
   if (id === '' || number === '' || attempt === '') return undefined
 
-  runId = `${id}.${number}.${attempt}`
+  return `${id}.${number}.${attempt}`
 }
