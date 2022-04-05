@@ -76,6 +76,8 @@ jobs:
 }
 
 export async function createAnnotatedTag (sha, tag, message) {
+  const octokit = createOctokit()
+
   const object = await octokit.rest.git.createTag({
     owner,
     repo,
@@ -91,6 +93,8 @@ export async function createAnnotatedTag (sha, tag, message) {
 }
 
 export async function createLightweightTag (sha, tag) {
+  const octokit = createOctokit()
+
   return octokit.rest.git.createRef({
     owner,
     repo,
@@ -100,6 +104,8 @@ export async function createLightweightTag (sha, tag) {
 }
 
 export async function findWorkflow () {
+  const octokit = createOctokit()
+
   const workflowPages = octokit.paginate.iterator(
     octokit.rest.actions.listRepoWorkflows,
     {
