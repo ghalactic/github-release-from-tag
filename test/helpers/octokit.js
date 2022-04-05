@@ -99,30 +99,44 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
-export async function waitForTagCheckRuns (tag) {
-  for (let i = 0; i < 10; ++i) {
-    if (i > 0) {
-      console.log(`No checks detected for tag ${JSON.stringify(tag)}. Trying again in 1 second.`)
-      await sleep(1000)
-    }
-
-    console.log(`Detecting checks for tag ${JSON.stringify(tag)}.`)
-
-    const checks = await octokit.rest.checks.listForRef({
+export async function findWorkflow () {
+  const workflowPages = octokit.paginate.iterator(
+    octokit.rest.actions.listRepoWorkflows,
+    {
       owner,
       repo,
-      ref: `refs/tags/${tag}`,
-    })
-    const count = checks?.data?.total_count ?? 0
+    },
+  )
 
-    if (count > 0) return checks
+  for await (const workflows of workflowPages) {
+    console.log({workflows})
   }
-
-  throw new Error(`No checks detected for tag ${JSON.stringify(tag)}.`)
 }
 
-function sleep (delay) {
-  return new Promise((resolve) => {
-    setTimeout(() => { resolve() }, delay)
-  })
-}
+// export async function waitForTagCheckRuns (tag) {
+//   for (let i = 0; i < 10; ++i) {
+//     if (i > 0) {
+//       console.log(`No checks detected for tag ${JSON.stringify(tag)}. Trying again in 1 second.`)
+//       await sleep(1000)
+//     }
+
+//     console.log(`Detecting checks for tag ${JSON.stringify(tag)}.`)
+
+//     const checks = await octokit.rest.checks.listForRef({
+//       owner,
+//       repo,
+//       ref: `refs/tags/${tag}`,
+//     })
+//     const count = checks?.data?.total_count ?? 0
+
+//     if (count > 0) return checks
+//   }
+
+//   throw new Error(`No checks detected for tag ${JSON.stringify(tag)}.`)
+// }
+
+// function sleep (delay) {
+//   return new Promise((resolve) => {
+//     setTimeout(() => { resolve() }, delay)
+//   })
+// }
