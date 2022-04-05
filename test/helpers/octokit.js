@@ -104,11 +104,11 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
-export async function waitForTagWorkflowRun (fileName, tag) {
+export async function waitForCompletedTagWorkflowRun (fileName, tag) {
   const octokit = createOctokit()
 
-  for (let i = 0; i < 5; ++i) {
-    if (i > 0) await sleep(3000)
+  while (true) {
+    await sleep(5 * 1000)
 
     const runs = await octokit.rest.actions.listWorkflowRuns({
       owner,
@@ -116,6 +116,7 @@ export async function waitForTagWorkflowRun (fileName, tag) {
       workflow_id: fileName, // fileName does not include a path
       branch: tag, // this seems to work, despite not being a branch
       event: 'push',
+      status: 'completed',
       per_page: 1, // pagination is not needed because we only want one result
     })
 
@@ -123,6 +124,4 @@ export async function waitForTagWorkflowRun (fileName, tag) {
       return {workflowRun: runs.data.workflow_runs[0], retryCount: i}
     }
   }
-
-  throw new Error(`No ${JSON.stringify(fileName)} workflow runs detected for tag ${JSON.stringify(tag)}.`)
 }
