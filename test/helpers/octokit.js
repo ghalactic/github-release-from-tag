@@ -104,6 +104,16 @@ export async function createLightweightTag (sha, tag) {
   })
 }
 
+export async function getReleaseByTag (tag) {
+  const octokit = createOctokit()
+
+  return octokit.rest.repos.getReleaseByTag({
+    owner,
+    repo,
+    tag,
+  })
+}
+
 export async function waitForCompletedTagWorkflowRun (fileName, tag) {
   const octokit = createOctokit()
 

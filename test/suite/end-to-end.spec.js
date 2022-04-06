@@ -1,11 +1,18 @@
 import {readRunId} from '../helpers/gha.js'
-import {createAnnotatedTag, createLightweightTag, createOrphanBranchForCi, waitForCompletedTagWorkflowRun} from '../helpers/octokit.js'
+
+import {
+  createAnnotatedTag,
+  createLightweightTag,
+  createOrphanBranchForCi,
+  getReleaseByTag,
+  waitForCompletedTagWorkflowRun,
+} from '../helpers/octokit.js'
 
 const SETUP_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
-  let annotatedTagWorkflowRun, lightweightTagWorkflowRun
+  let annotatedTagRelease, annotatedTagWorkflowRun, lightweightTagWorkflowRun
 
   beforeAll(async () => {
     const runId = readRunId()
@@ -26,6 +33,8 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     ])
     annotatedTagWorkflowRun = workflowRuns[0]
     lightweightTagWorkflowRun = workflowRuns[1]
+
+    annotatedTagRelease = await getReleaseByTag(annotatedTagName)
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
@@ -37,6 +46,10 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
   describe('for annotated tags', () => {
     it('should conclude in success', () => {
       expect(annotatedTagWorkflowRun.conclusion).toBe('success')
+    })
+
+    it('should produce the expected release title', () => {
+      console.log(JSON.stringify({annotatedTagRelease}, null, 2))
     })
   })
 })
