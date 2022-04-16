@@ -1,35 +1,28 @@
-import {readdir, readFile} from 'fs/promises'
+import {readdirSync, readFileSync} from 'fs'
 import {join} from 'path'
 
 export function buildTagName (version, runId, label) {
   return `${version}+ci-${runId}-${label}`
 }
 
-export async function readFixtures (fixturesPath, runId) {
-  const entries = await readdir(fixturesPath, {withFileTypes: true})
+export function readFixtures (fixturesPath, runId) {
+  const entries = readdirSync(fixturesPath, {withFileTypes: true})
   const fixtures = []
 
-  await Promise.all(entries.map(async entry => {
-    if (entry.isDirectory()) fixtures.push(await readFixture(runId, join(fixturesPath, entry.name), entry.name))
-  }))
+  for (const entry of entries) {
+    if (entry.isDirectory()) fixtures.push(readFixture(runId, join(fixturesPath, entry.name), entry.name))
+  }
 
   fixtures.sort(({name: a}, {name: b}) => a.localeCompare(b))
 
   return fixtures
 }
 
-async function readFixture (runId, fixturePath, name) {
-  const [
-    releaseBody,
-    releaseName,
-    tagAnnotation,
-    tagName,
-  ] = await Promise.all([
-    readFile(join(fixturePath, 'release-body.html')),
-    readFile(join(fixturePath, 'release-name')),
-    readFile(join(fixturePath, 'tag-annotation')),
-    readFile(join(fixturePath, 'tag-name')),
-  ])
+function readFixture (runId, fixturePath, name) {
+  const releaseBody = readFileSync(join(fixturePath, 'release-body.html'))
+  const releaseName = readFileSync(join(fixturePath, 'release-name'))
+  const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation'))
+  const tagName = readFileSync(join(fixturePath, 'tag-name'))
 
   return {
     name,

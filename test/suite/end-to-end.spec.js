@@ -15,15 +15,15 @@ const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
-  const fixturesByName = {}
+  // read file-based fixtures
+  const runId = readRunId()
+  const fixtures = readFixtures(resolve(__dirname, '../fixture'), runId)
+  const fixtureData = fixtures.map(fixture => [fixture.name, fixture])
+
   const workflowRun = {}
   const tagRelease = {}
 
   beforeAll(async () => {
-    // read file-based fixtures
-    const runId = readRunId()
-    const fixtures = await readFixtures(resolve(__dirname, '../fixture'), runId)
-    fixtures.forEach(fixture => { fixturesByName[fixture.name] = fixture })
     const lightweightTagName = buildTagName('0.1.0', runId, 'lightweight')
 
     // create a new branch
@@ -69,17 +69,17 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     })
   })
 
-  describe('for annotated tags', () => {
+  describe.each(fixtureData)('for annotated tags (%s)', (name, fixture) => {
     it('should conclude in success', () => {
-      expect(workflowRun.annotated.conclusion).toBe('success')
+      expect(workflowRun[name].conclusion).toBe('success')
     })
 
     it('should produce the expected release name', () => {
-      expect(tagRelease.annotated.data.name).toBe(fixturesByName.annotated.releaseName)
+      expect(tagRelease[name].data.name).toBe(fixture.releaseName)
     })
 
     it('should produce the expected release body', () => {
-      expect(tagRelease.annotated.data.body).toBe(fixturesByName.annotated.releaseBody)
+      expect(tagRelease[name].data.body).toBe(fixture.releaseBody)
     })
   })
 })
