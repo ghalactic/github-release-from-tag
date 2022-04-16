@@ -31,8 +31,10 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     // create all tags in parallel
     await Promise.all([
       createLightweightTag(headSha, lightweightTagName),
-      ...fixtures.map(({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
+      ...fixtures.map(async ({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
     ])
+
+    console.log('TAGS CREATED')
 
     // wait for all workflow runs to finish, and read completed runs into an object
     async function workflowRunTask (fixtureName, tagName) {
@@ -41,15 +43,19 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     await Promise.all([
       workflowRunTask('lightweight', lightweightTagName),
-      ...fixtures.map(({name, tagName}) => workflowRunTask(name, tagName))
+      ...fixtures.map(async ({name, tagName}) => workflowRunTask(name, tagName))
     ])
+
+    console.log('WORKFLOW RUNS COMPLETED')
 
     // read all tag releases into an object
     async function tagReleaseTask (fixtureName, tagName) {
       tagRelease[fixtureName] = await getReleaseByTag(tagName)
     }
 
-    await Promise.all(fixtures.map(({name, tagName}) => tagReleaseTask(name, tagName)))
+    await Promise.all(fixtures.map(async ({name, tagName}) => tagReleaseTask(name, tagName)))
+
+    console.log('TAG RELEASES FOUND')
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
