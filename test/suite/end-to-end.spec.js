@@ -81,5 +81,9 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     it('should produce the expected release body', () => {
       expect(tagRelease[name].data.body).toBe(fixture.releaseBody)
     })
+
+    it('should produce the expected release attributes', () => {
+      expect(tagRelease[name].data).toMatchObject(fixture.releaseAttributes)
+    })
   })
 })
