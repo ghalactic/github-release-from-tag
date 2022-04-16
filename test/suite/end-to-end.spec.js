@@ -1,3 +1,4 @@
+import {buildTagName, readFixtures} from '../helpers/fixture.js'
 import {readRunId} from '../helpers/gha.js'
 
 import {
@@ -12,44 +13,56 @@ const SETUP_TIMEOUT = 5 * 60 * 1000 // 5 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
-  let annotatedTagRelease, annotatedTagWorkflowRun, lightweightTagWorkflowRun
+  const workflowRun = {}
+  const tagRelease = {}
 
   beforeAll(async () => {
+    // read file-based fixtures
     const runId = readRunId()
-    const annotatedTagName = `0.1.0+ci-${runId}-annotated`
-    const lightweightTagName = `0.1.0+ci-${runId}-lightweight`
+    const fixtures = await readFixtures(runId)
+    const lightweightTagName = buildTagName('0.1.0', runId, 'lightweight')
 
+    // create a new branch
     const {workflowFile} = await createOrphanBranchForCi('a')
     const headSha = workflowFile.data.commit.sha
 
+    // create all tags in parallel
     await Promise.all([
-      createAnnotatedTag(headSha, annotatedTagName, '0.1.0\nsubject-a\nsubject-b\n\nbody-a\nbody-b\n'),
       createLightweightTag(headSha, lightweightTagName),
+      ...fixtures.map(({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
     ])
 
-    const workflowRuns = await Promise.all([
-      waitForCompletedTagWorkflowRun('publish-release.yml', annotatedTagName),
-      waitForCompletedTagWorkflowRun('publish-release.yml', lightweightTagName),
-    ])
-    annotatedTagWorkflowRun = workflowRuns[0]
-    lightweightTagWorkflowRun = workflowRuns[1]
+    // wait for all workflow runs to finish, and read completed runs into an object
+    async function workflowRunTask (fixtureName, tagName) {
+      workflowRun[fixtureName] = await waitForCompletedTagWorkflowRun('publish-release.yml', tagName)
+    }
 
-    annotatedTagRelease = await getReleaseByTag(annotatedTagName)
+    await Promise.all([
+      workflowRunTask('lightweight', lightweightTagName),
+      ...fixtures.map(({name, tagName}) => workflowRunTask(name, tagName))
+    ])
+
+    // read all tag releases into an object
+    async function tagReleaseTask (fixtureName, tagName) {
+      tagRelease[fixtureName] = await getReleaseByTag(tagName)
+    }
+
+    await Promise.all(fixtures.map(({name, tagName}) => tagReleaseTask(name, tagName)))
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
     it('should conclude in failure', () => {
-      expect(lightweightTagWorkflowRun.conclusion).toBe('failure')
+      expect(workflowRun.lightweight.conclusion).toBe('failure')
     })
   })
 
   describe('for annotated tags', () => {
     it('should conclude in success', () => {
-      expect(annotatedTagWorkflowRun.conclusion).toBe('success')
+      expect(workflowRun.annotated.conclusion).toBe('success')
     })
 
     it('should produce the expected release name', () => {
-      expect(annotatedTagRelease.data.name).toBe('0.1.0 subject-a subject-b')
+      expect(tagRelease.annotated.data.name).toBe('0.1.0 subject-a subject-b')
     })
 
     it('should produce the expected release body', () => {
@@ -62,7 +75,7 @@ body-b
 <p>body-a
 body-b</p>
 `
-      expect(annotatedTagRelease.data.body).toBe(expected)
+      expect(tagRelease.annotated.data.body).toBe(expected)
     })
   })
 })
