@@ -140,24 +140,45 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
 
     pagination: for await (const {data: {workflow_runs: runs}} of pages) {
       for (const run of runs) {
+        console.log(JSON.stringify(run, null, 2))
+
         // note that GitHub also uses the "head_branch" property for the tag name in a tag push run
         const {head_branch: runTag} = run
 
+        console.log(`TESTING WORKFLOW FOR ${runTag}`)
+
         // skip unrelated workflow runs
-        if (!tags.includes(runTag)) continue
+        if (!tags.includes(runTag)) {
+          console.log(`${runTag} IS UNRELATED`)
+
+          continue
+        }
+
+        console.log(`${runTag} IS RELEVANT`)
 
         tagRuns[runTag] = run
 
         // stop paginating as soon as all tag runs have been found
-        if (Object.keys(tagRuns).length >= tags.length) break pagination
+        if (Object.keys(tagRuns).length >= tags.length) {
+          console.log('ENDING PAGINATION')
+          break pagination
+        }
       }
+
+      console.log('READING NEXT PAGE')
     }
 
     // haven't found all tag runs yet
-    if (Object.keys(tagRuns).length < tags.length) continue
+    if (Object.keys(tagRuns).length < tags.length) {
+      console.log('TRYING AGAIN LATER')
+
+      continue
+    }
 
     const tagRunsOrdered = []
     for (const tag of tags) tagRunsOrdered = tagRuns[tag]
+
+    console.log(JSON.stringify(tagRunsOrdered, null, 2))
 
     return tagRunsOrdered
   }
