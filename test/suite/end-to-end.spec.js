@@ -1,3 +1,5 @@
+import {resolve} from 'path'
+
 import {buildTagName, readFixtures} from '../helpers/fixture.js'
 import {readRunId} from '../helpers/gha.js'
 
@@ -19,7 +21,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
   beforeAll(async () => {
     // read file-based fixtures
     const runId = readRunId()
-    const fixtures = await readFixtures(runId)
+    const fixtures = await readFixtures(resolve(__dirname, '../fixture'), runId)
     const lightweightTagName = buildTagName('0.1.0', runId, 'lightweight')
 
     // create a new branch

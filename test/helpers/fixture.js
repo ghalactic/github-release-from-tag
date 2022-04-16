@@ -1,13 +1,11 @@
 import {readdir, readFile} from 'fs/promises'
-import {join, resolve} from 'path'
-import {fileURLToPath} from 'url'
+import {join} from 'path'
 
 export function buildTagName (version, runId, label) {
   return `${version}+ci-${runId}-${label}`
 }
 
-export async function readFixtures (runId) {
-  const fixturesPath = resolve(fileURLToPath(import.meta.url), '../../fixture')
+export async function readFixtures (fixturesPath, runId) {
   const entries = await readdir(fixturesPath, {withFileTypes: true})
   const fixtures = []
 
