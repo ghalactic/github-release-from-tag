@@ -11,7 +11,7 @@ import {
   waitForCompletedTagWorkflowRun,
 } from '../helpers/octokit.js'
 
-const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
+const SETUP_TIMEOUT = 1 * 60 * 1000 // 3 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
@@ -36,6 +36,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     // wait for all workflow runs to finish, and read completed runs into an object
     async function workflowRunTask (fixtureName, tagName) {
+      console.log({fixtureName, tagName})
       workflowRun[fixtureName] = await waitForCompletedTagWorkflowRun('publish-release.yml', tagName)
     }
 
