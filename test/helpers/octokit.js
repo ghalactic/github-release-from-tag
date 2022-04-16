@@ -138,7 +138,10 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
 
     const tagRuns = {}
 
-    pagination: for await (const {data: {workflow_runs: runs}} of pages) {
+    pagination: for await (const page of pages) {
+      console.log(JSON.stringify(page, null, 2))
+      const {workflow_runs: runs} = page
+
       for (const run of runs) {
         console.log(JSON.stringify(run, null, 2))
 
