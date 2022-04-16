@@ -26,7 +26,8 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     // create a new branch
     const {workflowFile} = await createOrphanBranchForCi('a')
-    console.log(JSON.stringify(workflowFile.data, null, 2))
+    const workflowFileName = workflowFile.data.content.name
+    console.log({workflowFileName})
     const headSha = workflowFile.data.commit.sha
 
     // create all tags in parallel
@@ -40,7 +41,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       const [
         lightweightRun,
         ...fixtureRuns
-      ] = await waitForCompletedTagWorkflowRuns('publish-release.yml', [
+      ] = await waitForCompletedTagWorkflowRuns(workflowFileName, [
         lightweightTagName,
         ...fixtures.map(fixture => fixture.tagName),
       ])
