@@ -175,9 +175,7 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
       continue
     }
 
-    const tagRunsOrdered = []
-    for (const tag of tags) tagRunsOrdered = tagRuns[tag]
-
+    const tagRunsOrdered = tags.map(tag => tagRuns[tag])
     console.log(JSON.stringify(tagRunsOrdered, null, 2))
 
     return tagRunsOrdered
