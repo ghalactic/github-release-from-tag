@@ -17,7 +17,7 @@ export function createOctokit () {
 export async function createFile (branch, path, content) {
   const octokit = createOctokit()
 
-  return octokit.rest.repos.createOrUpdateFileContents({
+  const {data} = await octokit.rest.repos.createOrUpdateFileContents({
     owner,
     repo,
     branch,
@@ -25,23 +25,25 @@ export async function createFile (branch, path, content) {
     message: `Create ${path}`,
     content: Buffer.from(content).toString('base64'),
   })
+
+  return data
 }
 
 export async function createOrphanBranch (branch) {
   const octokit = createOctokit()
 
-  const commit = await octokit.rest.git.createCommit({
+  const {data: commit} = await octokit.rest.git.createCommit({
     owner,
     repo,
     message: 'Create an empty initial commit',
     tree: await readEmptyTreeHash(),
   })
 
-  const ref = await octokit.rest.git.createRef({
+  const {data: ref} = await octokit.rest.git.createRef({
     owner,
     repo,
     ref: `refs/heads/${branch}`,
-    sha: commit.data.sha,
+    sha: commit.sha,
   })
 
   return {commit, ref}
@@ -79,7 +81,7 @@ jobs:
 export async function createAnnotatedTag (sha, tag, message) {
   const octokit = createOctokit()
 
-  const object = await octokit.rest.git.createTag({
+  const {data: object} = await octokit.rest.git.createTag({
     owner,
     repo,
     type: 'commit',
@@ -88,7 +90,7 @@ export async function createAnnotatedTag (sha, tag, message) {
     message,
   })
 
-  const ref = await createLightweightTag(object.data.sha, tag)
+  const ref = await createLightweightTag(object.sha, tag)
 
   return {object, ref}
 }
@@ -96,22 +98,26 @@ export async function createAnnotatedTag (sha, tag, message) {
 export async function createLightweightTag (sha, tag) {
   const octokit = createOctokit()
 
-  return octokit.rest.git.createRef({
+  const {data} = await octokit.rest.git.createRef({
     owner,
     repo,
     ref: `refs/tags/${tag}`,
     sha,
   })
+
+  return data
 }
 
 export async function getReleaseByTag (tag) {
   const octokit = createOctokit()
 
-  return octokit.rest.repos.getReleaseByTag({
+  const {data} = await octokit.rest.repos.getReleaseByTag({
     owner,
     repo,
     tag,
   })
+
+  return data
 }
 
 /**
@@ -143,9 +149,7 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
 
     const tagRuns = {}
 
-    pagination: for await (const page of pages) {
-      const {data: runs} = page
-
+    pagination: for await (const {data: runs} of pages) {
       for (const run of runs) {
         const {
           event,

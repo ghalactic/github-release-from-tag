@@ -28,8 +28,8 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     // create a new branch
     const {workflowFile} = await createOrphanBranchForCi()
-    const workflowFileName = workflowFile.data.content.name
-    const headSha = workflowFile.data.commit.sha
+    const workflowFileName = workflowFile.content.name
+    const headSha = workflowFile.commit.sha
 
     // create all tags in parallel
     await Promise.all([
@@ -75,15 +75,15 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     })
 
     it('should produce the expected release name', () => {
-      expect(tagRelease[name].data.name).toBe(fixture.releaseName)
+      expect(tagRelease[name].name).toBe(fixture.releaseName)
     })
 
     it('should produce the expected release body', () => {
-      expect(tagRelease[name].data.body).toBe(fixture.releaseBody)
+      expect(tagRelease[name].body).toBe(fixture.releaseBody)
     })
 
     it('should produce the expected release attributes', () => {
-      expect(tagRelease[name].data).toMatchObject(fixture.releaseAttributes)
+      expect(tagRelease[name]).toMatchObject(fixture.releaseAttributes)
     })
   })
 })
