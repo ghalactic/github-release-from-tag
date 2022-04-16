@@ -25,9 +25,8 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     const lightweightTagName = buildTagName('0.1.0', runId, 'lightweight')
 
     // create a new branch
-    const {workflowFile} = await createOrphanBranchForCi('a')
+    const {workflowFile} = await createOrphanBranchForCi()
     const workflowFileName = workflowFile.data.content.name
-    console.log({workflowFileName})
     const headSha = workflowFile.data.commit.sha
 
     // create all tags in parallel

@@ -47,16 +47,16 @@ export async function createOrphanBranch (branch) {
   return {commit, ref}
 }
 
-export async function createOrphanBranchForCi (suffix) {
+export async function createOrphanBranchForCi () {
   const {GITHUB_SHA: sha = 'main'} = process.env
 
-  const branch = `ci-${readRunId()}-${suffix}`
+  const branch = `ci-${readRunId()}`
   const {commit, ref} = await createOrphanBranch(branch)
 
   const workflowFile = await createFile(
     branch,
     `.github/workflows/publish-release.${branch}.yml`,
-    `name: Publish release
+    `name: ${branch}
 on:
   push:
     tags:
