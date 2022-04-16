@@ -35,7 +35,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     ])
 
     // wait for all workflow runs to finish, and read completed runs into an object
-    await (async () => {
+    async function workflowRunsTask () {
       const [
         lightweightRun,
         ...fixtureRuns
@@ -48,7 +48,10 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       fixtures.forEach((fixture, index) => {
         workflowRun[fixture.name] = fixtureRuns[index]
       })
-    })
+    }
+
+    await workflowRunsTask()
+    console.log(JSON.stringify(workflowRun, null, 2))
 
     console.log('WORKFLOW RUNS COMPLETED')
 
