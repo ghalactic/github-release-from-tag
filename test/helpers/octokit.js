@@ -114,11 +114,8 @@ export async function getReleaseByTag (tag) {
   })
 }
 
-const COMPLETED_WORKFLOW_RUN_CUTOFF =  60 * 60 * 1000 // 1 hour
-
 export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
   const octokit = createOctokit()
-  const cutoff = new Date(Date.now() - COMPLETED_WORKFLOW_RUN_CUTOFF)
 
   while (true) {
     await sleep(15 * 1000)
@@ -129,10 +126,6 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
         owner,
         repo,
         workflow_id: fileName, // fileName does not include a path
-        // event: 'push',
-        // status: 'completed',
-        // created: `>${cutoff.toISOString()}`,
-        // exclude_pull_requests: true,
       },
     )
 
@@ -142,42 +135,26 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
       const {data: runs} = page
 
       for (const run of runs) {
-        // note that GitHub also uses the "head_branch" property for the tag name in a tag push run
-        const {head_branch: runTag} = run
+        const {
+          event,
+          head_branch: runTag, // note that GitHub also uses this property for the tag name in a tag push run
+          status,
+        } = run
 
-        console.log(`TESTING WORKFLOW FOR ${runTag}`)
-
-        // skip unrelated workflow runs
-        if (!tags.includes(runTag)) {
-          console.log(`${runTag} IS UNRELATED`)
-
-          continue
-        }
-
-        console.log(`${runTag} IS RELEVANT`)
+        // skip incomplete or unrelated workflow runs
+        if (event !== 'push' || status !== 'completed' || !tags.includes(runTag)) continue
 
         tagRuns[runTag] = run
 
         // stop paginating as soon as all tag runs have been found
-        if (Object.keys(tagRuns).length >= tags.length) {
-          console.log('ENDING PAGINATION')
-          break pagination
-        }
+        if (Object.keys(tagRuns).length >= tags.length) break pagination
       }
-
-      console.log('READING NEXT PAGE')
     }
 
     // haven't found all tag runs yet
-    if (Object.keys(tagRuns).length < tags.length) {
-      console.log('TRYING AGAIN LATER')
+    if (Object.keys(tagRuns).length < tags.length) continue
 
-      continue
-    }
-
-    const tagRunsOrdered = tags.map(tag => tagRuns[tag])
-    console.log(JSON.stringify(tagRunsOrdered, null, 2))
-
-    return tagRunsOrdered
+    // return an ordered array of runs
+    return tags.map(tag => tagRuns[tag])
   }
 }
