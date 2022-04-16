@@ -131,7 +131,7 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
         workflow_id: fileName, // fileName does not include a path
         event: 'push',
         status: 'completed',
-        created: `>${cutoff.toISOString()}`,
+        // created: `>${cutoff.toISOString()}`,
         exclude_pull_requests: true,
       },
     )
@@ -140,7 +140,7 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
 
     pagination: for await (const page of pages) {
       console.log(JSON.stringify(page, null, 2))
-      const {workflow_runs: runs} = page
+      const {data: runs} = page
 
       for (const run of runs) {
         console.log(JSON.stringify(run, null, 2))
