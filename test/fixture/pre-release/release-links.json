@@ -1,3 +1,4 @@
 {
-  "#1": "https://github.com/{owner}/{repo}/issues/1"
+  "#1": "https://github.com/{owner}/{repo}/issues/1",
+  "foo": "https://example.org/"
 }
