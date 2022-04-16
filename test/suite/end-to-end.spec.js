@@ -26,6 +26,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     // create a new branch
     const {workflowFile} = await createOrphanBranchForCi('a')
+    console.log(JSON.stringify(workflowFile.data, null, 2))
     const headSha = workflowFile.data.commit.sha
 
     // create all tags in parallel
