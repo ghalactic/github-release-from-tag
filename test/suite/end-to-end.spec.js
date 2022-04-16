@@ -70,6 +70,12 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
   })
 
   describe.each(fixtureData)('for annotated tags (%s)', (name, fixture) => {
+    const releaseLinksData = Object.entries(fixture.releaseLinks)
+
+    beforeAll(async () => {
+      if (releaseLinksData.length > 0) await page.goto(tagRelease[name].html_url)
+    })
+
     it('should conclude in success', () => {
       expect(workflowRun[name].conclusion).toBe('success')
     })
@@ -86,20 +92,13 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       expect(tagRelease[name].body).toBe(fixture.releaseBody)
     })
 
-    if (Object.keys(fixture.releaseLinks).length > 0) {
-      it('should produce the expected release links', async () => {
-        await page.goto(tagRelease[name].html_url)
+    it.each(releaseLinksData)('should produce the expected release links (link %j)', async (text, href) => {
+      const elements = await page.$x(`
+        //*[@data-test-selector="body-content"]
+        //a[text()=${JSON.stringify(text)}][@href=${JSON.stringify(href)}]
+      `)
 
-        for (const text in fixture.releaseLinks) {
-          const href = fixture.releaseLinks[text]
-          const elements = await page.$x(`
-            //*[@data-test-selector="body-content"]
-            //a[text()=${JSON.stringify(text)}][@href=${JSON.stringify(href)}]
-          `)
-
-          expect(elements.length).toBeGreaterThan(0)
-        }
-      })
-    }
+      expect(elements.length).toBeGreaterThan(0)
+    })
   })
 })
