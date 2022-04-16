@@ -91,7 +91,7 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
         await page.goto(tagRelease[name].html_url)
 
         for (const text in fixture.releaseLinks) {
-          const href = fixture.releaseLinks[label]
+          const href = fixture.releaseLinks[text]
           const elements = await page.$x(`
             //*[@data-test-selector="body-content"]
             //a[text()=${JSON.stringify(text)})][@href=${JSON.stringify(href)}]
