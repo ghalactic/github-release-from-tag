@@ -130,6 +130,8 @@ export async function waitForCompletedTagWorkflowRun (fileName, tag) {
       per_page: 1, // pagination is not needed because we only want one result
     })
 
+    console.log(JSON.stringify(runs.data, null, 2))
+
     if (runs.data.total_count > 0) return runs.data.workflow_runs[0]
   }
 }

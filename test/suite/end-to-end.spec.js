@@ -34,8 +34,6 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       ...fixtures.map(async ({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
     ])
 
-    console.log('TAGS CREATED')
-
     // wait for all workflow runs to finish, and read completed runs into an object
     async function workflowRunTask (fixtureName, tagName) {
       workflowRun[fixtureName] = await waitForCompletedTagWorkflowRun('publish-release.yml', tagName)
