@@ -114,6 +114,18 @@ export async function getReleaseByTag (tag) {
   })
 }
 
+/**
+ * This function is a mess. Originally I was trying to use GitHub's API in a
+ * "sane" way, searching only for workflow runs related to each specific tag,
+ * using query parameters that made sense, restricting the results to completed
+ * runs, etc.
+ *
+ * Unfortunately, GitHub's API starting omitting workflow runs when specifying
+ * simple filters like "status=completed" - including workflow runs that
+ * definitely matched the filters. No idea why this should be the case. So
+ * instead, I was forced to use a unique workflow filename for each test branch,
+ * and manually filter the workflow runs myself.
+ */
 export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
   const octokit = createOctokit()
 
