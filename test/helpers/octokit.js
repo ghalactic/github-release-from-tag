@@ -129,10 +129,10 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
         owner,
         repo,
         workflow_id: fileName, // fileName does not include a path
-        event: 'push',
-        status: 'completed',
+        // event: 'push',
+        // status: 'completed',
         // created: `>${cutoff.toISOString()}`,
-        exclude_pull_requests: true,
+        // exclude_pull_requests: true,
       },
     )
 
