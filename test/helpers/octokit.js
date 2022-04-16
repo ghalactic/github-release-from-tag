@@ -130,6 +130,15 @@ export async function waitForCompletedTagWorkflowRun (fileName, tag) {
       per_page: 1, // pagination is not needed because we only want one result
     })
 
+    console.log({
+      owner,
+      repo,
+      workflow_id: fileName, // fileName does not include a path
+      branch: tag, // this seems to work, despite not being a branch
+      event: 'push',
+      status: 'completed',
+      per_page: 1, // pagination is not needed because we only want one result
+    })
     console.log(JSON.stringify(runs.data, null, 2))
 
     if (runs.data.total_count > 0) return runs.data.workflow_runs[0]

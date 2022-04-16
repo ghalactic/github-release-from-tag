@@ -36,7 +36,6 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
     // wait for all workflow runs to finish, and read completed runs into an object
     async function workflowRunTask (fixtureName, tagName) {
-      console.log({fixtureName, tagName})
       workflowRun[fixtureName] = await waitForCompletedTagWorkflowRun('publish-release.yml', tagName)
     }
 
