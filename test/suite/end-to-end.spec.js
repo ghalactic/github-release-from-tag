@@ -92,10 +92,10 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
 
         for (const text in fixture.releaseLinks) {
           const href = fixture.releaseLinks[text]
-          const elements = await page.$x(
-            '//*[@data-test-selector="body-content"]' +
-            `//a[text()=${JSON.stringify(text)})][@href=${JSON.stringify(href)}]`
-          )
+          const elements = await page.$x(`
+            //*[@data-test-selector="body-content"]
+            //a[text()=${JSON.stringify(text)}][@href=${JSON.stringify(href)}]
+          `)
 
           expect(elements.length).toBeGreaterThan(0)
         }
