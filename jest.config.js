@@ -1,5 +1,5 @@
 export default {
-  preset: 'es-jest',
+  preset: './jest.preset.js',
   transformIgnorePatterns: [
     'src/main.js',
   ],

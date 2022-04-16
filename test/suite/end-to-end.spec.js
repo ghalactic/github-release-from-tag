@@ -74,6 +74,10 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       expect(workflowRun[name].conclusion).toBe('success')
     })
 
+    it('should produce the expected release attributes', () => {
+      expect(tagRelease[name]).toMatchObject(fixture.releaseAttributes)
+    })
+
     it('should produce the expected release name', () => {
       expect(tagRelease[name].name).toBe(fixture.releaseName)
     })
@@ -82,8 +86,20 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
       expect(tagRelease[name].body).toBe(fixture.releaseBody)
     })
 
-    it('should produce the expected release attributes', () => {
-      expect(tagRelease[name]).toMatchObject(fixture.releaseAttributes)
-    })
+    if (Object.keys(fixture.releaseLinks).length > 0) {
+      it('should produce the expected release links', async () => {
+        await page.goto(tagRelease[name].html_url)
+
+        for (const text in fixture.releaseLinks) {
+          const href = fixture.releaseLinks[label]
+          const elements = await page.$x(`
+            //*[@data-test-selector="body-content"]
+            //a[text()=${JSON.stringify(text)})][@href=${JSON.stringify(href)}]
+          `)
+
+          expect(elements.length).toBeGreaterThan(0)
+        }
+      })
+    }
   })
 })

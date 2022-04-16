@@ -1,11 +1,10 @@
 import {Octokit} from 'octokit'
 
+import {owner, repo} from './fixture-repo.js'
 import {readRunId} from './gha.js'
 import {readEmptyTreeHash} from './git.js'
 import {sleep} from './timers.js'
 
-const owner = 'eloquent-fixtures'
-const repo = 'github-release-action-ci'
 let octokit
 
 export function createOctokit () {
