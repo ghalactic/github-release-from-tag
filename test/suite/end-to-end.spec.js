@@ -11,7 +11,7 @@ import {
   waitForCompletedTagWorkflowRun,
 } from '../helpers/octokit.js'
 
-const SETUP_TIMEOUT = 5 * 60 * 1000 // 5 minutes
+const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
