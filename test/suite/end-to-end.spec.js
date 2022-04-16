@@ -11,7 +11,7 @@ import {
   waitForCompletedTagWorkflowRuns,
 } from '../helpers/octokit.js'
 
-const SETUP_TIMEOUT = 1 * 60 * 1000 // 3 minutes
+const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
 describeOrSkip('End-to-end tests (only runs under GHA)', () => {
@@ -51,9 +51,6 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     }
 
     await workflowRunsTask()
-    console.log(JSON.stringify(workflowRun, null, 2))
-
-    console.log('WORKFLOW RUNS COMPLETED')
 
     // read all tag releases into an object
     async function tagReleaseTask (fixtureName, tagName) {
@@ -61,8 +58,6 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     }
 
     await Promise.all(fixtures.map(async ({name, tagName}) => tagReleaseTask(name, tagName)))
-
-    console.log('TAG RELEASES FOUND')
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
