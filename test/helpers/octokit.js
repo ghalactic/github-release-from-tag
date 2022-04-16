@@ -139,12 +139,9 @@ export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
     const tagRuns = {}
 
     pagination: for await (const page of pages) {
-      console.log(JSON.stringify(page, null, 2))
       const {data: runs} = page
 
       for (const run of runs) {
-        console.log(JSON.stringify(run, null, 2))
-
         // note that GitHub also uses the "head_branch" property for the tag name in a tag push run
         const {head_branch: runTag} = run
 
