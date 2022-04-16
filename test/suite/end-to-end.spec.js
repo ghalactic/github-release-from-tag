@@ -14,7 +14,7 @@ import {
 const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
 const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describe.skip
 
-describeOrSkip('End-to-end tests (only runs under GHA)', () => {
+describeOrSkip('End-to-end tests', () => {
   // read file-based fixtures
   const runId = readRunId()
   const fixtures = readFixtures(resolve(__dirname, '../fixture'), runId)
