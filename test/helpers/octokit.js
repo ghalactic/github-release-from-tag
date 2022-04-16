@@ -114,33 +114,51 @@ export async function getReleaseByTag (tag) {
   })
 }
 
-export async function waitForCompletedTagWorkflowRun (fileName, tag) {
+const COMPLETED_WORKFLOW_RUN_CUTOFF =  60 * 60 * 1000 // 1 hour
+
+export async function waitForCompletedTagWorkflowRuns (fileName, tags) {
   const octokit = createOctokit()
+  const cutoff = new Date(Date.now() - COMPLETED_WORKFLOW_RUN_CUTOFF)
 
   while (true) {
     await sleep(15 * 1000)
 
-    const runs = await octokit.rest.actions.listWorkflowRuns({
-      owner,
-      repo,
-      workflow_id: fileName, // fileName does not include a path
-      branch: tag, // this seems to work, despite not being a branch
-      event: 'push',
-      status: 'completed',
-      per_page: 1, // pagination is not needed because we only want one result
-    })
+    const pages = octokit.paginate.iterator(
+      octokit.rest.actions.listWorkflowRuns,
+      {
+        owner,
+        repo,
+        workflow_id: fileName, // fileName does not include a path
+        event: 'push',
+        status: 'completed',
+        created: `>${cutoff.toISOString()}`,
+        exclude_pull_requests: true,
+      },
+    )
 
-    console.log({
-      owner,
-      repo,
-      workflow_id: fileName, // fileName does not include a path
-      branch: tag, // this seems to work, despite not being a branch
-      event: 'push',
-      status: 'completed',
-      per_page: 1, // pagination is not needed because we only want one result
-    })
-    console.log(JSON.stringify(runs.data, null, 2))
+    const tagRuns = {}
 
-    if (runs.data.total_count > 0) return runs.data.workflow_runs[0]
+    pagination: for await (const {data: {workflow_runs: runs}} of pages) {
+      for (const run of runs) {
+        // note that GitHub also uses the "head_branch" property for the tag name in a tag push run
+        const {head_branch: runTag} = run
+
+        // skip unrelated workflow runs
+        if (!tags.includes(runTag)) continue
+
+        tagRuns[runTag] = run
+
+        // stop paginating as soon as all tag runs have been found
+        if (Object.keys(tagRuns).length >= tags.length) break pagination
+      }
+    }
+
+    // haven't found all tag runs yet
+    if (Object.keys(tagRuns).length < tags.length) continue
+
+    const tagRunsOrdered = []
+    for (const tag of tags) tagRunsOrdered = tagRuns[tag]
+
+    return tagRunsOrdered
   }
 }

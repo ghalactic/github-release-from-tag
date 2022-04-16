@@ -8,7 +8,7 @@ import {
   createLightweightTag,
   createOrphanBranchForCi,
   getReleaseByTag,
-  waitForCompletedTagWorkflowRun,
+  waitForCompletedTagWorkflowRuns,
 } from '../helpers/octokit.js'
 
 const SETUP_TIMEOUT = 1 * 60 * 1000 // 3 minutes
@@ -35,14 +35,20 @@ describeOrSkip('End-to-end tests (only runs under GHA)', () => {
     ])
 
     // wait for all workflow runs to finish, and read completed runs into an object
-    async function workflowRunTask (fixtureName, tagName) {
-      workflowRun[fixtureName] = await waitForCompletedTagWorkflowRun('publish-release.yml', tagName)
-    }
+    await (async () => {
+      const [
+        lightweightRun,
+        ...fixtureRuns
+      ] = await waitForCompletedTagWorkflowRuns('publish-release.yml', [
+        lightweightTagName,
+        ...fixtures.map(fixture => fixture.tagName),
+      ])
 
-    await Promise.all([
-      workflowRunTask('lightweight', lightweightTagName),
-      ...fixtures.map(async ({name, tagName}) => workflowRunTask(name, tagName))
-    ])
+      workflowRun.lightweight = lightweightRun
+      fixtures.forEach((fixture, index) => {
+        workflowRun[fixture.name] = fixtureRuns[index]
+      })
+    })
 
     console.log('WORKFLOW RUNS COMPLETED')
 
