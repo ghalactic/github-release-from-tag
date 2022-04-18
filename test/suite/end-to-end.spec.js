@@ -36,7 +36,7 @@ describeOrSkip('End-to-end tests', () => {
 
     // create all tags
     async function createTagTask ({name, tagName, tagAnnotation}) {
-      tagData[fixtureName] = await createTag(branchData[name].headSha, tagName, tagAnnotation)
+      tagData[name] = await createTag(branchData[name].headSha, tagName, tagAnnotation)
     }
     await Promise.all(allFixtureEntries.map(([, fixture]) => createTagTask(fixture)))
 
@@ -54,23 +54,23 @@ describeOrSkip('End-to-end tests', () => {
     await Promise.all(successFixtureEntries.map(([, fixture]) => tagReleaseTask(fixture)))
   }, SETUP_TIMEOUT)
 
-  describe.each(failureFixtureEntries)('for workflows that fail (%s)', (fixtureName, fixture) => {
+  describe.each(failureFixtureEntries)('for workflows that fail (%s)', name => {
     it('should produce a workflow run that concludes in failure', () => {
-      expect(workflowRunData[fixtureName].conclusion).toBe('failure')
+      expect(workflowRunData[name].conclusion).toBe('failure')
     })
   })
 
-  describe.each(successFixtureEntries)('for workflows that succeed (%s)', (fixtureName, fixture) => {
+  describe.each(successFixtureEntries)('for workflows that succeed (%s)', (name, fixture) => {
     beforeAll(async () => {
-      await page.goto(tagReleaseData[fixtureName].html_url)
+      await page.goto(tagReleaseData[name].html_url)
     })
 
     it('should produce a workflow run that concludes in success', () => {
-      expect(workflowRunData[fixtureName].conclusion).toBe('success')
+      expect(workflowRunData[name].conclusion).toBe('success')
     })
 
     it('should produce the expected release attributes', () => {
-      expect(tagReleaseData[fixtureName]).toMatchObject(fixture.releaseAttributes)
+      expect(tagReleaseData[name]).toMatchObject(fixture.releaseAttributes)
     })
 
     it.each(Object.entries(fixture.releaseBody))(
