@@ -7,7 +7,7 @@ import {
   createTag,
   createOrphanBranchForCi,
   getReleaseByTag,
-  waitForCompletedTagWorkflowRuns,
+  waitForCompletedTagWorkflowRun,
 } from '../helpers/octokit.js'
 
 const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
