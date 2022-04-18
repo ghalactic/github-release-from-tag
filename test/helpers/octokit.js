@@ -56,7 +56,7 @@ export async function createOrphanBranchForCi (suffix, workflowSteps) {
   const {commit, ref} = await createOrphanBranch(branch)
 
   const workflow = dump({
-    name: branch,
+    name: `ci-${readRunId()}`,
     on: {
       push: {
         tags: ['*'],
