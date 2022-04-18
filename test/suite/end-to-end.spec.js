@@ -61,6 +61,8 @@ describeOrSkip('End-to-end tests', () => {
   })
 
   describe.each(successFixtureEntries)('for workflows that succeed (%s)', (name, fixture) => {
+    const releaseBodyEntries = Object.entries(fixture.releaseBody)
+
     beforeAll(async () => {
       const htmlUrl = tagReleaseData[name]?.html_url
 
@@ -75,13 +77,15 @@ describeOrSkip('End-to-end tests', () => {
       expect(tagReleaseData[name]).toMatchObject(fixture.releaseAttributes)
     })
 
-    it.each(Object.entries(fixture.releaseBody))(
-      'should produce the expected release body elements (%s)',
-      async (_, expression) => {
-        const elements = await page.$x(`//*[@data-test-selector="body-content"]${expression}`)
+    if (releaseBodyEntries.length > 0) {
+      it.each(releaseBodyEntries)(
+        'should produce the expected release body elements (%s)',
+        async (_, expression) => {
+          const elements = await page.$x(`//*[@data-test-selector="body-content"]${expression}`)
 
-        expect(elements.length).toBeGreaterThan(0)
-      },
-    )
+          expect(elements.length).toBeGreaterThan(0)
+        },
+      )
+    }
   })
 })

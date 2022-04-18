@@ -119,16 +119,29 @@ export async function createTag(sha, tag, annotation) {
   return {object, ref}
 }
 
+/**
+ * Yet another function that has to do everything the hard way because of
+ * GitHub's API. Unfortunately, you cannot look up a draft release by tag, so
+ * this function must list all releases, and find the release manually.
+ */
 export async function getReleaseByTag (tag) {
   const octokit = createOctokit()
 
-  const {data} = await octokit.rest.repos.getReleaseByTag({
-    owner,
-    repo,
-    tag,
-  })
+  const pages = octokit.paginate.iterator(
+    octokit.rest.repos.listReleases,
+    {
+      owner,
+      repo,
+    },
+  )
 
-  return data
+  for await (const {data: tags} of pages) {
+    for (const data of tags) {
+      if (data.tag_name === tag) return data
+    }
+  }
+
+  throw new Error(`Unable to find release for tag ${JSON.stringify(tag)}`)
 }
 
 /**

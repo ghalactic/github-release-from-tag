@@ -1,1 +1,8 @@
-has a body: //*[normalize-space()='this should form one paragraph']
+# Currently, draft release bodies cannot be end-to-end tested. The release body
+# needs to be requested via a browser in order to properly evaluate the final
+# HTML that gets produced.
+#
+# Since draft releases cannot be seen by unauthenticated users, the browser
+# would need to sign in to GitHub web UI in order to read release bodies for
+# draft releases. The effort involved outweighs the benefits in this case.
+{}
