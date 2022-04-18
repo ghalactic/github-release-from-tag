@@ -1,6 +1,7 @@
 export async function createOrUpdateRelease ({
   group,
   info,
+  isDraft,
   isStable,
   owner,
   releaseBody,
@@ -15,7 +16,7 @@ export async function createOrUpdateRelease ({
     tag_name: tag,
     name: tagSubject,
     body: releaseBody,
-    draft: false,
+    draft: isDraft,
     prerelease: !isStable,
   }
 

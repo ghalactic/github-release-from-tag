@@ -55,6 +55,7 @@ async function main () {
     return
   }
 
+  const isDraft = getInput('draft') === 'true'
   const {rest: {markdown, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
@@ -68,6 +69,7 @@ async function main () {
   const [release, wasCreated] = await createOrUpdateRelease({
     group,
     info,
+    isDraft,
     isStable,
     owner,
     releaseBody,
