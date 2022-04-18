@@ -55,31 +55,35 @@ export async function createOrphanBranchForCi (suffix, workflowSteps) {
   const branch = `ci-${readRunId()}-${suffix}`
   const {commit, ref} = await createOrphanBranch(branch)
 
+  const workflow = dump({
+    name: branch,
+    on: {
+      push: {
+        tags: ['*'],
+      },
+    },
+    jobs: {
+      publish: {
+        'runs-on': 'ubuntu-latest',
+        name: 'Publish release',
+        steps: [
+          {
+            name: 'Checkout',
+            uses: 'actions/checkout@v2',
+          },
+
+          ...load(workflowSteps.replace('{action}', `eloquent/github-release-action@${actionSha}`)),
+        ],
+      },
+    },
+  })
+
+  console.log(workflow)
+
   const workflowFile = await createFile(
     branch,
     `.github/workflows/publish-release.${branch}.yml`,
-    dump({
-      name: branch,
-      on: {
-        push: {
-          tags: ['*'],
-        },
-      },
-      jobs: {
-        publish: {
-          'runs-on': 'ubuntu-latest',
-          name: 'Publish release',
-          steps: [
-            {
-              name: 'Checkout',
-              uses: 'actions/checkout@v2',
-            },
-
-            ...load(workflowSteps.replace('{action}', `eloquent/github-release-action@${actionSha}`)),
-          ],
-        },
-      },
-    }),
+    workflow,
   )
 
   const headSha = workflowFile.commit.sha
