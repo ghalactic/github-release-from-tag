@@ -70,10 +70,10 @@ describeOrSkip('End-to-end tests', () => {
   })
 
   describe.each(fixtureData)('for annotated tags (%s)', (name, fixture) => {
-    const releaseLinksData = Object.entries(fixture.releaseLinks)
+    const releaseBodyData = Object.entries(fixture.releaseBody)
 
     beforeAll(async () => {
-      if (releaseLinksData.length > 0) await page.goto(tagRelease[name].html_url)
+      await page.goto(tagRelease[name].html_url)
     })
 
     it('should conclude in success', () => {
@@ -88,15 +88,8 @@ describeOrSkip('End-to-end tests', () => {
       expect(tagRelease[name].name).toBe(fixture.releaseName)
     })
 
-    it('should produce the expected release body', () => {
-      expect(tagRelease[name].body).toBe(fixture.releaseBody)
-    })
-
-    it.each(releaseLinksData)('should produce the expected release links (link %j)', async (text, href) => {
-      const elements = await page.$x(`
-        //*[@data-test-selector="body-content"]
-        //a[text()=${JSON.stringify(text)}][@href=${JSON.stringify(href)}]
-      `)
+    it.each(releaseBodyData)('should produce the expected release body elements (%s)', async (_, expression) => {
+      const elements = await page.$x(`//*[@data-test-selector="body-content"]${expression}`)
 
       expect(elements.length).toBeGreaterThan(0)
     })

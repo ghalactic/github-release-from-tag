@@ -22,14 +22,13 @@ export function readFixtures (fixturesPath, runId) {
 
 function readFixture (runId, fixturePath, name) {
   const releaseAttributes = JSON.parse(readFileSync(join(fixturePath, 'release-attributes.json')))
-  const releaseBody = readFileSync(join(fixturePath, 'release-body.html'))
-  const releaseLinks = JSON.parse(readFileSync(join(fixturePath, 'release-links.json')))
+  const releaseBody = JSON.parse(readFileSync(join(fixturePath, 'release-body.json')))
   const releaseName = readFileSync(join(fixturePath, 'release-name'))
   const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation'))
   const tagName = readFileSync(join(fixturePath, 'tag-name'))
 
-  for (const text in releaseLinks) {
-    releaseLinks[text] = releaseLinks[text]
+  for (const label in releaseBody) {
+    releaseBody[label] = releaseBody[label]
       .replace('{owner}', owner)
       .replace('{repo}', repo)
   }
@@ -37,8 +36,7 @@ function readFixture (runId, fixturePath, name) {
   return {
     name,
     releaseAttributes,
-    releaseBody: releaseBody.toString(),
-    releaseLinks,
+    releaseBody,
     releaseName: releaseName.toString().trim(),
     tagAnnotation: tagAnnotation.toString(),
     tagName: buildTagName(tagName.toString().trim(), runId, name),
