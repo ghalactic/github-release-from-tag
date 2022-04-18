@@ -7,6 +7,7 @@ import {
   createTag,
   createOrphanBranchForCi,
   getReleaseByTag,
+  listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
 } from '../helpers/octokit.js'
 
@@ -25,6 +26,7 @@ describeOrSkip('End-to-end tests', () => {
   const branchData = {}
   const tagData = {}
   const workflowRunData = {}
+  const workflowRunAnnotationData = {}
   const tagReleaseData = {}
 
   beforeAll(async () => {
@@ -46,6 +48,12 @@ describeOrSkip('End-to-end tests', () => {
       workflowRunData[name] = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
     }
     await Promise.all(allFixtureEntries.map(([, fixture]) => workflowRunTask(fixture)))
+
+    // read all tag workflow run annotations into an object
+    async function workflowRunAnnotationsTask ({name}) {
+      workflowRunAnnotationData[name] = await listAnnotationsByWorkflowRun(workflowRunData[name])
+    }
+    await Promise.all(successFixtureEntries.map(([, fixture]) => workflowRunAnnotationsTask(fixture)))
 
     // read all tag releases into an object
     async function tagReleaseTask ({name, tagName}) {
@@ -71,6 +79,17 @@ describeOrSkip('End-to-end tests', () => {
 
     it('should produce a workflow run that concludes in success', () => {
       expect(workflowRunData[name].conclusion).toBe('success')
+    })
+
+    it('should annotate the workflow run with a link to the release', () => {
+      const annotation = workflowRunAnnotationData[name].find(({title}) => title.startsWith('Released - '))
+      const release = tagReleaseData[name]
+
+      expect(annotation).toMatchObject({
+        annotation_level: 'notice',
+        title: `Released - ${release.name}`,
+        message: `Created ${release.html_url}`,
+      })
     })
 
     it('should produce the expected release attributes', () => {

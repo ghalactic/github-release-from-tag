@@ -144,13 +144,14 @@ export async function getReleaseByTag (tag) {
   throw new Error(`Unable to find release for tag ${JSON.stringify(tag)}`)
 }
 
-export async function listAnnotationsByWorkflowRun (checkSuiteId) {
+export async function listAnnotationsByWorkflowRun (workflowRun) {
   const octokit = createOctokit()
 
+  const {check_suite_id} = workflowRun
   const {data: {check_runs: checkRuns}} = await octokit.rest.checks.listForSuite({
     owner,
     repo,
-    check_suite_id: checkSuiteId,
+    check_suite_id,
     per_page: 1,
   })
 
