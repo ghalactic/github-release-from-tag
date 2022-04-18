@@ -1,6 +1,6 @@
 {
   "heading-1": "//h1[normalize-space()='Heading 1']",
-  "heading-2": "//h2[normalize-space()='Heading 2']",
+  "heading-2": "//h3[normalize-space()='Heading 2']",
   "paragraph": "//*[normalize-space()='body-a body-b']",
   "issue-link": "//a[@href='https://github.com/{owner}/{repo}/issues/1'][normalize-space()='#1']"
 }
