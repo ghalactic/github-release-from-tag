@@ -14,18 +14,28 @@ export function readSuccessFixtures (fixturesPath, runId) {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue
 
-    const {name} = entry
-    fixtures[name] = readSuccessFixture(runId, join(fixturesPath, name), name)
+    const name = `success-${entry.name}`
+    fixtures[name] = readSuccessFixture(runId, join(fixturesPath, entry.name), name)
   }
 
   return fixtures
 }
 
-function readSuccessFixture (runId, fixturePath, name) {
-  const releaseAttributes = JSON.parse(readFileSync(join(fixturePath, 'release-attributes.json')))
-  const releaseBody = JSON.parse(readFileSync(join(fixturePath, 'release-body.json')))
+function readFixture (runId, fixturePath, name) {
   const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation')).toString()
   const tagName = buildTagName(readFileSync(join(fixturePath, 'tag-name')).toString().trim(), runId, name)
+
+  return {
+    name,
+    tagAnnotation,
+    tagName,
+  }
+}
+
+function readSuccessFixture (runId, fixturePath, name) {
+  const fixture = readFixture(runId, fixturePath, name)
+  const releaseAttributes = JSON.parse(readFileSync(join(fixturePath, 'release-attributes.json')))
+  const releaseBody = JSON.parse(readFileSync(join(fixturePath, 'release-body.json')))
 
   for (const label in releaseBody) {
     releaseBody[label] = releaseBody[label]
@@ -34,10 +44,8 @@ function readSuccessFixture (runId, fixturePath, name) {
   }
 
   return {
-    name,
+    ...fixture,
     releaseAttributes,
     releaseBody,
-    tagAnnotation,
-    tagName,
   }
 }

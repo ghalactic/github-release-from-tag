@@ -33,7 +33,7 @@ describeOrSkip('End-to-end tests', () => {
     // create all tags in parallel
     await Promise.all([
       createLightweightTag(headSha, lightweightTagName),
-      ...fixtures.map(async ({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
+      ...successFixtures.map(({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
     ])
 
     // wait for all workflow runs to finish, and read completed runs into an object
@@ -43,11 +43,11 @@ describeOrSkip('End-to-end tests', () => {
         ...fixtureRuns
       ] = await waitForCompletedTagWorkflowRuns(workflowFileName, [
         lightweightTagName,
-        ...fixtures.map(fixture => fixture.tagName),
+        ...successFixtures.map(fixture => fixture.tagName),
       ])
 
       workflowRun.lightweight = lightweightRun
-      fixtures.forEach((fixture, index) => {
+      successFixtures.forEach((fixture, index) => {
         workflowRun[fixture.name] = fixtureRuns[index]
       })
     }
@@ -59,7 +59,7 @@ describeOrSkip('End-to-end tests', () => {
       tagRelease[fixtureName] = await getReleaseByTag(tagName)
     }
 
-    await Promise.all(fixtures.map(async ({name, tagName}) => tagReleaseTask(name, tagName)))
+    await Promise.all(successFixtures.map(({name, tagName}) => tagReleaseTask(name, tagName)))
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
