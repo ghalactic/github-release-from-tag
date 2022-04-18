@@ -78,8 +78,6 @@ export async function createOrphanBranchForCi (suffix, workflowSteps) {
     },
   })
 
-  console.log(workflow)
-
   const workflowFile = await createFile(
     branch,
     `.github/workflows/publish-release.${branch}.yml`,
