@@ -22,59 +22,55 @@ describeOrSkip('End-to-end tests', () => {
   const successFixtureEntries = Object.entries(successFixtures)
   const allFixtureEntries = [...failureFixtureEntries, ...successFixtureEntries]
 
-  const workflowRun = {}
-  const tagRelease = {}
+  const branchData = {}
+  const tagData = {}
+  const workflowRunData = {}
+  const tagReleaseData = {}
 
   beforeAll(async () => {
-    // create a new branch
-    const {workflowFile} = await createOrphanBranchForCi()
-    const workflowFileName = workflowFile.content.name
-    const headSha = workflowFile.commit.sha
+    // create all branches
+    async function createBranchTask ({name, workflowSteps}) {
+      branchData[name] = await createOrphanBranchForCi(name, workflowSteps)
+    }
+    await Promise.all(allFixtureEntries.map(([, fixture]) => createBranchTask(fixture)))
 
-    // create all tags in parallel
-    await Promise.all(allFixtureEntries.map(
-      ([, {tagAnnotation, tagName}]) => createTag(headSha, tagName, tagAnnotation)
-    ))
+    // create all tags
+    async function createTagTask ({name, tagName, tagAnnotation}) {
+      tagData[fixtureName] = await createTag(branchData[name].headSha, tagName, tagAnnotation)
+    }
+    await Promise.all(allFixtureEntries.map(([, fixture]) => createTagTask(fixture)))
 
     // wait for all workflow runs to finish, and read completed runs into an object
-    async function workflowRunsTask () {
-      const runs = await waitForCompletedTagWorkflowRuns(
-        workflowFileName,
-        allFixtureEntries.map(([, fixture]) => fixture.tagName),
-      )
-
-      allFixtureEntries.forEach(([fixtureName], index) => {
-        workflowRun[fixtureName] = runs[index]
-      })
+    async function workflowRunTask ({name, tagName}) {
+      const workflowFileName = branchData[name].workflowFile.content.name
+      workflowRunData[name] = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
     }
-
-    await workflowRunsTask()
+    await Promise.all(allFixtureEntries.map(([, fixture]) => workflowRunTask(fixture)))
 
     // read all tag releases into an object
-    async function tagReleaseTask (fixtureName, tagName) {
-      tagRelease[fixtureName] = await getReleaseByTag(tagName)
+    async function tagReleaseTask ({name, tagName}) {
+      tagReleaseData[name] = await getReleaseByTag(tagName)
     }
-
-    await Promise.all(successFixtureEntries.map(([fixtureName, {tagName}]) => tagReleaseTask(fixtureName, tagName)))
+    await Promise.all(successFixtureEntries.map(([, fixture]) => tagReleaseTask(fixture)))
   }, SETUP_TIMEOUT)
 
   describe.each(failureFixtureEntries)('for workflows that fail (%s)', (fixtureName, fixture) => {
     it('should produce a workflow run that concludes in failure', () => {
-      expect(workflowRun[fixtureName].conclusion).toBe('failure')
+      expect(workflowRunData[fixtureName].conclusion).toBe('failure')
     })
   })
 
   describe.each(successFixtureEntries)('for workflows that succeed (%s)', (fixtureName, fixture) => {
     beforeAll(async () => {
-      await page.goto(tagRelease[fixtureName].html_url)
+      await page.goto(tagReleaseData[fixtureName].html_url)
     })
 
     it('should produce a workflow run that concludes in success', () => {
-      expect(workflowRun[fixtureName].conclusion).toBe('success')
+      expect(workflowRunData[fixtureName].conclusion).toBe('success')
     })
 
     it('should produce the expected release attributes', () => {
-      expect(tagRelease[fixtureName]).toMatchObject(fixture.releaseAttributes)
+      expect(tagReleaseData[fixtureName]).toMatchObject(fixture.releaseAttributes)
     })
 
     it.each(Object.entries(fixture.releaseBody))(

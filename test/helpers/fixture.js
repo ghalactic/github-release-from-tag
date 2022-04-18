@@ -38,11 +38,13 @@ function buildTagName (version, runId, label) {
 function readFixture (runId, fixturePath, name) {
   const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation')).toString().trim()
   const tagName = buildTagName(readFileSync(join(fixturePath, 'tag-name')).toString().trim(), runId, name)
+  const workflowSteps = readFileSync(join(fixturePath, 'workflow-steps.yml')).toString()
 
   return {
     name,
     tagAnnotation,
     tagName,
+    workflowSteps,
   }
 }
 
