@@ -1,13 +1,16 @@
 name: 'GitHub Release from Tag'
-author: 'Eloquent'
-branding:
-  icon: 'tag'
-  color: 'green'
 description: 'Publish GitHub releases from tags, supporting Markdown and SemVer'
+author: 'Eloquent'
 inputs:
+  draft:
+    description: Set to "true" to produce releases in a draft state
+    default: 'false'
   token:
     description: The GitHub token to use when managing releases
     default: ${{ github.token }}
+branding:
+  icon: 'tag'
+  color: 'green'
 runs:
   using: 'docker'
   image: 'Dockerfile'
