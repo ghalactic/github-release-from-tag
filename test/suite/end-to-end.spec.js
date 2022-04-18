@@ -62,7 +62,9 @@ describeOrSkip('End-to-end tests', () => {
 
   describe.each(successFixtureEntries)('for workflows that succeed (%s)', (name, fixture) => {
     beforeAll(async () => {
-      await page.goto(tagReleaseData[name].html_url)
+      const htmlUrl = tagReleaseData[name]?.html_url
+
+      if (htmlUrl != null) await page.goto(htmlUrl)
     })
 
     it('should produce a workflow run that concludes in success', () => {
