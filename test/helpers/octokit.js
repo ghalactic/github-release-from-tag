@@ -144,6 +144,28 @@ export async function getReleaseByTag (tag) {
   throw new Error(`Unable to find release for tag ${JSON.stringify(tag)}`)
 }
 
+export async function listAnnotationsByWorkflowRun (checkSuiteId) {
+  const octokit = createOctokit()
+
+  const {data: {check_runs: checkRuns}} = await octokit.rest.checks.listForSuite({
+    owner,
+    repo,
+    check_suite_id: checkSuiteId,
+    per_page: 1,
+  })
+
+  if (checkRuns.length < 1) throw new Error(`Unable to locate check runs for check suite ${checkSuiteId}`)
+
+  return octokit.paginate(
+    octokit.rest.checks.listAnnotations,
+    {
+      owner,
+      repo,
+      check_run_id: checkRuns[0].id,
+    },
+  )
+}
+
 /**
  * This function is a mess. Originally I was trying to use GitHub's API in a
  * "sane" way, searching only for workflow runs related to each specific tag,
