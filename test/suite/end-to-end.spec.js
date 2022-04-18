@@ -4,8 +4,7 @@ import {buildTagName, readSuccessFixtures} from '../helpers/fixture.js'
 import {readRunId} from '../helpers/gha.js'
 
 import {
-  createAnnotatedTag,
-  createLightweightTag,
+  createTag,
   createOrphanBranchForCi,
   getReleaseByTag,
   waitForCompletedTagWorkflowRuns,
@@ -33,10 +32,10 @@ describeOrSkip('End-to-end tests', () => {
 
     // create all tags in parallel
     await Promise.all([
-      createLightweightTag(headSha, lightweightTagName),
+      createTag(headSha, lightweightTagName),
 
       ...successFixtureEntries.map(
-        ([, {tagAnnotation, tagName}]) => createAnnotatedTag(headSha, tagName, tagAnnotation)
+        ([, {tagAnnotation, tagName}]) => createTag(headSha, tagName, tagAnnotation)
       ),
     ])
 

@@ -77,34 +77,34 @@ jobs:
   return {commit, ref, workflowFile}
 }
 
-export async function createAnnotatedTag (sha, tag, message) {
+export async function createTag(sha, tag, annotation) {
   const octokit = createOctokit()
 
-  const {data: object} = await octokit.rest.git.createTag({
-    owner,
-    repo,
-    type: 'commit',
-    object: sha,
-    tag,
-    message,
-  })
+  let targetSha = sha
+  let object
 
-  const ref = await createLightweightTag(object.sha, tag)
+  if (typeof annotation === 'string' && annotation.length > 0) {
+    const {data} = await octokit.rest.git.createTag({
+      owner,
+      repo,
+      type: 'commit',
+      object: sha,
+      tag,
+      message: annotation,
+    })
 
-  return {object, ref}
-}
+    object = data
+    targetSha = object.sha
+  }
 
-export async function createLightweightTag (sha, tag) {
-  const octokit = createOctokit()
-
-  const {data} = await octokit.rest.git.createRef({
+  const {data: ref} = await octokit.rest.git.createRef({
     owner,
     repo,
     ref: `refs/tags/${tag}`,
-    sha,
+    sha: targetSha,
   })
 
-  return data
+  return {object, ref}
 }
 
 export async function getReleaseByTag (tag) {
