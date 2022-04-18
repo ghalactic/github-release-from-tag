@@ -1,6 +1,6 @@
 import {resolve} from 'path'
 
-import {buildTagName, readSuccessFixtures} from '../helpers/fixture.js'
+import {readFailureFixtures, readSuccessFixtures} from '../helpers/fixture.js'
 import {readRunId} from '../helpers/gha.js'
 
 import {
@@ -16,42 +16,35 @@ const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describ
 describeOrSkip('End-to-end tests', () => {
   // read file-based fixtures
   const runId = readRunId()
+  const failureFixtures = readFailureFixtures(resolve(__dirname, '../fixture/failure'), runId)
+  const failureFixtureEntries = Object.entries(failureFixtures)
   const successFixtures = readSuccessFixtures(resolve(__dirname, '../fixture/success'), runId)
   const successFixtureEntries = Object.entries(successFixtures)
+  const allFixtureEntries = [...failureFixtureEntries, ...successFixtureEntries]
 
   const workflowRun = {}
   const tagRelease = {}
 
   beforeAll(async () => {
-    const lightweightTagName = buildTagName('0.1.0', runId, 'lightweight')
-
     // create a new branch
     const {workflowFile} = await createOrphanBranchForCi()
     const workflowFileName = workflowFile.content.name
     const headSha = workflowFile.commit.sha
 
     // create all tags in parallel
-    await Promise.all([
-      createTag(headSha, lightweightTagName),
-
-      ...successFixtureEntries.map(
-        ([, {tagAnnotation, tagName}]) => createTag(headSha, tagName, tagAnnotation)
-      ),
-    ])
+    await Promise.all(allFixtureEntries.map(
+      ([, {tagAnnotation, tagName}]) => createTag(headSha, tagName, tagAnnotation)
+    ))
 
     // wait for all workflow runs to finish, and read completed runs into an object
     async function workflowRunsTask () {
-      const [
-        lightweightRun,
-        ...fixtureRuns
-      ] = await waitForCompletedTagWorkflowRuns(workflowFileName, [
-        lightweightTagName,
-        ...successFixtureEntries.map(([, fixture]) => fixture.tagName),
-      ])
+      const runs = await waitForCompletedTagWorkflowRuns(
+        workflowFileName,
+        allFixtureEntries.map(([, fixture]) => fixture.tagName),
+      )
 
-      workflowRun.lightweight = lightweightRun
-      successFixtureEntries.forEach(([fixtureName], index) => {
-        workflowRun[fixtureName] = fixtureRuns[index]
+      allFixtureEntries.forEach(([fixtureName], index) => {
+        workflowRun[fixtureName] = runs[index]
       })
     }
 
@@ -65,9 +58,9 @@ describeOrSkip('End-to-end tests', () => {
     await Promise.all(successFixtureEntries.map(([fixtureName, {tagName}]) => tagReleaseTask(fixtureName, tagName)))
   }, SETUP_TIMEOUT)
 
-  describe('for lightweight tags', () => {
-    it('should conclude in failure', () => {
-      expect(workflowRun.lightweight.conclusion).toBe('failure')
+  describe.each(failureFixtureEntries)('for workflows that fail (%s)', (fixtureName, fixture) => {
+    it('should produce a workflow run that concludes in failure', () => {
+      expect(workflowRun[fixtureName].conclusion).toBe('failure')
     })
   })
 

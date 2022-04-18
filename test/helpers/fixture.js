@@ -3,8 +3,18 @@ import {join} from 'path'
 
 import {owner, repo} from './fixture-repo.js'
 
-export function buildTagName (version, runId, label) {
-  return `${version}+ci-${runId}-${label}`
+export function readFailureFixtures (fixturesPath, runId) {
+  const entries = readdirSync(fixturesPath, {withFileTypes: true})
+  const fixtures = {}
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+
+    const name = `failure-${entry.name}`
+    fixtures[name] = readFixture(runId, join(fixturesPath, entry.name), name)
+  }
+
+  return fixtures
 }
 
 export function readSuccessFixtures (fixturesPath, runId) {
@@ -21,8 +31,12 @@ export function readSuccessFixtures (fixturesPath, runId) {
   return fixtures
 }
 
+function buildTagName (version, runId, label) {
+  return `${version}+ci-${runId}-${label}`
+}
+
 function readFixture (runId, fixturePath, name) {
-  const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation')).toString()
+  const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation')).toString().trim()
   const tagName = buildTagName(readFileSync(join(fixturePath, 'tag-name')).toString().trim(), runId, name)
 
   return {
