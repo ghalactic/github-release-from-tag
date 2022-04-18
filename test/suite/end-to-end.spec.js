@@ -18,6 +18,7 @@ describeOrSkip('End-to-end tests', () => {
   // read file-based fixtures
   const runId = readRunId()
   const successFixtures = readSuccessFixtures(resolve(__dirname, '../fixture/success'), runId)
+  const successFixtureEntries = Object.entries(successFixtures)
 
   const workflowRun = {}
   const tagRelease = {}
@@ -33,7 +34,10 @@ describeOrSkip('End-to-end tests', () => {
     // create all tags in parallel
     await Promise.all([
       createLightweightTag(headSha, lightweightTagName),
-      ...successFixtures.map(({tagAnnotation, tagName}) => createAnnotatedTag(headSha, tagName, tagAnnotation)),
+
+      ...successFixtureEntries.map(
+        ([, {tagAnnotation, tagName}]) => createAnnotatedTag(headSha, tagName, tagAnnotation)
+      ),
     ])
 
     // wait for all workflow runs to finish, and read completed runs into an object
@@ -43,12 +47,12 @@ describeOrSkip('End-to-end tests', () => {
         ...fixtureRuns
       ] = await waitForCompletedTagWorkflowRuns(workflowFileName, [
         lightweightTagName,
-        ...successFixtures.map(fixture => fixture.tagName),
+        ...successFixtureEntries.map(([, fixture]) => fixture.tagName),
       ])
 
       workflowRun.lightweight = lightweightRun
-      successFixtures.forEach((fixture, index) => {
-        workflowRun[fixture.name] = fixtureRuns[index]
+      successFixtureEntries.forEach(([fixtureName], index) => {
+        workflowRun[fixtureName] = fixtureRuns[index]
       })
     }
 
@@ -59,7 +63,7 @@ describeOrSkip('End-to-end tests', () => {
       tagRelease[fixtureName] = await getReleaseByTag(tagName)
     }
 
-    await Promise.all(successFixtures.map(({name, tagName}) => tagReleaseTask(name, tagName)))
+    await Promise.all(successFixtureEntries.map(([fixtureName, {tagName}]) => tagReleaseTask(fixtureName, tagName)))
   }, SETUP_TIMEOUT)
 
   describe('for lightweight tags', () => {
@@ -68,13 +72,13 @@ describeOrSkip('End-to-end tests', () => {
     })
   })
 
-  describe.each(Object.entries(successFixtures))('for workflows that succeed (%s)', (name, fixture) => {
+  describe.each(successFixtureEntries)('for workflows that succeed (%s)', (fixtureName, fixture) => {
     beforeAll(async () => {
-      await page.goto(tagRelease[name].html_url)
+      await page.goto(tagRelease[fixtureName].html_url)
     })
 
     it('should produce the expected release attributes', () => {
-      expect(tagRelease[name]).toMatchObject(fixture.releaseAttributes)
+      expect(tagRelease[fixtureName]).toMatchObject(fixture.releaseAttributes)
     })
 
     it.each(Object.entries(fixture.releaseBody))(
