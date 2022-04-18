@@ -5,7 +5,7 @@ export function readRunId () {
     GITHUB_RUN_ATTEMPT: attempt = '',
   } = process.env
 
-  if (id === '' || number === '' || attempt === '') return undefined
+  if (id !== '' && number !== '' && attempt !== '') return `${id}.${number}.${attempt}`
 
-  return `${id}.${number}.${attempt}`
+  return `manual.${(Math.random() + 1).toString(36).substring(2)}`
 }
