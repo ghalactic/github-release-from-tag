@@ -149,24 +149,25 @@ export async function getReleaseByTag (tag) {
   while (true) {
     await sleep(15 * 1000)
 
-    const {data: runs} = await octokit.rest.actions.listWorkflowRuns({
+    const {data: {workflow_runs: [run]}} = await octokit.rest.actions.listWorkflowRuns({
       owner,
       repo,
       workflow_id: fileName, // fileName does not include a path
       per_page: 1, // fileName is unique - there should only ever be one run
     })
 
-    for (const run of runs) {
-      const {
-        event,
-        head_branch: runTag, // note that GitHub also uses this property for the tag name in a tag push run
-        status,
-      } = run
+    // run has not yet been created
+    if (run == null) continue
 
-      // skip incomplete or unrelated workflow runs
-      if (event !== 'push' || status !== 'completed' || runTag !== tag) continue
+    const {
+      event,
+      head_branch: runTag, // note that GitHub also uses this property for the tag name in a tag push run
+      status,
+    } = run
 
-      return runs.workflow_runs[0]
-    }
+    // skip incomplete or unrelated workflow runs
+    if (event !== 'push' || status !== 'completed' || runTag !== tag) continue
+
+    return run
   }
 }
