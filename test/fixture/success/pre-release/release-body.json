@@ -1,3 +1,0 @@
-{
-  "has a body": "//*[normalize-space()='this should form one paragraph']"
-}

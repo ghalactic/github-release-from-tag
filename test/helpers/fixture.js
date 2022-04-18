@@ -1,4 +1,5 @@
 import {readdirSync, readFileSync} from 'fs'
+import {load} from 'js-yaml'
 import {join} from 'path'
 
 import {owner, repo} from './fixture-repo.js'
@@ -50,8 +51,8 @@ function readFixture (runId, fixturePath, name) {
 
 function readSuccessFixture (runId, fixturePath, name) {
   const fixture = readFixture(runId, fixturePath, name)
-  const releaseAttributes = JSON.parse(readFileSync(join(fixturePath, 'release-attributes.json')))
-  const releaseBody = JSON.parse(readFileSync(join(fixturePath, 'release-body.json')))
+  const releaseAttributes = load(readFileSync(join(fixturePath, 'release-attributes.yml')))
+  const releaseBody = load(readFileSync(join(fixturePath, 'release-body.yml')))
 
   for (const label in releaseBody) {
     releaseBody[label] = releaseBody[label]
