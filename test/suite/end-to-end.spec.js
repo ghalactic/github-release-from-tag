@@ -77,6 +77,10 @@ describeOrSkip('End-to-end tests', () => {
       await page.goto(tagRelease[fixtureName].html_url)
     })
 
+    it('should produce a workflow run that concludes in success', () => {
+      expect(workflowRun[fixtureName].conclusion).toBe('success')
+    })
+
     it('should produce the expected release attributes', () => {
       expect(tagRelease[fixtureName]).toMatchObject(fixture.releaseAttributes)
     })
