@@ -7,25 +7,25 @@ export function buildTagName (version, runId, label) {
   return `${version}+ci-${runId}-${label}`
 }
 
-export function readFixtures (fixturesPath, runId) {
+export function readSuccessFixtures (fixturesPath, runId) {
   const entries = readdirSync(fixturesPath, {withFileTypes: true})
-  const fixtures = []
+  const fixtures = {}
 
   for (const entry of entries) {
-    if (entry.isDirectory()) fixtures.push(readFixture(runId, join(fixturesPath, entry.name), entry.name))
-  }
+    if (!entry.isDirectory()) continue
 
-  fixtures.sort(({name: a}, {name: b}) => a.localeCompare(b))
+    const {name} = entry
+    fixtures[name] = readSuccessFixture(runId, join(fixturesPath, name), name)
+  }
 
   return fixtures
 }
 
-function readFixture (runId, fixturePath, name) {
+function readSuccessFixture (runId, fixturePath, name) {
   const releaseAttributes = JSON.parse(readFileSync(join(fixturePath, 'release-attributes.json')))
   const releaseBody = JSON.parse(readFileSync(join(fixturePath, 'release-body.json')))
-  const releaseName = readFileSync(join(fixturePath, 'release-name'))
-  const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation'))
-  const tagName = readFileSync(join(fixturePath, 'tag-name'))
+  const tagAnnotation = readFileSync(join(fixturePath, 'tag-annotation')).toString()
+  const tagName = buildTagName(readFileSync(join(fixturePath, 'tag-name')).toString().trim(), runId, name)
 
   for (const label in releaseBody) {
     releaseBody[label] = releaseBody[label]
@@ -37,8 +37,7 @@ function readFixture (runId, fixturePath, name) {
     name,
     releaseAttributes,
     releaseBody,
-    releaseName: releaseName.toString().trim(),
-    tagAnnotation: tagAnnotation.toString(),
-    tagName: buildTagName(tagName.toString().trim(), runId, name),
+    tagAnnotation,
+    tagName,
   }
 }

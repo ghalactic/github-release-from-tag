@@ -1,6 +1,6 @@
 import {resolve} from 'path'
 
-import {buildTagName, readFixtures} from '../helpers/fixture.js'
+import {buildTagName, readSuccessFixtures} from '../helpers/fixture.js'
 import {readRunId} from '../helpers/gha.js'
 
 import {
@@ -17,8 +17,7 @@ const describeOrSkip = process.env.GITHUB_ACTIONS == 'true' ? describe : describ
 describeOrSkip('End-to-end tests', () => {
   // read file-based fixtures
   const runId = readRunId()
-  const fixtures = readFixtures(resolve(__dirname, '../fixture'), runId)
-  const fixtureData = fixtures.map(fixture => [fixture.name, fixture])
+  const successFixtures = readSuccessFixtures(resolve(__dirname, '../fixture/success'), runId)
 
   const workflowRun = {}
   const tagRelease = {}
@@ -69,29 +68,22 @@ describeOrSkip('End-to-end tests', () => {
     })
   })
 
-  describe.each(fixtureData)('for annotated tags (%s)', (name, fixture) => {
-    const releaseBodyData = Object.entries(fixture.releaseBody)
-
+  describe.each(Object.entries(successFixtures))('for workflows that succeed (%s)', (name, fixture) => {
     beforeAll(async () => {
       await page.goto(tagRelease[name].html_url)
-    })
-
-    it('should conclude in success', () => {
-      expect(workflowRun[name].conclusion).toBe('success')
     })
 
     it('should produce the expected release attributes', () => {
       expect(tagRelease[name]).toMatchObject(fixture.releaseAttributes)
     })
 
-    it('should produce the expected release name', () => {
-      expect(tagRelease[name].name).toBe(fixture.releaseName)
-    })
+    it.each(Object.entries(fixture.releaseBody))(
+      'should produce the expected release body elements (%s)',
+      async (_, expression) => {
+        const elements = await page.$x(`//*[@data-test-selector="body-content"]${expression}`)
 
-    it.each(releaseBodyData)('should produce the expected release body elements (%s)', async (_, expression) => {
-      const elements = await page.$x(`//*[@data-test-selector="body-content"]${expression}`)
-
-      expect(elements.length).toBeGreaterThan(0)
-    })
+        expect(elements.length).toBeGreaterThan(0)
+      },
+    )
   })
 })
