@@ -149,12 +149,21 @@ export async function getReleaseByTag (tag) {
   while (true) {
     await sleep(15 * 1000)
 
-    const {data: {workflow_runs: [run]}} = await octokit.rest.actions.listWorkflowRuns({
-      owner,
-      repo,
-      workflow_id: fileName, // fileName does not include a path
-      per_page: 1, // fileName is unique - there should only ever be one run
-    })
+    let run
+
+    try {
+      const {data: {workflow_runs}} = await octokit.rest.actions.listWorkflowRuns({
+        owner,
+        repo,
+        workflow_id: fileName, // fileName does not include a path
+        per_page: 1, // fileName is unique - there should only ever be one run
+      })
+
+      run = workflow_runs[0]
+    } catch (error) {
+      // handle 404s when the workflow has not yet been created
+      if (error.status !== 404) throw error
+    }
 
     // run has not yet been created
     if (run == null) continue
