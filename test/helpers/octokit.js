@@ -9,7 +9,7 @@ import {sleep} from './timers.js'
 let octokit
 
 export function createOctokit () {
-  if (octokit == null) octokit = new Octokit({auth: process.env.FIXTURE_GITHUB_TOKEN})
+  if (octokit == null) octokit = new Octokit({auth: process.env.FIXTURE_GITHUB_TOKEN, log: console})
 
   return octokit
 }
@@ -161,6 +161,7 @@ export async function getReleaseByTag (tag) {
 
       run = workflow_runs[0]
     } catch (error) {
+      console.log({status: error.status, json: JSON.stringify(error), error})
       // handle 404s when the workflow has not yet been created
       if (error.status !== 404) throw error
     }
