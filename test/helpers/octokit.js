@@ -85,8 +85,24 @@ export async function createOrphanBranchForCi (suffix, workflowSteps) {
   )
 
   const headSha = workflowFile.commit.sha
+  const workflowFileName = workflowFile.content.name
 
-  return {commit, headSha, ref, workflowFile}
+  return {commit, headSha, ref, workflowFile, workflowFileName}
+}
+
+export async function createOrphanBranchForCi2 (branch, workflow) {
+  const {commit, ref} = await createOrphanBranch(branch)
+
+  const workflowFile = await createFile(
+    branch,
+    `.github/workflows/publish-release.${branch}.yml`,
+    workflow,
+  )
+
+  const headSha = workflowFile.commit.sha
+  const workflowFileName = workflowFile.content.name
+
+  return {commit, headSha, ref, workflowFile, workflowFileName}
 }
 
 export async function createTag(sha, tag, annotation) {
