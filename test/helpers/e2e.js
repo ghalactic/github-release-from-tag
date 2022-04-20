@@ -7,6 +7,10 @@ const {
 
 export const SETUP_TIMEOUT = 3 * 60 * 1000 // 3 minutes
 
+export function buildBodyExpression (expression) {
+  return `//*[@data-test-selector="body-content"]${expression}`
+}
+
 export function buildBranchName (runId, label) {
   return `ci-${runId}-${label}`
 }
