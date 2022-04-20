@@ -4,20 +4,20 @@ import {
   buildWorkflow,
   describeOrSkip,
   SETUP_TIMEOUT,
-} from '../../../helpers/e2e.js'
+} from '../../helpers/e2e.js'
 
-import {readRunId} from '../../../helpers/gha.js'
+import {readRunId} from '../../helpers/gha.js'
 
 import {
   createOrphanBranchForCi,
   createTag,
   getReleaseByTag,
   waitForCompletedTagWorkflowRun,
-} from '../../../helpers/octokit.js'
+} from '../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
   describe('Draft', () => {
-    const label = 'success-draft'
+    const label = 'draft'
     const runId = readRunId()
     const branchName = buildBranchName(runId, label)
     const tagName = buildTagName('1.0.0', runId, label)

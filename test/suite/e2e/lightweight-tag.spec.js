@@ -1,16 +1,16 @@
-import {buildBranchName, buildTagName, buildWorkflow, describeOrSkip, SETUP_TIMEOUT} from '../../../helpers/e2e.js'
-import {readRunId} from '../../../helpers/gha.js'
+import {buildBranchName, buildTagName, buildWorkflow, describeOrSkip, SETUP_TIMEOUT} from '../../helpers/e2e.js'
+import {readRunId} from '../../helpers/gha.js'
 
 import {
   createTag,
   createOrphanBranchForCi,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
-} from '../../../helpers/octokit.js'
+} from '../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
   describe('Lightweight tag', () => {
-    const label = 'failure-lightweight'
+    const label = 'lightweight-tag'
     const runId = readRunId()
     const branchName = buildBranchName(runId, label)
     const tagName = buildTagName('0.1.0', runId, label)

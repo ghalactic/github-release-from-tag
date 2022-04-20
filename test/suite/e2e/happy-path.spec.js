@@ -5,10 +5,10 @@ import {
   buildWorkflow,
   describeOrSkip,
   SETUP_TIMEOUT,
-} from '../../../helpers/e2e.js'
+} from '../../helpers/e2e.js'
 
-import {owner, repo} from '../../../helpers/fixture-repo.js'
-import {readRunId} from '../../../helpers/gha.js'
+import {owner, repo} from '../../helpers/fixture-repo.js'
+import {readRunId} from '../../helpers/gha.js'
 
 import {
   createOrphanBranchForCi,
@@ -16,11 +16,11 @@ import {
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
-} from '../../../helpers/octokit.js'
+} from '../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
   describe('Happy path', () => {
-    const label = 'success-happy-path'
+    const label = 'happy-path'
     const runId = readRunId()
     const branchName = buildBranchName(runId, label)
     const tagName = buildTagName('1.0.0', runId, label)
