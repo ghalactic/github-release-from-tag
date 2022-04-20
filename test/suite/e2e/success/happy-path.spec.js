@@ -11,7 +11,7 @@ import {owner, repo} from '../../../helpers/fixture-repo.js'
 import {readRunId} from '../../../helpers/gha.js'
 
 import {
-  createOrphanBranchForCi2,
+  createOrphanBranchForCi,
   createTag,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
@@ -49,7 +49,7 @@ paragraph
     let workflowRun, annotations, release
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi2(branchName, workflow)
+      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow)
       await createTag(headSha, tagName, tagAnnotation)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)

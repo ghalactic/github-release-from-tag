@@ -1,4 +1,0 @@
-- name: Publish release
-  uses: '{action}'
-  with:
-    draft: true

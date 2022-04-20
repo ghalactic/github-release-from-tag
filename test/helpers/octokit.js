@@ -1,8 +1,6 @@
 import {Octokit} from 'octokit'
-import {dump, load} from 'js-yaml'
 
 import {owner, repo} from './fixture-repo.js'
-import {readRunId} from './gha.js'
 import {readEmptyTreeHash} from './git.js'
 import {sleep} from './timers.js'
 
@@ -49,48 +47,7 @@ export async function createOrphanBranch (branch) {
   return {commit, ref}
 }
 
-export async function createOrphanBranchForCi (suffix, workflowSteps) {
-  const {GITHUB_SHA: actionSha = 'main'} = process.env
-
-  const branch = `ci-${readRunId()}-${suffix}`
-  const {commit, ref} = await createOrphanBranch(branch)
-
-  const workflow = dump({
-    name: branch,
-    on: {
-      push: {
-        tags: ['*'],
-      },
-    },
-    jobs: {
-      publish: {
-        'runs-on': 'ubuntu-latest',
-        name: 'Publish release',
-        steps: [
-          {
-            name: 'Checkout',
-            uses: 'actions/checkout@v2',
-          },
-
-          ...load(workflowSteps.replace('{action}', `eloquent/github-release-action@${actionSha}`)),
-        ],
-      },
-    },
-  })
-
-  const workflowFile = await createFile(
-    branch,
-    `.github/workflows/publish-release.${branch}.yml`,
-    workflow,
-  )
-
-  const headSha = workflowFile.commit.sha
-  const workflowFileName = workflowFile.content.name
-
-  return {commit, headSha, ref, workflowFile, workflowFileName}
-}
-
-export async function createOrphanBranchForCi2 (branch, workflow) {
+export async function createOrphanBranchForCi (branch, workflow) {
   const {commit, ref} = await createOrphanBranch(branch)
 
   const workflowFile = await createFile(

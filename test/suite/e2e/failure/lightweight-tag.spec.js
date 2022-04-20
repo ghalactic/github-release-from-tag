@@ -3,13 +3,13 @@ import {readRunId} from '../../../helpers/gha.js'
 
 import {
   createTag,
-  createOrphanBranchForCi2,
+  createOrphanBranchForCi,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
 } from '../../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
-  describe('Lightweight tags', () => {
+  describe('Lightweight tag', () => {
     const label = 'failure-lightweight'
     const runId = readRunId()
     const branchName = buildBranchName(runId, label)
@@ -19,7 +19,7 @@ describeOrSkip('End-to-end tests', () => {
     let workflowRun, annotations
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi2(branchName, workflow)
+      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow)
       await createTag(headSha, tagName)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)

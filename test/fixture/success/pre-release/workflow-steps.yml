@@ -1,2 +1,0 @@
-- name: Publish release
-  uses: '{action}'
