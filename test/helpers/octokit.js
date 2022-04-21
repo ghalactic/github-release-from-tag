@@ -47,8 +47,11 @@ export async function createOrphanBranch (branch) {
   return {commit, ref}
 }
 
-export async function createOrphanBranchForCi (branch, workflow) {
+export async function createOrphanBranchForCi (branch, workflow, files = []) {
   const {commit, ref} = await createOrphanBranch(branch)
+
+  // each of these creates a commit, so do them sequentially
+  for (const {path, content} of files) await createFile(branch, path, content)
 
   const workflowFile = await createFile(
     branch,

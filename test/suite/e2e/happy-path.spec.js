@@ -46,10 +46,30 @@ paragraph
 #1
 `
 
+    const config = `assets:
+  - path: files/text/file-a.txt
+  - path: files/json/file-b.json
+`
+
+    const files = [
+      {
+        path: '.github/release.eloquent.yml',
+        content: config,
+      },
+      {
+        path: 'files/text/file-a.txt',
+        content: 'file-a\n',
+      },
+      {
+        path: 'files/json/file-b.json',
+        content: '{"file-b":true}\n',
+      },
+    ]
+
     let workflowRun, annotations, release
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow)
+      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow, files)
       await createTag(headSha, tagName, tagAnnotation)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
