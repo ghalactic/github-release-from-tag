@@ -47,8 +47,8 @@ paragraph
 `
 
     const config = `assets:
-  - path: files/text/file-a.txt
-  - path: files/json/file-b.json
+  - path: assets/text/file-a.txt
+  - path: assets/json/file-b.json
 `
 
     const files = [
@@ -57,11 +57,11 @@ paragraph
         content: config,
       },
       {
-        path: 'files/text/file-a.txt',
+        path: 'assets/text/file-a.txt',
         content: 'file-a\n',
       },
       {
-        path: 'files/json/file-b.json',
+        path: 'assets/json/file-b.json',
         content: '{"file-b":true}\n',
       },
     ]

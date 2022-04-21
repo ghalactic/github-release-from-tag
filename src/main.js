@@ -2,6 +2,7 @@ import {getInput, group, info, notice, setFailed} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
 import {renderReleaseBody} from './body.js'
+import {readConfig} from './config.js'
 import {determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
 import {parseRef} from './ref.js'
 import {createOrUpdateRelease} from './release.js'
@@ -13,6 +14,8 @@ try {
 }
 
 async function main () {
+  await readConfig({group, info})
+
   const {env} = process
   const {ref, repo: {owner, repo}} = context
   const {isTag, isSemVer, isStable, tag} = parseRef(ref)
