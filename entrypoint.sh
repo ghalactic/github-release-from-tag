@@ -20,6 +20,8 @@ else
   die Cannot create a release from a non-tag
 fi
 
+git config --global --add safe.directory /github/workspace
+
 # fetch the annotated tag, GHA creates a fake lightweight tag
 git fetch origin --force "$GITHUB_REF:$GITHUB_REF" >/dev/null 2>&1
 
