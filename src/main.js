@@ -2,7 +2,7 @@ import {getInput, group, info, notice, setFailed} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
 import {renderReleaseBody} from './body.js'
-import {readConfig} from './config.js'
+import {readConfig} from './config/reading.js'
 import {determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
 import {parseRef} from './ref.js'
 import {createOrUpdateRelease} from './release.js'

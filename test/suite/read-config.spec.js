@@ -1,6 +1,6 @@
 import {join} from 'path'
 
-import {readConfig} from '../../src/config.js'
+import {readConfig} from '../../src/config/reading.js'
 import {group, info} from '../mocks/actions-core.js'
 
 const {chdir, cwd} = process
