@@ -10,7 +10,7 @@ export async function readConfig ({
   return group('Reading release configuration', async () => {
     const [hasYaml, yaml] = await readConfigFile()
 
-    if (!hasYaml) info('No release configuration found at .github/release.eloquent.yml')
+    if (!hasYaml) info('No configuration found at .github/release.eloquent.yml')
 
     const config = validateConfig(hasYaml ? load(yaml) : {})
     info(`Effective configuration: ${JSON.stringify(config, null, 2)}`)
