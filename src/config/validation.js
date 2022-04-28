@@ -22,19 +22,8 @@ function renderErrors (errors) {
 }
 
 function renderError (error) {
-  const {instancePath} = error
-  const subject = instancePath === '' ? 'the config' : `the value at '${instancePath}'`
+  const {instancePath, message} = error
+  const subject = instancePath && ` (${instancePath})`
 
-  return `${subject} ${renderErrorMessage(error)}`
-}
-
-function renderErrorMessage (error) {
-  const {keyword, params} = error
-
-  switch (keyword) {
-    case 'additionalProperties': return `must NOT have additional property '${params.additionalProperty}'`
-    case 'type': return `should be of type '${params.type}'`
-  }
-
-  return error.message
+  return `${message}${subject}`
 }

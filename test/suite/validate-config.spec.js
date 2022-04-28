@@ -68,13 +68,13 @@ describe('validateConfig()', () => {
       actual = error.message
     }
 
-    expect(actual).toMatch(`  - the config must NOT have additional property 'additional'`)
-    expect(actual).toMatch(`  - the value at '/assets/0' must have required property 'path'`)
+    expect(actual).toMatch(`  - must NOT have additional properties`)
+    expect(actual).toMatch(`  - must have required property 'path' (/assets/0)`)
   })
 
   it.each(nonObjectData)('should throw for non-object configs (%j)', config => {
     expect(() => { validateConfig(config) }).toThrow(
-      `the config should be of type 'object'`
+      `must be object`
     )
   })
 
@@ -84,7 +84,7 @@ describe('validateConfig()', () => {
     }
 
     expect(() => { validateConfig(config) }).toThrow(
-      `the config must NOT have additional property 'additional'`,
+      `must NOT have additional properties`,
     )
   })
 
@@ -94,7 +94,7 @@ describe('validateConfig()', () => {
     }
 
     expect(() => { validateConfig(config) }).toThrow(
-      `the value at '/assets' should be of type 'array'`,
+      `must be array (/assets)`,
     )
   })
 
@@ -106,19 +106,7 @@ describe('validateConfig()', () => {
     }
 
     expect(() => { validateConfig(config) }).toThrow(
-      `the value at '/assets/0' should be of type 'object'`,
-    )
-  })
-
-  it('should throw for assets with missing paths', () => {
-    const config = {
-      assets: [
-        {},
-      ],
-    }
-
-    expect(() => { validateConfig(config) }).toThrow(
-      `the value at '/assets/0' must have required property 'path'`,
+      `must be object (/assets/0)`,
     )
   })
 
@@ -132,7 +120,19 @@ describe('validateConfig()', () => {
     }
 
     expect(() => { validateConfig(config) }).toThrow(
-      `the value at '/assets/0/path' must NOT have fewer than 1 characters`,
+      `must NOT have fewer than 1 characters (/assets/0/path)`,
+    )
+  })
+
+  it('should throw for assets with missing paths', () => {
+    const config = {
+      assets: [
+        {},
+      ],
+    }
+
+    expect(() => { validateConfig(config) }).toThrow(
+      `must have required property 'path' (/assets/0)`,
     )
   })
 
@@ -147,7 +147,7 @@ describe('validateConfig()', () => {
     }
 
     expect(() => { validateConfig(config) }).toThrow(
-      `the value at '/assets/0' must NOT have additional property 'additional'`,
+      `must NOT have additional properties (/assets/0)`,
     )
   })
 })
