@@ -15,6 +15,7 @@ import {
   createTag,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
+  listReleaseAssets,
   waitForCompletedTagWorkflowRun,
 } from '../../helpers/octokit.js'
 
@@ -66,7 +67,7 @@ paragraph
       },
     ]
 
-    let workflowRun, annotations, release
+    let workflowRun, annotations, release, assets
 
     beforeAll(async () => {
       const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow, files)
@@ -75,6 +76,7 @@ paragraph
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
       annotations = await listAnnotationsByWorkflowRun(workflowRun)
       release = await getReleaseByTag(tagName)
+      assets = await listReleaseAssets(release)
 
       if (release?.html_url != null) await page.goto(release?.html_url)
     }, SETUP_TIMEOUT)
@@ -111,6 +113,19 @@ paragraph
       ${'issue link'}          | ${`//a[@href='https://github.com/${owner}/${repo}/issues/1'][normalize-space()='#1']`}
     `('should produce the expected release body elements ($description)', async ({expression}) => {
       expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty()
+    })
+
+    it.each`
+      name             | size  | contentType
+      ${'file-a.txt'}  | ${7}  | ${'text/plain'}
+      ${'file-b.json'} | ${16} | ${'application/json'}
+    `('should produce the expected release assets ($name)', ({name, size, contentType}) => {
+      expect(assets).toPartiallyContain({
+        state: 'uploaded',
+        name,
+        size,
+        content_type: contentType,
+      })
     })
   })
 })
