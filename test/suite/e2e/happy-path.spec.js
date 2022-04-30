@@ -67,7 +67,7 @@ paragraph
       },
     ]
 
-    let workflowRun, annotations, release, assets
+    let workflowRun, annotations, release
 
     beforeAll(async () => {
       const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow, files)
@@ -76,7 +76,6 @@ paragraph
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
       annotations = await listAnnotationsByWorkflowRun(workflowRun)
       release = await getReleaseByTag(tagName)
-      assets = await listReleaseAssets(release)
 
       if (release?.html_url != null) await page.goto(release?.html_url)
     }, SETUP_TIMEOUT)
@@ -120,7 +119,7 @@ paragraph
       ${'file-a.txt'}  | ${7}  | ${'text/plain'}
       ${'file-b.json'} | ${16} | ${'application/json'}
     `('should produce the expected release assets ($name)', ({name, size, contentType}) => {
-      expect(assets).toPartiallyContain({
+      expect(release.assets).toPartiallyContain({
         state: 'uploaded',
         name,
         size,

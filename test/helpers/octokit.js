@@ -143,19 +143,6 @@ export async function listAnnotationsByWorkflowRun (workflowRun) {
   )
 }
 
-export async function listReleaseAssets (release) {
-  const octokit = createOctokit()
-
-  return octokit.paginate(
-    octokit.rest.repos.listReleaseAssets,
-    {
-      owner,
-      repo,
-      release_id: release.id,
-    },
-  )
-}
-
 /**
  * This function is a mess. Originally I was trying to use GitHub's API in a
  * "sane" way, searching only for workflow runs related to each specific tag,
