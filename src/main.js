@@ -1,4 +1,4 @@
-import {getInput, group, info, notice, setFailed} from '@actions/core'
+import {error, getInput, group, info, notice, setFailed} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
 import {modifyReleaseAssets} from './asset.js'
@@ -10,8 +10,8 @@ import {createOrUpdateRelease} from './release.js'
 
 try {
   await main()
-} catch (error) {
-  setFailed(error.stack)
+} catch (e) {
+  setFailed(e.stack)
 }
 
 async function main () {
@@ -87,6 +87,7 @@ async function main () {
 
   const assetResult = await modifyReleaseAssets({
     config,
+    error,
     group,
     info,
     release,

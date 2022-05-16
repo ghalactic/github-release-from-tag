@@ -4,6 +4,7 @@ import {basename} from 'path'
 
 export async function modifyReleaseAssets ({
   config,
+  error,
   group,
   info,
   release,
@@ -37,9 +38,9 @@ export async function modifyReleaseAssets ({
     const updateResult = analyzeResults(updateResults)
     const deleteResult = analyzeResults(deleteResults)
 
-    info(`${uploadResult.successCount} uploaded, ${uploadResult.failureCount} failed to upload`)
-    info(`${updateResult.successCount} updated, ${updateResult.failureCount} failed to update`)
-    info(`${deleteResult.successCount} deleted, ${deleteResult.failureCount} failed to delete`)
+    logResults(group, info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
+    logResults(group, info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
+    logResults(group, info, error, deleteResult, '{successCount} deleted, {failureCount} failed to delete')
 
     return (
       uploadResult.isSuccess &&
@@ -136,13 +137,15 @@ function analyzeResults (results) {
   let isSuccess = true
   let successCount = 0
   let failureCount = 0
+  const failureReasons = []
 
-  for (const {status} of results) {
+  for (const {status, reason} of results) {
     if (status === 'fulfilled') {
       ++successCount
     } else {
-      ++failureCount
       isSuccess = false
+      ++failureCount
+      failureReasons.push(reason)
     }
   }
 
@@ -150,5 +153,21 @@ function analyzeResults (results) {
     isSuccess,
     successCount,
     failureCount,
+    failureReasons,
+  }
+}
+
+async function logResults (group, info, error, result, messageTemplate) {
+  const {successCount, failureCount, failureReasons} = result
+  const message = messageTemplate
+    .replace('{successCount}', successCount)
+    .replace('{failureCount}', failureCount)
+
+  if (failureCount > 0) {
+    await group(message, () => {
+      for (const reason of failureReasons) error(String(reason))
+    })
+  } else {
+    info(message)
   }
 }
