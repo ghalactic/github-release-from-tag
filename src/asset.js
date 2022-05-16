@@ -61,21 +61,8 @@ async function deleteAsset (repos, release, existing) {
 }
 
 async function updateAsset (repos, release, existing, desired) {
-  const {owner, repo} = release
-  const {name, path} = desired
-  const contentType = lookup(path)
-  const data = await readFile(path)
-
-  await repos.post.updateReleaseAsset({
-    owner,
-    repo,
-    asset_id: existing.id,
-    name,
-    data,
-    headers: {
-      'Content-Type': contentType,
-    },
-  })
+  await deleteAsset(repos, release, existing)
+  await uploadAsset(repos, release, desired)
 }
 
 async function uploadAsset (repos, release, desired) {
