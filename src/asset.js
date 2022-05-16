@@ -38,9 +38,9 @@ export async function modifyReleaseAssets ({
     const updateResult = analyzeResults(updateResults)
     const deleteResult = analyzeResults(deleteResults)
 
-    logResults(group, info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
-    logResults(group, info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
-    logResults(group, info, error, deleteResult, '{successCount} deleted, {failureCount} failed to delete')
+    logResults(info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
+    logResults(info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
+    logResults(info, error, deleteResult, '{successCount} deleted, {failureCount} failed to delete')
 
     return (
       uploadResult.isSuccess &&
@@ -157,16 +157,16 @@ function analyzeResults (results) {
   }
 }
 
-async function logResults (group, info, error, result, messageTemplate) {
+async function logResults (info, error, result, messageTemplate) {
   const {successCount, failureCount, failureReasons} = result
   const message = messageTemplate
     .replace('{successCount}', successCount)
     .replace('{failureCount}', failureCount)
 
   if (failureCount > 0) {
-    await group(message, () => {
-      for (const reason of failureReasons) error(String(reason))
-    })
+    info(`${message}:`)
+    for (const reason of failureReasons) error(String(reason))
+    info('')
   } else {
     info(message)
   }
