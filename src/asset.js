@@ -73,7 +73,7 @@ export async function modifyReleaseAssets ({
     const contentType = lookup(path)
     const data = await readFile(path)
 
-    info(`Uploading release asset ${JSON.stringify(desired.name)} (${contentType}) from ${path} to ${url}`)
+    info(`Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`)
 
     await request({
       method: 'POST',
