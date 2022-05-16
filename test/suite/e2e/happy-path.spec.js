@@ -15,7 +15,6 @@ import {
   createTag,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
-  listReleaseAssets,
   waitForCompletedTagWorkflowRun,
 } from '../../helpers/octokit.js'
 
