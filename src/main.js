@@ -60,7 +60,7 @@ async function main () {
   }
 
   const isDraft = getInput('draft') === 'true'
-  const {rest: {markdown, repos}} = getOctokit(getInput('token'))
+  const {request, rest: {markdown, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
     env,
@@ -92,6 +92,7 @@ async function main () {
     info,
     release,
     repos,
+    request,
   })
 
   if (!assetResult) setFailed('Unable to modify release assets')

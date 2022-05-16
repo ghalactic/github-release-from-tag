@@ -9,6 +9,7 @@ export async function modifyReleaseAssets ({
   info,
   release,
   repos,
+  request,
 }) {
   const existingAssets = release.assets
   const desiredAssets = config.assets.map(normalizeAsset)
@@ -29,9 +30,9 @@ export async function modifyReleaseAssets ({
       updateResults,
       deleteResults,
     ] = await Promise.all([
-      Promise.allSettled(toUpload.map(desired => uploadAsset(repos, release, desired))),
-      Promise.allSettled(toUpdate.map(([existing, desired]) => updateAsset(repos, release, existing, desired))),
-      Promise.allSettled(toDelete.map(existing => deleteAsset(repos, release, existing))),
+      Promise.allSettled(toUpload.map(desired => uploadAsset(desired))),
+      Promise.allSettled(toUpdate.map(([existing, desired]) => updateAsset(existing, desired))),
+      Promise.allSettled(toDelete.map(existing => deleteAsset(existing))),
     ])
 
     const uploadResult = analyzeResults(uploadResults)
@@ -48,39 +49,38 @@ export async function modifyReleaseAssets ({
       deleteResult.isSuccess
     )
   })
-}
 
-async function deleteAsset (repos, release, existing) {
-  const {owner, repo} = release
+  async function deleteAsset (existing) {
+    const {owner, repo} = release
 
-  await repos.deleteReleaseAsset({
-    owner,
-    repo,
-    asset_id: existing.id,
-  })
-}
+    await repos.deleteReleaseAsset({
+      owner,
+      repo,
+      asset_id: existing.id,
+    })
+  }
 
-async function updateAsset (repos, release, existing, desired) {
-  await deleteAsset(repos, release, existing)
-  await uploadAsset(repos, release, desired)
-}
+  async function updateAsset (existing, desired) {
+    await deleteAsset(existing)
+    await uploadAsset(desired)
+  }
 
-async function uploadAsset (repos, release, desired) {
-  const {owner, repo, id: releaseId} = release
-  const {name, path} = desired
-  const contentType = lookup(path)
-  const data = await readFile(path)
+  async function uploadAsset (desired) {
+    const {upload_url: url} = release
+    const {name, path} = desired
+    const contentType = lookup(path)
+    const data = await readFile(path)
 
-  await repos.post.uploadReleaseAsset({
-    owner,
-    repo,
-    release_id: releaseId,
-    name,
-    data,
-    headers: {
-      'Content-Type': contentType,
-    },
-  })
+    await request({
+      method: 'POST',
+      url,
+      name,
+      data,
+      headers: {
+        'Content-Type': contentType,
+      },
+    })
+  }
 }
 
 function normalizeAsset (asset) {
