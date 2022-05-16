@@ -53,6 +53,8 @@ export async function modifyReleaseAssets ({
   async function deleteAsset (existing) {
     const {owner, repo} = release
 
+    info(`Deleting existing release asset ${JSON.stringify(existing.name)} (${existing.id})`)
+
     await repos.deleteReleaseAsset({
       owner,
       repo,
@@ -70,6 +72,8 @@ export async function modifyReleaseAssets ({
     const {name, path} = desired
     const contentType = lookup(path)
     const data = await readFile(path)
+
+    info(`Uploading release asset ${JSON.stringify(desired.name)} (${contentType}) from ${path} to ${url}`)
 
     await request({
       method: 'POST',
@@ -152,7 +156,7 @@ async function logResults (info, error, result, messageTemplate) {
 
   if (failureCount > 0) {
     info(`${message}:`)
-    for (const reason of failureReasons) error(String(reason))
+    for (const reason of failureReasons) error(reason.stack)
     info('')
   } else {
     info(message)
