@@ -7,7 +7,9 @@ export async function modifyReleaseAssets ({
   error,
   group,
   info,
+  owner,
   release,
+  repo,
   repos,
   request,
 }) {
@@ -51,8 +53,6 @@ export async function modifyReleaseAssets ({
   })
 
   async function deleteAsset (existing) {
-    const {owner, repo} = release
-
     info(`Deleting existing release asset ${JSON.stringify(existing.name)} (${existing.id})`)
 
     await repos.deleteReleaseAsset({

@@ -90,7 +90,9 @@ async function main () {
     error,
     group,
     info,
+    owner,
     release,
+    repo,
     repos,
     request,
   })
