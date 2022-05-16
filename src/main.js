@@ -1,6 +1,7 @@
 import {getInput, group, info, notice, setFailed} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
+import {modifyReleaseAssets} from './asset.js'
 import {renderReleaseBody} from './body.js'
 import {readConfig} from './config/reading.js'
 import {determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
@@ -14,7 +15,7 @@ try {
 }
 
 async function main () {
-  await readConfig({group, info})
+  const config = await readConfig({group, info})
 
   const {env} = process
   const {ref, repo: {owner, repo}} = context
@@ -83,4 +84,14 @@ async function main () {
   })
 
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
+
+  const assetResult = await modifyReleaseAssets({
+    config,
+    group,
+    info,
+    release,
+    repos,
+  })
+
+  if (!assetResult) setFailed('Unable to modify release assets')
 }

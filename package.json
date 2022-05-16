@@ -6,7 +6,8 @@
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0",
     "ajv": "^8.11.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "mime-types": "^2.1.35"
   },
   "devDependencies": {
     "es-jest": "^1.5.0",
