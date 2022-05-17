@@ -23,32 +23,27 @@ export async function modifyReleaseAssets ({
   }
 
   return group('Modifying release assets', async () => {
-    const {toUpload, toUpdate, toDelete} = diffAssets(existingAssets, desiredAssets)
+    const {toUpload, toUpdate} = diffAssets(existingAssets, desiredAssets)
 
-    info(`${toUpload.length} to upload, ${toUpdate.length} to update, ${toDelete.length} to delete`)
+    info(`${toUpload.length} to upload, ${toUpdate.length} to update`)
 
     const [
       uploadResults,
       updateResults,
-      deleteResults,
     ] = await Promise.all([
       Promise.allSettled(toUpload.map(desired => uploadAsset(desired))),
       Promise.allSettled(toUpdate.map(([existing, desired]) => updateAsset(existing, desired))),
-      Promise.allSettled(toDelete.map(existing => deleteAsset(existing))),
     ])
 
     const uploadResult = analyzeResults(uploadResults)
     const updateResult = analyzeResults(updateResults)
-    const deleteResult = analyzeResults(deleteResults)
 
     logResults(info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
     logResults(info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
-    logResults(info, error, deleteResult, '{successCount} deleted, {failureCount} failed to delete')
 
     return (
       uploadResult.isSuccess &&
-      updateResult.isSuccess &&
-      deleteResult.isSuccess
+      updateResult.isSuccess
     )
   })
 
@@ -97,7 +92,6 @@ function normalizeAsset (asset) {
 }
 
 function diffAssets (existingAssets, desiredAssets) {
-  const toDelete = []
   const toUpdate = []
   const toUpload = []
 
@@ -111,14 +105,7 @@ function diffAssets (existingAssets, desiredAssets) {
     }
   }
 
-  for (const existing of existingAssets) {
-    const isDesired = desiredAssets.some(desired => desired.name === existing.name)
-
-    if (!isDesired) toDelete.push(existing)
-  }
-
   return {
-    toDelete,
     toUpdate,
     toUpload,
   }
