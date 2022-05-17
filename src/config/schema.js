@@ -18,6 +18,16 @@ export const schema = {
           'path',
         ],
         properties: {
+          label: {
+            description: 'The asset label.',
+            type: 'string',
+            minLength: 1,
+          },
+          name: {
+            description: 'The asset name. Defaults to the basename of the asset path.',
+            type: 'string',
+            minLength: 1,
+          },
           path: {
             description: 'The path to an asset. Relative paths are resolved against the root of the Git repo.',
             type: 'string',

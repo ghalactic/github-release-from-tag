@@ -49,6 +49,8 @@ paragraph
     const config = `assets:
   - path: assets/text/file-a.txt
   - path: assets/json/file-b.json
+    name: name-b
+    label: label-b
 `
 
     const files = [
@@ -114,14 +116,15 @@ paragraph
     })
 
     it.each`
-      name             | size  | contentType
-      ${'file-a.txt'}  | ${7}  | ${'text/plain'}
-      ${'file-b.json'} | ${16} | ${'application/json'}
-    `('should produce the expected release assets ($name)', ({name, size, contentType}) => {
+      name             | size  | label        | contentType
+      ${'file-a.txt'}  | ${7}  | ${''}        | ${'text/plain'}
+      ${'name-b'}      | ${16} | ${'label-b'} | ${'application/json'}
+    `('should produce the expected release assets ($name)', ({name, size, label, contentType}) => {
       expect(release.assets).toPartiallyContain({
         state: 'uploaded',
         name,
         size,
+        label,
         content_type: contentType,
       })
     })
