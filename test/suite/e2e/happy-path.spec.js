@@ -53,6 +53,7 @@ paragraph
     label: Label for file-b.json, which will download as custom-name-b.json
   - path: assets/text/file-c.*.txt
     name: custom-name-c.txt
+  - path: assets/json/file-d.*.json
 `
 
     const files = [
@@ -72,6 +73,14 @@ paragraph
         // makes a filename like "file-c.2572064453.txt"
         path: `assets/text/file-c.${Math.floor(Math.random() * 10000000000)}.txt`,
         content: 'file-c\n',
+      },
+      {
+        path: 'assets/json/file-d.0.json',
+        content: '{"file-d":0}\n',
+      },
+      {
+        path: 'assets/json/file-d.1.json',
+        content: '{"file-d":1}\n',
       },
     ]
 
@@ -127,6 +136,8 @@ paragraph
       ${'file-a.txt'}         | ${7}  | ${'text/plain'}       | ${''}
       ${'custom-name-b.json'} | ${16} | ${'application/json'} | ${'Label for file-b.json, which will download as custom-name-b.json'}
       ${'custom-name-c.txt'}  | ${7}  | ${'text/plain'}       | ${''}
+      ${'file-d.0.json'}      | ${13} | ${'application/json'} | ${''}
+      ${'file-d.1.json'}      | ${13} | ${'application/json'} | ${''}
     `('should produce the expected release assets ($name)', ({name, size, contentType, label}) => {
       expect(release.assets).toPartiallyContain({
         state: 'uploaded',
