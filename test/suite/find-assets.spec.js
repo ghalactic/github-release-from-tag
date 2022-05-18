@@ -2,6 +2,7 @@ import {mockProcessStdout} from 'jest-mock-process'
 import {join} from 'path'
 
 import {findAssets} from '../../src/asset.js'
+import {warning} from '../mocks/actions-core.js'
 
 const {chdir, cwd} = process
 const fixturesPath = join(__dirname, '../fixture/find-assets')
@@ -23,7 +24,7 @@ describe('findAssets()', () => {
     const fixturePath = join(fixturesPath, 'singular')
     chdir(fixturePath)
 
-    const actual = await findAssets([
+    const actual = await findAssets(warning, [
       {
         path: 'path/to/file-a.txt',
       },
@@ -52,7 +53,7 @@ describe('findAssets()', () => {
     const fixturePath = join(fixturesPath, 'singular')
     chdir(fixturePath)
 
-    const actual = await findAssets([
+    const actual = await findAssets(warning, [
       {
         path: 'path/to/file-b.*.txt',
         name: 'custom-name.txt',
@@ -75,7 +76,7 @@ describe('findAssets()', () => {
     const fixturePath = join(fixturesPath, 'multiple')
     chdir(fixturePath)
 
-    const actual = await findAssets([
+    const actual = await findAssets(warning, [
       {
         path: 'path/to/file-a.*.txt',
       },
@@ -101,7 +102,7 @@ describe('findAssets()', () => {
     const fixturePath = join(fixturesPath, 'multiple')
     chdir(fixturePath)
 
-    const actual = await findAssets([
+    const actual = await findAssets(warning, [
       {
         path: 'path/to/file-a.*.txt',
         name: 'custom-name.txt',
@@ -125,11 +126,35 @@ describe('findAssets()', () => {
     expect(actual).toEqual(expected)
   })
 
+  it('should warn about duplicate assets', async () => {
+    const fixturePath = join(fixturesPath, 'multiple')
+    chdir(fixturePath)
+
+    const actual = []
+    const warning = message => {
+      actual.push(message)
+    }
+
+    await findAssets(warning, [
+      {
+        path: 'path/to/file-a.*.txt',
+      },
+      {
+        path: 'path/to/file-a.*.txt',
+      },
+    ])
+
+    expect(actual)
+      .toContain('Release asset "file-a.1468898034.txt" found multiple times. Only the first instance will be used.')
+    expect(actual)
+      .toContain('Release asset "file-a.4228738524.txt" found multiple times. Only the first instance will be used.')
+  })
+
   it('should fail when the pattern matches no files', async () => {
     chdir(fixturesPath)
 
     async function actual () {
-      await findAssets([
+      await findAssets(warning, [
         {
           path: 'path/to/nonexistent.*',
         },

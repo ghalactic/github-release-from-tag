@@ -16,20 +16,7 @@ export async function modifyReleaseAssets ({
   warning,
 }) {
   const existingAssets = release.assets
-  const foundAssets = await findAssets(config.assets)
-  const seenAssets = new Set()
-
-  const desiredAssets = foundAssets.filter(({name}) => {
-    if (!seenAssets.has(name)) {
-      seenAssets.add(name)
-
-      return true
-    }
-
-    warning(`Release asset ${JSON.stringify(name)} appears multiple times. Only the first definition will be used.`)
-
-    return false
-  })
+  const desiredAssets = await findAssets(warning, config.assets)
 
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info('No release assets to modify')
@@ -98,11 +85,23 @@ export async function modifyReleaseAssets ({
   }
 }
 
-export async function findAssets (assets) {
-  const desired = []
-  for (const asset of assets) desired.push(...await findAsset(asset))
+export async function findAssets (warning, assets) {
+  const found = []
+  for (const asset of assets) found.push(...await findAsset(asset))
 
-  return desired
+  const seen = new Set()
+
+  return found.filter(({name}) => {
+    if (!seen.has(name)) {
+      seen.add(name)
+
+      return true
+    }
+
+    warning(`Release asset ${JSON.stringify(name)} found multiple times. Only the first instance will be used.`)
+
+    return false
+  })
 }
 
 async function findAsset (asset) {
