@@ -105,7 +105,8 @@ export async function modifyReleaseAssets ({
 }
 
 async function findAsset (asset) {
-  const globber = await glob.create(asset.path)
+  const {path: pattern} = asset
+  const globber = await glob.create(pattern)
   const assets = []
 
   for await (const path of globber.globGenerator()) {
@@ -113,6 +114,8 @@ async function findAsset (asset) {
     const stats = await stat(path)
     if (!stats.isDirectory()) assets.push({path})
   }
+
+  if (assets.length < 1) throw new Error(`No release assets found for path ${JSON.stringify(pattern)}`)
 
   // name and label options only apply when the glob matches a single file
   if (assets.length > 1) return assets.map(normalizeAsset)

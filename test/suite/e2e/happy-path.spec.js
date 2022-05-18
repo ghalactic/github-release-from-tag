@@ -69,7 +69,8 @@ paragraph
         content: '{"file-b":true}\n',
       },
       {
-        path: `assets/text/file-c.${Math.random()}.txt`,
+        // makes a filename like "file-c.2572064453.txt"
+        path: `assets/text/file-c.${Math.floor(Math.random() * 10000000000)}.txt`,
         content: 'file-c\n',
       },
     ]
