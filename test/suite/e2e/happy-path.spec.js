@@ -49,8 +49,10 @@ paragraph
     const config = `assets:
   - path: assets/text/file-a.txt
   - path: assets/json/file-b.json
-    name: custom-name.json
-    label: Label for file-b.json, which will download as custom-name.json
+    name: custom-name-b.json
+    label: Label for file-b.json, which will download as custom-name-b.json
+  - path: assets/json/file-c.*.txt
+    name: custom-name-c.txt
 `
 
     const files = [
@@ -65,6 +67,10 @@ paragraph
       {
         path: 'assets/json/file-b.json',
         content: '{"file-b":true}\n',
+      },
+      {
+        path: `assets/text/file-c.${Math.random()}.txt`,
+        content: 'file-c\n',
       },
     ]
 
@@ -116,9 +122,10 @@ paragraph
     })
 
     it.each`
-      name                  | size  | contentType           | label
-      ${'file-a.txt'}       | ${7}  | ${'text/plain'}       | ${''}
-      ${'custom-name.json'} | ${16} | ${'application/json'} | ${'Label for file-b.json, which will download as custom-name.json'}
+      name                    | size  | contentType           | label
+      ${'file-a.txt'}         | ${7}  | ${'text/plain'}       | ${''}
+      ${'custom-name-b.json'} | ${16} | ${'application/json'} | ${'Label for file-b.json, which will download as custom-name-b.json'}
+      ${'custom-name-c.txt'}  | ${7}  | ${'text/plain'}       | ${''}
     `('should produce the expected release assets ($name)', ({name, size, contentType, label}) => {
       expect(release.assets).toPartiallyContain({
         state: 'uploaded',
