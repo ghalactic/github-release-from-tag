@@ -1,4 +1,4 @@
-import {error, getInput, group, info, notice, setFailed} from '@actions/core'
+import {error, getInput, group, info, notice, setFailed, warning} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
 import {modifyReleaseAssets} from './asset.js'
@@ -95,6 +95,7 @@ async function main () {
     repo,
     repos,
     request,
+    warning,
   })
 
   if (!assetResult) setFailed('Unable to modify release assets')

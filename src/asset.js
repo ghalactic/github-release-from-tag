@@ -1,4 +1,5 @@
-import {readFile} from 'fs/promises'
+import glob from '@actions/glob'
+import {readFile, stat} from 'fs/promises'
 import {lookup} from 'mime-types'
 import {basename} from 'path'
 
@@ -12,9 +13,10 @@ export async function modifyReleaseAssets ({
   repo,
   repos,
   request,
+  warning,
 }) {
   const existingAssets = release.assets
-  const desiredAssets = config.assets.map(normalizeAsset)
+  const desiredAssets = await findAssets(config.assets)
 
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info('No release assets to modify')
@@ -46,6 +48,25 @@ export async function modifyReleaseAssets ({
       updateResult.isSuccess
     )
   })
+
+  async function findAssets (assets) {
+    const desired = []
+    for (const asset of assets) desired.concat(await findAsset(asset))
+
+    const seen = new Set()
+
+    return desired.filter(({name}) => {
+      if (!seen.has(name)) {
+        seen.add(name)
+
+        return true
+      }
+
+      warning(`Release asset ${JSON.stringify(name)} appears multiple times. Only the first definition will be used.`)
+
+      return false
+    })
+  }
 
   async function deleteAsset (existing) {
     info(`Deleting existing release asset ${JSON.stringify(existing.name)} (${existing.id})`)
@@ -81,6 +102,25 @@ export async function modifyReleaseAssets ({
       },
     })
   }
+}
+
+async function findAsset (asset) {
+  const globber = await glob.create(asset.path)
+  const assets = []
+
+  for await (const path of globber.globGenerator()) {
+    // ignore directories
+    const stats = await stat(path)
+    if (!stats.isDirectory()) assets.push({path})
+  }
+
+  // name and label options only apply when the glob matches a single file
+  if (assets.length > 1) return assets.map(normalizeAsset)
+
+  const [{path}] = assets
+  const {name, label} = asset
+
+  return [normalizeAsset({label, name, path})]
 }
 
 function normalizeAsset (asset) {
