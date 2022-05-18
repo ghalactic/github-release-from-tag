@@ -51,7 +51,7 @@ paragraph
   - path: assets/json/file-b.json
     name: custom-name-b.json
     label: Label for file-b.json, which will download as custom-name-b.json
-  - path: assets/json/file-c.*.txt
+  - path: assets/text/file-c.*.txt
     name: custom-name-c.txt
 `
 
