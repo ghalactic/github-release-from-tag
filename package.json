@@ -15,6 +15,7 @@
     "file-url": "^4.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
+    "jest-mock-process": "^1.4.1",
     "jest-puppeteer": "^6.1.0",
     "octokit": "^1.7.1",
     "puppeteer": "^13.5.2"

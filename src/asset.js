@@ -1,4 +1,4 @@
-import glob from '@actions/glob'
+import {create as createGlob} from '@actions/glob'
 import {readFile, stat} from 'fs/promises'
 import {lookup} from 'mime-types'
 import {basename} from 'path'
@@ -16,7 +16,20 @@ export async function modifyReleaseAssets ({
   warning,
 }) {
   const existingAssets = release.assets
-  const desiredAssets = await findAssets(config.assets)
+  const foundAssets = await findAssets(config.assets)
+  const seenAssets = new Set()
+
+  const desiredAssets = foundAssets.filter(({name}) => {
+    if (!seenAssets.has(name)) {
+      seenAssets.add(name)
+
+      return true
+    }
+
+    warning(`Release asset ${JSON.stringify(name)} appears multiple times. Only the first definition will be used.`)
+
+    return false
+  })
 
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info('No release assets to modify')
@@ -48,25 +61,6 @@ export async function modifyReleaseAssets ({
       updateResult.isSuccess
     )
   })
-
-  async function findAssets (assets) {
-    const desired = []
-    for (const asset of assets) desired.concat(await findAsset(asset))
-
-    const seen = new Set()
-
-    return desired.filter(({name}) => {
-      if (!seen.has(name)) {
-        seen.add(name)
-
-        return true
-      }
-
-      warning(`Release asset ${JSON.stringify(name)} appears multiple times. Only the first definition will be used.`)
-
-      return false
-    })
-  }
 
   async function deleteAsset (existing) {
     info(`Deleting existing release asset ${JSON.stringify(existing.name)} (${existing.id})`)
@@ -104,9 +98,16 @@ export async function modifyReleaseAssets ({
   }
 }
 
+export async function findAssets (assets) {
+  const desired = []
+  for (const asset of assets) desired.push(...await findAsset(asset))
+
+  return desired
+}
+
 async function findAsset (asset) {
   const {path: pattern} = asset
-  const globber = await glob.create(pattern)
+  const globber = await createGlob(pattern)
   const assets = []
 
   for await (const path of globber.globGenerator()) {
