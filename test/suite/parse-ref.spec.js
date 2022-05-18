@@ -1,5 +1,15 @@
 import {parseRef} from '../../src/ref.js'
 
+const shorthandFixtures = {
+  validStable: [
+    ['v1'],
+    ['v99999999999999999999999'],
+  ],
+  validUnstable: [
+    ['v0'],
+  ],
+}
+
 /**
  * SemVer fixtures taken from https://regex101.com/r/vkijKf/1/ - which is linked
  * to directly from https://semver.org/.
@@ -96,6 +106,14 @@ describe('parseRef()', () => {
     expect(parseRef('refs/heads/a').tag).toBeUndefined()
     expect(parseRef('refs/heads/main')).toMatchObject({isTag: false})
     expect(parseRef('refs/heads/main').tag).toBeUndefined()
+  })
+
+  it.each(shorthandFixtures.validStable)('should be able to detect stable shorthand tag refs (%s)', tag => {
+    expect(parseRef(`refs/tags/${tag}`)).toMatchObject({isStable: true})
+  })
+
+  it.each(shorthandFixtures.validUnstable)('should be able to detect unstable shorthand tag refs (%s)', tag => {
+    expect(parseRef(`refs/tags/${tag}`)).toMatchObject({isStable: false})
   })
 
   it.each(semVerFixtures.valid)('should be able to detect SemVer tag refs (%s)', tag => {
