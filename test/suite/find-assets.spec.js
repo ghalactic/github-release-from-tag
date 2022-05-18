@@ -19,7 +19,7 @@ describe('findAssets()', () => {
     mockStdout.mockRestore()
   })
 
-  it('should be find assets when the pattern matches a single file', async () => {
+  it('should find assets when the pattern matches a single file', async () => {
     const fixturePath = join(fixturesPath, 'singular')
     chdir(fixturePath)
 
@@ -46,5 +46,96 @@ describe('findAssets()', () => {
     ]
 
     expect(actual).toEqual(expected)
+  })
+
+  it('should apply custom names and labels when the pattern matches a single file', async () => {
+    const fixturePath = join(fixturesPath, 'singular')
+    chdir(fixturePath)
+
+    const actual = await findAssets([
+      {
+        path: 'path/to/file-b.*.txt',
+        name: 'custom-name.txt',
+        label: 'label for file b',
+      },
+    ])
+
+    const expected = [
+      {
+        path: join(fixturePath, 'path/to/file-b.243980118.txt'),
+        name: 'custom-name.txt',
+        label: 'label for file b',
+      },
+    ]
+
+    expect(actual).toEqual(expected)
+  })
+
+  it('should find assets when the pattern matches multiple files', async () => {
+    const fixturePath = join(fixturesPath, 'multiple')
+    chdir(fixturePath)
+
+    const actual = await findAssets([
+      {
+        path: 'path/to/file-a.*.txt',
+      },
+    ])
+
+    const expected = [
+      {
+        path: join(fixturePath, 'path/to/file-a.1468898034.txt'),
+        name: 'file-a.1468898034.txt',
+        label: '',
+      },
+      {
+        path: join(fixturePath, 'path/to/file-a.4228738524.txt'),
+        name: 'file-a.4228738524.txt',
+        label: '',
+      },
+    ]
+
+    expect(actual).toEqual(expected)
+  })
+
+  it('should not apply custom names or labels when the pattern matches multiple files', async () => {
+    const fixturePath = join(fixturesPath, 'multiple')
+    chdir(fixturePath)
+
+    const actual = await findAssets([
+      {
+        path: 'path/to/file-a.*.txt',
+        name: 'custom-name.txt',
+        label: 'label for file a',
+      },
+    ])
+
+    const expected = [
+      {
+        path: join(fixturePath, 'path/to/file-a.1468898034.txt'),
+        name: 'file-a.1468898034.txt',
+        label: '',
+      },
+      {
+        path: join(fixturePath, 'path/to/file-a.4228738524.txt'),
+        name: 'file-a.4228738524.txt',
+        label: '',
+      },
+    ]
+
+    expect(actual).toEqual(expected)
+  })
+
+  it('should fail when the pattern matches no files', async () => {
+    chdir(fixturesPath)
+
+    async function actual () {
+      await findAssets([
+        {
+          path: 'path/to/nonexistent.*',
+        },
+      ])
+    }
+
+    await expect(actual).rejects.toThrow('No release assets found for path "path/to/nonexistent.*"')
   })
 })
