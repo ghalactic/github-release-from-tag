@@ -64,7 +64,7 @@ export async function modifyReleaseAssets ({
 
   async function uploadAsset (desired) {
     const {upload_url: url} = release
-    const {name, path} = desired
+    const {label, name, path} = desired
     const contentType = lookup(path)
     const data = await readFile(path)
 
@@ -75,6 +75,7 @@ export async function modifyReleaseAssets ({
       url,
       name,
       data,
+      label,
       headers: {
         'Content-Type': contentType,
       },
@@ -83,10 +84,18 @@ export async function modifyReleaseAssets ({
 }
 
 function normalizeAsset (asset) {
-  const {path} = asset
+  const {
+    label = '',
+    path,
+  } = asset
+
+  const {
+    name = basename(path),
+  } = asset
 
   return {
-    name: basename(path),
+    label,
+    name,
     path,
   }
 }
