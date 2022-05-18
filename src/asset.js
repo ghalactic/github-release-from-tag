@@ -92,8 +92,10 @@ export async function findAssets (warning, assets) {
   const seen = new Set()
 
   return found.filter(({name}) => {
-    if (!seen.has(name)) {
-      seen.add(name)
+    const lowercaseName = name.toLowerCase()
+
+    if (!seen.has(lowercaseName)) {
+      seen.add(lowercaseName)
 
       return true
     }

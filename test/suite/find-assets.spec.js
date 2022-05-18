@@ -150,6 +150,24 @@ describe('findAssets()', () => {
       .toContain('Release asset "file-a.4228738524.txt" found multiple times. Only the first instance will be used.')
   })
 
+  it('should skip duplicate assets where the names differ only by case', async () => {
+    const fixturePath = join(fixturesPath, 'case-insensitivity')
+    chdir(fixturePath)
+
+    const actual = []
+    const warning = message => {
+      actual.push(message)
+    }
+
+    await findAssets(warning, [
+      {
+        path: '**/*.txt',
+      },
+    ])
+
+    expect(actual).toContain('Release asset "FILE-A.txt" found multiple times. Only the first instance will be used.')
+  })
+
   it('should fail when the pattern matches no files', async () => {
     chdir(fixturesPath)
 
