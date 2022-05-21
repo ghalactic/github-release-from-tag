@@ -5,14 +5,13 @@ export async function determineRef ({
   info,
   silent = false,
 }) {
-  const {stdout} = await group('Determining the current Git ref', async () => {
-    return getExecOutput('git', ['describe', '--exact-match', '--all'], {silent})
+  return group('Determining the current Git ref', async () => {
+    const {stdout} = await getExecOutput('git', ['describe', '--exact-match', '--all'], {silent})
+    const ref = `refs/${stdout.trim()}`
+    info(ref)
+
+    return ref
   })
-
-  const ref = `refs/${stdout.trim()}`
-  info(ref)
-
-  return ref
 }
 
 export async function determineTagType ({
