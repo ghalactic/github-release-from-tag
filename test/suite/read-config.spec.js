@@ -28,6 +28,8 @@ describe('readConfig()', () => {
         },
         {
           path: 'assets/json/file-b.json',
+          name: 'custom-name-b.json',
+          label: 'Label for file-b.json',
         },
       ],
     }
