@@ -62,6 +62,7 @@ async function main () {
   }
 
   const isDraft = getInput('draft') === 'true'
+  const discussionCategory = getInput('discussion-category')
   const {request, rest: {markdown, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
@@ -73,6 +74,7 @@ async function main () {
   })
 
   const [release, wasCreated] = await createOrUpdateRelease({
+    discussionCategory,
     group,
     info,
     isDraft,

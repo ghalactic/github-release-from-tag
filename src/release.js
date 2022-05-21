@@ -1,4 +1,5 @@
 export async function createOrUpdateRelease ({
+  discussionCategory,
   group,
   info,
   isDraft,
@@ -18,6 +19,7 @@ export async function createOrUpdateRelease ({
     body: releaseBody,
     draft: isDraft,
     prerelease: !isStable,
+    discussion_category_name: discussionCategory || undefined,
   }
 
   // Attempt to create a new release first, prioritizing speed during normal
