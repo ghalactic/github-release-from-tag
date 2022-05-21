@@ -1,16 +1,19 @@
-name: 'GitHub Release from Tag'
-description: 'Publish GitHub releases from tags, supporting Markdown and SemVer'
-author: 'Eloquent'
+name: "GitHub Release from Tag"
+description: "Publish GitHub releases from tags, supporting Markdown and SemVer"
+author: "Eloquent"
 inputs:
+  discussion-category:
+    description: If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository.
+    default: ""
   draft:
     description: Set to "true" to produce releases in a draft state
-    default: 'false'
+    default: "false"
   token:
     description: The GitHub token to use when managing releases
     default: ${{ github.token }}
 branding:
-  icon: 'tag'
-  color: 'green'
+  icon: "tag"
+  color: "green"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
