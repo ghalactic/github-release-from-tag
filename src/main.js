@@ -4,7 +4,7 @@ import {context, getOctokit} from '@actions/github'
 import {modifyReleaseAssets} from './asset.js'
 import {renderReleaseBody} from './body.js'
 import {readConfig} from './config/reading.js'
-import {determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
+import {determineRef, determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
 import {parseRef} from './ref.js'
 import {createOrUpdateRelease} from './release.js'
 
@@ -18,7 +18,9 @@ async function main () {
   const config = await readConfig({group, info})
 
   const {env} = process
-  const {ref, repo: {owner, repo}} = context
+  const {repo: {owner, repo}} = context
+
+  const ref = await determineRef({group, info})
   const {isTag, isSemVer, isStable, tag} = parseRef(ref)
 
   if (!isTag) {

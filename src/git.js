@@ -1,5 +1,20 @@
 import {exec, getExecOutput} from '@actions/exec'
 
+export async function determineRef ({
+  group,
+  info,
+  silent = false,
+}) {
+  const {stdout} = await group('Determining the current Git ref', async () => {
+    return getExecOutput('git', ['describe', '--exact-match', '--all'], {silent})
+  })
+
+  const ref = `refs/${stdout.trim()}`
+  info(ref)
+
+  return ref
+}
+
 export async function determineTagType ({
   group,
   silent = false,
