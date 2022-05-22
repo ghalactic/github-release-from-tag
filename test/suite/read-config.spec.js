@@ -32,6 +32,9 @@ describe('readConfig()', () => {
           label: 'Label for file-b.json',
         },
       ],
+      discussionCategory: 'category-a',
+      draft: true,
+      generateReleaseNotes: true,
     }
 
     expect(actual).toEqual(expected)
@@ -43,6 +46,9 @@ describe('readConfig()', () => {
 
     const expected = {
       assets: [],
+      discussionCategory: '',
+      draft: false,
+      generateReleaseNotes: false,
     }
 
     expect(actual).toEqual(expected)
@@ -54,6 +60,9 @@ describe('readConfig()', () => {
 
     const expected = {
       assets: [],
+      discussionCategory: '',
+      draft: false,
+      generateReleaseNotes: false,
     }
 
     expect(actual).toEqual(expected)

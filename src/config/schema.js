@@ -36,5 +36,20 @@ export const schema = {
         },
       },
     },
+    discussionCategory: {
+      description: 'If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository.',
+      type: 'string',
+      default: '',
+    },
+    draft: {
+      description: 'Set to true to produce releases in a draft state.',
+      type: 'boolean',
+      default: false,
+    },
+    generateReleaseNotes: {
+      description: 'Set to "true" to append automatically generated release notes to the release body.',
+      type: 'boolean',
+      default: false,
+    },
   },
 }
