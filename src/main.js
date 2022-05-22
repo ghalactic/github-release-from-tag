@@ -62,6 +62,7 @@ async function main () {
   }
 
   const isDraft = getInput('draft') === 'true'
+  const shouldGenerateReleaseNotes = getInput('generate-release-notes') === 'true'
   const discussionCategory = getInput('discussion-category')
   const {request, rest: {markdown, repos}} = getOctokit(getInput('token'))
 
@@ -70,6 +71,11 @@ async function main () {
     group,
     info,
     markdown,
+    owner,
+    repo,
+    repos,
+    shouldGenerateReleaseNotes,
+    tag,
     tagBody,
   })
 
