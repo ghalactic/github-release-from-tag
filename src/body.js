@@ -20,6 +20,8 @@ export async function renderReleaseBody ({
   markdown,
   tagBody,
 }) {
+  if (tagBody.trim() === '') return ''
+
   const renderedTagBody = await group('Rendering tag annotation body', async () => {
     const {data} = await markdown.render({mode: 'markdown', text: tagBody})
     info(data)
