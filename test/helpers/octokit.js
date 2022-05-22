@@ -27,6 +27,37 @@ export async function createFile (branch, path, content) {
   return data
 }
 
+export async function createBranchForCi (branch, workflow, options = {}) {
+  const {
+    files = [],
+  } = options
+
+  let commit, ref
+
+  if (options.commit == null) {
+    const orphan = await createOrphanBranch(branch)
+    commit = orphan.commit
+    ref = orphan.ref
+  } else {
+    commit = options.commit
+    ref = await createBranch(branch, commit)
+  }
+
+  // each of these creates a commit, so do them sequentially
+  for (const {path, content} of files) await createFile(branch, path, content)
+
+  const workflowFile = await createFile(
+    branch,
+    `.github/workflows/publish-release.${branch}.yml`,
+    workflow,
+  )
+
+  const headSha = workflowFile.commit.sha
+  const workflowFileName = workflowFile.content.name
+
+  return {commit, headSha, ref, workflowFile, workflowFileName}
+}
+
 export async function createOrphanBranch (branch) {
   const octokit = createOctokit()
 
@@ -47,22 +78,17 @@ export async function createOrphanBranch (branch) {
   return {commit, ref}
 }
 
-export async function createOrphanBranchForCi (branch, workflow, files = []) {
-  const {commit, ref} = await createOrphanBranch(branch)
+export async function createBranch (branch, commit) {
+  const octokit = createOctokit()
 
-  // each of these creates a commit, so do them sequentially
-  for (const {path, content} of files) await createFile(branch, path, content)
+  const {data: ref} = await octokit.rest.git.createRef({
+    owner,
+    repo,
+    ref: `refs/heads/${branch}`,
+    sha: commit,
+  })
 
-  const workflowFile = await createFile(
-    branch,
-    `.github/workflows/publish-release.${branch}.yml`,
-    workflow,
-  )
-
-  const headSha = workflowFile.commit.sha
-  const workflowFileName = workflowFile.content.name
-
-  return {commit, headSha, ref, workflowFile, workflowFileName}
+  return ref
 }
 
 export async function createTag(sha, tag, annotation) {

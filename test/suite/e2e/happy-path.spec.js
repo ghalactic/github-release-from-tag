@@ -13,7 +13,7 @@ import {owner, repo} from '../../helpers/fixture-repo.js'
 import {readRunId} from '../../helpers/gha.js'
 
 import {
-  createOrphanBranchForCi,
+  createBranchForCi,
   createTag,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
@@ -89,10 +89,17 @@ paragraph
       },
     ]
 
+    // points to a commit history with PRs for generating release notes
+    const parentCommit = '4b8277d28bee33b7c323164b2f2750adf98917be'
+
     let workflowRun, annotations, release
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow, files)
+      const {headSha, workflowFileName} = await createBranchForCi(branchName, workflow, {
+        commit: parentCommit,
+        files,
+      })
+
       await createTag(headSha, tagName, tagAnnotation)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)

@@ -9,7 +9,7 @@ import {
 import {readRunId} from '../../helpers/gha.js'
 
 import {
-  createOrphanBranchForCi,
+  createBranchForCi,
   createTag,
   getReleaseByTag,
   waitForCompletedTagWorkflowRun,
@@ -28,7 +28,7 @@ describeOrSkip('End-to-end tests', () => {
     let workflowRun, release
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow)
+      const {headSha, workflowFileName} = await createBranchForCi(branchName, workflow)
       await createTag(headSha, tagName, tagAnnotation)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)

@@ -3,7 +3,7 @@ import {readRunId} from '../../helpers/gha.js'
 
 import {
   createTag,
-  createOrphanBranchForCi,
+  createBranchForCi,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
 } from '../../helpers/octokit.js'
@@ -19,7 +19,7 @@ describeOrSkip('End-to-end tests', () => {
     let workflowRun, annotations
 
     beforeAll(async () => {
-      const {headSha, workflowFileName} = await createOrphanBranchForCi(branchName, workflow)
+      const {headSha, workflowFileName} = await createBranchForCi(branchName, workflow)
       await createTag(headSha, tagName)
 
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
