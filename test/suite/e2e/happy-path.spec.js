@@ -172,11 +172,8 @@ paragraph
         `\/${escapeStringRegexp(repo)}` +
         `\/releases\/tag\/${escapeStringRegexp(encodeURIComponent(tagName))}"`
       )
-      console.log(String(pattern))
 
       for await (const discussion of listDiscussionsByCategory('releases')) {
-        console.log(discussion)
-
         if (pattern.test(discussion.bodyHTML)) {
           match = discussion
           break
