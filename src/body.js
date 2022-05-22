@@ -44,10 +44,10 @@ ${renderedTagBody}`
   if (!shouldGenerateReleaseNotes) return releaseBody
 
   const releaseNotes = await group('Rendering automatically generated release notes', async () => {
-    const {data} = await repos.generateReleaseNotes({owner, repo, tag_name: tag})
-    info(data)
+    const {data: {body}} = await repos.generateReleaseNotes({owner, repo, tag_name: tag})
+    info(body)
 
-    return data
+    return body
   })
 
   return `${releaseBody}
