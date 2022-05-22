@@ -2,13 +2,13 @@ name: "GitHub Release from Tag"
 description: "Publish GitHub releases from tags, supporting Markdown and SemVer"
 author: "Eloquent"
 inputs:
-  discussion-category:
+  discussionCategory:
     description: If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository.
     default: ""
   draft:
     description: Set to "true" to produce releases in a draft state
     default: "false"
-  generate-release-notes:
+  generateReleaseNotes:
     description: Set to "true" to append automatically generated release notes to the release body.
     default: "false"
   token:

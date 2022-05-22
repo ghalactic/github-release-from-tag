@@ -28,8 +28,8 @@ describeOrSkip('End-to-end tests', () => {
     const branchName = buildBranchName(runId, label)
     const tagName = buildTagName('1.0.0', runId, label)
     const workflow = buildWorkflow(branchName, {
-      'discussion-category': 'releases',
-      'generate-release-notes': 'true',
+      'discussionCategory': 'releases',
+      'generateReleaseNotes': 'true',
     })
 
     const tagAnnotation = `1.0.0
