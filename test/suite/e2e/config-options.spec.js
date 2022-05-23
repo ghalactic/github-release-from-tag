@@ -82,7 +82,9 @@ reactions:
       ['rocket'],
       ['eyes'],
     ])('should produce the expected release reactions (%s)', reaction => {
-      expect(release.reactions[reaction]).toBeGreaterThan(0)
+      const {reactions: {[reaction]: actual = 0} = {}} = release
+
+      expect(actual).toBeGreaterThan(0)
     })
   })
 })
