@@ -27,7 +27,8 @@ describeOrSkip('End-to-end tests', () => {
 
     const tagAnnotation = '1.0.0'
 
-    const config = `discussionCategory: releases
+    const config = `discussion:
+  category: releases
 generateReleaseNotes: true
 reactions:
   - "+1"

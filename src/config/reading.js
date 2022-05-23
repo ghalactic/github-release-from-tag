@@ -21,7 +21,12 @@ export async function readConfig ({
       info(`Configuration overrides: ${JSON.stringify(overrides, null, 2)}`)
     }
 
-    const effective = {...base, ...overrides}
+    const effective = {
+      ...base,
+      ...overrides,
+      discussion: {...base.discussion, ...overrides.discussion},
+    }
+
     info(`Effective configuration: ${JSON.stringify(effective, null, 2)}`)
 
     return effective
@@ -45,14 +50,16 @@ async function readConfigFile () {
 }
 
 function getConfigOverrides (getInput) {
-  const overrides = {}
+  const overrides = {
+    discussion: {},
+  }
 
   const discussionCategory = getInput('discussionCategory')
   const draft = getInput('draft')
   const generateReleaseNotes = getInput('generateReleaseNotes')
   const reactions = getInput('reactions')
 
-  if (discussionCategory) overrides.discussionCategory = discussionCategory
+  if (discussionCategory) overrides.discussion.category = discussionCategory
   if (draft) overrides.draft = draft === 'true'
   if (generateReleaseNotes) overrides.generateReleaseNotes = generateReleaseNotes === 'true'
   if (reactions) overrides.reactions = reactions.split(',')

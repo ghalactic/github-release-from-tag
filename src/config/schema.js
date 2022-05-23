@@ -36,10 +36,19 @@ export const schema = {
         },
       },
     },
-    discussionCategory: {
-      description: 'If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository.',
-      type: 'string',
-      default: '',
+    discussion: {
+      description: 'If specified, a discussion is created and linked to the release.',
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'category',
+      ],
+      properties: {
+        category: {
+          description: 'The category to use when creating the discussion. The value must be a category that already exists in the repository.',
+          type: 'string',
+        },
+      },
     },
     draft: {
       description: 'Set to true to produce releases in a draft state.',

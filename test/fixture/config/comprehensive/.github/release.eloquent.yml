@@ -3,7 +3,8 @@ assets:
   - path: assets/json/file-b.json
     name: custom-name-b.json
     label: Label for file-b.json
-discussionCategory: category-a
+discussion:
+  category: category-a
 draft: true
 generateReleaseNotes: true
 reactions:

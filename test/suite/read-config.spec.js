@@ -32,7 +32,9 @@ describe('readConfig()', () => {
           label: 'Label for file-b.json',
         },
       ],
-      discussionCategory: 'category-a',
+      discussion: {
+        category: 'category-a',
+      },
       draft: true,
       generateReleaseNotes: true,
       reactions: [
@@ -54,7 +56,7 @@ describe('readConfig()', () => {
 
     const expected = {
       assets: [],
-      discussionCategory: '',
+      discussion: {},
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
@@ -69,7 +71,7 @@ describe('readConfig()', () => {
 
     const expected = {
       assets: [],
-      discussionCategory: '',
+      discussion: {},
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
@@ -101,7 +103,9 @@ describe('readConfig()', () => {
     const actual = await readConfig({getInput, group, info})
 
     const expected = {
-      discussionCategory: 'category-override-a',
+      discussion: {
+        category: 'category-override-a',
+      },
       draft: false,
       generateReleaseNotes: false,
       reactions: [
