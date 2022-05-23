@@ -48,6 +48,25 @@ export const schema = {
           description: 'The category to use when creating the discussion. The value must be a category that already exists in the repository.',
           type: 'string',
         },
+        reactions: {
+          description: 'Reactions to create for discussions linked to releases.',
+          type: 'array',
+          default: [],
+          items: {
+            description: 'A reaction to create for discussions linked to releases.',
+            type: 'string',
+            enum: [
+              '+1',
+              '-1',
+              'laugh',
+              'hooray',
+              'confused',
+              'heart',
+              'rocket',
+              'eyes',
+            ],
+          },
+        },
       },
     },
     draft: {

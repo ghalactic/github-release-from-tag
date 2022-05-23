@@ -26,6 +26,7 @@ describeOrSkip('End-to-end tests', () => {
     const tagName = buildTagName('1.0.0', runId, label)
     const workflow = buildWorkflow(branchName, {
       discussionCategory: 'releases',
+      discussionReactions: '+1,-1,laugh,hooray,confused,heart,rocket,eyes',
       generateReleaseNotes: 'true',
       reactions: '+1,laugh,hooray,heart,rocket,eyes',
     })

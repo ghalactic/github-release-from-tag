@@ -1,25 +1,40 @@
-name: "GitHub Release from Tag"
-description: "Publish GitHub releases from tags, supporting Markdown and SemVer"
-author: "Eloquent"
+name: GitHub Release from Tag
+description: Publish GitHub releases from tags, supporting Markdown and SemVer
+author: Eloquent
 inputs:
   discussionCategory:
-    description: If specified, a discussion of the specified category is created and linked to the release. The value must be a category that already exists in the repository.
+    description: >-
+      If specified, a discussion of the specified category is created and linked
+      to the release. The value must be a category that already exists in the
+      repository.
+    default: ""
+  discussionReactions:
+    description: >-
+      A comma-separated list of reactions to create for discussions linked to
+      releases. A valid value with all available reactions is
+      "+1,-1,laugh,hooray,confused,heart,rocket,eyes".
     default: ""
   draft:
-    description: Set to "true" to produce releases in a draft state.
+    description: >-
+      Set to "true" to produce releases in a draft state.
     default: "" # defaults to the default in the config file (false)
   generateReleaseNotes:
-    description: Set to "true" to append automatically generated release notes to the release body.
+    description: >-
+      Set to "true" to append automatically generated release notes to the
+      release body.
     default: "" # defaults to the default in the config file (false)
   reactions:
-    description: A comma-separated list of reactions to create for the release. A valid value with all available reactions is "+1,laugh,hooray,heart,rocket,eyes".
+    description: >-
+      A comma-separated list of reactions to create for the release. A valid
+      value with all available reactions is "+1,laugh,hooray,heart,rocket,eyes".
     default: ""
   token:
-    description: The GitHub token to use when managing releases.
+    description: >-
+      The GitHub token to use when managing releases.
     default: ${{ github.token }}
 branding:
-  icon: "tag"
-  color: "green"
+  icon: tag
+  color: green
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: docker
+  image: Dockerfile

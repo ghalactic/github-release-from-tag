@@ -5,6 +5,15 @@ assets:
     label: Label for file-b.json
 discussion:
   category: category-a
+  reactions:
+    - "+1"
+    - "-1"
+    - laugh
+    - hooray
+    - confused
+    - heart
+    - rocket
+    - eyes
 draft: true
 generateReleaseNotes: true
 reactions:

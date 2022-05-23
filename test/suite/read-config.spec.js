@@ -34,6 +34,16 @@ describe('readConfig()', () => {
       ],
       discussion: {
         category: 'category-a',
+        reactions: [
+          '+1',
+          '-1',
+          'laugh',
+          'hooray',
+          'confused',
+          'heart',
+          'rocket',
+          'eyes',
+        ],
       },
       draft: true,
       generateReleaseNotes: true,
@@ -65,6 +75,18 @@ describe('readConfig()', () => {
     expect(actual).toEqual(expected)
   })
 
+  it('should fill in default options in the "discussion" property', async () => {
+    chdir(join(fixturesPath, 'discussion-defaults'))
+    const actual = await readConfig({getInput, group, info})
+
+    const expected = {
+      category: 'category-a',
+      reactions: [],
+    }
+
+    expect(actual.discussion).toEqual(expected)
+  })
+
   it('should return a default config when no config file exists', async () => {
     chdir(join(fixturesPath, 'none'))
     const actual = await readConfig({getInput, group, info})
@@ -92,6 +114,7 @@ describe('readConfig()', () => {
     const getInput = name => {
       switch (name) {
         case 'discussionCategory': return 'category-override-a'
+        case 'discussionReactions': return 'eyes,+1'
         case 'draft': return 'false'
         case 'generateReleaseNotes': return 'false'
         case 'reactions': return 'heart,hooray,rocket'
@@ -105,6 +128,10 @@ describe('readConfig()', () => {
     const expected = {
       discussion: {
         category: 'category-override-a',
+        reactions: [
+          'eyes',
+          '+1',
+        ],
       },
       draft: false,
       generateReleaseNotes: false,

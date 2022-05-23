@@ -29,6 +29,15 @@ describeOrSkip('End-to-end tests', () => {
 
     const config = `discussion:
   category: releases
+  reactions:
+    - "+1"
+    - "-1"
+    - laugh
+    - hooray
+    - confused
+    - heart
+    - rocket
+    - eyes
 generateReleaseNotes: true
 reactions:
   - "+1"

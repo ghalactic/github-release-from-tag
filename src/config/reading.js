@@ -55,11 +55,13 @@ function getConfigOverrides (getInput) {
   }
 
   const discussionCategory = getInput('discussionCategory')
+  const discussionReactions = getInput('discussionReactions')
   const draft = getInput('draft')
   const generateReleaseNotes = getInput('generateReleaseNotes')
   const reactions = getInput('reactions')
 
   if (discussionCategory) overrides.discussion.category = discussionCategory
+  if (discussionReactions) overrides.discussion.reactions = discussionReactions.split(',')
   if (draft) overrides.draft = draft === 'true'
   if (generateReleaseNotes) overrides.generateReleaseNotes = generateReleaseNotes === 'true'
   if (reactions) overrides.reactions = reactions.split(',')
