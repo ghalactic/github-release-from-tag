@@ -73,4 +73,28 @@ describe('readConfig()', () => {
 
     await expect(() => readConfig({getInput, group, info})).rejects.toThrow()
   })
+
+  it('should override config options with actions inputs', async () => {
+    chdir(join(fixturesPath, 'comprehensive'))
+
+    const getInput = name => {
+      switch (name) {
+        case 'discussionCategory': return 'category-override-a'
+        case 'draft': return 'false'
+        case 'generateReleaseNotes': return 'false'
+      }
+
+      return ''
+    }
+
+    const actual = await readConfig({getInput, group, info})
+
+    const expected = {
+      discussionCategory: 'category-override-a',
+      draft: false,
+      generateReleaseNotes: false,
+    }
+
+    expect(actual).toMatchObject(expected)
+  })
 })
