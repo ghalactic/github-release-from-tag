@@ -26,6 +26,10 @@ export function createRepos ({
       return {data}
     },
 
+    async generateReleaseNotes ({owner, repo, tag_name}) {
+      return {data: {body: JSON.stringify({releaseNotesBody: true, owner, repo, tag_name}, null, 2)}}
+    },
+
     async getReleaseByTag ({owner, repo, tag}) {
       if (getReleaseByTagError) throw getReleaseByTagError
 
