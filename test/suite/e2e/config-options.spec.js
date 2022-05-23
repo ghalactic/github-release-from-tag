@@ -31,7 +31,6 @@ describeOrSkip('End-to-end tests', () => {
     const tagAnnotation = '1.0.0'
 
     const config = `discussionCategory: releases
-draft: true
 generateReleaseNotes: true
 `
 
@@ -59,10 +58,6 @@ generateReleaseNotes: true
 
     it('should produce a workflow run that concludes in success', () => {
       expect(workflowRun.conclusion).toBe('success')
-    })
-
-    it('should produce a draft release', () => {
-      expect(release.draft).toBe(true)
     })
 
     it('should append generated release notes to the release body', async () => {
