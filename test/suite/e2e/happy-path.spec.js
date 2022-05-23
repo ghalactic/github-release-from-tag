@@ -1,5 +1,3 @@
-import escapeStringRegexp from 'escape-string-regexp'
-
 import {
   buildBodyExpression,
   buildBranchName,
@@ -17,7 +15,6 @@ import {
   createTag,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
-  listDiscussionsByCategory,
   waitForCompletedTagWorkflowRun,
 } from '../../helpers/octokit.js'
 
@@ -162,27 +159,8 @@ paragraph
       })
     })
 
-    it('should create a linked discussion', async () => {
-      let count = 0
-      let match
-
-      const pattern = new RegExp(
-        `href="https:\/\/github\.com` +
-        `\/${escapeStringRegexp(owner)}` +
-        `\/${escapeStringRegexp(repo)}` +
-        `\/releases\/tag\/${escapeStringRegexp(encodeURIComponent(tagName))}"`
-      )
-
-      for await (const discussion of listDiscussionsByCategory('releases')) {
-        if (pattern.test(discussion.bodyHTML)) {
-          match = discussion
-          break
-        }
-
-        if (++count > 100) break
-      }
-
-      expect(match?.title).toBe(release.name)
+    it('should create a linked discussion', () => {
+      expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
     })
   })
 })
