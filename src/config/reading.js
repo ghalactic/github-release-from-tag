@@ -4,6 +4,7 @@ import {load} from 'js-yaml'
 import {validateConfig} from './validation.js'
 
 export async function readConfig ({
+  getInput,
   group,
   info,
 }) {
@@ -12,10 +13,18 @@ export async function readConfig ({
 
     if (!hasYaml) info('No configuration found at .github/release.eloquent.yml')
 
-    const config = validateConfig(hasYaml ? load(yaml) : {})
-    info(`Effective configuration: ${JSON.stringify(config, null, 2)}`)
+    const base = validateConfig(hasYaml ? load(yaml) : {})
+    const [overrides, hasOverrides] = getConfigOverrides(getInput)
 
-    return config
+    if (hasOverrides) {
+      info(`Base configuration: ${JSON.stringify(base, null, 2)}`)
+      info(`Configuration overrides: ${JSON.stringify(overrides, null, 2)}`)
+    }
+
+    const effective = {...base, ...overrides}
+    info(`Effective configuration: ${JSON.stringify(effective, null, 2)}`)
+
+    return effective
   })
 }
 
@@ -33,4 +42,18 @@ async function readConfigFile () {
   const yaml = data.toString().trim()
 
   return [yaml.length > 0, yaml]
+}
+
+function getConfigOverrides (getInput) {
+  const overrides = {}
+
+  const discussionCategory = getInput('discussionCategory')
+  const draft = getInput('draft')
+  const generateReleaseNotes = getInput('generateReleaseNotes')
+
+  if (discussionCategory) overrides.discussionCategory = discussionCategory
+  if (draft) overrides.draft = draft === 'true'
+  if (generateReleaseNotes) overrides.generateReleaseNotes = generateReleaseNotes === 'true'
+
+  return [overrides, Object.keys(overrides).length > 0]
 }

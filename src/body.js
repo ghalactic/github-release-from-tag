@@ -14,6 +14,7 @@
  * inside the pre-rendered HTML.
  */
 export async function renderReleaseBody ({
+  config,
   env,
   group,
   info,
@@ -21,7 +22,6 @@ export async function renderReleaseBody ({
   owner,
   repo,
   repos,
-  shouldGenerateReleaseNotes,
   tag,
   tagBody,
 }) {
@@ -41,7 +41,7 @@ ${tagBody}
 
 ${renderedTagBody}`
 
-  if (!shouldGenerateReleaseNotes) return releaseBody
+  if (!config.generateReleaseNotes) return releaseBody
 
   const releaseNotes = await group('Rendering automatically generated release notes', async () => {
     const {data: {body}} = await repos.generateReleaseNotes({owner, repo, tag_name: tag})

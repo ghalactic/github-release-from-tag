@@ -1,7 +1,7 @@
 import {join} from 'path'
 
 import {readConfig} from '../../src/config/reading.js'
-import {group, info} from '../mocks/actions-core.js'
+import {getInput, group, info} from '../mocks/actions-core.js'
 
 const {chdir, cwd} = process
 const fixturesPath = join(__dirname, '../fixture/config')
@@ -19,7 +19,7 @@ describe('readConfig()', () => {
 
   it('should be able to read comprehensive valid configs', async () => {
     chdir(join(fixturesPath, 'comprehensive'))
-    const actual = await readConfig({group, info})
+    const actual = await readConfig({getInput, group, info})
 
     const expected = {
       assets: [
@@ -42,7 +42,7 @@ describe('readConfig()', () => {
 
   it('should return a default config the config file is empty', async () => {
     chdir(join(fixturesPath, 'empty'))
-    const actual = await readConfig({group, info})
+    const actual = await readConfig({getInput, group, info})
 
     const expected = {
       assets: [],
@@ -56,7 +56,7 @@ describe('readConfig()', () => {
 
   it('should return a default config when no config file exists', async () => {
     chdir(join(fixturesPath, 'none'))
-    const actual = await readConfig({group, info})
+    const actual = await readConfig({getInput, group, info})
 
     const expected = {
       assets: [],
@@ -71,6 +71,6 @@ describe('readConfig()', () => {
   it('should throw an error if the config file contains invalid YAML', async () => {
     chdir(join(fixturesPath, 'invalid-yaml'))
 
-    await expect(() => readConfig({group, info})).rejects.toThrow()
+    await expect(() => readConfig({getInput, group, info})).rejects.toThrow()
   })
 })

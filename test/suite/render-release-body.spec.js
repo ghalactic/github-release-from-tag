@@ -32,6 +32,7 @@ This should be a separate paragraph.
 }`
 
     const actual = await renderReleaseBody({
+      config: {},
       env,
       group,
       info,

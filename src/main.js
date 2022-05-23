@@ -15,7 +15,7 @@ try {
 }
 
 async function main () {
-  const config = await readConfig({group, info})
+  const config = await readConfig({getInput, group, info})
 
   const {env} = process
   const {repo: {owner, repo}} = context
@@ -61,12 +61,10 @@ async function main () {
     return
   }
 
-  const isDraft = getInput('draft') === 'true'
-  const shouldGenerateReleaseNotes = getInput('generateReleaseNotes') === 'true'
-  const discussionCategory = getInput('discussionCategory')
   const {request, rest: {markdown, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
+    config,
     env,
     group,
     info,
@@ -74,16 +72,14 @@ async function main () {
     owner,
     repo,
     repos,
-    shouldGenerateReleaseNotes,
     tag,
     tagBody,
   })
 
   const [release, wasCreated] = await createOrUpdateRelease({
-    discussionCategory,
+    config,
     group,
     info,
-    isDraft,
     isStable,
     owner,
     releaseBody,

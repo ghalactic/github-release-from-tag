@@ -1,8 +1,7 @@
 export async function createOrUpdateRelease ({
-  discussionCategory,
+  config,
   group,
   info,
-  isDraft,
   isStable,
   owner,
   releaseBody,
@@ -17,9 +16,9 @@ export async function createOrUpdateRelease ({
     tag_name: tag,
     name: tagSubject,
     body: releaseBody,
-    draft: isDraft,
+    draft: config.draft,
     prerelease: !isStable,
-    discussion_category_name: discussionCategory || undefined,
+    discussion_category_name: config.discussionCategory || undefined,
   }
 
   // Attempt to create a new release first, prioritizing speed during normal

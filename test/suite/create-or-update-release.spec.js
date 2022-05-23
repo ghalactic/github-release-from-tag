@@ -4,6 +4,9 @@ import {createAlreadyExistsError, createError, createRepos} from '../mocks/oktok
 
 describe('createOrUpdateRelease()', () => {
   const staticParams = {
+    config: {
+      draft: false,
+    },
     group,
     info,
     owner: 'owner-a',
@@ -11,7 +14,6 @@ describe('createOrUpdateRelease()', () => {
     releaseBody: 'release-body-a',
     tag: 'tag-a',
     tagSubject: 'tag-subject-a',
-    isDraft: false,
     isStable: true,
   }
 
@@ -56,10 +58,10 @@ describe('createOrUpdateRelease()', () => {
     expect(actual).toMatchObject({...defaultExpectation, prerelease: true})
   })
 
-  it('should honor the isDraft option', async () => {
+  it('should honor the config.draft option', async () => {
     const repos = createRepos()
 
-    const [actual, wasCreated] = await createOrUpdateRelease({...staticParams, repos, isDraft: true})
+    const [actual, wasCreated] = await createOrUpdateRelease({...staticParams, repos, config: {draft: true}})
 
     expect(wasCreated).toBe(true)
     expect(actual).toMatchObject({...defaultExpectation, draft: true})
