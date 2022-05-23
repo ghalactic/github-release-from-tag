@@ -38,7 +38,8 @@ export async function renderReleaseBody ({
     parts.push(
       '<!-- original source:',
       tagBody.trim(),
-      '-->\n',
+      '-->',
+      '',
       renderedTagBody,
     )
   }
