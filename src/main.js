@@ -5,6 +5,7 @@ import {modifyReleaseAssets} from './asset.js'
 import {renderReleaseBody} from './body.js'
 import {readConfig} from './config/reading.js'
 import {determineRef, determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
+import {createReleaseReactions} from './reaction.js'
 import {parseRef} from './ref.js'
 import {createOrUpdateRelease} from './release.js'
 
@@ -61,7 +62,7 @@ async function main () {
     return
   }
 
-  const {request, rest: {markdown, repos}} = getOctokit(getInput('token'))
+  const {request, rest: {markdown, reactions, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
     config,
@@ -105,4 +106,14 @@ async function main () {
   })
 
   if (!assetResult) setFailed('Unable to modify release assets')
+
+  await createReleaseReactions({
+    config,
+    group,
+    info,
+    owner,
+    reactions,
+    release,
+    repo,
+  })
 }
