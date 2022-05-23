@@ -29,6 +29,13 @@ describeOrSkip('End-to-end tests', () => {
 
     const config = `discussionCategory: releases
 generateReleaseNotes: true
+reactions:
+  - "+1"
+  - laugh
+  - hooray
+  - heart
+  - rocket
+  - eyes
 `
 
     const files = [
@@ -63,8 +70,19 @@ generateReleaseNotes: true
       expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty()
     })
 
-    it('should create a linked discussion', () => {
+    it('should produce the expected release discussion', () => {
       expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
+    })
+
+    it.each([
+      ['+1'],
+      ['laugh'],
+      ['hooray'],
+      ['heart'],
+      ['rocket'],
+      ['eyes'],
+    ])('should produce the expected release reactions (%s)', reaction => {
+      expect(release.reactions[reaction]).toBeGreaterThan(0)
     })
   })
 })

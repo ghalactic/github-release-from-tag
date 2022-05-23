@@ -6,3 +6,10 @@ assets:
 discussionCategory: category-a
 draft: true
 generateReleaseNotes: true
+reactions:
+  - "+1"
+  - laugh
+  - hooray
+  - heart
+  - rocket
+  - eyes

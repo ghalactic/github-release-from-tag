@@ -51,5 +51,22 @@ export const schema = {
       type: 'boolean',
       default: false,
     },
+    reactions: {
+      description: 'Reactions to create for releases.',
+      type: 'array',
+      default: [],
+      items: {
+        description: 'A reaction to create for releases.',
+        type: 'string',
+        enum: [
+          '+1',
+          'laugh',
+          'hooray',
+          'heart',
+          'rocket',
+          'eyes',
+        ],
+      },
+    },
   },
 }

@@ -35,6 +35,14 @@ describe('readConfig()', () => {
       discussionCategory: 'category-a',
       draft: true,
       generateReleaseNotes: true,
+      reactions: [
+        '+1',
+        'laugh',
+        'hooray',
+        'heart',
+        'rocket',
+        'eyes',
+      ],
     }
 
     expect(actual).toEqual(expected)
@@ -49,6 +57,7 @@ describe('readConfig()', () => {
       discussionCategory: '',
       draft: false,
       generateReleaseNotes: false,
+      reactions: [],
     }
 
     expect(actual).toEqual(expected)
@@ -63,6 +72,7 @@ describe('readConfig()', () => {
       discussionCategory: '',
       draft: false,
       generateReleaseNotes: false,
+      reactions: [],
     }
 
     expect(actual).toEqual(expected)
@@ -82,6 +92,7 @@ describe('readConfig()', () => {
         case 'discussionCategory': return 'category-override-a'
         case 'draft': return 'false'
         case 'generateReleaseNotes': return 'false'
+        case 'reactions': return 'heart,hooray,rocket'
       }
 
       return ''
@@ -93,6 +104,11 @@ describe('readConfig()', () => {
       discussionCategory: 'category-override-a',
       draft: false,
       generateReleaseNotes: false,
+      reactions: [
+        'heart',
+        'hooray',
+        'rocket',
+      ],
     }
 
     expect(actual).toMatchObject(expected)

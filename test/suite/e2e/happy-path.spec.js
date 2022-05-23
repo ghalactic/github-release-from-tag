@@ -25,8 +25,9 @@ describeOrSkip('End-to-end tests', () => {
     const branchName = buildBranchName(runId, label)
     const tagName = buildTagName('1.0.0', runId, label)
     const workflow = buildWorkflow(branchName, {
-      'discussionCategory': 'releases',
-      'generateReleaseNotes': 'true',
+      discussionCategory: 'releases',
+      generateReleaseNotes: 'true',
+      reactions: '+1,laugh,hooray,heart,rocket,eyes',
     })
 
     const tagAnnotation = `1.0.0
@@ -159,8 +160,19 @@ paragraph
       })
     })
 
-    it('should create a linked discussion', () => {
+    it('should produce the expected release discussion', () => {
       expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
+    })
+
+    it.each([
+      ['+1'],
+      ['laugh'],
+      ['hooray'],
+      ['heart'],
+      ['rocket'],
+      ['eyes'],
+    ])('should produce the expected release reactions (%s)', reaction => {
+      expect(release.reactions[reaction]).toBeGreaterThan(0)
     })
   })
 })
