@@ -132,15 +132,12 @@ function normalizeAsset (asset) {
   const {
     label = '',
     path,
-  } = asset
-
-  const {
-    name = basename(path),
+    name,
   } = asset
 
   return {
     label,
-    name,
+    name: name || basename(path),
     path,
   }
 }
