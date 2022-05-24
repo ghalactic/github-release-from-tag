@@ -1,5 +1,6 @@
 import {Octokit} from 'octokit'
 
+import {getDiscussionNumberByUrl} from '../../src/discussion.js'
 import {owner, repo} from './fixture-repo.js'
 import {readEmptyTreeHash} from './git.js'
 import {sleep} from './timers.js'
@@ -119,6 +120,38 @@ export async function createTag(sha, tag, annotation) {
   })
 
   return {object, ref}
+}
+
+export async function getDiscussionReactionGroupsByRelease (owner, repo, release) {
+  const {graphql} = createOctokit()
+
+  const {discussion_url: url} = release
+
+  if (!url) throw new Error(`Release ${release.id} has no linked discussion`)
+
+  const query = `
+    query getDiscussionReactionsByNumber ($owner: String!, $repo: String!, $number: Int!) {
+      repository (owner: $owner, name: $repo) {
+        discussion (number: $number) {
+          reactionGroups {
+            content
+            reactors {
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  `
+
+  const result = await graphql({
+    query,
+    owner,
+    repo,
+    number: getDiscussionNumberByUrl(url),
+  })
+
+  return result.repository.discussion.reactionGroups
 }
 
 /**

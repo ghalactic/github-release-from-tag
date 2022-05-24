@@ -1,4 +1,4 @@
-import {DISCUSSION_URL_PATTERN} from '../../../src/discussion.js'
+import {GRAPHQL_REACTION_CONTENT} from '../../../src/reaction.js'
 
 import {
   buildBodyExpression,
@@ -15,6 +15,7 @@ import {readRunId} from '../../helpers/gha.js'
 import {
   createBranchForCi,
   createTag,
+  getDiscussionReactionGroupsByRelease,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
@@ -94,7 +95,7 @@ paragraph
     // points to a commit history with PRs for generating release notes
     const parentCommit = '4b8277d28bee33b7c323164b2f2750adf98917be'
 
-    let workflowRun, annotations, release
+    let workflowRun, annotations, release, discussionReactionGroups
 
     beforeAll(async () => {
       const {headSha, workflowFileName} = await createBranchForCi(branchName, workflow, {
@@ -107,6 +108,7 @@ paragraph
       workflowRun = await waitForCompletedTagWorkflowRun(workflowFileName, tagName)
       annotations = await listAnnotationsByWorkflowRun(workflowRun)
       release = await getReleaseByTag(tagName)
+      discussionReactionGroups = await getDiscussionReactionGroupsByRelease(owner, repo, release)
 
       if (release?.html_url != null) await page.goto(release?.html_url)
     }, SETUP_TIMEOUT)
@@ -164,7 +166,7 @@ paragraph
     })
 
     it('should produce the expected release discussion', () => {
-      expect(release.discussion_url).toMatch(DISCUSSION_URL_PATTERN)
+      expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
     })
 
     it.each([
@@ -178,6 +180,21 @@ paragraph
       const {reactions: {[reaction]: actual = 0} = {}} = release
 
       expect(actual).toBeGreaterThan(0)
+    })
+
+    it.each([
+      ['+1'],
+      ['-1'],
+      ['laugh'],
+      ['hooray'],
+      ['confused'],
+      ['heart'],
+      ['rocket'],
+      ['eyes'],
+    ])('should produce the expected release discussion reactions (%s)', reaction => {
+      const group = discussionReactionGroups.find(group => group.content === GRAPHQL_REACTION_CONTENT[reaction])
+
+      expect(group?.reactors?.totalCount ?? 0).toBeGreaterThan(0)
     })
   })
 })

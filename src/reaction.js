@@ -1,6 +1,6 @@
-import {DISCUSSION_URL_PATTERN} from "./discussion.js"
+import {getDiscussionIdByUrl} from "./discussion.js"
 
-const GRAPHQL_REACTION_CONTENT = {
+export const GRAPHQL_REACTION_CONTENT = {
   '+1': 'THUMBS_UP',
   '-1': 'THUMBS_DOWN',
   laugh: 'LAUGH',
@@ -33,7 +33,12 @@ export async function createDiscussionReactions ({
   }
 
   await group('Creating release discussion reactions', async () => {
-    const discussionId = await getDiscussionIdByUrl(release.discussion_url)
+    const discussionId = await getDiscussionIdByUrl({
+      graphql,
+      owner,
+      repo,
+      url: release.discussion_url,
+    })
 
     await Promise.all(config.discussion.reactions.map(createReaction))
 
@@ -55,30 +60,6 @@ export async function createDiscussionReactions ({
       info(`Created ${content} reaction`)
     }
   })
-
-  async function getDiscussionIdByUrl (url) {
-    const [, numberString] = DISCUSSION_URL_PATTERN.exec(url)
-    const number = parseInt(numberString, 10)
-
-    const query = `
-      query getDiscussionIdByNumber ($owner: String!, $repo: String!, $number: Int!) {
-        repository (owner: $owner, name: $repo) {
-          discussion (number: $number) {
-            id
-          }
-        }
-      }
-    `
-
-    const result = await graphql({
-      query,
-      owner,
-      repo,
-      number,
-    })
-
-    return result.repository.discussion.id
-  }
 }
 
 export async function createReleaseReactions ({
