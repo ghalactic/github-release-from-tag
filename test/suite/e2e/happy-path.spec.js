@@ -1,3 +1,5 @@
+import {DISCUSSION_URL_PATTERN} from '../../../src/discussion.js'
+
 import {
   buildBodyExpression,
   buildBranchName,
@@ -162,7 +164,7 @@ paragraph
     })
 
     it('should produce the expected release discussion', () => {
-      expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
+      expect(release.discussion_url).toMatch(DISCUSSION_URL_PATTERN)
     })
 
     it.each([
