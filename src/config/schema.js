@@ -21,12 +21,12 @@ export const schema = {
           label: {
             description: 'The asset label.',
             type: 'string',
-            minLength: 1,
+            default: '',
           },
           name: {
             description: 'The asset name. Defaults to the basename of the asset path.',
             type: 'string',
-            minLength: 1,
+            default: '',
           },
           path: {
             description: 'The path to an asset. Relative paths are resolved against the root of the Git repo.',
@@ -37,16 +37,15 @@ export const schema = {
       },
     },
     discussion: {
-      description: 'If specified, a discussion is created and linked to the release.',
+      description: 'Options for creating discussions linked to releases.',
       type: 'object',
       additionalProperties: false,
-      required: [
-        'category',
-      ],
+      default: {},
       properties: {
         category: {
           description: 'The category to use when creating the discussion. The value must be a category that already exists in the repository.',
           type: 'string',
+          default: '',
         },
         reactions: {
           description: 'Reactions to create for discussions linked to releases.',

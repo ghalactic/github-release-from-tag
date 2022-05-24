@@ -25,6 +25,8 @@ describe('readConfig()', () => {
       assets: [
         {
           path: 'assets/text/file-a.txt',
+          name: '',
+          label: '',
         },
         {
           path: 'assets/json/file-b.json',
@@ -66,7 +68,10 @@ describe('readConfig()', () => {
 
     const expected = {
       assets: [],
-      discussion: {},
+      discussion: {
+        category: '',
+        reactions: [],
+      },
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
@@ -75,25 +80,16 @@ describe('readConfig()', () => {
     expect(actual).toEqual(expected)
   })
 
-  it('should fill in default options in the "discussion" property', async () => {
-    chdir(join(fixturesPath, 'discussion-defaults'))
-    const actual = await readConfig({getInput, group, info})
-
-    const expected = {
-      category: 'category-a',
-      reactions: [],
-    }
-
-    expect(actual.discussion).toEqual(expected)
-  })
-
   it('should return a default config when no config file exists', async () => {
     chdir(join(fixturesPath, 'none'))
     const actual = await readConfig({getInput, group, info})
 
     const expected = {
       assets: [],
-      discussion: {},
+      discussion: {
+        category: '',
+        reactions: [],
+      },
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
@@ -140,6 +136,25 @@ describe('readConfig()', () => {
         'hooray',
         'rocket',
       ],
+    }
+
+    expect(actual).toMatchObject(expected)
+  })
+
+  it('should correctly fill in discussions defaults when using action input overrides', async () => {
+    chdir(join(fixturesPath, 'empty'))
+
+    const getInput = name => name === 'discussionReactions' ? 'eyes,+1' : ''
+    const actual = await readConfig({getInput, group, info})
+
+    const expected = {
+      discussion: {
+        category: '',
+        reactions: [
+          'eyes',
+          '+1',
+        ],
+      },
     }
 
     expect(actual).toMatchObject(expected)

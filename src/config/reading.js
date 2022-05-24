@@ -50,18 +50,19 @@ async function readConfigFile () {
 }
 
 function getConfigOverrides (getInput) {
-  const overrides = {
-    discussion: {},
-  }
-
+  const discussionOverrides = {}
   const discussionCategory = getInput('discussionCategory')
   const discussionReactions = getInput('discussionReactions')
+
+  if (discussionCategory) discussionOverrides.category = discussionCategory
+  if (discussionReactions) discussionOverrides.reactions = discussionReactions.split(',')
+
+  const overrides = {}
   const draft = getInput('draft')
   const generateReleaseNotes = getInput('generateReleaseNotes')
   const reactions = getInput('reactions')
 
-  if (discussionCategory) overrides.discussion.category = discussionCategory
-  if (discussionReactions) overrides.discussion.reactions = discussionReactions.split(',')
+  if (Object.keys(discussionOverrides).length > 0) overrides.discussion = discussionOverrides
   if (draft) overrides.draft = draft === 'true'
   if (generateReleaseNotes) overrides.generateReleaseNotes = generateReleaseNotes === 'true'
   if (reactions) overrides.reactions = reactions.split(',')

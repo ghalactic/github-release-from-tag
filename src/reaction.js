@@ -9,7 +9,7 @@ export async function createDiscussionReactions ({
   release,
   repo,
 }) {
-  if (config.discussion?.reactions.length ?? 0 < 1) {
+  if (config.discussion.reactions.length < 1) {
     info('No release discussion reactions to create')
 
     return
