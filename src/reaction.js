@@ -1,5 +1,16 @@
 import {DISCUSSION_URL_PATTERN} from "./discussion.js"
 
+const GRAPHQL_REACTION_CONTENT = {
+  '+1': 'THUMBS_UP',
+  '-1': 'THUMBS_DOWN',
+  laugh: 'LAUGH',
+  hooray: 'HOORAY',
+  confused: 'CONFUSED',
+  heart: 'HEART',
+  rocket: 'ROCKET',
+  eyes: 'EYES',
+}
+
 export async function createDiscussionReactions ({
   config,
   graphql,
@@ -28,7 +39,7 @@ export async function createDiscussionReactions ({
 
     async function createReaction (content) {
       const query = `
-        mutation createDiscussionReaction ($discussionId: ID!, $content: String!) {
+        mutation createDiscussionReaction ($discussionId: ID!, $content: ReactionContent!) {
           addReaction (input: {subjectId: $discussionId, content: $content}) {
             clientMutationId
           }
@@ -38,7 +49,7 @@ export async function createDiscussionReactions ({
       await graphql({
         query,
         discussionId,
-        content,
+        content: GRAPHQL_REACTION_CONTENT[content],
       })
 
       info(`Created ${content} reaction`)
