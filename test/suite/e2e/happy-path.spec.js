@@ -201,6 +201,14 @@ paragraph
     })
 
     describe('Outputs', () => {
+      it('should produce the correct releaseId output', () => {
+        expect(outputs.releaseId).toBe(String(release.id))
+      })
+
+      it('should produce the correct releaseUploadUrl output', () => {
+        expect(outputs.releaseUploadUrl).toBe(release.upload_url)
+      })
+
       it('should produce the correct releaseUrl output', () => {
         expect(outputs.releaseUrl).toBe(release.html_url)
       })

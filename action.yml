@@ -33,6 +33,12 @@ inputs:
       The GitHub token to use when managing releases.
     default: ${{ github.token }}
 outputs:
+  releaseId:
+    description: >-
+      The ID of the published release.
+  releaseUploadUrl:
+    description: >-
+      The asset upload URL for the published release.
   releaseUrl:
     description: >-
       The URL of the user-facing HTML page for the published release.

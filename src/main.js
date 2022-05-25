@@ -90,6 +90,8 @@ async function main () {
     tagSubject,
   })
 
+  setOutput('releaseId', release.id)
+  setOutput('releaseUploadUrl', release.upload_url)
   setOutput('releaseUrl', release.html_url)
 
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
