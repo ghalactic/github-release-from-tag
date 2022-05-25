@@ -1,4 +1,4 @@
-import {error, getInput, group, info, notice, setFailed, warning} from '@actions/core'
+import {error, getInput, group, info, notice, setFailed, setOutput, warning} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 
 import {modifyReleaseAssets} from './asset.js'
@@ -89,6 +89,8 @@ async function main () {
     tag,
     tagSubject,
   })
+
+  setOutput('releaseUrl', release.html_url)
 
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
 

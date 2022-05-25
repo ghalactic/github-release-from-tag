@@ -32,6 +32,10 @@ inputs:
     description: >-
       The GitHub token to use when managing releases.
     default: ${{ github.token }}
+outputs:
+  releaseUrl:
+    description: >-
+      The URL of the user-facing HTML page for the published release.
 branding:
   icon: tag
   color: green
