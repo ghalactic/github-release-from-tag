@@ -95,7 +95,7 @@ paragraph
     // points to a commit history with PRs for generating release notes
     const parentCommit = '4b8277d28bee33b7c323164b2f2750adf98917be'
 
-    let workflowRun, annotations, release, discussionReactionGroups
+    let workflowRun, annotations, release, discussionReactionGroups, outputs
 
     beforeAll(async () => {
       const {headSha, workflowFileName} = await createBranchForCi(branchName, workflow, {
@@ -111,6 +111,9 @@ paragraph
       discussionReactionGroups = await getDiscussionReactionGroupsByRelease(owner, repo, release)
 
       if (release?.html_url != null) await page.goto(release?.html_url)
+
+      const {message: outputsJson} = annotations.find(({title}) => title === 'Outputs')
+      outputs = JSON.parse(outputsJson)
     }, SETUP_TIMEOUT)
 
     it('should produce a workflow run that concludes in success', () => {
@@ -195,6 +198,12 @@ paragraph
       const group = discussionReactionGroups.find(group => group.content === GRAPHQL_REACTION_CONTENT[reaction])
 
       expect(group?.reactors?.totalCount ?? 0).toBeGreaterThan(0)
+    })
+
+    describe('Outputs', () => {
+      it('should produce the correct releaseUrl output', () => {
+        expect(outputs.releaseUrl).toBe(release.html_url)
+      })
     })
   })
 })
