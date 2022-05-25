@@ -40,6 +40,14 @@ export function buildWorkflow (branchName, publishOptions = {}) {
             name: 'Publish release',
             uses: `eloquent/github-release-action@${GITHUB_SHA || 'main'}`,
             with: publishOptions,
+            id: 'publishRelease',
+          },
+          {
+            name: 'Expose outputs',
+            env: {
+              PUBLISH_OPTIONS_OUTPUTS: '${{ toJSON(steps.publishRelease.outputs) }}',
+            },
+            run: 'echo ::notice title=Outputs::$PUBLISH_OPTIONS_OUTPUTS',
           },
         ],
       },
