@@ -26,7 +26,7 @@ export async function getDiscussionIdByUrl ({
 
 export function getDiscussionNumberByUrl (url) {
   const {pathname} = new URL(url)
-  const [/* owner */, /* repo */, /* discussions */, numberString] = pathname.split('/').map(decodeURIComponent)
+  const numberString = decodeURIComponent(pathname.split('/').pop())
 
   return parseInt(numberString, 10)
 }
