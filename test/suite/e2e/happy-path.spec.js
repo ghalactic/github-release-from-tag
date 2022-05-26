@@ -213,6 +213,14 @@ paragraph
         expect(outputs.releaseUrl).toBe(release.html_url)
       })
 
+      it('should produce the correct tagBody output', () => {
+        expect(outputs.tagBody).toContain('# Heading 1')
+      })
+
+      it('should produce the correct tagBodyRendered output', () => {
+        expect(outputs.tagBodyRendered).toMatch(/<h1>.*Heading 1.*<\/h1>/s)
+      })
+
       it('should produce the correct tagIsSemVer output', () => {
         expect(outputs.tagIsSemVer).toBe('true')
       })
@@ -223,6 +231,10 @@ paragraph
 
       it('should produce the correct tagName output', () => {
         expect(outputs.tagName).toBe(tagName)
+      })
+
+      it('should produce the correct tagSubject output', () => {
+        expect(outputs.tagSubject).toBe('1.0.0 this should form the release name')
       })
     })
   })

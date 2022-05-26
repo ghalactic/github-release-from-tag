@@ -1,5 +1,5 @@
 import {renderReleaseBody} from '../../src/body.js'
-import {group, info} from '../mocks/actions-core.js'
+import {group, info, setOutput} from '../mocks/actions-core.js'
 import {markdown} from '../mocks/oktokit-markdown.js'
 import {createRepos} from '../mocks/oktokit-repos.js'
 
@@ -47,6 +47,7 @@ This should be a separate paragraph.
       owner,
       repo,
       repos,
+      setOutput,
       tag,
       tagBody,
     })
@@ -86,6 +87,7 @@ body-a
       owner,
       repo,
       repos,
+      setOutput,
       tag,
       tagBody,
     })
@@ -116,6 +118,7 @@ body-a
       owner,
       repo,
       repos,
+      setOutput,
       tag,
       tagBody,
     })
@@ -138,6 +141,7 @@ body-a
       owner,
       repo,
       repos,
+      setOutput,
       tag,
       tagBody,
     })

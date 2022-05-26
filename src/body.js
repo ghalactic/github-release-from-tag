@@ -22,6 +22,7 @@ export async function renderReleaseBody ({
   owner,
   repo,
   repos,
+  setOutput,
   tag,
   tagBody,
 }) {
@@ -34,6 +35,8 @@ export async function renderReleaseBody ({
 
       return data
     })
+
+    setOutput('tagBodyRendered', renderedTagBody)
 
     parts.push(
       '<!-- original source:',

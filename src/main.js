@@ -66,6 +66,9 @@ async function main () {
     return
   }
 
+  setOutput('tagBody', tagBody)
+  setOutput('tagSubject', tagSubject)
+
   const {graphql, request, rest: {markdown, reactions, repos}} = getOctokit(getInput('token'))
 
   const releaseBody = await renderReleaseBody({
@@ -77,6 +80,7 @@ async function main () {
     owner,
     repo,
     repos,
+    setOutput,
     tag,
     tagBody,
   })

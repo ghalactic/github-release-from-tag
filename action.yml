@@ -42,6 +42,12 @@ outputs:
   releaseUrl:
     description: >-
       The URL of the user-facing HTML page for the published release.
+  tagBody:
+    description: >-
+      The "body" portion of the tag annotation.
+  tagBodyRendered:
+    description: >-
+      The "body" portion of the tag annotation, rendered as HTML.
   tagIsSemVer:
     description: >-
       Contains "true" for SemVer version tags, or an empty string otherwise.
@@ -52,6 +58,9 @@ outputs:
   tagName:
     description: >-
       The name of the tag that caused the release to be published.
+  tagSubject:
+    description: >-
+      The "subject" portion of the tag annotation.
 branding:
   icon: tag
   color: green
