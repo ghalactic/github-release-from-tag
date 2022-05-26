@@ -85,6 +85,8 @@ async function main () {
     tagBody,
   })
 
+  setOutput('releaseBody', releaseBody)
+
   const [release, wasCreated] = await createOrUpdateRelease({
     config,
     group,
@@ -99,8 +101,10 @@ async function main () {
   })
 
   setOutput('releaseId', release.id)
+  setOutput('releaseName', release.name)
   setOutput('releaseUploadUrl', release.upload_url)
   setOutput('releaseUrl', release.html_url)
+  setOutput('releaseWasCreated', wasCreated ? 'true' : '')
 
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
 

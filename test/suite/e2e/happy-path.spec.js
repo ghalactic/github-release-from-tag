@@ -201,8 +201,20 @@ paragraph
     })
 
     describe('Outputs', () => {
+      it('should produce the correct generatedReleaseNotes output', () => {
+        expect(outputs.generatedReleaseNotes).toContain('Full Changelog')
+      })
+
+      it('should produce the correct releaseBody output', () => {
+        expect(outputs.releaseBody).toBe(release.body)
+      })
+
       it('should produce the correct releaseId output', () => {
         expect(outputs.releaseId).toBe(String(release.id))
+      })
+
+      it('should produce the correct releaseName output', () => {
+        expect(outputs.releaseName).toBe(release.name)
       })
 
       it('should produce the correct releaseUploadUrl output', () => {
@@ -211,6 +223,10 @@ paragraph
 
       it('should produce the correct releaseUrl output', () => {
         expect(outputs.releaseUrl).toBe(release.html_url)
+      })
+
+      it('should produce the correct releaseWasCreated output', () => {
+        expect(outputs.releaseWasCreated).toBe('true')
       })
 
       it('should produce the correct tagBody output', () => {

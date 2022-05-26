@@ -55,6 +55,8 @@ export async function renderReleaseBody ({
       return body
     })
 
+    setOutput('generatedReleaseNotes', releaseNotes)
+
     parts.push(
       '',
       releaseNotes,
