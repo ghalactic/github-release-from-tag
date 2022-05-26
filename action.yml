@@ -37,6 +37,19 @@ outputs:
     description: >-
       The generated release notes produced by GitHub. This output will only be
       available if generated release notes are enabled.
+  discussionId:
+    description: >-
+      The ID of the discussion linked to the published release. This output will
+      only be available if discussion creation is enabled.
+  discussionNumber:
+    description: >-
+      The unique number of the discussion linked to the published release. This
+      output will only be available if discussion creation is enabled.
+  discussionUrl:
+    description: >-
+      The URL of the user-facing HTML page of the discussion linked to the
+      published release. This output will only be available if discussion
+      creation is enabled.
   releaseBody:
     description: >-
       The body of the published release.

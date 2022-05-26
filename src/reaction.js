@@ -19,6 +19,7 @@ export async function createDiscussionReactions ({
   owner,
   release,
   repo,
+  setOutput,
 }) {
   if (config.discussion.reactions.length < 1) {
     info('No release discussion reactions to create')
@@ -37,6 +38,7 @@ export async function createDiscussionReactions ({
       graphql,
       owner,
       repo,
+      setOutput,
       url: release.discussion_url,
     })
 

@@ -1,3 +1,4 @@
+import {getDiscussionNumberByUrl} from '../../../src/discussion.js'
 import {GRAPHQL_REACTION_CONTENT} from '../../../src/reaction.js'
 
 import {
@@ -203,6 +204,18 @@ paragraph
     describe('Outputs', () => {
       it('should produce the correct generatedReleaseNotes output', () => {
         expect(outputs.generatedReleaseNotes).toContain('Full Changelog')
+      })
+
+      it('should produce the correct discussionId output', () => {
+        expect(outputs.discussionId).toMatch(/^D_/)
+      })
+
+      it('should produce the correct discussionNumber output', () => {
+        expect(outputs.discussionNumber).toBe(String(getDiscussionNumberByUrl(release.discussion_url)))
+      })
+
+      it('should produce the correct discussionUrl output', () => {
+        expect(outputs.discussionUrl).toBe(release.discussion_url)
       })
 
       it('should produce the correct releaseBody output', () => {

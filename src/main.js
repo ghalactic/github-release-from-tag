@@ -141,5 +141,6 @@ async function main () {
     owner,
     release,
     repo,
+    setOutput,
   })
 }
