@@ -212,6 +212,18 @@ paragraph
       it('should produce the correct releaseUrl output', () => {
         expect(outputs.releaseUrl).toBe(release.html_url)
       })
+
+      it('should produce the correct tagIsSemVer output', () => {
+        expect(outputs.tagIsSemVer).toBe('true')
+      })
+
+      it('should produce the correct tagIsStable output', () => {
+        expect(outputs.tagIsStable).toBe('true')
+      })
+
+      it('should produce the correct tagName output', () => {
+        expect(outputs.tagName).toBe(tagName)
+      })
     })
   })
 })

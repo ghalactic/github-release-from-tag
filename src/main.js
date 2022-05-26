@@ -32,6 +32,10 @@ async function main () {
 
   info(`Detected tag ${JSON.stringify(tag)}`)
 
+  setOutput('tagIsSemVer', isSemVer ? 'true' : '')
+  setOutput('tagIsStable', isStable ? 'true' : '')
+  setOutput('tagName', tag)
+
   if (!(await fetchTagAnnotation({group, tag}))) {
     setFailed('Unable to fetch the tag annotation')
 
