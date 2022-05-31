@@ -1,3 +1,5 @@
+import escapeStringRegExp from 'escape-string-regexp'
+
 import {getDiscussionNumberByUrl} from '../../../src/discussion.js'
 import {GRAPHQL_REACTION_CONTENT} from '../../../src/reaction.js'
 
@@ -23,6 +25,9 @@ import {
 } from '../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
+  const regExpOwner = escapeStringRegExp(owner)
+  const regExpRepo = escapeStringRegExp(repo)
+
   describe('Happy path', () => {
     const label = 'happy-path'
     const runId = readRunId()
@@ -56,12 +61,12 @@ paragraph
 `
 
     const config = `assets:
-  - path: assets/text/file-a.txt
   - path: assets/json/file-b.json
     name: custom-name-b.json
     label: Label for file-b.json, which will download as custom-name-b.json
   - path: assets/text/file-c.*.txt
     name: custom-name-c.txt
+  - path: assets/text/file-a.txt
   - path: assets/json/file-d.*.json
 `
 
@@ -170,7 +175,7 @@ paragraph
     })
 
     it('should produce the expected release discussion', () => {
-      expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
+      expect(release.discussion_url).toMatch(new RegExp(`^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\d+$`))
     })
 
     it.each([
@@ -202,6 +207,84 @@ paragraph
     })
 
     describe('Outputs', () => {
+      it('should produce the correct assets output', () => {
+        const apiUrlPattern = `^https://api.github.com/repos/${regExpOwner}/${regExpRepo}/releases/assets/\d+$`
+        const downloadUrlPrefix = `https://github.com/${owner}/${repo}/releases/download/${encodeURIComponent(tagName)}`
+
+        expect(JSON.parse(outputs.assets)).toEqual([
+          {
+            apiUrl: expect.stringMatching(apiUrlPattern),
+            downloadUrl: `${downloadUrlPrefix}/custom-name-b.json`,
+            id: expect.any(Number),
+            nodeId: expect.any(String),
+            name: 'custom-name-b.json',
+            label: 'Label for file-b.json, which will download as custom-name-b.json',
+            state: 'uploaded',
+            contentType: 'application/json',
+            size: 16,
+            downloadCount: expect.any(Number),
+            createdAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+            updatedAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+          },
+          {
+            apiUrl: expect.stringMatching(apiUrlPattern),
+            downloadUrl: `${downloadUrlPrefix}/custom-name-c.txt`,
+            id: expect.any(Number),
+            nodeId: expect.any(String),
+            name: 'custom-name-c.txt',
+            label: '',
+            state: 'uploaded',
+            contentType: 'text/plain',
+            size: 7,
+            downloadCount: expect.any(Number),
+            createdAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+            updatedAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+          },
+          {
+            apiUrl: expect.stringMatching(apiUrlPattern),
+            downloadUrl: `${downloadUrlPrefix}/file-a.txt`,
+            id: expect.any(Number),
+            nodeId: expect.any(String),
+            name: 'file-a.txt',
+            label: '',
+            state: 'uploaded',
+            contentType: 'text/plain',
+            size: 7,
+            downloadCount: expect.any(Number),
+            createdAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+            updatedAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+          },
+          {
+            apiUrl: expect.stringMatching(apiUrlPattern),
+            downloadUrl: `${downloadUrlPrefix}/file-d.0.json`,
+            id: expect.any(Number),
+            nodeId: expect.any(String),
+            name: 'file-d.0.json',
+            label: '',
+            state: 'uploaded',
+            contentType: 'application/json',
+            size: 13,
+            downloadCount: expect.any(Number),
+            createdAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+            updatedAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+          },
+          {
+            apiUrl: expect.stringMatching(apiUrlPattern),
+            downloadUrl: `${downloadUrlPrefix}/file-d.1.json`,
+            id: expect.any(Number),
+            nodeId: expect.any(String),
+            name: 'file-d.0.json',
+            label: '',
+            state: 'uploaded',
+            contentType: 'application/json',
+            size: 13,
+            downloadCount: expect.any(Number),
+            createdAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+            updatedAt: expect.stringMatching(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/),
+          },
+        ])
+      })
+
       it('should produce the correct generatedReleaseNotes output', () => {
         expect(outputs.generatedReleaseNotes).toContain('Full Changelog')
       })

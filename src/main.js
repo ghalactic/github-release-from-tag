@@ -108,7 +108,7 @@ async function main () {
 
   notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
 
-  const assetResult = await modifyReleaseAssets({
+  const [assetResult, assets] = await modifyReleaseAssets({
     config,
     error,
     group,
@@ -122,6 +122,8 @@ async function main () {
   })
 
   if (!assetResult) setFailed('Unable to modify release assets')
+
+  setOutput('assets', JSON.stringify(assets))
 
   await createReleaseReactions({
     config,

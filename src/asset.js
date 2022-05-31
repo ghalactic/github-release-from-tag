@@ -21,7 +21,7 @@ export async function modifyReleaseAssets ({
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info('No release assets to modify')
 
-    return true
+    return [true, []]
   }
 
   return group('Modifying release assets', async () => {
@@ -43,10 +43,10 @@ export async function modifyReleaseAssets ({
     logResults(info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
     logResults(info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
 
-    return (
-      uploadResult.isSuccess &&
-      updateResult.isSuccess
-    )
+    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess
+    const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(compareApiAsset)
+
+    return [isSuccess, sortedAssets]
   })
 
   async function deleteAsset (existing) {
@@ -61,7 +61,8 @@ export async function modifyReleaseAssets ({
 
   async function updateAsset (existing, desired) {
     await deleteAsset(existing)
-    await uploadAsset(desired)
+
+    return uploadAsset(desired)
   }
 
   async function uploadAsset (desired) {
@@ -72,7 +73,7 @@ export async function modifyReleaseAssets ({
 
     info(`Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`)
 
-    await request({
+    const {data: apiAsset} = await request({
       method: 'POST',
       url,
       name,
@@ -82,6 +83,11 @@ export async function modifyReleaseAssets ({
         'Content-Type': contentType,
       },
     })
+
+    const normalized = normalizeApiAsset(apiAsset)
+    info(`Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(normalized, null, 2)}`)
+
+    return normalized
   }
 }
 
@@ -165,12 +171,14 @@ function diffAssets (existingAssets, desiredAssets) {
 function analyzeResults (results) {
   let isSuccess = true
   let successCount = 0
+  const assets = []
   let failureCount = 0
   const failureReasons = []
 
-  for (const {status, reason} of results) {
+  for (const {status, value, reason} of results) {
     if (status === 'fulfilled') {
       ++successCount
+      assets.push(value)
     } else {
       isSuccess = false
       ++failureCount
@@ -181,6 +189,7 @@ function analyzeResults (results) {
   return {
     isSuccess,
     successCount,
+    assets,
     failureCount,
     failureReasons,
   }
@@ -199,4 +208,40 @@ async function logResults (info, error, result, messageTemplate) {
   } else {
     info(message)
   }
+}
+
+function normalizeApiAsset (apiAsset) {
+  const {
+    url: apiUrl,
+    browser_download_url: downloadUrl,
+    id,
+    node_id: nodeId,
+    name,
+    label,
+    state,
+    content_type: contentType,
+    size,
+    download_count: downloadCount,
+    created_at: createdAt,
+    updated_at: updatedAt,
+  } = apiAsset
+
+  return {
+    apiUrl,
+    downloadUrl,
+    id,
+    nodeId,
+    name,
+    label,
+    state,
+    contentType,
+    size,
+    downloadCount,
+    createdAt,
+    updatedAt,
+  }
+}
+
+function compareApiAsset (a, b) {
+  return a.name.localeCompare(b.name)
 }

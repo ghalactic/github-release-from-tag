@@ -1,3 +1,5 @@
+import escapeStringRegExp from 'escape-string-regexp'
+
 import {GRAPHQL_REACTION_CONTENT} from '../../../src/reaction.js'
 
 import {
@@ -21,6 +23,9 @@ import {
 } from '../../helpers/octokit.js'
 
 describeOrSkip('End-to-end tests', () => {
+  const regExpOwner = escapeStringRegExp(owner)
+  const regExpRepo = escapeStringRegExp(repo)
+
   describe('Config options', () => {
     const label = 'config-options'
     const runId = readRunId()
@@ -85,7 +90,7 @@ reactions:
     })
 
     it('should produce the expected release discussion', () => {
-      expect(release.discussion_url).toMatch(/^https:\/\/github.com\/eloquent-fixtures\/github-release-action-ci\/discussions\/\d+$/)
+      expect(release.discussion_url).toMatch(new RegExp(`^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\d+$`))
     })
 
     it.each([

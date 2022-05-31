@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "es-jest": "^1.5.0",
+    "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
