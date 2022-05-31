@@ -187,7 +187,7 @@ export async function listAnnotationsByWorkflowRun (workflowRun) {
     owner,
     repo,
     check_suite_id,
-    per_page: 1,
+    per_page: 30,
   })
 
   if (checkRuns.length < 1) throw new Error(`Unable to locate check runs for check suite ${checkSuiteId}`)
