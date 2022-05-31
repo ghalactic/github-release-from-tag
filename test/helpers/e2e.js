@@ -1,5 +1,25 @@
 import {dump} from 'js-yaml'
 
+const OUTPUT_NAMES = [
+  'assets',
+  'discussionId',
+  'discussionNumber',
+  'discussionUrl',
+  'generatedReleaseNotes',
+  'releaseBody',
+  'releaseId',
+  'releaseName',
+  'releaseUploadUrl',
+  'releaseUrl',
+  'releaseWasCreated',
+  'tagBody',
+  'tagBodyRendered',
+  'tagIsSemVer',
+  'tagIsStable',
+  'tagName',
+  'tagSubject',
+]
+
 const {
   GITHUB_ACTIONS,
   GITHUB_SHA,
@@ -20,6 +40,14 @@ export function buildTagName (version, runId, label) {
 }
 
 export function buildWorkflow (branchName, publishOptions = {}) {
+  const exposeOutputEnv = {}
+  const exposeOutputCommands = []
+
+  for (const name of OUTPUT_NAMES) {
+    exposeOutputEnv[`PUBLISH_RELEASE_OUTPUT_${name}`] = `\${{ toJSON(steps.publishRelease.outputs.${name}) }}`
+    exposeOutputCommands.push(`echo ::notice title=outputs.${name}::$PUBLISH_RELEASE_OUTPUT_${name}`)
+  }
+
   return dump({
     name: branchName,
     on: {
@@ -44,10 +72,8 @@ export function buildWorkflow (branchName, publishOptions = {}) {
           },
           {
             name: 'Expose outputs',
-            env: {
-              PUBLISH_OPTIONS_OUTPUTS: '${{ toJSON(steps.publishRelease.outputs) }}',
-            },
-            run: 'echo ::notice title=Outputs::$PUBLISH_OPTIONS_OUTPUTS',
+            env: exposeOutputEnv,
+            run: exposeOutputCommands.join('\n'),
           },
         ],
       },

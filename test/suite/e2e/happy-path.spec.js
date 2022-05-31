@@ -118,8 +118,18 @@ paragraph
 
       if (release?.html_url != null) await page.goto(release?.html_url)
 
-      const {message: outputsJson} = annotations.find(({title}) => title === 'Outputs')
-      outputs = JSON.parse(outputsJson)
+      const outputsPrefix = 'outputs.'
+      outputs = {}
+
+      for (const {title, message} of annotations) {
+        if (!title.startsWith(outputsPrefix)) continue
+
+        try {
+          outputs[title.substring(outputsPrefix.length)] = JSON.parse(message)
+        } catch (error) {
+          throw new Error(`Unable to parse ${title}: ${error.message}`)
+        }
+      }
     }, SETUP_TIMEOUT)
 
     it('should produce a workflow run that concludes in success', () => {
