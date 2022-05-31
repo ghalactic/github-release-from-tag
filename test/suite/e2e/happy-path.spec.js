@@ -208,7 +208,7 @@ paragraph
 
     describe('Outputs', () => {
       it('should produce the correct assets output', () => {
-        const apiUrlPattern = `^https://api.github.com/repos/${regExpOwner}/${regExpRepo}/releases/assets/\d+$`
+        const apiUrlPattern = `^https://api.github.com/repos/${regExpOwner}/${regExpRepo}/releases/assets/\\d+$`
         const downloadUrlPrefix = `https://github.com/${owner}/${repo}/releases/download/${encodeURIComponent(tagName)}`
 
         expect(JSON.parse(outputs.assets)).toEqual([
@@ -273,7 +273,7 @@ paragraph
             downloadUrl: `${downloadUrlPrefix}/file-d.1.json`,
             id: expect.any(Number),
             nodeId: expect.any(String),
-            name: 'file-d.0.json',
+            name: 'file-d.1.json',
             label: '',
             state: 'uploaded',
             contentType: 'application/json',
