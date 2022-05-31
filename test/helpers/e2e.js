@@ -40,12 +40,16 @@ export function buildTagName (version, runId, label) {
 }
 
 export function buildWorkflow (branchName, publishOptions = {}) {
-  const exposeOutputEnv = {}
-  const exposeOutputCommands = []
+  const exposeSteps = []
 
   for (const name of OUTPUT_NAMES) {
-    exposeOutputEnv[`PUBLISH_RELEASE_OUTPUT_${name}`] = `\${{ toJSON(steps.publishRelease.outputs.${name}) }}`
-    exposeOutputCommands.push(`echo ::notice title=outputs.${name}::$PUBLISH_RELEASE_OUTPUT_${name}`)
+    exposeSteps.push({
+      name: `Expose outputs.${name}`,
+      env: {
+        PUBLISH_RELEASE_OUTPUT: `\${{ toJSON(steps.publishRelease.outputs.${name}) }}`,
+      },
+      run: `echo ::notice title=outputs.${name}::$PUBLISH_RELEASE_OUTPUT`,
+    })
   }
 
   return dump({
@@ -70,11 +74,8 @@ export function buildWorkflow (branchName, publishOptions = {}) {
             with: publishOptions,
             id: 'publishRelease',
           },
-          {
-            name: 'Expose outputs',
-            env: exposeOutputEnv,
-            run: exposeOutputCommands.join('\n'),
-          },
+
+          ...exposeSteps,
         ],
       },
     },
