@@ -90,7 +90,7 @@ reactions:
     })
 
     it('should produce the expected release discussion', () => {
-      expect(release.discussion_url).toMatch(new RegExp(`^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\d+$`))
+      expect(release.discussion_url).toMatch(new RegExp(`^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`))
     })
 
     it.each([
