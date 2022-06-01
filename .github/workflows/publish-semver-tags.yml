@@ -1,0 +1,18 @@
+name: Publish SemVer tags
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish SemVer tags
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Publish SemVer tags
+        uses: kellyselden/move-semver-tags-action@v3
+        with:
+          copy-annotations: true
