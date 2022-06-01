@@ -126,7 +126,7 @@ prefix (e.g. `v1.0.0`), as well as "major version" tag names (e.g. `v1`) as per
 #### Example release stabilities
 
 | Tag name         | Is SemVer? | Release stability |
-| ---------------- | ---------- | ----------------- |
+| :--------------- | :--------- | :---------------- |
 | `v1`             | no         | stable release    |
 | `1.2.3`          | yes        | stable release    |
 | `1.2.3+21AF26D3` | yes        | stable release    |
