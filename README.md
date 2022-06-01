@@ -1,41 +1,54 @@
 # GitHub Release from Tag
 
-This action automatically creates GitHub releases from annotated Git tag
-messages.
+A [GitHub Action] that creates [GitHub Releases] from your Git tags. Does what
+you _probably wish_ GitHub would just do without the need to use GitHub Actions.
 
-- The tag message "subject" (the first line) becomes the release title.
-- The tag message "body" (everything after the first line) becomes the release
-  description.
-- Markdown in the tag message body is supported.
-- The release will be marked as a pre-release unless the tag is a
-  [stable SemVer version].
-- Releases will be edited if the tag is updated.
+[github action]: https://docs.github.com/actions
+[github releases]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases
+
+## Overview
+
+This action creates releases by sourcing the release data from the place where
+it makes the most sense to keep it — your Git tags. By harnessing [SemVer] to
+determine pre-release status, and [Markdown] for formatting, your GitHub
+Releases become a natural extension of your Git tags.
+
+[semver]: https://semver.org/
+[markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
+
+In addition, this action has also been designed to feel like a natural extension
+of GitHub's own features. As such, its feature set closely mirrors what you have
+access to when you [publish a GitHub Release manually], including [automated
+release notes], [release assets], and [release discussions].
+
+[publish a github release manually]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
+[automated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
+[release assets]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#:~:text=drag%20and%20drop
+[release discussions]: https://docs.github.com/discussions
+
+## Features
+
+- Minimal [configuration], or often **zero** configuration
+- [SemVer] stability determines **pre-release** status
+- [Markdown] support in tag annotation messages
+- [Asset] uploading with support for **labels**
+- [Automated release notes] support
+- [Release discussion] creation
+- Releases can be created as **drafts**
+- Creation of initial **🚀 reactions ❤️** to promote engagement
+
+[configuration]: #configuration
+[semver]: https://semver.org/
+[markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
+[asset]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#:~:text=drag%20and%20drop
+[automated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
+[release discussion]: https://docs.github.com/discussions
 
 ## Usage
 
-```yaml
-# .github/workflows/publish-release.yml
-name: Publish release
-on:
-  push:
-    tags:
-    - '*'
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    name: Publish release
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Publish release
-      uses: eloquent/github-release-action@v1
-```
+### Workflow for tag creation
 
-### Custom tokens
-
-By default, this action will use [automatic token authentication] to obtain the
-token used to manage releases. To use a different token, you must specify the
-`token` input:
+Most of the time you will want tag pushes to trigger release publishing:
 
 ```yaml
 # .github/workflows/publish-release.yml
@@ -43,21 +56,57 @@ name: Publish release
 on:
   push:
     tags:
-    - '*'
+      - "*"
 jobs:
   publish:
     runs-on: ubuntu-latest
     name: Publish release
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Publish release
-      uses: eloquent/github-release-action@v1
-      with:
-        token: ${{ secrets.PUBLISH_RELEASE_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Publish release
+        uses: eloquent/github-release-action@v2
 ```
 
-<!-- References -->
+It's also possible to use [`if` conditionals] to restrict the release publishing
+step inside a multi-purpose workflow, so that it only runs on tag pushes:
 
-[automatic token authentication]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
-[stable semver version]: https://semver.org/#semantic-versioning-specification-semver
+[`if` conditionals]: https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsif
+
+```yaml
+- name: Publish release
+  uses: eloquent/github-release-action@v2
+  if: github.ref_type == 'tag'
+```
+
+### Workflow for manual runs
+
+You may also want to be able to manually publish releases for a specific tag.
+This allows you to remedy failed publish attempts, or publish tags that were
+created before automated release publishing was set up:
+
+```yaml
+# .github/workflows/publish-release-manual.yml
+name: Publish release (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag to publish
+        required: true
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: refs/tags/${{ github.event.inputs.tag }}
+      - name: Publish release
+        uses: eloquent/github-release-action@v2
+```
+
+## Configuration
+
+_TODO_
