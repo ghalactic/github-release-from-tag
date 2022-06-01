@@ -16,15 +16,11 @@ Releases become a natural extension of your Git tags.
 [semver]: https://semver.org/
 [markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
 
-In addition, this action has also been designed to feel like a natural extension
-of GitHub's own features. As such, its feature set closely mirrors what you have
-access to when you [publish a GitHub Release manually], including [automated
-release notes], [release assets], and [release discussions].
+In addition, this action has been designed to feel like it _could_ be a
+first-party GitHub feature. Its feature set closely mirrors what you have access
+to when you [publish a GitHub Release manually].
 
 [publish a github release manually]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
-[automated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
-[release assets]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#:~:text=drag%20and%20drop
-[release discussions]: https://docs.github.com/discussions
 
 ## Features
 
