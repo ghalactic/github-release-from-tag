@@ -103,6 +103,40 @@ jobs:
         uses: eloquent/github-release-action@v2
 ```
 
+### Release stability
+
+This action uses [SemVer] rules to determine whether a tag should be published
+as a **pre-release**, or a **stable release**. The decision is made as follows:
+
+- If the tag name is a **"stable"** SemVer version, it's considered a **stable
+  release**.
+- If the tag name is an **"unstable"** SemVer version, it's considered a
+  **pre-release**.
+- If the tag name is **not** a valid SemVer version, it's considered a
+  **pre-release**.
+
+[semver]: https://semver.org/
+
+The standard SemVer rules are relaxed a bit to allow for tag names with a `v`
+prefix (e.g. `v1.0.0`), as well as "major version" tag names (e.g. `v1`) as per
+[GitHub's recommendations for action versioning].
+
+[github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
+
+#### Example release stabilities
+
+| Tag name         | Is SemVer? | Release stability |
+| ---------------- | ---------- | ----------------- |
+| `v1`             | no         | stable release    |
+| `1.2.3`          | yes        | stable release    |
+| `1.2.3+21AF26D3` | yes        | stable release    |
+| `v1.2.3`         | yes        | stable release    |
+| `0.1.0`          | yes        | pre-release       |
+| `v0.1.0`         | yes        | pre-release       |
+| `1.2.3-alpha`    | yes        | pre-release       |
+| `v0`             | no         | pre-release       |
+| `rc-1`           | no         | pre-release       |
+
 ## Configuration
 
 _TODO_
