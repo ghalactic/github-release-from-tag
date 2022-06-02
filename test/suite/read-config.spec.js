@@ -49,6 +49,7 @@ describe('readConfig()', () => {
       },
       draft: true,
       generateReleaseNotes: true,
+      prerelease: false,
       reactions: [
         '+1',
         'laugh',
@@ -113,6 +114,7 @@ describe('readConfig()', () => {
         case 'discussionReactions': return 'eyes,+1'
         case 'draft': return 'false'
         case 'generateReleaseNotes': return 'false'
+        case 'prerelease': return 'true'
         case 'reactions': return 'heart,hooray,rocket'
       }
 
@@ -131,6 +133,7 @@ describe('readConfig()', () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      prerelease: true,
       reactions: [
         'heart',
         'hooray',

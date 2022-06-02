@@ -17,7 +17,7 @@ export async function createOrUpdateRelease ({
     name: tagSubject,
     body: releaseBody,
     draft: config.draft,
-    prerelease: !isStable,
+    prerelease: config.prerelease ?? !isStable,
     discussion_category_name: config.discussion.category || undefined,
   }
 

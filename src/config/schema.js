@@ -78,6 +78,10 @@ export const schema = {
       type: 'boolean',
       default: false,
     },
+    prerelease: {
+      description: 'Set to true or false to override the automatic tag name based pre-release detection.',
+      type: 'boolean',
+    },
     reactions: {
       description: 'Reactions to create for releases.',
       type: 'array',

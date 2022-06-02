@@ -60,11 +60,13 @@ function getConfigOverrides (getInput) {
   const overrides = {}
   const draft = getInput('draft')
   const generateReleaseNotes = getInput('generateReleaseNotes')
+  const prerelease = getInput('prerelease')
   const reactions = getInput('reactions')
 
   if (Object.keys(discussionOverrides).length > 0) overrides.discussion = discussionOverrides
   if (draft) overrides.draft = draft === 'true'
   if (generateReleaseNotes) overrides.generateReleaseNotes = generateReleaseNotes === 'true'
+  if (prerelease) overrides.prerelease = prerelease === 'true'
   if (reactions) overrides.reactions = reactions.split(',')
 
   return [overrides, Object.keys(overrides).length > 0]

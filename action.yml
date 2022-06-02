@@ -23,6 +23,11 @@ inputs:
       Set to "true" to append automatically generated release notes to the
       release body.
     default: "" # defaults to the default in the config file (false)
+  prerelease:
+    description: >-
+      Set to "true" or "false" to override the automatic tag name based
+      pre-release detection.
+    default: "" # defaults to automatic tag name based detection
   reactions:
     description: >-
       A comma-separated list of reactions to create for the release. A valid

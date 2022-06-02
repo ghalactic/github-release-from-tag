@@ -56,7 +56,18 @@ async function main () {
     return
   }
 
-  info(`${isSemVer ? 'SemVer' : 'Non-Semver'} tag will be treated as a ${isStable ? 'stable release' : 'pre-release'}`)
+  const tagSemVerLabel = isSemVer ? 'SemVer' : 'Non-Semver'
+  const tagStabilityLabel = isStable ? 'stable release' : 'pre-release'
+
+  if (typeof config.prerelease === 'boolean') {
+    info(`Release has been explicitly configured to be a ${config.prerelease ? 'pre-release' : 'stable release'}`)
+
+    if (isStable === config.prerelease) {
+      info(`Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`)
+    }
+  } else {
+    info(`${tagSemVerLabel} tag will be treated as a ${tagStabilityLabel}`)
+  }
 
   const [isTagAnnotationReadSuccess, tagSubject, tagBody] = await readTagAnnotation({group, tag})
 

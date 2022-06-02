@@ -123,6 +123,11 @@ prefix (e.g. `v1.2.3`), as well as major/minor version tag names (e.g. `v1`,
 
 [github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
+It's also possible to [configure] an override for this behavior, and force a
+release to be published as either a **pre-release** or **stable release**.
+
+[configure]: #configuration
+
 #### Example release stabilities
 
 | Tag name                             | Is SemVer? | Release stability |

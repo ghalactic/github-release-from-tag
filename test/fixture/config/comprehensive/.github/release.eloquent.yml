@@ -16,6 +16,7 @@ discussion:
     - eyes
 draft: true
 generateReleaseNotes: true
+prerelease: false
 reactions:
   - "+1"
   - laugh
