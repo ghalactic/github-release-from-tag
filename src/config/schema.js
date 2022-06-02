@@ -74,7 +74,7 @@ export const schema = {
       default: false,
     },
     generateReleaseNotes: {
-      description: 'Set to "true" to append automatically generated release notes to the release body.',
+      description: 'Set to true to append automatically generated release notes to the release body.',
       type: 'boolean',
       default: false,
     },
