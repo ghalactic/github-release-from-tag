@@ -38,6 +38,12 @@ inputs:
       The GitHub token to use when managing releases.
     default: ${{ github.token }}
 outputs:
+  assets:
+    description: >-
+      A JSON array of objects describing the assets that were uploaded to the
+      release. Each member of the array has the following fields: apiUrl,
+      downloadUrl, id, nodeId, name, label, state, contentType, size,
+      downloadCount, createdAt, and updatedAt.
   generatedReleaseNotes:
     description: >-
       The generated release notes produced by GitHub. This output will only be
