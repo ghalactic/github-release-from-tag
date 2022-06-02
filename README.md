@@ -118,24 +118,24 @@ as a **pre-release**, or a **stable release**. The decision is made as follows:
 [semver]: https://semver.org/
 
 The standard SemVer rules are relaxed a bit to allow for tag names with a `v`
-prefix (e.g. `v1.0.0`), as well as "major version" tag names (e.g. `v1`) as per
-[GitHub's recommendations for action versioning].
+prefix (e.g. `v1.2.3`), as well as major/minor version tag names (e.g. `v1`,
+`v1.2`) as per [GitHub's recommendations for action versioning].
 
 [github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
 #### Example release stabilities
 
-| Tag name         | Is SemVer? | Release stability |
-| :--------------- | :--------- | :---------------- |
-| `v1`             | no         | stable release    |
-| `1.2.3`          | yes        | stable release    |
-| `1.2.3+21AF26D3` | yes        | stable release    |
-| `v1.2.3`         | yes        | stable release    |
-| `0.1.0`          | yes        | pre-release       |
-| `v0.1.0`         | yes        | pre-release       |
-| `1.2.3-alpha`    | yes        | pre-release       |
-| `v0`             | no         | pre-release       |
-| `rc-1`           | no         | pre-release       |
+| Tag name                             | Is SemVer? | Release stability |
+| :----------------------------------- | :--------- | :---------------- |
+| `1` / `v1`                           | no         | stable release    |
+| `1.2` / `v1.2`                       | no         | stable release    |
+| `1.2.3` / `v1.2.3`                   | yes        | stable release    |
+| `1.2.3+21AF26D3` / `v1.2.3+21AF26D3` | yes        | stable release    |
+| `0.1.0` / `v0.1.0`                   | yes        | pre-release       |
+| `1.2.3-alpha` / `v1.2.3-alpha`       | yes        | pre-release       |
+| `0` / `v0`                           | no         | pre-release       |
+| `0.1` / `v0.1`                       | no         | pre-release       |
+| `something-else`                     | no         | pre-release       |
 
 ## Configuration
 

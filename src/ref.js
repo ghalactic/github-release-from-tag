@@ -1,8 +1,8 @@
 /**
- * Specifically targets typical GitHub Actions style major version tags (e.g.
- * "v1", "v2").
+ * Specifically targets typical GitHub Actions style major and minor version
+ * tags (e.g. "v1", "v2", "v1.2", "v2.3").
  */
-const SHORTHAND_PATTERN = /^v([1-9]\d*)$/
+const SHORTHAND_PATTERN = /^v?([1-9]\d*)(\.\d+)?$/
 
 /**
  * Taken directly from https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
