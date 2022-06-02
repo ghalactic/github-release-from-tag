@@ -144,4 +144,85 @@ release to be published as either a **pre-release** or **stable release**.
 
 ## Configuration
 
-_TODO_
+> **Tip:** Try to use as _little_ configuration as possible. Everything here is
+> **optional**, and **the less configuration the better**.
+
+### The configuration file
+
+This action supports an **optional** YAML configuration file, with options for
+affecting how releases are published:
+
+> **Note:** These options can be overridden by any equivalent [action inputs]. A
+> [JSON Schema definition] is also available.
+
+[action inputs]: #action-inputs
+[json schema definition]: src/config/schema.js
+
+```yaml
+# .github/release.eloquent.yml
+
+# Set to true to produce releases in a draft state.
+draft: true
+
+# Set to true to append automatically generated release notes to the release body.
+generateReleaseNotes: true
+
+# Set to true or false to override the automatic tag name based pre-release detection.
+prerelease: false
+
+# Reactions to create for releases.
+reactions: ["+1", laugh, hooray, heart, rocket, eyes]
+
+assets:
+  # A path is required for each asset.
+  - path: assets/text/file-a.txt
+
+  # The name and label are optional.
+  - path: assets/json/file-b.json
+    name: custom-name-b.json
+    label: Label for file-b.json
+
+discussion:
+  # The category to use when creating the discussion.
+  category: category-a
+
+  # Reactions to create for discussions linked to releases.
+  reactions: ["+1", "-1", laugh, hooray, confused, heart, rocket, eyes]
+```
+
+### Action inputs
+
+This action supports **optional** inputs for affecting how releases are
+published:
+
+> **Note:** These inputs take precedence over any equivalent options specified
+> in [the configuration file]. The [action metadata file] contains the actual
+> definitions for these inputs.
+
+[the configuration file]: #the-configuration-file
+[action metadata file]: action.yml
+
+```yaml
+- uses: eloquent/github-release-action@v2
+  with:
+    # Set to "true" to produce releases in a draft state.
+    draft: "true"
+
+    # Set to "true" to append automatically generated release notes to the release body.
+    generateReleaseNotes: "true"
+
+    # Set to "true" or "false" to override the automatic tag name based pre-release detection.
+    prerelease: "false"
+
+    # Reactions to create for releases.
+    reactions: +1,laugh,hooray,heart,rocket,eyes
+
+    # Use a custom GitHub token.
+    token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+    # The category to use when creating the discussion.
+    discussionCategory: category-a
+
+    # Reactions to create for discussions linked to releases.
+    discussionReactions: +1,-1,laugh,hooray,confused,heart,rocket,eyes
+```
