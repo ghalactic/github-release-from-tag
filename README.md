@@ -157,6 +157,28 @@ prerelease: true # or false
 | `0.1` / `v0.1`                       | no         | pre-release       |
 | `something-else`                     | no         | pre-release       |
 
+### Draft releases
+
+This action can be [configured] to create draft releases. These draft releases
+can then be published manually at some later time via GitHub. You can enable
+this feature via the [configuration file], or via [action inputs]:
+
+[configured]: #configuration
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+draft: true
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    draft: "true"
+```
+
 ### Release name and body
 
 This action generates a release **name** and **body** from your **tag annotation
