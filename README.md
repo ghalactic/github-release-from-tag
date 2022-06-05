@@ -142,6 +142,90 @@ release to be published as either a **pre-release** or **stable release**.
 | `0.1` / `v0.1`                       | no         | pre-release       |
 | `something-else`                     | no         | pre-release       |
 
+### Release name and body
+
+This action generates a release **name** and **body** from your **tag annotation
+message**. Git already breaks your tag annotation messages into two parts that
+line up with each part of a GitHub release:
+
+- The tag annotation **subject** becomes the release **name**.
+- The tag annotation **body** is rendered as [Markdown], and used as the release
+  **body**.
+
+[markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
+
+The tag annotation "subject" is just the first **paragraph** of the message. The
+"body" is everything that follows:
+
+    This is part of the subject.
+    This is also considered part of the subject.
+
+    This is the beginning of the body.
+    This is also part of the body.
+
+    The body can have multiple paragraphs.
+
+#### Markdown support
+
+For the most part, [Markdown] "just works" how you would expect. You can write
+Markdown in the "body" portion of your tag annotations, and it will be rendered
+in the body of the releases published by this action. Shorthand issues
+references like `#42`, and mentions like `@username` also "just work".
+
+[markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
+
+##### Markdown headings in tag annotation messages
+
+When authoring tag annotation messages, you might run into the issue that
+Markdown **headings** are lines that start with a `#` character, which Git
+interprets as a **comment**. You can get around this limitation by using the
+following Git command to create the tag:
+
+    git tag --annotate --cleanup=whitespace --edit --message "" 1.0.0
+
+You might want to add a **Git alias** to make it easier to remember the command:
+
+    git config --global alias.tag-md 'tag --annotate --cleanup=whitespace --edit --message ""'
+
+With the above alias configured, you can then use `git tag-md` to create tags
+with Markdown tag annotation bodies:
+
+    git tag-md 1.0.0
+
+##### Markdown line breaks
+
+It's common for tag annotation messages to be "wrapped" at a fixed column width,
+for readability when viewed as plain text:
+
+    1.0.0
+
+    This provides an example of a Git tag annotation body that has been
+    "hard wrapped". This is a very common practice.
+
+If we were to copy the body from the tag annotation message above directly into
+the GitHub release, the line breaks would be interpreted as explicit line breaks
+in the final HTML, like so:
+
+> This provides an example of a Git tag annotation body that has been\
+> "hard wrapped". This is a very common practice.
+
+Most people would probably consider this an undesirable result, and would rather
+that the above two lines be considered part of the same line, similar to how
+GitHub behaves when rendering `README.md` files.
+
+To avoid this issue, this action **pre-renders** the tag annotation body to HTML
+(using [GitHub's API], in `markdown` mode) before inserting it into the release
+body, meaning that the line breaks will be interpreted in a way that works
+better for "hard wrapped" tag annotation messages:
+
+[github's api]: https://docs.github.com/rest/markdown#render-a-markdown-document
+
+> This provides an example of a Git tag annotation body that has been
+> "hard wrapped". This is a very common practice.
+
+To aid in making manual edits after release publication, the original Markdown
+source is also kept in a comment in the release body.
+
 ### Automated release notes
 
 This action supports GitHub's [automatically generated release notes] feature.
