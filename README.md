@@ -313,6 +313,18 @@ release body. The release notes are based off of **pull requests**, and can be
 
 </details>
 
+### Release assets
+
+_TODO_
+
+### Release discussions
+
+_TODO_
+
+### Reactions
+
+_TODO_
+
 ## Configuration
 
 > **Tip:** Try to use as _little_ configuration as possible. Everything here is
