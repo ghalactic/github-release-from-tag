@@ -58,6 +58,8 @@ one
 paragraph
 
 #1
+
+@actions
 `
 
     const config = `assets:
@@ -162,6 +164,7 @@ paragraph
       ${'markdown heading 2'}  | ${`//h2[normalize-space()='Heading 2']`}
       ${'markdown paragraphs'} | ${`//*[normalize-space()='this should form one paragraph']`}
       ${'issue link'}          | ${`//a[@href='https://github.com/${owner}/${repo}/issues/1'][normalize-space()='#1']`}
+      ${'mention'}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
       ${'release notes'}       | ${`//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`}
     `('should produce the expected release body elements ($description)', async ({expression}) => {
       expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty()
