@@ -210,13 +210,14 @@ in the final HTML, like so:
 > "hard wrapped". This is a very common practice.
 
 Most people would probably consider this an undesirable result, and would rather
-that the above two lines be considered part of the same line, similar to how
-GitHub behaves when rendering `README.md` files.
+that the above two lines be combined into a single line in the resulting HTML,
+similar to how GitHub behaves when rendering `README.md` files.
 
 To avoid this issue, this action **pre-renders** the tag annotation body to HTML
 (using [GitHub's API], in `markdown` mode) before inserting it into the release
 body, meaning that the line breaks will be interpreted in a way that works
-better for "hard wrapped" tag annotation messages:
+better for "hard wrapped" tag annotation messages. Using this method, the above
+tag annotation body would be rendered like so:
 
 [github's api]: https://docs.github.com/rest/markdown#render-a-markdown-document
 
