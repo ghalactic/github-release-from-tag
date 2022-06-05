@@ -298,18 +298,20 @@ release body. The release notes are based off of **pull requests**, and can be
 
 > ## What's Changed
 >
-> - Add feature A by @ezzatron in [#5](#)
-> - Add feature B by @ezzatron in [#6](#)
-> - Fix bug A by @ezzatron in [#7](#)
-> - Fix bug B by @ezzatron in [#8](#)
-> - Add docs for feature A by @ezzatron in [#9](#)
-> - Add docs for feature B by @ezzatron in [#10](#)
+> - Add feature A by [@ezzatron] in [#5](#)
+> - Add feature B by [@ezzatron] in [#6](#)
+> - Fix bug A by [@ezzatron] in [#7](#)
+> - Fix bug B by [@ezzatron] in [#8](#)
+> - Add docs for feature A by [@ezzatron] in [#9](#)
+> - Add docs for feature B by [@ezzatron] in [#10](#)
 >
 > ## New Contributors
 >
-> - @ezzatron made their first contribution in [#5](#)
+> - [@ezzatron] made their first contribution in [#5](#)
 >
 > **Full Changelog**: https://github.com/owner/repo/commits/1.0.0
+
+[@ezzatron]: https://github.com/ezzatron
 
 </details>
 
