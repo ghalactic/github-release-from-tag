@@ -362,7 +362,30 @@ release's assets.
 
 ### Release discussions
 
-_TODO_
+This action supports creating [GitHub Discussions] for releases. You can enable
+this feature via the [configuration file], or via [action inputs]:
+
+[github discussions]: https://docs.github.com/discussions
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+discussion:
+  category: Announcements
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    discussionCategory: Announcements
+```
+
+When enabled, discussions will automatically be created and linked to each
+published release. The discussion **title** and **body** will match the release
+**name** and **body**. The specified discussion category **must already exist**
+in the repo.
 
 ### Reactions
 
