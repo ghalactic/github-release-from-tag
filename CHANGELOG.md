@@ -27,7 +27,7 @@ _There are currently no unreleased changes._
 - **[BC BREAK]** Tag names like `v1` and `v1.2` are now considered "stable" as
   per [GitHub's recommendations for action versioning].
 
-[markdown line breaks]: README.md#markdown-line-breaks
+[markdown line breaks]: https://github.com/eloquent/github-release-action/tree/v2.0.0#markdown-line-breaks
 [github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
 ### Added
@@ -39,9 +39,9 @@ _There are currently no unreleased changes._
 - Support for creating [reactions] for releases and release discussions.
 - Support for overriding [release stability] detection.
 
-[release assets]: README.md#release-assets
-[automated release notes]: README.md#automated-release-notes
-[release discussions]: README.md#release-discussions
-[draft releases]: README.md#draft-releases
-[reactions]: README.md#reactions
-[release stability]: README.md#release-stability
+[release assets]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-assets
+[automated release notes]: https://github.com/eloquent/github-release-action/tree/v2.0.0#automated-release-notes
+[release discussions]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-discussions
+[draft releases]: https://github.com/eloquent/github-release-action/tree/v2.0.0#draft-releases
+[reactions]: https://github.com/eloquent/github-release-action/tree/v2.0.0#reactions
+[release stability]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-stability
