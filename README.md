@@ -107,8 +107,14 @@ jobs:
 
 Generally speaking, **you do not need to supply this action with a custom GitHub
 token** unless you run into some kind of permissions issue, which should not
-happen under normal operation. If for some reason you want to supply a different
-token anyway, you can do so via [action inputs]:
+happen under normal operation.
+
+By default, this action uses [automatic token authentication] to obtain the
+token used to manage releases. If for some reason you want to supply a different
+token, you can do so via [action inputs]:
+
+[automatic token authentication]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+[action inputs]: #action-inputs
 
 ```yaml
 # In your workflow:
