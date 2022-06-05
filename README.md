@@ -656,3 +656,21 @@ can be accessed:
     DOWNLOAD_URL: ${{ fromJSON(steps.publishRelease.outputs.assets)[0].downloadUrl }}
   run: echo Download the first asset from $DOWNLOAD_URL
 ```
+
+## FAQ
+
+### What format should I use for my release body?
+
+I recommend following [Keep a Changelog]. When it's time to release, just grab
+the content from the **Unreleased** section and paste it into your tag
+annotation message.
+
+[keep a changelog]: https://keepachangelog.com/
+
+### Does this action work with [Semantic Release] / [Release Please]?
+
+[semantic release]: https://semantic-release.gitbook.io/
+[release please]: https://github.com/googleapis/release-please
+
+Technically yes, but it's not recommended. These tools have their own solutions
+for publishing GitHub releases which are better suited.
