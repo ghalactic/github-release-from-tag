@@ -389,7 +389,49 @@ in the repo.
 
 ### Reactions
 
-_TODO_
+In order to promote engagement with your releases, this action can create
+**reactions** like 👍, 😄, 🎉, ❤️, 🚀, and 👀.
+
+A typical user is more likely to add their own reaction if they can simply click
+on an existing one — rather than be the first one to add a particular reaction,
+which takes more effort. You can enable this feature via the [configuration
+file], or via [action inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+reactions: ["+1", laugh, hooray, heart, rocket, eyes]
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    reactions: +1,laugh,hooray,heart,rocket,eyes
+```
+
+If you've enabled [release discussion creation], reactions can also be created
+for release discussions (which support a couple of additional reactions like 👎
+and 😕):
+
+```yaml
+# In .github/release.eloquent.yml:
+discussion:
+  category: Announcements
+  reactions: ["+1", "-1", laugh, hooray, confused, heart, rocket, eyes]
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    discussionCategory: Announcements
+    discussionReactions: +1,-1,laugh,hooray,confused,heart,rocket,eyes
+```
+
+[release discussion creation]: #release-discussions
 
 ## Configuration
 
