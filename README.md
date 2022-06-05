@@ -144,7 +144,52 @@ release to be published as either a **pre-release** or **stable release**.
 
 ### Automated release notes
 
-_TODO_
+This action supports GitHub's [automatically generated release notes] feature.
+You can enable this feature via the [configuration file], or via [action
+inputs]:
+
+[automatically generated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+generateReleaseNotes: true
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    generateReleaseNotes: "true"
+```
+
+When enabled, automated release notes will be generated and appended to each
+release body. The release notes are based off of **pull requests**, and can be
+[configured to customize how they are generated].
+
+[configured to customize how they are generated]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuring-automatically-generated-release-notes
+
+<details>
+<summary><strong>Example automated release notes</strong></summary>
+<br>
+
+> ## What's Changed
+>
+> - Add feature A by @ezzatron in [#5](#)
+> - Add feature B by @ezzatron in [#6](#)
+> - Fix bug A by @ezzatron in [#7](#)
+> - Fix bug B by @ezzatron in [#8](#)
+> - Add docs for feature A by @ezzatron in [#9](#)
+> - Add docs for feature B by @ezzatron in [#10](#)
+>
+> ## New Contributors
+>
+> - @ezzatron made their first contribution in [#5](#)
+>
+> **Full Changelog**: https://github.com/owner/repo/commits/1.0.0
+
+</details>
 
 ## Configuration
 
