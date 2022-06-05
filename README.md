@@ -315,7 +315,50 @@ release body. The release notes are based off of **pull requests**, and can be
 
 ### Release assets
 
-_TODO_
+This action supports uploading **release assets** — files that are associated
+with a release, and made available for download from GitHub. Release assets
+**must exist before this action is run**, and must be specified via the
+[configuration file]:
+
+[configuration file]: #the-configuration-file
+
+```yaml
+# In .github/release.eloquent.yml:
+assets:
+  - path: path/to/asset-a
+  - path: path/to/asset-b-*
+```
+
+> **⚠️ Warning:** This action will **overwrite existing release assets** if their
+> names match the assets configured for upload. This will only happen for assets
+> mentioned in the configuration. Other assets will not be modified or removed.
+
+Each asset must have a `path` property, which is a file glob pattern supported
+by [`@actions/glob`]. If no matching file is found when the action is run, **the
+workflow step will fail**.
+
+[`@actions/glob`]: https://github.com/actions/toolkit/tree/main/packages/glob
+
+If **multiple files** match the `path` glob pattern, each file will be uploaded
+individually. **This action does not handle archiving multiple assets for you.**
+If you want to upload a `.zip` (or similar) file composed of multiple files, you
+must build the archive yourself prior to running this action.
+
+If **a single file** matches the `path` glob pattern, you can additionally
+specify a custom `name` and/or `label` for the asset:
+
+```yaml
+# In .github/release.eloquent.yml:
+assets:
+  - path: path/to/asset-a.yaml
+    name: custom-name.yml
+    label: Labels can have spaces
+```
+
+The `name` property overrides the file name that will be used when the file is
+uploaded (and hence the filename seen by users who download the asset). The
+`label` property is a text field that gets used by GitHub when viewing a
+release's assets.
 
 ### Release discussions
 
