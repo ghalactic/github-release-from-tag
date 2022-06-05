@@ -103,6 +103,20 @@ jobs:
         uses: eloquent/github-release-action@v2
 ```
 
+### GitHub token
+
+Generally speaking, **you do not need to supply this action with a custom GitHub
+token** unless you run into some kind of permissions issue, which should not
+happen under normal operation. If for some reason you want to supply a different
+token anyway, you can do so via [action inputs]:
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+```
+
 ### Release stability
 
 This action uses [SemVer] rules to determine whether a tag should be published
