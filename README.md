@@ -124,9 +124,24 @@ prefix (e.g. `v1.2.3`), as well as major/minor version tag names (e.g. `v1`,
 [github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
 It's also possible to [configure] an override for this behavior, and force a
-release to be published as either a **pre-release** or **stable release**.
+release to be published as either a **pre-release** or **stable release**. This
+can be done via the [configuration file], or via [action inputs]:
 
 [configure]: #configuration
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+prerelease: true # or false
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    prerelease: "true" # or "false"
+```
 
 #### Example release stabilities
 
