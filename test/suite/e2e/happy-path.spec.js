@@ -34,6 +34,17 @@ describeOrSkip("End-to-end tests", () => {
     const branchName = buildBranchName(runId, label);
     const tagName = buildTagName("1.0.0", runId, label);
     const workflow = buildWorkflow(branchName, {
+      assetsJson: JSON.stringify([
+        {
+          path: "assets/assets-json/file-e.txt",
+        },
+        {
+          path: "assets/assets-json/file-f.txt",
+          name: "custom-name-f.txt",
+          label:
+            "Label for file-f.txt, which will download as custom-name-f.txt",
+        },
+      ]),
       discussionCategory: "releases",
       discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
       generateReleaseNotes: "true",
@@ -99,6 +110,14 @@ paragraph
       {
         path: "assets/json/file-d.1.json",
         content: '{"file-d":1}\n',
+      },
+      {
+        path: "assets/assets-json/file-e.txt",
+        content: "assets-json-file-e\n",
+      },
+      {
+        path: "assets/assets-json/file-f.txt",
+        content: "assets-json-file-f\n",
       },
     ];
 
@@ -193,6 +212,8 @@ paragraph
       ${"custom-name-c.txt"}  | ${7}  | ${"text/plain"}       | ${""}
       ${"file-d.0.json"}      | ${13} | ${"application/json"} | ${""}
       ${"file-d.1.json"}      | ${13} | ${"application/json"} | ${""}
+      ${"file-e.txt"}         | ${19} | ${"text/plain"}       | ${""}
+      ${"custom-name-f.txt"}  | ${19} | ${"text/plain"}       | ${"Label for file-f.txt, which will download as custom-name-f.txt"}
     `(
       "should produce the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
@@ -286,6 +307,15 @@ paragraph
           },
           {
             ...commonFields,
+            downloadUrl: `${downloadUrlPrefix}/custom-name-f.txt`,
+            name: "custom-name-f.txt",
+            label:
+              "Label for file-f.txt, which will download as custom-name-f.txt",
+            contentType: "text/plain",
+            size: 19,
+          },
+          {
+            ...commonFields,
             downloadUrl: `${downloadUrlPrefix}/file-a.txt`,
             name: "file-a.txt",
             label: "",
@@ -307,6 +337,14 @@ paragraph
             label: "",
             contentType: "application/json",
             size: 13,
+          },
+          {
+            ...commonFields,
+            downloadUrl: `${downloadUrlPrefix}/file-e.txt`,
+            name: "file-e.txt",
+            label: "",
+            contentType: "text/plain",
+            size: 19,
           },
         ]);
       });
