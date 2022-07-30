@@ -10,7 +10,7 @@ export async function readConfig({ getInput, group, info }) {
     if (!hasYaml)
       info("No configuration found at .github/release.eloquent.yml");
 
-    const base = validateConfig(hasYaml ? load(yaml) : {});
+    const base = parseConfigYAML(hasYaml, yaml);
     const [overrides, hasOverrides] = getConfigOverrides(getInput, base);
 
     if (hasOverrides) {
@@ -55,12 +55,16 @@ function getConfigOverrides(getInput, base) {
   if (discussionReactions)
     discussionOverrides.reactions = discussionReactions.split(",");
 
-  const overrides = {};
-  const inputAssets = parseAssetsJSON(getInput);
+  const inputAssets = [
+    ...parseAssetsJSON(getInput),
+    ...parseAssetsYAML(getInput),
+  ];
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
   const prerelease = getInput("prerelease");
   const reactions = getInput("reactions");
+
+  const overrides = {};
 
   if (inputAssets.length > 0)
     overrides.assets = [...base.assets, ...inputAssets];
@@ -73,6 +77,25 @@ function getConfigOverrides(getInput, base) {
   if (reactions) overrides.reactions = reactions.split(",");
 
   return [overrides, Object.keys(overrides).length > 0];
+}
+
+function parseConfigYAML(hasYaml, yaml) {
+  if (!hasYaml) return validateConfig({});
+
+  let parsed;
+
+  try {
+    parsed = load(yaml);
+  } catch (error) {
+    const message = JSON.stringify(error.message);
+    const original = JSON.stringify(yaml);
+
+    throw new Error(
+      `Parsing of release configuration failed with ${message}. Provided value: ${original}`
+    );
+  }
+
+  return validateConfig(parsed);
 }
 
 function parseAssetsJSON(getInput) {
@@ -93,5 +116,34 @@ function parseAssetsJSON(getInput) {
     );
   }
 
-  return validateAssets(parsed);
+  try {
+    return validateAssets(parsed);
+  } catch (error) {
+    throw new Error(`Validation of assetsJSON input failed: ${error.stack}`);
+  }
+}
+
+function parseAssetsYAML(getInput) {
+  const yaml = getInput("assetsYAML");
+
+  if (!yaml) return [];
+
+  let parsed;
+
+  try {
+    parsed = load(yaml);
+  } catch (error) {
+    const message = JSON.stringify(error.message);
+    const original = JSON.stringify(yaml);
+
+    throw new Error(
+      `Parsing of assetsYAML input failed with ${message}. Provided value: ${original}`
+    );
+  }
+
+  try {
+    return validateAssets(parsed);
+  } catch (error) {
+    throw new Error(`Validation of assetsYAML input failed: ${error.stack}`);
+  }
 }

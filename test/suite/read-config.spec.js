@@ -1,3 +1,4 @@
+import { dump } from "js-yaml";
 import { join } from "path";
 
 import { readConfig } from "../../src/config/reading.js";
@@ -103,7 +104,9 @@ describe("readConfig()", () => {
   it("should throw an error if the config file contains invalid YAML", async () => {
     chdir(join(fixturesPath, "invalid-yaml"));
 
-    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow();
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Parsing of release configuration failed"
+    );
   });
 
   it("should override config options with actions inputs", async () => {
@@ -161,22 +164,37 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should append assets specified via the assetsJSON action input", async () => {
+  it("should append assets specified via the assetsJSON and assetsYAML action inputs", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name) => {
-      if (name !== "assetsJSON") return "";
+      if (name === "assetsJSON") {
+        return JSON.stringify([
+          {
+            path: "assets/assets-json/file-a",
+          },
+          {
+            path: "assets/assets-json/file-b",
+            name: "custom-name-assets-json-b",
+            label: "Label for assetsJSON input asset B",
+          },
+        ]);
+      }
 
-      return JSON.stringify([
-        {
-          path: "assets/assets-json/file-a",
-        },
-        {
-          path: "assets/assets-json/file-b",
-          name: "custom-name-assets-json-b",
-          label: "Label for assetsJSON input asset B",
-        },
-      ]);
+      if (name === "assetsYAML") {
+        return dump([
+          {
+            path: "assets/assets-yaml/file-c",
+          },
+          {
+            path: "assets/assets-yaml/file-d",
+            name: "custom-name-assets-yaml-d",
+            label: "Label for assetsYAML input asset D",
+          },
+        ]);
+      }
+
+      return "";
     };
 
     const actual = await readConfig({ getInput, group, info });
@@ -202,6 +220,16 @@ describe("readConfig()", () => {
         name: "custom-name-assets-json-b",
         label: "Label for assetsJSON input asset B",
       },
+      {
+        path: "assets/assets-yaml/file-c",
+        name: "",
+        label: "",
+      },
+      {
+        path: "assets/assets-yaml/file-d",
+        name: "custom-name-assets-yaml-d",
+        label: "Label for assetsYAML input asset D",
+      },
     ];
 
     expect(actual.assets).toMatchObject(expected);
@@ -211,7 +239,18 @@ describe("readConfig()", () => {
     chdir(join(fixturesPath, "none"));
     const getInput = (name) => (name === "assetsJSON" ? "{" : "");
 
-    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow();
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Parsing of assetsJSON input failed"
+    );
+  });
+
+  it("should throw an error if the assetsYAML action input contains invalid YAML", async () => {
+    chdir(join(fixturesPath, "none"));
+    const getInput = (name) => (name === "assetsYAML" ? "{" : "");
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Parsing of assetsYAML input failed"
+    );
   });
 
   it("should throw an error if the assetsJSON action input does not match the schema", async () => {
@@ -219,7 +258,16 @@ describe("readConfig()", () => {
     const getInput = (name) => (name === "assetsJSON" ? "{}" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Invalid release assets configuration"
+      "Validation of assetsJSON input failed"
+    );
+  });
+
+  it("should throw an error if the assetsYAML action input does not match the schema", async () => {
+    chdir(join(fixturesPath, "none"));
+    const getInput = (name) => (name === "assetsYAML" ? "{}" : "");
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Validation of assetsYAML input failed"
     );
   });
 });
