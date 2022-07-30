@@ -48,7 +48,7 @@ describeOrSkip("End-to-end tests", () => {
     const workflow = buildWorkflow(
       branchName,
       {
-        assetsJSON: "${{ format('''{0}''', steps.listAssets.outputs.assets) }}",
+        assetsJSON: "${{ steps.listAssets.outputs.assets }}",
         discussionCategory: "releases",
         discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
         generateReleaseNotes: "true",
@@ -58,7 +58,7 @@ describeOrSkip("End-to-end tests", () => {
         {
           name: "List assets",
           id: "listAssets",
-          run: `echo "::set-output name=assets::${assetsJSON}"`,
+          run: `echo '::set-output name=assets::${assetsJSON}'`,
         },
       ]
     );
