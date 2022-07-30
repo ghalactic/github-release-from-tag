@@ -1,29 +1,31 @@
-import Ajv from 'ajv'
+import Ajv from "ajv";
 
-import {schema} from './schema.js'
+import { schema } from "./schema.js";
 
-export function validateConfig (config) {
-  const ajv = new Ajv({allErrors: true, useDefaults: true})
-  const validator = ajv.compile(schema)
-  const isValid = validator(config)
+export function validateConfig(config) {
+  const ajv = new Ajv({ allErrors: true, useDefaults: true });
+  const validator = ajv.compile(schema);
+  const isValid = validator(config);
 
-  if (isValid) return config
+  if (isValid) return config;
 
-  const {errors} = validator
+  const { errors } = validator;
 
-  const error = new Error(`Invalid release configuration:\n${renderErrors(errors)}`)
-  error.errors = errors
+  const error = new Error(
+    `Invalid release configuration:\n${renderErrors(errors)}`
+  );
+  error.errors = errors;
 
-  throw error
+  throw error;
 }
 
-function renderErrors (errors) {
-  return `  - ${errors.map(renderError).join('\n  - ')}\n`
+function renderErrors(errors) {
+  return `  - ${errors.map(renderError).join("\n  - ")}\n`;
 }
 
-function renderError (error) {
-  const {instancePath, message} = error
-  const subject = instancePath && ` (${instancePath})`
+function renderError(error) {
+  const { instancePath, message } = error;
+  const subject = instancePath && ` (${instancePath})`;
 
-  return `${message}${subject}`
+  return `${message}${subject}`;
 }

@@ -1,4 +1,4 @@
-export async function getDiscussionIdByUrl ({
+export async function getDiscussionIdByUrl({
   graphql,
   owner,
   repo,
@@ -13,30 +13,30 @@ export async function getDiscussionIdByUrl ({
         }
       }
     }
-  `
+  `;
 
-  const number = getDiscussionNumberByUrl(url)
+  const number = getDiscussionNumberByUrl(url);
 
-  setOutput('discussionNumber', number)
-  setOutput('discussionUrl', url)
+  setOutput("discussionNumber", number);
+  setOutput("discussionUrl", url);
 
   const result = await graphql({
     query,
     owner,
     repo,
     number,
-  })
+  });
 
-  const id = result.repository.discussion.id
+  const id = result.repository.discussion.id;
 
-  setOutput('discussionId', id)
+  setOutput("discussionId", id);
 
-  return id
+  return id;
 }
 
-export function getDiscussionNumberByUrl (url) {
-  const {pathname} = new URL(url)
-  const numberString = decodeURIComponent(pathname.split('/').pop())
+export function getDiscussionNumberByUrl(url) {
+  const { pathname } = new URL(url);
+  const numberString = decodeURIComponent(pathname.split("/").pop());
 
-  return parseInt(numberString, 10)
+  return parseInt(numberString, 10);
 }

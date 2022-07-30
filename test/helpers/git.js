@@ -1,12 +1,16 @@
-import {getExecOutput} from '@actions/exec'
+import { getExecOutput } from "@actions/exec";
 
-let emptyTreeHash
+let emptyTreeHash;
 
-export async function readEmptyTreeHash () {
+export async function readEmptyTreeHash() {
   if (emptyTreeHash == null) {
-    const {stdout} = await getExecOutput('git', ['hash-object', '-t', 'tree', '/dev/null'], {silent: true})
-    emptyTreeHash = stdout.trim()
+    const { stdout } = await getExecOutput(
+      "git",
+      ["hash-object", "-t", "tree", "/dev/null"],
+      { silent: true }
+    );
+    emptyTreeHash = stdout.trim();
   }
 
-  return emptyTreeHash
+  return emptyTreeHash;
 }

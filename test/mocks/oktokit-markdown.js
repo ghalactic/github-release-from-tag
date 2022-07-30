@@ -1,3 +1,5 @@
 export const markdown = {
-  render: async ({mode, text}) => ({data: JSON.stringify({markdown: true, mode, text}, null, 2)}),
-}
+  render: async ({ mode, text }) => ({
+    data: JSON.stringify({ markdown: true, mode, text }, null, 2),
+  }),
+};

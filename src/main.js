@@ -1,86 +1,116 @@
-import {error, getInput, group, info, notice, setFailed, setOutput, warning} from '@actions/core'
-import {context, getOctokit} from '@actions/github'
+import {
+  error,
+  getInput,
+  group,
+  info,
+  notice,
+  setFailed,
+  setOutput,
+  warning,
+} from "@actions/core";
+import { context, getOctokit } from "@actions/github";
 
-import {modifyReleaseAssets} from './asset.js'
-import {renderReleaseBody} from './body.js'
-import {readConfig} from './config/reading.js'
-import {determineRef, determineTagType, fetchTagAnnotation, readTagAnnotation} from './git.js'
-import {createDiscussionReactions, createReleaseReactions} from './reaction.js'
-import {parseRef} from './ref.js'
-import {createOrUpdateRelease} from './release.js'
+import { modifyReleaseAssets } from "./asset.js";
+import { renderReleaseBody } from "./body.js";
+import { readConfig } from "./config/reading.js";
+import {
+  determineRef,
+  determineTagType,
+  fetchTagAnnotation,
+  readTagAnnotation,
+} from "./git.js";
+import {
+  createDiscussionReactions,
+  createReleaseReactions,
+} from "./reaction.js";
+import { parseRef } from "./ref.js";
+import { createOrUpdateRelease } from "./release.js";
 
 try {
-  await main()
+  await main();
 } catch (e) {
-  setFailed(e.stack)
+  setFailed(e.stack);
 }
 
-async function main () {
-  const config = await readConfig({getInput, group, info})
+async function main() {
+  const config = await readConfig({ getInput, group, info });
 
-  const {env} = process
-  const {repo: {owner, repo}} = context
+  const { env } = process;
+  const {
+    repo: { owner, repo },
+  } = context;
 
-  const ref = await determineRef({group, info})
-  const {isTag, isSemVer, isStable, tag} = parseRef(ref)
+  const ref = await determineRef({ group, info });
+  const { isTag, isSemVer, isStable, tag } = parseRef(ref);
 
   if (!isTag) {
-    setFailed('Cannot create a release from a non-tag')
+    setFailed("Cannot create a release from a non-tag");
 
-    return
+    return;
   }
 
-  info(`Detected tag ${JSON.stringify(tag)}`)
+  info(`Detected tag ${JSON.stringify(tag)}`);
 
-  setOutput('tagIsSemVer', isSemVer ? 'true' : '')
-  setOutput('tagIsStable', isStable ? 'true' : '')
-  setOutput('tagName', tag)
+  setOutput("tagIsSemVer", isSemVer ? "true" : "");
+  setOutput("tagIsStable", isStable ? "true" : "");
+  setOutput("tagName", tag);
 
-  if (!(await fetchTagAnnotation({group, tag}))) {
-    setFailed('Unable to fetch the tag annotation')
+  if (!(await fetchTagAnnotation({ group, tag }))) {
+    setFailed("Unable to fetch the tag annotation");
 
-    return
+    return;
   }
 
-  const [isTagTypeSuccess, tagType] = await determineTagType({group, tag})
+  const [isTagTypeSuccess, tagType] = await determineTagType({ group, tag });
 
   if (!isTagTypeSuccess) {
-    setFailed('Unable to determine the tag type')
+    setFailed("Unable to determine the tag type");
 
-    return
+    return;
   }
 
-  if (tagType !== 'tag') {
-    setFailed('Unable to create a release from a lightweight tag')
+  if (tagType !== "tag") {
+    setFailed("Unable to create a release from a lightweight tag");
 
-    return
+    return;
   }
 
-  const tagSemVerLabel = isSemVer ? 'SemVer' : 'Non-Semver'
-  const tagStabilityLabel = isStable ? 'stable release' : 'pre-release'
+  const tagSemVerLabel = isSemVer ? "SemVer" : "Non-Semver";
+  const tagStabilityLabel = isStable ? "stable release" : "pre-release";
 
-  if (typeof config.prerelease === 'boolean') {
-    info(`Release has been explicitly configured to be a ${config.prerelease ? 'pre-release' : 'stable release'}`)
+  if (typeof config.prerelease === "boolean") {
+    info(
+      `Release has been explicitly configured to be a ${
+        config.prerelease ? "pre-release" : "stable release"
+      }`
+    );
 
     if (isStable === config.prerelease) {
-      info(`Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`)
+      info(
+        `Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`
+      );
     }
   } else {
-    info(`${tagSemVerLabel} tag will be treated as a ${tagStabilityLabel}`)
+    info(`${tagSemVerLabel} tag will be treated as a ${tagStabilityLabel}`);
   }
 
-  const [isTagAnnotationReadSuccess, tagSubject, tagBody] = await readTagAnnotation({group, tag})
+  const [isTagAnnotationReadSuccess, tagSubject, tagBody] =
+    await readTagAnnotation({ group, tag });
 
   if (!isTagAnnotationReadSuccess) {
-    setFailed('Unable to read the tag annotation')
+    setFailed("Unable to read the tag annotation");
 
-    return
+    return;
   }
 
-  setOutput('tagBody', tagBody)
-  setOutput('tagSubject', tagSubject)
+  setOutput("tagBody", tagBody);
+  setOutput("tagSubject", tagSubject);
 
-  const {graphql, request, rest: {markdown, reactions, repos}} = getOctokit(getInput('token'))
+  const {
+    graphql,
+    request,
+    rest: { markdown, reactions, repos },
+  } = getOctokit(getInput("token"));
 
   const releaseBody = await renderReleaseBody({
     config,
@@ -94,9 +124,9 @@ async function main () {
     setOutput,
     tag,
     tagBody,
-  })
+  });
 
-  setOutput('releaseBody', releaseBody)
+  setOutput("releaseBody", releaseBody);
 
   const [release, wasCreated] = await createOrUpdateRelease({
     config,
@@ -109,15 +139,17 @@ async function main () {
     repos,
     tag,
     tagSubject,
-  })
+  });
 
-  setOutput('releaseId', release.id)
-  setOutput('releaseName', release.name)
-  setOutput('releaseUploadUrl', release.upload_url)
-  setOutput('releaseUrl', release.html_url)
-  setOutput('releaseWasCreated', wasCreated ? 'true' : '')
+  setOutput("releaseId", release.id);
+  setOutput("releaseName", release.name);
+  setOutput("releaseUploadUrl", release.upload_url);
+  setOutput("releaseUrl", release.html_url);
+  setOutput("releaseWasCreated", wasCreated ? "true" : "");
 
-  notice(`${wasCreated ? 'Created' : 'Updated'} ${release.html_url}`, {title: `Released - ${tagSubject}`})
+  notice(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`, {
+    title: `Released - ${tagSubject}`,
+  });
 
   const [assetResult, assets] = await modifyReleaseAssets({
     config,
@@ -130,11 +162,11 @@ async function main () {
     repos,
     request,
     warning,
-  })
+  });
 
-  if (!assetResult) setFailed('Unable to modify release assets')
+  if (!assetResult) setFailed("Unable to modify release assets");
 
-  setOutput('assets', JSON.stringify(assets))
+  setOutput("assets", JSON.stringify(assets));
 
   await createReleaseReactions({
     config,
@@ -144,7 +176,7 @@ async function main () {
     reactions,
     release,
     repo,
-  })
+  });
 
   await createDiscussionReactions({
     config,
@@ -155,5 +187,5 @@ async function main () {
     release,
     repo,
     setOutput,
-  })
+  });
 }

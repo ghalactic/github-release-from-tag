@@ -1,9 +1,9 @@
-import {create as createGlob} from '@actions/glob'
-import {readFile, stat} from 'fs/promises'
-import {lookup} from 'mime-types'
-import {basename} from 'path'
+import { create as createGlob } from "@actions/glob";
+import { readFile, stat } from "fs/promises";
+import { lookup } from "mime-types";
+import { basename } from "path";
 
-export async function modifyReleaseAssets ({
+export async function modifyReleaseAssets({
   config,
   error,
   group,
@@ -15,174 +15,202 @@ export async function modifyReleaseAssets ({
   request,
   warning,
 }) {
-  const existingAssets = release.assets
-  const desiredAssets = await findAssets(warning, config.assets)
+  const existingAssets = release.assets;
+  const desiredAssets = await findAssets(warning, config.assets);
 
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
-    info('No release assets to modify')
+    info("No release assets to modify");
 
-    return [true, []]
+    return [true, []];
   }
 
-  return group('Modifying release assets', async () => {
-    const {toUpload, toUpdate} = diffAssets(existingAssets, desiredAssets)
+  return group("Modifying release assets", async () => {
+    const { toUpload, toUpdate } = diffAssets(existingAssets, desiredAssets);
 
-    info(`${toUpload.length} to upload, ${toUpdate.length} to update`)
+    info(`${toUpload.length} to upload, ${toUpdate.length} to update`);
 
-    const [
-      uploadResults,
-      updateResults,
-    ] = await Promise.all([
-      Promise.allSettled(toUpload.map(desired => uploadAsset(desired))),
-      Promise.allSettled(toUpdate.map(([existing, desired]) => updateAsset(existing, desired))),
-    ])
+    const [uploadResults, updateResults] = await Promise.all([
+      Promise.allSettled(toUpload.map((desired) => uploadAsset(desired))),
+      Promise.allSettled(
+        toUpdate.map(([existing, desired]) => updateAsset(existing, desired))
+      ),
+    ]);
 
-    const uploadResult = analyzeResults(uploadResults)
-    const updateResult = analyzeResults(updateResults)
+    const uploadResult = analyzeResults(uploadResults);
+    const updateResult = analyzeResults(updateResults);
 
-    logResults(info, error, uploadResult, '{successCount} uploaded, {failureCount} failed to upload')
-    logResults(info, error, updateResult, '{successCount} updated, {failureCount} failed to update')
+    logResults(
+      info,
+      error,
+      uploadResult,
+      "{successCount} uploaded, {failureCount} failed to upload"
+    );
+    logResults(
+      info,
+      error,
+      updateResult,
+      "{successCount} updated, {failureCount} failed to update"
+    );
 
-    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess
-    const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(compareApiAsset)
+    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess;
+    const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(
+      compareApiAsset
+    );
 
-    return [isSuccess, sortedAssets]
-  })
+    return [isSuccess, sortedAssets];
+  });
 
-  async function deleteAsset (existing) {
-    info(`Deleting existing release asset ${JSON.stringify(existing.name)} (${existing.id})`)
+  async function deleteAsset(existing) {
+    info(
+      `Deleting existing release asset ${JSON.stringify(existing.name)} (${
+        existing.id
+      })`
+    );
 
     await repos.deleteReleaseAsset({
       owner,
       repo,
       asset_id: existing.id,
-    })
+    });
   }
 
-  async function updateAsset (existing, desired) {
-    await deleteAsset(existing)
+  async function updateAsset(existing, desired) {
+    await deleteAsset(existing);
 
-    return uploadAsset(desired)
+    return uploadAsset(desired);
   }
 
-  async function uploadAsset (desired) {
-    const {upload_url: url} = release
-    const {label, name, path} = desired
-    const contentType = lookup(path)
-    const data = await readFile(path)
+  async function uploadAsset(desired) {
+    const { upload_url: url } = release;
+    const { label, name, path } = desired;
+    const contentType = lookup(path);
+    const data = await readFile(path);
 
-    info(`Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`)
+    info(
+      `Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`
+    );
 
-    const {data: apiAsset} = await request({
-      method: 'POST',
+    const { data: apiAsset } = await request({
+      method: "POST",
       url,
       name,
       data,
       label,
       headers: {
-        'Content-Type': contentType,
+        "Content-Type": contentType,
       },
-    })
+    });
 
-    const normalized = normalizeApiAsset(apiAsset)
-    info(`Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(normalized, null, 2)}`)
+    const normalized = normalizeApiAsset(apiAsset);
+    info(
+      `Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(
+        normalized,
+        null,
+        2
+      )}`
+    );
 
-    return normalized
+    return normalized;
   }
 }
 
-export async function findAssets (warning, assets) {
-  const found = []
-  for (const asset of assets) found.push(...await findAsset(asset))
+export async function findAssets(warning, assets) {
+  const found = [];
+  for (const asset of assets) found.push(...(await findAsset(asset)));
 
-  const seen = new Set()
+  const seen = new Set();
 
-  return found.filter(({name}) => {
-    const lowercaseName = name.toLowerCase()
+  return found.filter(({ name }) => {
+    const lowercaseName = name.toLowerCase();
 
     if (!seen.has(lowercaseName)) {
-      seen.add(lowercaseName)
+      seen.add(lowercaseName);
 
-      return true
+      return true;
     }
 
-    warning(`Release asset ${JSON.stringify(name)} found multiple times. Only the first instance will be used.`)
+    warning(
+      `Release asset ${JSON.stringify(
+        name
+      )} found multiple times. Only the first instance will be used.`
+    );
 
-    return false
-  })
+    return false;
+  });
 }
 
-async function findAsset (asset) {
-  const {path: pattern} = asset
-  const globber = await createGlob(pattern)
-  const assets = []
+async function findAsset(asset) {
+  const { path: pattern } = asset;
+  const globber = await createGlob(pattern);
+  const assets = [];
 
   for await (const path of globber.globGenerator()) {
     // ignore directories
-    const stats = await stat(path)
-    if (!stats.isDirectory()) assets.push({path})
+    const stats = await stat(path);
+    if (!stats.isDirectory()) assets.push({ path });
   }
 
-  if (assets.length < 1) throw new Error(`No release assets found for path ${JSON.stringify(pattern)}`)
+  if (assets.length < 1)
+    throw new Error(
+      `No release assets found for path ${JSON.stringify(pattern)}`
+    );
 
   // name and label options only apply when the glob matches a single file
-  if (assets.length > 1) return assets.map(normalizeAsset)
+  if (assets.length > 1) return assets.map(normalizeAsset);
 
-  const [{path}] = assets
-  const {name, label} = asset
+  const [{ path }] = assets;
+  const { name, label } = asset;
 
-  return [normalizeAsset({label, name, path})]
+  return [normalizeAsset({ label, name, path })];
 }
 
-function normalizeAsset (asset) {
-  const {
-    label = '',
-    path,
-    name,
-  } = asset
+function normalizeAsset(asset) {
+  const { label = "", path, name } = asset;
 
   return {
     label,
     name: name || basename(path),
     path,
-  }
+  };
 }
 
-function diffAssets (existingAssets, desiredAssets) {
-  const toUpdate = []
-  const toUpload = []
+function diffAssets(existingAssets, desiredAssets) {
+  const toUpdate = [];
+  const toUpload = [];
 
   for (const desired of desiredAssets) {
-    const existing = existingAssets.find(existing => existing.name === desired.name)
+    const existing = existingAssets.find(
+      (existing) => existing.name === desired.name
+    );
 
     if (existing == null) {
-      toUpload.push(desired)
+      toUpload.push(desired);
     } else {
-      toUpdate.push([existing, desired])
+      toUpdate.push([existing, desired]);
     }
   }
 
   return {
     toUpdate,
     toUpload,
-  }
+  };
 }
 
-function analyzeResults (results) {
-  let isSuccess = true
-  let successCount = 0
-  const assets = []
-  let failureCount = 0
-  const failureReasons = []
+function analyzeResults(results) {
+  let isSuccess = true;
+  let successCount = 0;
+  const assets = [];
+  let failureCount = 0;
+  const failureReasons = [];
 
-  for (const {status, value, reason} of results) {
-    if (status === 'fulfilled') {
-      ++successCount
-      assets.push(value)
+  for (const { status, value, reason } of results) {
+    if (status === "fulfilled") {
+      ++successCount;
+      assets.push(value);
     } else {
-      isSuccess = false
-      ++failureCount
-      failureReasons.push(reason)
+      isSuccess = false;
+      ++failureCount;
+      failureReasons.push(reason);
     }
   }
 
@@ -192,25 +220,25 @@ function analyzeResults (results) {
     assets,
     failureCount,
     failureReasons,
-  }
+  };
 }
 
-async function logResults (info, error, result, messageTemplate) {
-  const {successCount, failureCount, failureReasons} = result
+async function logResults(info, error, result, messageTemplate) {
+  const { successCount, failureCount, failureReasons } = result;
   const message = messageTemplate
-    .replace('{successCount}', successCount)
-    .replace('{failureCount}', failureCount)
+    .replace("{successCount}", successCount)
+    .replace("{failureCount}", failureCount);
 
   if (failureCount > 0) {
-    info(`${message}:`)
-    for (const reason of failureReasons) error(reason.stack)
-    info('')
+    info(`${message}:`);
+    for (const reason of failureReasons) error(reason.stack);
+    info("");
   } else {
-    info(message)
+    info(message);
   }
 }
 
-function normalizeApiAsset (apiAsset) {
+function normalizeApiAsset(apiAsset) {
   const {
     url: apiUrl,
     browser_download_url: downloadUrl,
@@ -224,7 +252,7 @@ function normalizeApiAsset (apiAsset) {
     download_count: downloadCount,
     created_at: createdAt,
     updated_at: updatedAt,
-  } = apiAsset
+  } = apiAsset;
 
   return {
     apiUrl,
@@ -239,9 +267,9 @@ function normalizeApiAsset (apiAsset) {
     downloadCount,
     createdAt,
     updatedAt,
-  }
+  };
 }
 
-function compareApiAsset (a, b) {
-  return a.name.localeCompare(b.name)
+function compareApiAsset(a, b) {
+  return a.name.localeCompare(b.name);
 }
