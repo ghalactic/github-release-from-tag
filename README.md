@@ -24,21 +24,14 @@ to when you [publish a GitHub Release manually].
 
 ## Features
 
-- Minimal [configuration], or often **zero** configuration
-- [SemVer] stability determines **pre-release** status
-- [Markdown] support in tag annotation messages
-- [Asset] uploading with support for **labels**
-- [Automated release notes] support
-- [Release discussion] creation
-- Releases can be created as **drafts**
-- Creation of initial **🚀 reactions ❤️** to promote engagement
-
-[configuration]: #configuration
-[semver]: https://semver.org/
-[markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
-[asset]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#:~:text=drag%20and%20drop
-[automated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
-[release discussion]: https://docs.github.com/discussions
+- [Minimal configuration, or often **zero** configuration](#configuration)
+- [SemVer stability determines **pre-release** status](#release-stability)
+- [Markdown support in tag annotation messages](#release-name-and-body)
+- [Asset uploading with support for **labels**](#release-assets)
+- [Automated release notes support](#automated-release-notes)
+- [Release discussion creation](#release-discussions)
+- [Releases can be created as **drafts**](#draft-releases)
+- [Creation of initial **🚀 reactions ❤️** to promote engagement](#reactions)
 
 ## Usage
 
