@@ -408,12 +408,13 @@ release's assets.
 #### Dynamic release assets
 
 If you need to dynamically specify a list of assets to upload, you can use the
-`assetsJSON` [action input].
+`assetsJSON` [action input]. How you generate the JSON for this input is up to
+you, but any value from a [context] (e.g. [an output from another step]) can be
+used, for example:
 
 [action input]: #action-inputs
-
-How you generate the JSON for this input is up to you, but any value from a
-[context] (e.g. [an output from another step]) can be used, for example:
+[context]: https://docs.github.com/actions/learn-github-actions/contexts
+[an output from another step]: https://docs.github.com/actions/learn-github-actions/contexts#steps-context
 
 ```yaml
 # Executing a script that outputs JSON describing the assets to upload.
@@ -424,9 +425,6 @@ How you generate the JSON for this input is up to you, but any value from a
   with:
     assetsJSON: ${{ steps.listAssets.outputs.assets }}
 ```
-
-[context]: https://docs.github.com/actions/learn-github-actions/contexts
-[an output from another step]: https://docs.github.com/actions/learn-github-actions/contexts#steps-context
 
 ### Release discussions
 
