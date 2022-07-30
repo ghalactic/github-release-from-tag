@@ -355,7 +355,13 @@ assets:
 # In your workflow:
 - uses: eloquent/github-release-action@v2
   with:
+    # The assetsJSON input is well suited for dynamic/generated asset lists.
     assetsJSON: '[{"path":"path/to/asset-c"}]'
+
+    # The assetsYAML input is better suited for hand-written asset lists.
+    # Note the "|" character - this example uses a YAML multiline string.
+    assetsYAML: |
+      - path: path/to/asset-d
 ```
 
 > **⚠️ Warning:** This action will **overwrite existing release assets** if their
@@ -389,15 +395,27 @@ assets:
 ```
 
 ```yaml
-# In your workflow:
+# In your workflow (using JSON):
 - uses: eloquent/github-release-action@v2
   with:
+    # Note the "|" character - this example uses a YAML multiline string.
     assetsJSON: |
       [{
         "path": "path/to/asset-a.yaml",
         "name: "custom-name.yml",
         "label": "Labels can have spaces"
       }]
+```
+
+```yaml
+# In your workflow (using YAML):
+- uses: eloquent/github-release-action@v2
+  with:
+    # Note the "|" character - this example uses a YAML multiline string.
+    assetsYAML: |
+      - path: path/to/asset-a.yaml
+        name: custom-name.yml
+        label: Labels can have spaces
 ```
 
 The `name` property overrides the file name that will be used when the file is
@@ -552,9 +570,10 @@ discussion:
 This action supports **optional** inputs for affecting how releases are
 published:
 
-> **Note:** With the exception of `assetsJSON`, these inputs take precedence
-> over any equivalent options specified in [the configuration file]. The
-> [action metadata file] contains the actual definitions for these inputs.
+> **Note:** With the exception of `assetsJSON` and `assetsYAML`, these inputs
+> take precedence over any equivalent options specified in
+> [the configuration file]. The [action metadata file] contains the actual
+> definitions for these inputs.
 
 [the configuration file]: #the-configuration-file
 [action metadata file]: action.yml
@@ -587,6 +606,14 @@ published:
           "label": "Label for file-b.json"
         }
       ]
+
+    # Assets to be associated with releases, specified as YAML, and merged with assets specified elsewhere.
+    assetsYAML: |
+      - path: assets/text/file-a.txt
+
+      - path: assets/json/file-b.json
+        name: custom-name-b.json
+        label: Label for file-b.json
 
     # Use a custom GitHub token.
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
