@@ -11,7 +11,14 @@ Versioning].
 
 [unreleased]: https://github.com/eloquent/github-release-action
 
-_There are currently no unreleased changes._
+<!-- _There are currently no unreleased changes._ -->
+
+### Added
+
+- Support for specifying [release assets] to upload via the new action inputs
+  `assetsJSON` and `assetsYAML`.
+
+[release assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#release-assets
 
 ## [v2.0.0]
 
