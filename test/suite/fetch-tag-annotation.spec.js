@@ -3,7 +3,6 @@ import fileUrl from "file-url";
 import { mkdtemp, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
-
 import { fetchTagAnnotation } from "../../src/git.js";
 import { group } from "../mocks/actions-core.js";
 

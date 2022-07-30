@@ -6,10 +6,9 @@ import {
   SETUP_TIMEOUT,
 } from "../../helpers/e2e.js";
 import { readRunId } from "../../helpers/gha.js";
-
 import {
-  createTag,
   createBranchForCi,
+  createTag,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
 } from "../../helpers/octokit.js";

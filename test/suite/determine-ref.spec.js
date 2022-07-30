@@ -3,7 +3,6 @@ import fileUrl from "file-url";
 import { mkdtemp, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
-
 import { determineRef } from "../../src/git.js";
 import { group, info } from "../mocks/actions-core.js";
 

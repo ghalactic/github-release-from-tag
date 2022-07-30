@@ -1,6 +1,5 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
-
 import { validateAssets, validateConfig } from "./validation.js";
 
 export async function readConfig({ getInput, group, info }) {

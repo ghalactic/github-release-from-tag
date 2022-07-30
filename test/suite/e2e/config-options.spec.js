@@ -1,7 +1,5 @@
 import escapeStringRegExp from "escape-string-regexp";
-
 import { GRAPHQL_REACTION_CONTENT } from "../../../src/reaction.js";
-
 import {
   buildBodyExpression,
   buildBranchName,
@@ -10,10 +8,8 @@ import {
   describeOrSkip,
   SETUP_TIMEOUT,
 } from "../../helpers/e2e.js";
-
 import { owner, repo } from "../../helpers/fixture-repo.js";
 import { readRunId } from "../../helpers/gha.js";
-
 import {
   createBranchForCi,
   createTag,

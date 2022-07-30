@@ -1,5 +1,4 @@
 import { Octokit } from "octokit";
-
 import { getDiscussionNumberByUrl } from "../../src/discussion.js";
 import { owner, repo } from "./fixture-repo.js";
 import { readEmptyTreeHash } from "./git.js";

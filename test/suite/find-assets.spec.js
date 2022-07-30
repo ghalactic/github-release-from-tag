@@ -1,6 +1,5 @@
 import { mockProcessStdout } from "jest-mock-process";
 import { join } from "path";
-
 import { findAssets } from "../../src/asset.js";
 import { warning } from "../mocks/actions-core.js";
 

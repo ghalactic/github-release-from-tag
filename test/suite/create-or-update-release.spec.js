@@ -2,7 +2,6 @@ import { createOrUpdateRelease } from "../../src/release.js";
 import { group, info } from "../mocks/actions-core.js";
 import {
   createAlreadyExistsError,
-  createError,
   createRepos,
 } from "../mocks/oktokit-repos.js";
 

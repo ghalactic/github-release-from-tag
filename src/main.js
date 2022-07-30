@@ -9,7 +9,6 @@ import {
   warning,
 } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-
 import { modifyReleaseAssets } from "./asset.js";
 import { renderReleaseBody } from "./body.js";
 import { readConfig } from "./config/reading.js";
