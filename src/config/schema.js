@@ -1,42 +1,19 @@
-export const schema = {
+export const CONFIG =
+  "https://lqnt.co/github-release-action/config.schema.json";
+export const ASSETS =
+  "https://lqnt.co/github-release-action/assets.schema.json";
+
+export const config = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "https://lqnt.co/github-release-action/config.schema.json",
-  title: "GitHub Release from Tag Configuration File",
-  description:
-    'The configuration file used by the "GitHub Release from Tag" GitHub Action.',
+  $id: CONFIG,
+  title: "GitHub Release from Tag (Configuration)",
+  description: 'Configuration for the "GitHub Release from Tag" GitHub Action.',
   type: "object",
   additionalProperties: false,
   properties: {
     assets: {
-      description: "Assets to be associated with releases.",
-      type: "array",
+      $ref: ASSETS,
       default: [],
-      items: {
-        description: "An asset to be associated with releases.",
-        type: "object",
-        additionalProperties: false,
-        required: ["path"],
-        properties: {
-          label: {
-            description: "The asset label.",
-            type: "string",
-            default: "",
-          },
-          name: {
-            description:
-              "The asset name. Defaults to the basename of the asset path.",
-            type: "string",
-            default: "",
-          },
-          path: {
-            description:
-              "The file path glob pattern used to locate the asset(s). " +
-              "Relative patterns are resolved against the root of the Git repo.",
-            type: "string",
-            minLength: 1,
-          },
-        },
-      },
     },
     discussion: {
       description: "Options for creating discussions linked to releases.",
@@ -97,6 +74,40 @@ export const schema = {
         description: "A reaction to create for releases.",
         type: "string",
         enum: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
+      },
+    },
+  },
+};
+
+export const assets = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  $id: ASSETS,
+  title: "GitHub Release from Tag (Assets)",
+  description: "Assets to be associated with releases.",
+  type: "array",
+  items: {
+    description: "An asset to be associated with releases.",
+    type: "object",
+    additionalProperties: false,
+    required: ["path"],
+    properties: {
+      label: {
+        description: "The asset label.",
+        type: "string",
+        default: "",
+      },
+      name: {
+        description:
+          "The asset name. Defaults to the basename of the asset path.",
+        type: "string",
+        default: "",
+      },
+      path: {
+        description:
+          "The file path glob pattern used to locate the asset(s). " +
+          "Relative patterns are resolved against the root of the Git repo.",
+        type: "string",
+        minLength: 1,
       },
     },
   },

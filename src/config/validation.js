@@ -1,22 +1,37 @@
 import Ajv from "ajv";
+import {
+  ASSETS,
+  assets as assetsSchema,
+  CONFIG,
+  config as configSchema,
+} from "./schema.js";
 
-import { schema } from "./schema.js";
+const ajv = new Ajv({
+  schemas: [assetsSchema, configSchema],
+  allErrors: true,
+  useDefaults: true,
+});
 
-export function validateConfig(config) {
-  const ajv = new Ajv({ allErrors: true, useDefaults: true });
-  const validator = ajv.compile(schema);
-  const isValid = validator(config);
+export const validateConfig = createValidate(CONFIG, "release configuration");
+export const validateAssets = createValidate(
+  ASSETS,
+  "release assets configuration"
+);
 
-  if (isValid) return config;
+function createValidate(schema, label) {
+  return function validate(value) {
+    const validator = ajv.getSchema(schema);
+    const isValid = validator(value);
 
-  const { errors } = validator;
+    if (isValid) return value;
 
-  const error = new Error(
-    `Invalid release configuration:\n${renderErrors(errors)}`
-  );
-  error.errors = errors;
+    const { errors } = validator;
 
-  throw error;
+    const error = new Error(`Invalid ${label}:\n${renderErrors(errors)}`);
+    error.errors = errors;
+
+    throw error;
+  };
 }
 
 function renderErrors(errors) {

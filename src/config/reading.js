@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 
-import { validateConfig } from "./validation.js";
+import { validateAssets, validateConfig } from "./validation.js";
 
 export async function readConfig({ getInput, group, info }) {
   return group("Reading release configuration", async () => {
@@ -11,7 +11,7 @@ export async function readConfig({ getInput, group, info }) {
       info("No configuration found at .github/release.eloquent.yml");
 
     const base = validateConfig(hasYaml ? load(yaml) : {});
-    const [overrides, hasOverrides] = getConfigOverrides(getInput);
+    const [overrides, hasOverrides] = getConfigOverrides(getInput, base);
 
     if (hasOverrides) {
       info(`Base configuration: ${JSON.stringify(base, null, 2)}`);
@@ -46,7 +46,7 @@ async function readConfigFile() {
   return [yaml.length > 0, yaml];
 }
 
-function getConfigOverrides(getInput) {
+function getConfigOverrides(getInput, base) {
   const discussionOverrides = {};
   const discussionCategory = getInput("discussionCategory");
   const discussionReactions = getInput("discussionReactions");
@@ -56,11 +56,14 @@ function getConfigOverrides(getInput) {
     discussionOverrides.reactions = discussionReactions.split(",");
 
   const overrides = {};
+  const inputAssets = parseAssetsJson(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
   const prerelease = getInput("prerelease");
   const reactions = getInput("reactions");
 
+  if (inputAssets.length > 0)
+    overrides.assets = [...base.assets, ...inputAssets];
   if (Object.keys(discussionOverrides).length > 0)
     overrides.discussion = discussionOverrides;
   if (draft) overrides.draft = draft === "true";
@@ -70,4 +73,10 @@ function getConfigOverrides(getInput) {
   if (reactions) overrides.reactions = reactions.split(",");
 
   return [overrides, Object.keys(overrides).length > 0];
+}
+
+function parseAssetsJson(getInput) {
+  const json = getInput("assetsJson");
+
+  return json ? validateAssets(JSON.parse(json)) : [];
 }
