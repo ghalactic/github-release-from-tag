@@ -11,15 +11,15 @@
     "mime-types": "^2.1.35"
   },
   "devDependencies": {
-    "es-jest": "^1.5.0",
+    "es-jest": "^2.0.0",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
-    "jest": "^27.5.1",
-    "jest-extended": "^2.0.0",
-    "jest-mock-process": "^1.4.1",
+    "jest": "^28.1.3",
+    "jest-extended": "^3.0.1",
+    "jest-mock-process": "^2.0.0",
     "jest-puppeteer": "^6.1.0",
-    "octokit": "^1.7.1",
+    "octokit": "^2.0.4",
     "prettier": "^2.7.1",
-    "puppeteer": "^13.5.2"
+    "puppeteer": "^15.5.0"
   }
 }

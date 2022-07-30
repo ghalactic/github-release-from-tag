@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 COPY . .
 RUN yarn install --production
 ENTRYPOINT ["node", "/src/main.js"]
