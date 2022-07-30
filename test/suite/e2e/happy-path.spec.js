@@ -34,17 +34,6 @@ describeOrSkip("End-to-end tests", () => {
     const branchName = buildBranchName(runId, label);
     const tagName = buildTagName("1.0.0", runId, label);
 
-    const assetsJSON = JSON.stringify([
-      {
-        path: "assets/assets-json/file-e.txt",
-      },
-      {
-        path: "assets/assets-json/file-f.txt",
-        name: "custom-name-f.txt",
-        label: "Label for file-f.txt, which will download as custom-name-f.txt",
-      },
-    ]);
-
     const workflow = buildWorkflow(
       branchName,
       {
@@ -58,7 +47,7 @@ describeOrSkip("End-to-end tests", () => {
         {
           name: "List assets",
           id: "listAssets",
-          run: `echo '::set-output name=assets::${assetsJSON}'`,
+          run: `echo ::set-output name=assets::$(cat assets.json)`,
         },
       ]
     );
@@ -99,6 +88,20 @@ paragraph
       {
         path: ".github/release.eloquent.yml",
         content: config,
+      },
+      {
+        path: "assets.json",
+        content: `${JSON.stringify([
+          {
+            path: "assets/assets-json/file-e.txt",
+          },
+          {
+            path: "assets/assets-json/file-f.txt",
+            name: "custom-name-f.txt",
+            label:
+              "Label for file-f.txt, which will download as custom-name-f.txt",
+          },
+        ])}\n`,
       },
       {
         path: "assets/text/file-a.txt",
