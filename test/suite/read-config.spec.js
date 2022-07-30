@@ -17,6 +17,14 @@ describe("readConfig()", () => {
     chdir(originalCwd);
   });
 
+  it("should throw an error if the config does not match the schema", async () => {
+    chdir(join(fixturesPath, "additional-properties"));
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Invalid release configuration"
+    );
+  });
+
   it("should be able to read comprehensive valid configs", async () => {
     chdir(join(fixturesPath, "comprehensive"));
     const actual = await readConfig({ getInput, group, info });
