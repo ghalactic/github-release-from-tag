@@ -417,12 +417,12 @@ How you generate the JSON for this input is up to you, but any value from a
 
 ```yaml
 # Executing a script that outputs JSON describing the assets to upload.
-- id: list-assets
+- id: listAssets
   run: echo "::set-output name=assets::$(bash list-assets.sh)"
 
 - uses: eloquent/github-release-action@v2
   with:
-    assetsJSON: ${{ steps.list-assets.outputs.assets }}
+    assetsJSON: ${{ steps.listAssets.outputs.assets }}
 ```
 
 [context]: https://docs.github.com/actions/learn-github-actions/contexts
