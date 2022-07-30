@@ -358,8 +358,8 @@ assets:
     # The assetsJSON input is well suited for dynamic/generated asset lists.
     assetsJSON: '[{"path":"path/to/asset-c"}]'
 
-    # The assetsYAML input is better suited for hand-written asset lists.
-    # Note the "|" character - this example uses a YAML multiline string.
+    # The assetsYAML input is better suited for hand-written asset lists. Note
+    # the "|" character - this example uses a YAML multiline string.
     assetsYAML: |
       - path: path/to/asset-d
 ```
@@ -539,10 +539,12 @@ affecting how releases are published:
 # Set to true to produce releases in a draft state.
 draft: true
 
-# Set to true to append automatically generated release notes to the release body.
+# Set to true to append automatically generated release notes to the release
+# body.
 generateReleaseNotes: true
 
-# Set to true or false to override the automatic tag name based pre-release detection.
+# Set to true or false to override the automatic tag name based pre-release
+# detection.
 prerelease: false
 
 # Reactions to create for releases.
@@ -584,17 +586,20 @@ published:
     # Set to "true" to produce releases in a draft state.
     draft: "true"
 
-    # Set to "true" to append automatically generated release notes to the release body.
+    # Set to "true" to append automatically generated release notes to the
+    # release body.
     generateReleaseNotes: "true"
 
-    # Set to "true" or "false" to override the automatic tag name based pre-release detection.
+    # Set to "true" or "false" to override the automatic tag name based
+    # pre-release detection.
     prerelease: "false"
 
     # Reactions to create for releases.
     reactions: +1,laugh,hooray,heart,rocket,eyes
 
-    # Assets to be associated with releases, specified as JSON, and merged with assets specified elsewhere.
-    # If you need a dynamic list, this input can be useful. See the section titled "Dynamic release assets".
+    # Assets to be associated with releases, specified as JSON, and merged with
+    # assets specified elsewhere. If you need a dynamic list, this input can be
+    # useful. See the section titled "Dynamic release assets".
     assetsJSON: |
       [
         {
@@ -607,7 +612,8 @@ published:
         }
       ]
 
-    # Assets to be associated with releases, specified as YAML, and merged with assets specified elsewhere.
+    # Assets to be associated with releases, specified as YAML, and merged with
+    # assets specified elsewhere.
     assetsYAML: |
       - path: assets/text/file-a.txt
 
