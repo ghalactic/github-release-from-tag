@@ -48,7 +48,7 @@ describeOrSkip("End-to-end tests", () => {
     const workflow = buildWorkflow(
       branchName,
       {
-        assetsJSON: "${{ steps.listAssets.outputs.assets }}",
+        assetsJSON: "${{ toJSON(steps.listAssets.outputs.assets) }}",
         discussionCategory: "releases",
         discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
         generateReleaseNotes: "true",
