@@ -161,11 +161,11 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should append assets specified via the assetsJson action input", async () => {
+  it("should append assets specified via the assetsJSON action input", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name) => {
-      if (name !== "assetsJson") return "";
+      if (name !== "assetsJSON") return "";
 
       return JSON.stringify([
         {
@@ -174,7 +174,7 @@ describe("readConfig()", () => {
         {
           path: "assets/assets-json/file-b",
           name: "custom-name-assets-json-b",
-          label: "Label for assetsJson input asset B",
+          label: "Label for assetsJSON input asset B",
         },
       ]);
     };
@@ -200,23 +200,23 @@ describe("readConfig()", () => {
       {
         path: "assets/assets-json/file-b",
         name: "custom-name-assets-json-b",
-        label: "Label for assetsJson input asset B",
+        label: "Label for assetsJSON input asset B",
       },
     ];
 
     expect(actual.assets).toMatchObject(expected);
   });
 
-  it("should throw an error if the assetsJson action input contains invalid JSON", async () => {
+  it("should throw an error if the assetsJSON action input contains invalid JSON", async () => {
     chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsJson" ? "{" : "");
+    const getInput = (name) => (name === "assetsJSON" ? "{" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow();
   });
 
-  it("should throw an error if the assetsJson action input does not match the schema", async () => {
+  it("should throw an error if the assetsJSON action input does not match the schema", async () => {
     chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsJson" ? "{}" : "");
+    const getInput = (name) => (name === "assetsJSON" ? "{}" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
       "Invalid release assets configuration"

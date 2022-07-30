@@ -355,7 +355,7 @@ assets:
 # In your workflow:
 - uses: eloquent/github-release-action@v2
   with:
-    assetsJson: '[{"path":"path/to/asset-c"}]'
+    assetsJSON: '[{"path":"path/to/asset-c"}]'
 ```
 
 > **⚠️ Warning:** This action will **overwrite existing release assets** if their
@@ -392,7 +392,7 @@ assets:
 # In your workflow:
 - uses: eloquent/github-release-action@v2
   with:
-    assetsJson: |
+    assetsJSON: |
       [{
         "path": "path/to/asset-a.yaml",
         "name: "custom-name.yml",
@@ -408,7 +408,7 @@ release's assets.
 #### Dynamic release assets
 
 If you need to dynamically specify a list of assets to upload, you can use the
-`assetsJson` [action input].
+`assetsJSON` [action input].
 
 [action input]: #action-inputs
 
@@ -422,7 +422,7 @@ How you generate the JSON for this input is up to you, but any value from a
 
 - uses: eloquent/github-release-action@v2
   with:
-    assetsJson: ${{ steps.list-assets.outputs.assets }}
+    assetsJSON: ${{ steps.list-assets.outputs.assets }}
 ```
 
 [context]: https://docs.github.com/actions/learn-github-actions/contexts
@@ -554,7 +554,7 @@ discussion:
 This action supports **optional** inputs for affecting how releases are
 published:
 
-> **Note:** With the exception of `assetsJson`, these inputs take precedence
+> **Note:** With the exception of `assetsJSON`, these inputs take precedence
 > over any equivalent options specified in [the configuration file]. The
 > [action metadata file] contains the actual definitions for these inputs.
 
@@ -578,7 +578,7 @@ published:
 
     # Assets to be associated with releases, specified as JSON, and merged with assets specified elsewhere.
     # If you need a dynamic list, this input can be useful. See the section titled "Dynamic release assets".
-    assetsJson: |
+    assetsJSON: |
       [
         {
           "path": "assets/text/file-a.txt"

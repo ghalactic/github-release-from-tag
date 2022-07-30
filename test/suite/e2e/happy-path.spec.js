@@ -34,7 +34,7 @@ describeOrSkip("End-to-end tests", () => {
     const branchName = buildBranchName(runId, label);
     const tagName = buildTagName("1.0.0", runId, label);
     const workflow = buildWorkflow(branchName, {
-      assetsJson: JSON.stringify([
+      assetsJSON: JSON.stringify([
         {
           path: "assets/assets-json/file-e.txt",
         },

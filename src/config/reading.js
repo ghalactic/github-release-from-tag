@@ -56,7 +56,7 @@ function getConfigOverrides(getInput, base) {
     discussionOverrides.reactions = discussionReactions.split(",");
 
   const overrides = {};
-  const inputAssets = parseAssetsJson(getInput);
+  const inputAssets = parseAssetsJSON(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
   const prerelease = getInput("prerelease");
@@ -75,8 +75,8 @@ function getConfigOverrides(getInput, base) {
   return [overrides, Object.keys(overrides).length > 0];
 }
 
-function parseAssetsJson(getInput) {
-  const json = getInput("assetsJson");
+function parseAssetsJSON(getInput) {
+  const json = getInput("assetsJSON");
 
   return json ? validateAssets(JSON.parse(json)) : [];
 }
