@@ -78,5 +78,20 @@ function getConfigOverrides(getInput, base) {
 function parseAssetsJSON(getInput) {
   const json = getInput("assetsJSON");
 
-  return json ? validateAssets(JSON.parse(json)) : [];
+  if (!json) return [];
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(json);
+  } catch (error) {
+    const message = JSON.stringify(error.message);
+    const original = JSON.stringify(json);
+
+    throw new Error(
+      `Parsing of assetsJSON input failed with ${message}. Provided value: ${original}`
+    );
+  }
+
+  return validateAssets(parsed);
 }
