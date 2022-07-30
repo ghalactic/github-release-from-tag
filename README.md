@@ -113,7 +113,7 @@ By default, this action uses [automatic token authentication] to obtain the
 token used to manage releases. If for some reason you want to supply a different
 token, you can do so via [action inputs]:
 
-[automatic token authentication]: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+[automatic token authentication]: https://docs.github.com/actions/security-guides/automatic-token-authentication
 [action inputs]: #action-inputs
 
 ```yaml
@@ -339,8 +339,8 @@ release body. The release notes are based off of **pull requests**, and can be
 
 This action supports uploading **release assets** — files that are associated
 with a release, and made available for download from GitHub. Release assets
-**must exist before this action is run**, and must be specified via the
-[configuration file]:
+**must exist before this action is run**, and can be specified via the
+[configuration file], or via [action inputs]:
 
 [configuration file]: #the-configuration-file
 
@@ -351,9 +351,20 @@ assets:
   - path: path/to/asset-b-*
 ```
 
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    assetsJson: '[{"path":"path/to/asset-c"}]'
+```
+
 > **⚠️ Warning:** This action will **overwrite existing release assets** if their
-> names match the assets configured for upload. This will only happen for assets
-> mentioned in the configuration. Other assets will not be modified or removed.
+> names match the assets configured for upload. Assets other than the ones
+> specified in configuration or action inputs will not be modified or removed.
+
+> **Note:** Unlike other [action inputs], which typically override their
+> equivalent [configuration file] options, assets specified via action inputs
+> are **merged** with those specified in the configuration file.
 
 Each asset must have a `path` property, which is a file glob pattern supported
 by [`@actions/glob`]. If no matching file is found when the action is run, **the
@@ -377,10 +388,45 @@ assets:
     label: Labels can have spaces
 ```
 
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    assetsJson: |
+      [{
+        "path": "path/to/asset-a.yaml",
+        "name: "custom-name.yml",
+        "label": "Labels can have spaces"
+      }]
+```
+
 The `name` property overrides the file name that will be used when the file is
 uploaded (and hence the filename seen by users who download the asset). The
 `label` property is a text field that gets used by GitHub when viewing a
 release's assets.
+
+#### Dynamic release assets
+
+If you need to dynamically specify a list of assets to upload, you can use the
+`assetsJson` [action input].
+
+[action input]: #action-inputs
+
+How you generate the JSON for this input is up to you, but any value from a
+[context] (e.g. [an output from another step]) can be used, for example:
+
+```yaml
+# Executing a script that outputs JSON describing the assets to upload.
+- id: list-assets
+  run: echo "::set-output name=assets::$(bash list-assets.sh)"
+
+- uses: eloquent/github-release-action@v2
+  with:
+    assetsJson: ${{ steps.list-assets.outputs.assets }}
+```
+
+[context]: https://docs.github.com/actions/learn-github-actions/contexts
+[an output from another step]: https://docs.github.com/actions/learn-github-actions/contexts#steps-context
 
 ### Release discussions
 
@@ -465,7 +511,7 @@ discussion:
 This action supports an **optional** YAML configuration file, with options for
 affecting how releases are published:
 
-> **Note:** These options can be overridden by any equivalent [action inputs]. A
+> **Note:** These options can also be specified by [action inputs]. A
 > [JSON Schema definition] is also available.
 
 [action inputs]: #action-inputs
@@ -508,9 +554,9 @@ discussion:
 This action supports **optional** inputs for affecting how releases are
 published:
 
-> **Note:** These inputs take precedence over any equivalent options specified
-> in [the configuration file]. The [action metadata file] contains the actual
-> definitions for these inputs.
+> **Note:** With the exception of `assetsJson`, these inputs take precedence
+> over any equivalent options specified in [the configuration file]. The
+> [action metadata file] contains the actual definitions for these inputs.
 
 [the configuration file]: #the-configuration-file
 [action metadata file]: action.yml
@@ -529,6 +575,20 @@ published:
 
     # Reactions to create for releases.
     reactions: +1,laugh,hooray,heart,rocket,eyes
+
+    # Assets to be associated with releases, specified as JSON, and merged with assets specified elsewhere.
+    # If you need a dynamic list, this input can be useful. See the section titled "Dynamic release assets".
+    assetsJson: |
+      [
+        {
+          "path": "assets/text/file-a.txt"
+        },
+        {
+          "path": "assets/json/file-b.json",
+          "name": "custom-name-b.json",
+          "label": "Label for file-b.json"
+        }
+      ]
 
     # Use a custom GitHub token.
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
