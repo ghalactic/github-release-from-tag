@@ -33,23 +33,35 @@ describeOrSkip("End-to-end tests", () => {
     const runId = readRunId();
     const branchName = buildBranchName(runId, label);
     const tagName = buildTagName("1.0.0", runId, label);
-    const workflow = buildWorkflow(branchName, {
-      assetsJSON: JSON.stringify([
+
+    const assetsJSON = JSON.stringify([
+      {
+        path: "assets/assets-json/file-e.txt",
+      },
+      {
+        path: "assets/assets-json/file-f.txt",
+        name: "custom-name-f.txt",
+        label: "Label for file-f.txt, which will download as custom-name-f.txt",
+      },
+    ]);
+
+    const workflow = buildWorkflow(
+      branchName,
+      {
+        assetsJSON: "${{ steps.listAssets.outputs.assets }}",
+        discussionCategory: "releases",
+        discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
+        generateReleaseNotes: "true",
+        reactions: "+1,laugh,hooray,heart,rocket,eyes",
+      },
+      [
         {
-          path: "assets/assets-json/file-e.txt",
+          name: "List assets",
+          id: "listAssets",
+          run: `echo "::set-output name=assets::${assetsJSON}"`,
         },
-        {
-          path: "assets/assets-json/file-f.txt",
-          name: "custom-name-f.txt",
-          label:
-            "Label for file-f.txt, which will download as custom-name-f.txt",
-        },
-      ]),
-      discussionCategory: "releases",
-      discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
-      generateReleaseNotes: "true",
-      reactions: "+1,laugh,hooray,heart,rocket,eyes",
-    });
+      ]
+    );
 
     const tagAnnotation = `1.0.0
 this

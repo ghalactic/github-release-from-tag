@@ -36,7 +36,7 @@ export function buildTagName(version, runId, label) {
   return `${version}+ci-${runId}-${label}`;
 }
 
-export function buildWorkflow(branchName, publishOptions = {}) {
+export function buildWorkflow(branchName, publishOptions = {}, preSteps = []) {
   const exposeSteps = [];
 
   for (const name of OUTPUT_NAMES) {
@@ -65,6 +65,9 @@ export function buildWorkflow(branchName, publishOptions = {}) {
             name: "Checkout",
             uses: "actions/checkout@v2",
           },
+
+          ...preSteps,
+
           {
             name: "Publish release",
             uses: `eloquent/github-release-action@${GITHUB_SHA || "main"}`,
