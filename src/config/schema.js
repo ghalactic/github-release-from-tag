@@ -30,7 +30,8 @@ export const schema = {
           },
           path: {
             description:
-              "The path to an asset. Relative paths are resolved against the root of the Git repo.",
+              "The file path glob pattern used to locate the asset(s). " +
+              "Relative patterns are resolved against the root of the Git repo.",
             type: "string",
             minLength: 1,
           },
