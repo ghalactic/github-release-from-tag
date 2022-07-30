@@ -1,4 +1,5 @@
 import escapeStringRegExp from "escape-string-regexp";
+import { dump } from "js-yaml";
 
 import { getDiscussionNumberByUrl } from "../../../src/discussion.js";
 import { GRAPHQL_REACTION_CONTENT } from "../../../src/reaction.js";
@@ -38,6 +39,17 @@ describeOrSkip("End-to-end tests", () => {
       branchName,
       {
         assetsJSON: "${{ steps.listAssets.outputs.assets }}",
+        assetsYAML: dump([
+          {
+            path: "assets/assets-yaml/file-g.txt",
+          },
+          {
+            path: "assets/assets-yaml/file-h.txt",
+            name: "custom-name-h.txt",
+            label:
+              "Label for file-h.txt, which will download as custom-name-h.txt",
+          },
+        ]),
         discussionCategory: "releases",
         discussionReactions: "+1,-1,laugh,hooray,confused,heart,rocket,eyes",
         generateReleaseNotes: "true",
@@ -134,6 +146,14 @@ paragraph
         path: "assets/assets-json/file-f.txt",
         content: "assets-json-file-f\n",
       },
+      {
+        path: "assets/assets-yaml/file-g.txt",
+        content: "assets-yaml-file-g\n",
+      },
+      {
+        path: "assets/assets-yaml/file-h.txt",
+        content: "assets-yaml-file-h\n",
+      },
     ];
 
     // points to a commit history with PRs for generating release notes
@@ -229,6 +249,8 @@ paragraph
       ${"file-d.1.json"}      | ${13} | ${"application/json"} | ${""}
       ${"file-e.txt"}         | ${19} | ${"text/plain"}       | ${""}
       ${"custom-name-f.txt"}  | ${19} | ${"text/plain"}       | ${"Label for file-f.txt, which will download as custom-name-f.txt"}
+      ${"file-g.txt"}         | ${19} | ${"text/plain"}       | ${""}
+      ${"custom-name-h.txt"}  | ${19} | ${"text/plain"}       | ${"Label for file-h.txt, which will download as custom-name-h.txt"}
     `(
       "should produce the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
@@ -331,6 +353,15 @@ paragraph
           },
           {
             ...commonFields,
+            downloadUrl: `${downloadUrlPrefix}/custom-name-h.txt`,
+            name: "custom-name-h.txt",
+            label:
+              "Label for file-h.txt, which will download as custom-name-h.txt",
+            contentType: "text/plain",
+            size: 19,
+          },
+          {
+            ...commonFields,
             downloadUrl: `${downloadUrlPrefix}/file-a.txt`,
             name: "file-a.txt",
             label: "",
@@ -357,6 +388,14 @@ paragraph
             ...commonFields,
             downloadUrl: `${downloadUrlPrefix}/file-e.txt`,
             name: "file-e.txt",
+            label: "",
+            contentType: "text/plain",
+            size: 19,
+          },
+          {
+            ...commonFields,
+            downloadUrl: `${downloadUrlPrefix}/file-g.txt`,
+            name: "file-g.txt",
             label: "",
             contentType: "text/plain",
             size: 19,
