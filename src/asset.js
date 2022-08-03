@@ -16,7 +16,7 @@ export async function modifyReleaseAssets({
   warning,
 }) {
   const existingAssets = release.assets;
-  const desiredAssets = await findAssets(warning, config.assets);
+  const desiredAssets = await findAssets(info, warning, config.assets);
 
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info("No release assets to modify");
@@ -114,9 +114,9 @@ export async function modifyReleaseAssets({
   }
 }
 
-export async function findAssets(warning, assets) {
+export async function findAssets(info, warning, assets) {
   const found = [];
-  for (const asset of assets) found.push(...(await findAsset(asset)));
+  for (const asset of assets) found.push(...(await findAsset(info, asset)));
 
   const seen = new Set();
 
@@ -139,8 +139,8 @@ export async function findAssets(warning, assets) {
   });
 }
 
-async function findAsset(asset) {
-  const { path: pattern } = asset;
+async function findAsset(info, asset) {
+  const { path: pattern, optional: isOptional } = asset;
   const globber = await createGlob(pattern);
   const assets = [];
 
@@ -150,10 +150,21 @@ async function findAsset(asset) {
     if (!stats.isDirectory()) assets.push({ path });
   }
 
-  if (assets.length < 1)
+  if (assets.length < 1) {
+    const quotedPattern = JSON.stringify(pattern);
+
+    if (isOptional) {
+      info(
+        `No release assets found for optional asset with path glob pattern ${quotedPattern}`
+      );
+
+      return [];
+    }
+
     throw new Error(
-      `No release assets found for path ${JSON.stringify(pattern)}`
+      `No release assets found for mandatory asset with path glob pattern ${quotedPattern}`
     );
+  }
 
   // name and label options only apply when the glob matches a single file
   if (assets.length > 1) return assets.map(normalizeAsset);

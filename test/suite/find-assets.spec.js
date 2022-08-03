@@ -1,7 +1,7 @@
 import { mockProcessStdout } from "jest-mock-process";
 import { join } from "path";
 import { findAssets } from "../../src/asset.js";
-import { warning } from "../mocks/actions-core.js";
+import { info, warning } from "../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
 const fixturesPath = join(__dirname, "../fixture/find-assets");
@@ -23,7 +23,7 @@ describe("findAssets()", () => {
     const fixturePath = join(fixturesPath, "singular");
     chdir(fixturePath);
 
-    const actual = await findAssets(warning, [
+    const actual = await findAssets(info, warning, [
       {
         path: "path/to/file-a.txt",
       },
@@ -52,7 +52,7 @@ describe("findAssets()", () => {
     const fixturePath = join(fixturesPath, "singular");
     chdir(fixturePath);
 
-    const actual = await findAssets(warning, [
+    const actual = await findAssets(info, warning, [
       {
         path: "path/to/file-b.*.txt",
         name: "custom-name.txt",
@@ -75,7 +75,7 @@ describe("findAssets()", () => {
     const fixturePath = join(fixturesPath, "multiple");
     chdir(fixturePath);
 
-    const actual = await findAssets(warning, [
+    const actual = await findAssets(info, warning, [
       {
         path: "path/to/file-a.*.txt",
       },
@@ -101,7 +101,7 @@ describe("findAssets()", () => {
     const fixturePath = join(fixturesPath, "multiple");
     chdir(fixturePath);
 
-    const actual = await findAssets(warning, [
+    const actual = await findAssets(info, warning, [
       {
         path: "path/to/file-a.*.txt",
         name: "custom-name.txt",
@@ -134,7 +134,7 @@ describe("findAssets()", () => {
       actual.push(message);
     };
 
-    await findAssets(warning, [
+    await findAssets(info, warning, [
       {
         path: "path/to/file-a.*.txt",
       },
@@ -160,7 +160,7 @@ describe("findAssets()", () => {
       actual.push(message);
     };
 
-    await findAssets(warning, [
+    await findAssets(info, warning, [
       {
         path: "**/*.txt",
       },
@@ -175,7 +175,7 @@ describe("findAssets()", () => {
     chdir(fixturesPath);
 
     async function actual() {
-      await findAssets(warning, [
+      await findAssets(info, warning, [
         {
           path: "path/to/nonexistent.*",
         },
@@ -183,7 +183,7 @@ describe("findAssets()", () => {
     }
 
     await expect(actual).rejects.toThrow(
-      'No release assets found for path "path/to/nonexistent.*"'
+      'No release assets found for mandatory asset with path glob pattern "path/to/nonexistent.*"'
     );
   });
 });
