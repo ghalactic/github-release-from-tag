@@ -163,32 +163,19 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should append assets specified via the assetsJSON and assetsYAML action inputs", async () => {
+  it("should append assets specified via the assetsYAML action input", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name) => {
-      if (name === "assetsJSON") {
-        return JSON.stringify([
-          {
-            path: "assets/assets-json/file-a",
-          },
-          {
-            path: "assets/assets-json/file-b",
-            name: "custom-name-assets-json-b",
-            label: "Label for assetsJSON input asset B",
-          },
-        ]);
-      }
-
       if (name === "assetsYAML") {
         return dump([
           {
-            path: "assets/assets-yaml/file-c",
+            path: "assets/action-input/file-a",
           },
           {
-            path: "assets/assets-yaml/file-d",
-            name: "custom-name-assets-yaml-d",
-            label: "Label for assetsYAML input asset D",
+            path: "assets/action-input/file-b",
+            name: "custom-name-action-input-b",
+            label: "Label for assetsYAML input asset B",
           },
         ]);
       }
@@ -210,37 +197,18 @@ describe("readConfig()", () => {
         label: "Label for file-b.json",
       },
       {
-        path: "assets/assets-json/file-a",
+        path: "assets/action-input/file-a",
         name: "",
         label: "",
       },
       {
-        path: "assets/assets-json/file-b",
-        name: "custom-name-assets-json-b",
-        label: "Label for assetsJSON input asset B",
-      },
-      {
-        path: "assets/assets-yaml/file-c",
-        name: "",
-        label: "",
-      },
-      {
-        path: "assets/assets-yaml/file-d",
-        name: "custom-name-assets-yaml-d",
-        label: "Label for assetsYAML input asset D",
+        path: "assets/action-input/file-b",
+        name: "custom-name-action-input-b",
+        label: "Label for assetsYAML input asset B",
       },
     ];
 
     expect(actual.assets).toMatchObject(expected);
-  });
-
-  it("should throw an error if the assetsJSON action input contains invalid JSON", async () => {
-    chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsJSON" ? "{" : "");
-
-    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Parsing of assetsJSON input failed"
-    );
   });
 
   it("should throw an error if the assetsYAML action input contains invalid YAML", async () => {
@@ -249,15 +217,6 @@ describe("readConfig()", () => {
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
       "Parsing of assetsYAML input failed"
-    );
-  });
-
-  it("should throw an error if the assetsJSON action input does not match the schema", async () => {
-    chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsJSON" ? "{}" : "");
-
-    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Validation of assetsJSON input failed"
     );
   });
 

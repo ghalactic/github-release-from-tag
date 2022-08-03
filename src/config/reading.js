@@ -54,10 +54,7 @@ function getConfigOverrides(getInput, base) {
   if (discussionReactions)
     discussionOverrides.reactions = discussionReactions.split(",");
 
-  const inputAssets = [
-    ...parseAssetsJSON(getInput),
-    ...parseAssetsYAML(getInput),
-  ];
+  const inputAssets = parseAssetsYAML(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
   const prerelease = getInput("prerelease");
@@ -95,31 +92,6 @@ function parseConfigYAML(hasYaml, yaml) {
   }
 
   return validateConfig(parsed);
-}
-
-function parseAssetsJSON(getInput) {
-  const json = getInput("assetsJSON");
-
-  if (!json) return [];
-
-  let parsed;
-
-  try {
-    parsed = JSON.parse(json);
-  } catch (error) {
-    const message = JSON.stringify(error.message);
-    const original = JSON.stringify(json);
-
-    throw new Error(
-      `Parsing of assetsJSON input failed with ${message}. Provided value: ${original}`
-    );
-  }
-
-  try {
-    return validateAssets(parsed);
-  } catch (error) {
-    throw new Error(`Validation of assetsJSON input failed: ${error.stack}`);
-  }
 }
 
 function parseAssetsYAML(getInput) {

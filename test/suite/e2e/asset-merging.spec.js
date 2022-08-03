@@ -1,4 +1,3 @@
-import { dump } from "js-yaml";
 import {
   buildBranchName,
   buildTagName,
@@ -23,15 +22,7 @@ describeOrSkip("End-to-end tests", () => {
     const workflow = buildWorkflow(
       branchName,
       {
-        assetsJSON: "${{ steps.listAssets.outputs.assets }}",
-        assetsYAML: dump([
-          {
-            path: "assets/file-c.txt",
-            name: "custom-name-c.txt",
-            label:
-              "Label for file-c.txt, which will download as custom-name-c.txt",
-          },
-        ]),
+        assetsYAML: "${{ steps.listAssets.outputs.assets }}",
       },
       [
         {
@@ -74,10 +65,6 @@ describeOrSkip("End-to-end tests", () => {
         path: "assets/file-b.txt",
         content: "file-b\n",
       },
-      {
-        path: "assets/file-c.txt",
-        content: "file-c\n",
-      },
     ];
 
     let workflowRun, release;
@@ -110,7 +97,6 @@ describeOrSkip("End-to-end tests", () => {
       name                   | size | contentType     | label
       ${"custom-name-a.txt"} | ${7} | ${"text/plain"} | ${"Label for file-a.txt, which will download as custom-name-a.txt"}
       ${"custom-name-b.txt"} | ${7} | ${"text/plain"} | ${"Label for file-b.txt, which will download as custom-name-b.txt"}
-      ${"custom-name-c.txt"} | ${7} | ${"text/plain"} | ${"Label for file-c.txt, which will download as custom-name-c.txt"}
     `(
       "should produce the expected release assets ($name)",
       ({ name, size, contentType, label }) => {

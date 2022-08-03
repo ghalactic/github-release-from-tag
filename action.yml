@@ -2,11 +2,6 @@ name: GitHub Release from Tag
 description: Publish GitHub releases from tags, supporting Markdown and SemVer
 author: Eloquent
 inputs:
-  assetsJSON:
-    description: >-
-      Assets to be associated with releases, encoded as a JSON array. The schema
-      of this value matches the schema for the "assets" config file property.
-    default: ""
   assetsYAML:
     description: >-
       Assets to be associated with releases, encoded as a YAML array. The schema

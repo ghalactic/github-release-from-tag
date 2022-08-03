@@ -16,7 +16,7 @@ Versioning].
 ### Added
 
 - Support for specifying [release assets][v2.1-release-assets] to upload via
-  the new action inputs `assetsJSON` and `assetsYAML`.
+  the new `assetsYAML` action input.
 
 [v2.1-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#release-assets
 
