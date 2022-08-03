@@ -11,7 +11,11 @@ Versioning].
 
 [unreleased]: https://github.com/eloquent/github-release-action
 
-<!-- _There are currently no unreleased changes._ -->
+_There are currently no unreleased changes._
+
+## [v2.1.0]
+
+[v2.1.0]: https://github.com/eloquent/github-release-action/releases/v2.1.0
 
 ### Added
 
