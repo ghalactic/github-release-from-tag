@@ -66,6 +66,8 @@ paragraph
     name: custom-name-c.txt
   - path: assets/text/file-a.txt
   - path: assets/json/file-d.*.json
+  - path: assets/optional/*
+    optional: true
 `;
 
     const files = [
