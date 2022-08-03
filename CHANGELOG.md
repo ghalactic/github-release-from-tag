@@ -17,8 +17,10 @@ Versioning].
 
 - Support for specifying [release assets][v2.1-release-assets] to upload via
   the new `assets` action input.
+- Support for [optional release assets][v2.1-optional-release-assets].
 
 [v2.1-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#release-assets
+[v2.1-optional-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#optional-release-assets
 
 ## [v2.0.0]
 

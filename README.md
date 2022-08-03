@@ -363,9 +363,10 @@ assets:
 
 Each asset must have a `path` property, which is a file glob pattern supported
 by [`@actions/glob`]. If no matching file is found when the action is run, **the
-workflow step will fail**.
+workflow step will fail** (unless the asset is [configured to be optional]).
 
 [`@actions/glob`]: https://github.com/actions/toolkit/tree/main/packages/glob
+[configured to be optional]: #optional-release-assets
 
 If **multiple files** match the `path` glob pattern, each file will be uploaded
 individually. **This action does not handle archiving multiple assets for you.**
@@ -411,6 +412,29 @@ The `name` property overrides the file name that will be used when the file is
 uploaded (and hence the filename seen by users who download the asset). The
 `label` property is a text field that gets used by GitHub when viewing a
 release's assets.
+
+#### Optional release assets
+
+Assets can be made "optional" — that is, they will simply be skipped if the
+`path` file glob pattern does not match any files. You can enable this behavior
+by setting the `optional` property to `true`:
+
+```yaml
+# In .github/release.eloquent.yml:
+assets:
+  - path: path/to/assets/*
+    optional: true
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v2
+  with:
+    # Note the "|" character - this example uses a YAML multiline string.
+    assets: |
+      - path: path/to/assets/*
+        optional: true
+```
 
 #### Dynamic release assets
 
@@ -543,8 +567,9 @@ assets:
   # A path is required for each asset.
   - path: assets/text/file-a.txt
 
-  # The name and label are optional.
+  # The "optional" flag, name, and label are optional.
   - path: assets/json/file-b.json
+    optional: true
     name: custom-name-b.json
     label: Label for file-b.json
 
@@ -592,6 +617,7 @@ published:
       - path: assets/text/file-a.txt
 
       - path: assets/json/file-b.json
+        optional: true
         name: custom-name-b.json
         label: Label for file-b.json
 
