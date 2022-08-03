@@ -20,4 +20,4 @@ jobs:
         env:
           FIXTURE_GITHUB_TOKEN: ${{ secrets.FIXTURE_GITHUB_TOKEN }}
       - name: Publish coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
