@@ -102,6 +102,12 @@ export const assets = {
         type: "string",
         default: "",
       },
+      optional: {
+        description:
+          "Whether the asset should be ignored if the path file glob pattern does not match any files.",
+        type: "boolean",
+        default: false,
+      },
       path: {
         description:
           "The file path glob pattern used to locate the asset(s). " +

@@ -33,11 +33,13 @@ describe("readConfig()", () => {
       assets: [
         {
           path: "assets/text/file-a.txt",
+          optional: false,
           name: "",
           label: "",
         },
         {
           path: "assets/json/file-b.json",
+          optional: true,
           name: "custom-name-b.json",
           label: "Label for file-b.json",
         },
@@ -175,6 +177,7 @@ describe("readConfig()", () => {
         },
         {
           path: "assets/action-input/file-b",
+          optional: true,
           name: "custom-name-action-input-b",
           label: "Label for assets input asset B",
         },
@@ -186,21 +189,25 @@ describe("readConfig()", () => {
     const expected = [
       {
         path: "assets/text/file-a.txt",
+        optional: false,
         name: "",
         label: "",
       },
       {
         path: "assets/json/file-b.json",
+        optional: true,
         name: "custom-name-b.json",
         label: "Label for file-b.json",
       },
       {
         path: "assets/action-input/file-a",
+        optional: false,
         name: "",
         label: "",
       },
       {
         path: "assets/action-input/file-b",
+        optional: true,
         name: "custom-name-action-input-b",
         label: "Label for assets input asset B",
       },

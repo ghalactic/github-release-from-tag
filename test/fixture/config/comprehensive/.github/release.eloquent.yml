@@ -1,6 +1,7 @@
 assets:
   - path: assets/text/file-a.txt
   - path: assets/json/file-b.json
+    optional: true
     name: custom-name-b.json
     label: Label for file-b.json
 discussion:
