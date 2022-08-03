@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
       - name: Install dependencies
@@ -20,4 +20,4 @@ jobs:
         env:
           FIXTURE_GITHUB_TOKEN: ${{ secrets.FIXTURE_GITHUB_TOKEN }}
       - name: Publish coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
