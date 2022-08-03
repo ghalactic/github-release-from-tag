@@ -23,7 +23,8 @@ export const config = {
       properties: {
         category: {
           description:
-            "The category to use when creating the discussion. The value must be a category that already exists in the repository.",
+            "The category to use when creating the discussion. " +
+            "The value must be a category that already exists in the repository.",
           type: "string",
           default: "",
         },
