@@ -22,4 +22,4 @@ jobs:
       - name: Publish release
         uses: eloquent/github-release-action@main
         with:
-          discussionCategory: ${{ (steps.check-tag.outputs.is-semver == 'true') && 'Releases' }}
+          discussionCategory: ${{ steps.check-tag.outputs.is-semver == 'true' && 'Releases' || '' }}
