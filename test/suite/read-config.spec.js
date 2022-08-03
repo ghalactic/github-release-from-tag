@@ -163,24 +163,22 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should append assets specified via the assetsYAML action input", async () => {
+  it("should append assets specified via the assets action input", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name) => {
-      if (name === "assetsYAML") {
-        return dump([
-          {
-            path: "assets/action-input/file-a",
-          },
-          {
-            path: "assets/action-input/file-b",
-            name: "custom-name-action-input-b",
-            label: "Label for assetsYAML input asset B",
-          },
-        ]);
-      }
+      if (name !== "assets") return "";
 
-      return "";
+      return dump([
+        {
+          path: "assets/action-input/file-a",
+        },
+        {
+          path: "assets/action-input/file-b",
+          name: "custom-name-action-input-b",
+          label: "Label for assets input asset B",
+        },
+      ]);
     };
 
     const actual = await readConfig({ getInput, group, info });
@@ -204,28 +202,28 @@ describe("readConfig()", () => {
       {
         path: "assets/action-input/file-b",
         name: "custom-name-action-input-b",
-        label: "Label for assetsYAML input asset B",
+        label: "Label for assets input asset B",
       },
     ];
 
     expect(actual.assets).toMatchObject(expected);
   });
 
-  it("should throw an error if the assetsYAML action input contains invalid YAML", async () => {
+  it("should throw an error if the assets action input contains invalid YAML", async () => {
     chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsYAML" ? "{" : "");
+    const getInput = (name) => (name === "assets" ? "{" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Parsing of assetsYAML input failed"
+      "Parsing of assets action input failed"
     );
   });
 
-  it("should throw an error if the assetsYAML action input does not match the schema", async () => {
+  it("should throw an error if the assets action input does not match the schema", async () => {
     chdir(join(fixturesPath, "none"));
-    const getInput = (name) => (name === "assetsYAML" ? "{}" : "");
+    const getInput = (name) => (name === "assets" ? "{}" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Validation of assetsYAML input failed"
+      "Validation of assets action input failed"
     );
   });
 });

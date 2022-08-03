@@ -9,7 +9,7 @@ export async function readConfig({ getInput, group, info }) {
     if (!hasYaml)
       info("No configuration found at .github/release.eloquent.yml");
 
-    const base = parseConfigYAML(hasYaml, yaml);
+    const base = parseConfig(hasYaml, yaml);
     const [overrides, hasOverrides] = getConfigOverrides(getInput, base);
 
     if (hasOverrides) {
@@ -54,7 +54,7 @@ function getConfigOverrides(getInput, base) {
   if (discussionReactions)
     discussionOverrides.reactions = discussionReactions.split(",");
 
-  const inputAssets = parseAssetsYAML(getInput);
+  const inputAssets = parseAssets(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
   const prerelease = getInput("prerelease");
@@ -75,7 +75,7 @@ function getConfigOverrides(getInput, base) {
   return [overrides, Object.keys(overrides).length > 0];
 }
 
-function parseConfigYAML(hasYaml, yaml) {
+function parseConfig(hasYaml, yaml) {
   if (!hasYaml) return validateConfig({});
 
   let parsed;
@@ -94,8 +94,8 @@ function parseConfigYAML(hasYaml, yaml) {
   return validateConfig(parsed);
 }
 
-function parseAssetsYAML(getInput) {
-  const yaml = getInput("assetsYAML");
+function parseAssets(getInput) {
+  const yaml = getInput("assets");
 
   if (!yaml) return [];
 
@@ -108,13 +108,13 @@ function parseAssetsYAML(getInput) {
     const original = JSON.stringify(yaml);
 
     throw new Error(
-      `Parsing of assetsYAML input failed with ${message}. Provided value: ${original}`
+      `Parsing of assets action input failed with ${message}. Provided value: ${original}`
     );
   }
 
   try {
     return validateAssets(parsed);
   } catch (error) {
-    throw new Error(`Validation of assetsYAML input failed: ${error.stack}`);
+    throw new Error(`Validation of assets action input failed: ${error.stack}`);
   }
 }

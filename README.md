@@ -349,7 +349,7 @@ assets:
 - uses: eloquent/github-release-action@v2
   with:
     # Note the "|" character - this example uses a YAML multiline string.
-    assetsYAML: |
+    assets: |
       - path: path/to/asset-d
 ```
 
@@ -384,27 +384,27 @@ assets:
 ```
 
 ```yaml
+# In your workflow (using YAML):
+- uses: eloquent/github-release-action@v2
+  with:
+    # Note the "|" character - this example uses a YAML multiline string.
+    assets: |
+      - path: path/to/asset-a.yaml
+        name: custom-name.yml
+        label: Labels can have spaces
+```
+
+```yaml
 # In your workflow (using JSON):
 - uses: eloquent/github-release-action@v2
   with:
     # Note the "|" character - this example uses a YAML multiline string.
-    assetsYAML: |
+    assets: |
       [{
         "path": "path/to/asset-a.yaml",
         "name: "custom-name.yml",
         "label": "Labels can have spaces"
       }]
-```
-
-```yaml
-# In your workflow (using YAML):
-- uses: eloquent/github-release-action@v2
-  with:
-    # Note the "|" character - this example uses a YAML multiline string.
-    assetsYAML: |
-      - path: path/to/asset-a.yaml
-        name: custom-name.yml
-        label: Labels can have spaces
 ```
 
 The `name` property overrides the file name that will be used when the file is
@@ -415,7 +415,7 @@ release's assets.
 #### Dynamic release assets
 
 If you need to dynamically specify a list of assets to upload, you can use the
-`assetsYAML` [action input] with generated JSON (or YAML). How you generate the
+`assets` [action input] with generated JSON (or YAML). How you generate the
 value for this input is up to you, but any value from a [context] (e.g.
 [an output from another step]) can be used, for example:
 
@@ -430,7 +430,7 @@ value for this input is up to you, but any value from a [context] (e.g.
 
 - uses: eloquent/github-release-action@v2
   with:
-    assetsYAML: ${{ steps.listAssets.outputs.assets }}
+    assets: ${{ steps.listAssets.outputs.assets }}
 ```
 
 ### Release discussions
@@ -561,8 +561,8 @@ discussion:
 This action supports **optional** inputs for affecting how releases are
 published:
 
-> **Note:** With the exception of `assetsYAML`, these inputs take precedence
-> over any equivalent options specified in [the configuration file]. The
+> **Note:** With the exception of `assets`, these inputs take precedence over
+> any equivalent options specified in [the configuration file]. The
 > [action metadata file] contains the actual definitions for these inputs.
 
 [the configuration file]: #the-configuration-file
@@ -588,7 +588,7 @@ published:
     # Assets to be associated with releases, specified as YAML (or JSON), and
     # merged with assets specified elsewhere. If you need a dynamic list, this
     # input can be useful. See the section titled "Dynamic release assets".
-    assetsYAML: |
+    assets: |
       - path: assets/text/file-a.txt
 
       - path: assets/json/file-b.json

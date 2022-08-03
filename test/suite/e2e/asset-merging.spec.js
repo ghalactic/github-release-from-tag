@@ -22,7 +22,7 @@ describeOrSkip("End-to-end tests", () => {
     const workflow = buildWorkflow(
       branchName,
       {
-        assetsYAML: "${{ steps.listAssets.outputs.assets }}",
+        assets: "${{ steps.listAssets.outputs.assets }}",
       },
       [
         {
