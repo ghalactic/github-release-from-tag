@@ -7,11 +7,17 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
-## [Unreleased]
+## [v2.1.1]
 
-[unreleased]: https://github.com/eloquent/github-release-action
+[v2.1.1]: https://github.com/eloquent/github-release-action/releases/v2.1.1
 
-_There are currently no unreleased changes._
+### Fixed
+
+- Fixed stripping of SSH signatures from tag annotation bodies.
+- Fixed excessive newlines being printed because of
+  [an issue in `@actions/toolkit`].
+
+[an issue in `@actions/toolkit`]: https://github.com/actions/toolkit/issues/777
 
 ## [v2.1.0]
 
