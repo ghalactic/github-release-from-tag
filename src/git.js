@@ -1,7 +1,7 @@
 import { exec, getExecOutput } from "@actions/exec";
 
 const SIGNATURE_PATTERN =
-  /-----BEGIN (\w+) SIGNATURE-----.*-----END \1 SIGNATURE-----/;
+  /-----BEGIN (\w+) SIGNATURE-----.*?-----END \1 SIGNATURE-----/gs;
 
 export async function determineRef({ group, info, silent = false }) {
   return group("Determining the current Git ref", async () => {
@@ -81,7 +81,7 @@ export async function readTagAnnotation({ group, silent = false, tag }) {
       }
     );
 
-    return [true, tagSubject.trim(), trimTagBody(tagBody)];
+    return [true, trimTagAnnotation(tagSubject), trimTagAnnotation(tagBody)];
   } catch {
     return [false, "", ""];
   }
@@ -90,11 +90,11 @@ export async function readTagAnnotation({ group, silent = false, tag }) {
 /**
  * This function is unfortunately necessary because the version of Git on the
  * Node.js Docker base image that I use is too old to understand SSH signatures,
- * and does not automatically remove them from tag annotation bodies.
+ * and does not automatically remove them from tag annotations.
  *
  * Once the Git version used on the Node.js Docker image is 2.34.0 or greater,
  * this function can be removed, and replaced with a simple trim operation.
  */
-function trimTagBody(tagBody) {
-  return tagBody.replace(SIGNATURE_PATTERN, "").trim();
+export function trimTagAnnotation(annotation) {
+  return annotation.replace(SIGNATURE_PATTERN, "").trim();
 }
