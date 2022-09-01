@@ -7,6 +7,15 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v2.1.2]
+
+[v2.1.2]: https://github.com/eloquent/github-release-action/releases/v2.1.2
+
+### Fixed
+
+- Fixed stripping of SSH signatures from tag annotation bodies (the previous fix
+  did not actually work).
+
 ## [v2.1.1]
 
 [v2.1.1]: https://github.com/eloquent/github-release-action/releases/v2.1.1
