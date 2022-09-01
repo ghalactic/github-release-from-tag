@@ -5,10 +5,10 @@ import {
   info,
   notice,
   setFailed,
-  setOutput,
   warning,
 } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
+import { setOutput } from "./actions.js";
 import { modifyReleaseAssets } from "./asset.js";
 import { renderReleaseBody } from "./body.js";
 import { readConfig } from "./config/reading.js";
