@@ -30,7 +30,7 @@ Versioning].
 
 - **[BC BREAK]** Release bodies will no longer be rendered as HTML, and instead
   will undergo Markdown parsing and transformation to address the handling of
-  [Markdown line breaks][v2.0-markdown-line-breaks].
+  [Markdown line breaks][v3.0-markdown-line-breaks].
   - This is primarily to address [#36] and [#37].
   - Most Markdown / GFM features are now handled by [Remark] (with
     [`remark-gfm`] and [`remark-github`]) instead of GitHub's own Markdown API.
@@ -44,6 +44,7 @@ Versioning].
 [`remark-gfm`]: https://github.com/remarkjs/remark-gfm
 [`remark-github`]: https://github.com/remarkjs/remark-github
 [remark]: https://remark.js.org/
+[v3.0-markdown-line-breaks]: https://github.com/eloquent/github-release-action/tree/v3.0.0#markdown-line-breaks
 
 ### Fixed
 
