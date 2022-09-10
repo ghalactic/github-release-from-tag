@@ -8,7 +8,11 @@
     "@actions/glob": "^0.3.0",
     "ajv": "^8.11.0",
     "js-yaml": "^4.1.0",
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "remark": "^14.0.2",
+    "remark-gfm": "^3.0.1",
+    "remark-github": "^11.2.4",
+    "unist-util-visit": "^4.1.1"
   },
   "devDependencies": {
     "es-jest": "^2.0.0",

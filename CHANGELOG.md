@@ -7,6 +7,37 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Changed
+
+- **[BC BREAK]** Release bodies will no longer be rendered as HTML, and instead
+  will undergo Markdown parsing and transformation to address the handling of
+  [Markdown line breaks][v2.0-markdown-line-breaks].
+  - This is primarily to address [#36] and [#37].
+  - Most Markdown / GFM features are now handled by [Remark] (with
+    [`remark-gfm`] and [`remark-github`]) instead of GitHub's own Markdown API.
+  - There could be lots of subtle changes to the way release bodies are
+    rendered. In practice, you will probably not even notice the difference (I
+    hope).
+- **[BC BREAK]** The `tagBodyRendered` output will no longer contain HTML, but
+  instead will contain a transformed version of the Markdown from the tag
+  annotation body.
+
+[`remark-gfm`]: https://github.com/remarkjs/remark-gfm
+[`remark-github`]: https://github.com/remarkjs/remark-github
+[remark]: https://remark.js.org/
+
+### Fixed
+
+- Dependabot should no longer render empty release notes inside of dependency
+  update pull request descriptions for dependencies that use this action to
+  manage their releases ([#36]).
+- Issue links in release bodies should no longer fail to render ([#37]).
+
+[#36]: https://github.com/eloquent/github-release-action/issues/36
+[#37]: https://github.com/eloquent/github-release-action/issues/37
+
 ## [v2.1.2]
 
 [v2.1.2]: https://github.com/eloquent/github-release-action/releases/v2.1.2

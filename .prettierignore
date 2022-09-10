@@ -1,3 +1,4 @@
 /.makefiles/
 /artifacts/
 /test/fixture/config/invalid-yaml/
+/test/fixture/markdown-processor/

@@ -108,7 +108,7 @@ async function main() {
   const {
     graphql,
     request,
-    rest: { markdown, reactions, repos },
+    rest: { reactions, repos },
   } = getOctokit(getInput("token"));
 
   const releaseBody = await renderReleaseBody({
@@ -116,7 +116,6 @@ async function main() {
     env,
     group,
     info,
-    markdown,
     owner,
     repo,
     repos,

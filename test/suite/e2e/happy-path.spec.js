@@ -356,7 +356,9 @@ paragraph
       });
 
       it("should produce the correct tagBodyRendered output", () => {
-        expect(outputs.tagBodyRendered).toMatch(/<h1>.*Heading 1.*<\/h1>/s);
+        expect(outputs.tagBodyRendered).toContain(
+          "this should form one paragraph"
+        );
       });
 
       it("should produce the correct tagIsSemVer output", () => {
