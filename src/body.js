@@ -43,14 +43,7 @@ export async function renderReleaseBody({
     );
 
     setOutput("tagBodyRendered", renderedTagBody);
-
-    parts.push(
-      "<!-- original source:",
-      tagBody.trim(),
-      "-->",
-      "",
-      renderedTagBody
-    );
+    parts.push(renderedTagBody);
   }
 
   if (config.generateReleaseNotes) {
