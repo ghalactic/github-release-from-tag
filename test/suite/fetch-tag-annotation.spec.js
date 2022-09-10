@@ -62,6 +62,7 @@ describe("fetchTagAnnotation()", () => {
         "-C",
         paths.origin,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=tag-message-a",
         "tag-a"
@@ -70,6 +71,7 @@ describe("fetchTagAnnotation()", () => {
         "-C",
         paths.origin,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=tag-message-b",
         "tag-b"
