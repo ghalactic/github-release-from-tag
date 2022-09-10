@@ -5,6 +5,7 @@ import {
   info,
   notice,
   setFailed,
+  summary,
   warning,
 } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
@@ -24,6 +25,7 @@ import {
 } from "./reaction.js";
 import { parseRef } from "./ref.js";
 import { createOrUpdateRelease } from "./release.js";
+import { renderSummary } from "./summary.js";
 
 try {
   await main();
@@ -186,4 +188,6 @@ async function main() {
     repo,
     setOutput,
   });
+
+  await summary.addRaw(renderSummary(release)).write();
 }

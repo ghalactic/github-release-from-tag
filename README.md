@@ -6,6 +6,8 @@ you _probably wish_ GitHub would just do without the need to use GitHub Actions.
 [github action]: https://docs.github.com/actions
 [github releases]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases
 
+![Example release summary](/assets/images/release-summary.png)
+
 ## Overview
 
 This action creates releases by sourcing the release data from the place where
@@ -32,6 +34,7 @@ to when you [publish a GitHub Release manually].
 - [Release discussion creation](#release-discussions)
 - [Releases can be created as **drafts**](#draft-releases)
 - [Creation of initial **🚀 reactions ❤️** to promote engagement](#reactions)
+- [Creation of job summaries for the Actions run summary page](#job-summaries)
 
 ## Usage
 
@@ -525,6 +528,13 @@ discussion:
 ```
 
 [release discussion creation]: #release-discussions
+
+### Job summaries
+
+When a release is created or updated, a summary containing useful information
+and links will be displayed on the Actions run summary page:
+
+![Example release summary](/assets/images/release-summary.png)
 
 ## Configuration
 
