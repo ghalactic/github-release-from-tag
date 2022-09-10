@@ -19,9 +19,10 @@ export async function renderReleaseBody({
       "Rendering tag annotation body",
       async () => {
         const process = createProcessor({ owner, repo });
-        const processed = await process(tagBody);
+        const processed = (await process(tagBody)).trim();
+        info(processed);
 
-        return processed.trim();
+        return processed;
       }
     );
 
