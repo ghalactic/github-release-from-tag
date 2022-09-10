@@ -16,6 +16,14 @@ Versioning].
 
 [v3.0-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.0.0#job-summaries
 
+### Removed
+
+- Workflow annotations containing the release URL will no longer be created when
+  the action is successful. This feature has been replaced by
+  [job summaries][v3.0-job-summaries].
+
+[v3.0-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.0.0#job-summaries
+
 ### Changed
 
 - **[BC BREAK]** Release bodies will no longer be rendered as HTML, and instead

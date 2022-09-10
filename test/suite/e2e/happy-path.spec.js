@@ -149,14 +149,6 @@ paragraph
       expect(workflowRun.conclusion).toBe("success");
     });
 
-    it("should annotate the workflow run with a link to the release", () => {
-      expect(annotations).toPartiallyContain({
-        annotation_level: "notice",
-        title: `Released - ${release.name}`,
-        message: `Created ${release.html_url}`,
-      });
-    });
-
     it("should produce a stable release", () => {
       expect(release.prerelease).toBe(false);
     });

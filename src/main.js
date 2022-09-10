@@ -3,7 +3,6 @@ import {
   getInput,
   group,
   info,
-  notice,
   setFailed,
   summary,
   warning,
@@ -147,7 +146,7 @@ async function main() {
   setOutput("releaseUrl", release.html_url);
   setOutput("releaseWasCreated", wasCreated ? "true" : "");
 
-  notice(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`, {
+  info(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`, {
     title: `Released - ${tagSubject}`,
   });
 
