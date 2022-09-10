@@ -45,7 +45,7 @@ Versioning].
 [#36]: https://github.com/eloquent/github-release-action/issues/36
 [#37]: https://github.com/eloquent/github-release-action/issues/37
 
-## [v2.1.2]
+## [v2.1.2] - 2022-09-01
 
 [v2.1.2]: https://github.com/eloquent/github-release-action/releases/v2.1.2
 
@@ -54,7 +54,7 @@ Versioning].
 - Fixed stripping of SSH signatures from tag annotation bodies (the previous fix
   did not actually work).
 
-## [v2.1.1]
+## [v2.1.1] - 2022-09-01
 
 [v2.1.1]: https://github.com/eloquent/github-release-action/releases/v2.1.1
 
@@ -66,7 +66,7 @@ Versioning].
 
 [an issue in `@actions/toolkit`]: https://github.com/actions/toolkit/issues/777
 
-## [v2.1.0]
+## [v2.1.0] - 2022-08-03
 
 [v2.1.0]: https://github.com/eloquent/github-release-action/releases/v2.1.0
 
@@ -79,7 +79,7 @@ Versioning].
 [v2.1-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#release-assets
 [v2.1-optional-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#optional-release-assets
 
-## [v2.0.0]
+## [v2.0.0] - 2022-06-05
 
 [v2.0.0]: https://github.com/eloquent/github-release-action/releases/v2.0.0
 
