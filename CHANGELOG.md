@@ -11,10 +11,14 @@ Versioning].
 
 ### Added
 
+- Actions [job summaries][v3.1-job-summaries] will now include information about
+  the user that created the tag.
 - Added the `taggerAvatarUrl` output, which contains the avatar URL of the
   GitHub user who created the tag.
 - Added the `taggerLogin` output, which contains the username of the GitHub user
   who created the tag.
+
+[v3.1-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.1.0#job-summaries
 
 ## [v3.0.0] - 2022-09-10
 

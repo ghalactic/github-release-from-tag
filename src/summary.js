@@ -3,20 +3,17 @@ import { toMarkdown } from "mdast-util-to-markdown";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
-export function renderSummary({
-  body,
-  discussion_url,
-  draft,
-  html_url,
-  name,
-  prerelease,
-  tag_name,
-}) {
+export function renderSummary({ release, tagger }) {
+  const { body, discussion_url, draft, html_url, name, prerelease, tag_name } =
+    release;
+  const hasTagger = tagger?.avatarUrl && tagger?.login;
+
   const rendered = toMarkdown(
     {
       type: "root",
       children: [
         ...titleAST(),
+        ...taggerAST(),
         ...detailsAST(),
         ...bodyAST(),
         ...definitionsAST(),
@@ -45,6 +42,53 @@ export function renderSummary({
           },
         ],
       },
+    ];
+  }
+
+  function taggerAST() {
+    if (!hasTagger) return [];
+
+    const { avatarUrl, login } = tagger;
+
+    return [
+      createTableAST(
+        undefined,
+        [
+          [
+            {
+              type: "linkReference",
+              identifier: "tagger-url",
+              label: "tagger-url",
+              referenceType: "full",
+              children: [
+                {
+                  type: "html",
+                  value: `<img alt="@${login}" src="${avatarUrl}" width="32">`,
+                },
+              ],
+            },
+          ],
+          [
+            {
+              type: "text",
+              value: "Tagged by ",
+            },
+            {
+              type: "linkReference",
+              identifier: "tagger-url",
+              label: "tagger-url",
+              referenceType: "full",
+              children: [
+                {
+                  type: "text",
+                  value: `@${login}`,
+                },
+              ],
+            },
+          ],
+        ],
+        []
+      ),
     ];
   }
 
@@ -162,6 +206,16 @@ export function renderSummary({
       url: html_url,
       title: null,
     });
+
+    if (hasTagger) {
+      definitions.push({
+        type: "definition",
+        identifier: "tagger-url",
+        label: "tagger-url",
+        url: `https://github.com/${encodeURIComponent(tagger.login)}`,
+        title: null,
+      });
+    }
 
     return definitions;
   }
