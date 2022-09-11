@@ -4,7 +4,7 @@ import { getDiscussionNumberByUrl } from "./discussion.js";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
-export function renderSummary({ release, tagger, wasCreated }) {
+export function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
   const { body, discussion_url, draft, html_url, name, prerelease, tag_name } =
     release;
   const hasTagger = tagger?.avatarUrl && tagger?.login;
@@ -109,8 +109,16 @@ export function renderSummary({ release, tagger, wasCreated }) {
     const cells = [
       [
         {
-          type: "inlineCode",
-          value: tag_name,
+          type: "linkReference",
+          identifier: "tag-url",
+          label: "tag-url",
+          referenceType: "full",
+          children: [
+            {
+              type: "inlineCode",
+              value: tag_name,
+            },
+          ],
         },
       ],
       [
@@ -173,13 +181,22 @@ export function renderSummary({ release, tagger, wasCreated }) {
       });
     }
 
-    definitions.push({
-      type: "definition",
-      identifier: "release-url",
-      label: "release-url",
-      url: html_url,
-      title: null,
-    });
+    definitions.push(
+      {
+        type: "definition",
+        identifier: "release-url",
+        label: "release-url",
+        url: html_url,
+        title: null,
+      },
+      {
+        type: "definition",
+        identifier: "tag-url",
+        label: "tag-url",
+        url: tagHtmlUrl,
+        title: null,
+      }
+    );
 
     return definitions;
   }

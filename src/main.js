@@ -41,7 +41,7 @@ import {
 import { parseRef } from "./ref.js";
 import { createOrUpdateRelease } from "./release.js";
 import { renderSummary } from "./summary.js";
-import { getTagger } from "./tagger.js";
+import { getTagger, getTagHtmlUrl } from "./tags.js";
 
 try {
   await main();
@@ -213,8 +213,10 @@ async function main() {
   });
 
   if (config.summary.enabled) {
+    const tagHtmlUrl = await getTagHtmlUrl({ repos, owner, repo, tag });
+
     await summary
-      .addRaw(renderSummary({ release, tagger, wasCreated }))
+      .addRaw(renderSummary({ release, tagger, tagHtmlUrl, wasCreated }))
       .write();
   }
 }
