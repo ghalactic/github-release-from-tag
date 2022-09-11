@@ -3,7 +3,7 @@ import { toMarkdown } from "mdast-util-to-markdown";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
-export function renderSummary({ release, serverUrl, tagger, wasCreated }) {
+export function renderSummary({ release, tagger, wasCreated }) {
   const { body, discussion_url, draft, html_url, name, prerelease, tag_name } =
     release;
   const hasTagger = tagger?.avatarUrl && tagger?.login;
@@ -69,16 +69,8 @@ export function renderSummary({ release, serverUrl, tagger, wasCreated }) {
         [
           [
             {
-              type: "linkReference",
-              identifier: "tagger-url",
-              label: "tagger-url",
-              referenceType: "full",
-              children: [
-                {
-                  type: "html",
-                  value: `<img alt="@${login}" src="${avatarUrl}" width="32">`,
-                },
-              ],
+              type: "html",
+              value: `<img alt="@${login}" src="${avatarUrl}" width="32">`,
             },
           ],
           [
@@ -87,16 +79,8 @@ export function renderSummary({ release, serverUrl, tagger, wasCreated }) {
               value: "Tagged by ",
             },
             {
-              type: "linkReference",
-              identifier: "tagger-url",
-              label: "tagger-url",
-              referenceType: "full",
-              children: [
-                {
-                  type: "text",
-                  value: `@${login}`,
-                },
-              ],
+              type: "text",
+              value: `@${login}`,
             },
           ],
         ],
@@ -199,16 +183,6 @@ export function renderSummary({ release, serverUrl, tagger, wasCreated }) {
       url: html_url,
       title: null,
     });
-
-    if (hasTagger) {
-      definitions.push({
-        type: "definition",
-        identifier: "tagger-url",
-        label: "tagger-url",
-        url: `${serverUrl}/${encodeURIComponent(tagger.login)}`,
-        title: null,
-      });
-    }
 
     return definitions;
   }

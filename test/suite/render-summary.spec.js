@@ -16,7 +16,6 @@ describe("renderSummary()", () => {
     ${"handle releases with incomplete tagger details"} | ${"incomplete-tagger"}
     ${"handle updating existing releases"}              | ${"updated-existing"}
     ${"handle updating existing draft releases"}        | ${"updated-existing-draft"}
-    ${"handle GitHub Enterprise Server"}                | ${"ghes"}
   `("should $label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
     const args = load(await readFile(join(fixturePath, "args.yml")));

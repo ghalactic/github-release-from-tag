@@ -50,7 +50,6 @@ try {
 }
 
 async function main() {
-  const serverUrl = process.env.GITHUB_SERVER_URL || "https://github.com";
   const config = await readConfig({ getInput, group, info });
 
   const { env } = process;
@@ -215,7 +214,7 @@ async function main() {
 
   if (config.summary.enabled) {
     await summary
-      .addRaw(renderSummary({ release, serverUrl, tagger, wasCreated }))
+      .addRaw(renderSummary({ release, tagger, wasCreated }))
       .write();
   }
 }

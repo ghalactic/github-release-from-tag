@@ -1,7 +1,7 @@
 ### Re-released [`name-a`][release-url]
 
-| [<img alt="@login-a" src="https://avatars.githubusercontent.com/u/123456" width="32">][tagger-url] | Tagged by [@login-a][tagger-url] |
-| -------------------------------------------------------------------------------------------------- | -------------------------------- |
+| <img alt="@login-a" src="https://avatars.githubusercontent.com/u/123456" width="32"> | Tagged by @login-a |
+| ------------------------------------------------------------------------------------ | ------------------ |
 
 | Tag          | Stability |
 | :----------- | :-------- |
@@ -14,5 +14,3 @@ This is a _release_ 🎉
 </details>
 
 [release-url]: https://github.com/owner-a/repo-a/releases/tag/release-a
-
-[tagger-url]: https://github.com/login-a
