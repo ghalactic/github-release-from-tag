@@ -1,5 +1,6 @@
 import { gfmToMarkdown } from "mdast-util-gfm";
 import { toMarkdown } from "mdast-util-to-markdown";
+import { getDiscussionNumberByUrl } from "./discussion.js";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
@@ -121,10 +122,6 @@ export function renderSummary({ release, tagger, wasCreated }) {
     ];
 
     if (discussion_url) {
-      const discussionNumber = new URL(discussion_url).pathname
-        .split("/")
-        .pop();
-
       headings.push([
         {
           type: "text",
@@ -140,7 +137,7 @@ export function renderSummary({ release, tagger, wasCreated }) {
           children: [
             {
               type: "text",
-              value: `#${discussionNumber}`,
+              value: `#${getDiscussionNumberByUrl(discussion_url)}`,
             },
           ],
         },
