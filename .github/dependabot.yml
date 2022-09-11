@@ -1,17 +1,17 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: /
     registries: "*"
     schedule:
       interval: weekly
   - package-ecosystem: docker
-    directory: "/"
+    directory: /
     registries: "*"
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     registries: "*"
     schedule:
       interval: weekly
