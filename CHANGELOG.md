@@ -7,7 +7,9 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
-## Unreleased
+## [v3.1.0] - 2022-09-11
+
+[v3.1.0]: https://github.com/eloquent/github-release-action/releases/v3.1.0
 
 ### Added
 
@@ -30,6 +32,8 @@ Versioning].
   mentions and other references to render without hover cards in release bodies.
   It was also likely to cause more trouble when integrating with GitHub
   Enterprise Server.
+
+[`remark-github`]: https://github.com/remarkjs/remark-github
 
 ## [v3.0.0] - 2022-09-10
 
