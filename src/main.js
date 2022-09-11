@@ -145,7 +145,6 @@ async function main() {
     owner,
     repo,
     repos,
-    serverUrl,
     setOutput,
     tag,
     tagBody,

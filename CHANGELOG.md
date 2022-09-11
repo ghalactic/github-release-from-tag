@@ -24,6 +24,13 @@ Versioning].
 
 [v3.1-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.1.0#job-summaries
 
+### Changed
+
+- Removed [`remark-github`] from the Markdown processor. It was causing user
+  mentions and other references to render without hover cards in release bodies.
+  It was also likely to cause more trouble when integrating with GitHub
+  Enterprise Server.
+
 ## [v3.0.0] - 2022-09-10
 
 [v3.0.0]: https://github.com/eloquent/github-release-action/releases/v3.0.0

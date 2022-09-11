@@ -222,8 +222,7 @@ The tag annotation "subject" is just the first **paragraph** of the message. The
 
 For the most part, [Markdown] "just works" how you would expect. You can write
 Markdown in the "body" portion of your tag annotations, and it will be rendered
-in the body of the releases published by this action. Shorthand issues
-references like `#42`, and mentions like `@username` also "just work".
+in the body of the releases published by this action.
 
 [markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
 
