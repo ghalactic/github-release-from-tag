@@ -3,7 +3,7 @@ import { toMarkdown } from "mdast-util-to-markdown";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
-export function renderSummary({ release, tagger }) {
+export function renderSummary({ release, tagger, wasCreated }) {
   const { body, discussion_url, draft, html_url, name, prerelease, tag_name } =
     release;
   const hasTagger = tagger?.avatarUrl && tagger?.login;
@@ -27,6 +27,11 @@ export function renderSummary({ release, tagger }) {
   return rendered.replace(BODY_TOKEN, body);
 
   function titleAST() {
+    const action = (() => {
+      if (draft) return wasCreated ? "Drafted release " : "Re-drafted release ";
+      return wasCreated ? "Released " : "Re-released ";
+    })();
+
     return [
       {
         type: "heading",
@@ -34,7 +39,7 @@ export function renderSummary({ release, tagger }) {
         children: [
           {
             type: "text",
-            value: draft ? "Drafted release " : "Released ",
+            value: action,
           },
           {
             type: "linkReference",

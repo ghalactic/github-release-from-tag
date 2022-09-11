@@ -212,5 +212,5 @@ async function main() {
     setOutput,
   });
 
-  await summary.addRaw(renderSummary({ release, tagger })).write();
+  await summary.addRaw(renderSummary({ release, tagger, wasCreated })).write();
 }
