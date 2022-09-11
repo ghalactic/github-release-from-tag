@@ -39,6 +39,10 @@ inputs:
       A comma-separated list of reactions to create for the release. A valid
       value with all available reactions is "+1,laugh,hooray,heart,rocket,eyes".
     default: ""
+  summaryEnabled:
+    description: >-
+      Set to "false" to disable GitHub Actions job summary creation.
+    default: "" # defaults to the default in the config file (true)
   token:
     description: >-
       The GitHub token to use when managing releases.

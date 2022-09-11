@@ -212,5 +212,9 @@ async function main() {
     setOutput,
   });
 
-  await summary.addRaw(renderSummary({ release, tagger, wasCreated })).write();
+  if (config.summary.enabled) {
+    await summary
+      .addRaw(renderSummary({ release, tagger, wasCreated }))
+      .write();
+  }
 }

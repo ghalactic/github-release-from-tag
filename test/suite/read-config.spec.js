@@ -61,6 +61,9 @@ describe("readConfig()", () => {
       generateReleaseNotes: true,
       prerelease: false,
       reactions: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
+      summary: {
+        enabled: false,
+      },
     };
 
     expect(actual).toEqual(expected);
@@ -79,6 +82,9 @@ describe("readConfig()", () => {
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
+      summary: {
+        enabled: true,
+      },
     };
 
     expect(actual).toEqual(expected);
@@ -97,6 +103,9 @@ describe("readConfig()", () => {
       draft: false,
       generateReleaseNotes: false,
       reactions: [],
+      summary: {
+        enabled: true,
+      },
     };
 
     expect(actual).toEqual(expected);
@@ -127,6 +136,8 @@ describe("readConfig()", () => {
           return "true";
         case "reactions":
           return "heart,hooray,rocket";
+        case "summaryEnabled":
+          return "true";
       }
 
       return "";
@@ -143,6 +154,9 @@ describe("readConfig()", () => {
       generateReleaseNotes: false,
       prerelease: true,
       reactions: ["heart", "hooray", "rocket"],
+      summary: {
+        enabled: true,
+      },
     };
 
     expect(actual).toMatchObject(expected);
@@ -159,6 +173,21 @@ describe("readConfig()", () => {
       discussion: {
         category: "",
         reactions: ["eyes", "+1"],
+      },
+    };
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  it("should correctly fill in summary defaults when using action input overrides", async () => {
+    chdir(join(fixturesPath, "empty"));
+
+    const getInput = (name) => (name === "summaryEnabled" ? "false" : "");
+    const actual = await readConfig({ getInput, group, info });
+
+    const expected = {
+      summary: {
+        enabled: false,
       },
     };
 

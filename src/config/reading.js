@@ -21,6 +21,7 @@ export async function readConfig({ getInput, group, info }) {
       ...base,
       ...overrides,
       discussion: { ...base.discussion, ...overrides.discussion },
+      summary: { ...base.summary, ...overrides.summary },
     };
 
     info(`Effective configuration: ${JSON.stringify(effective, null, 2)}`);
@@ -54,6 +55,11 @@ function getConfigOverrides(getInput, base) {
   if (discussionReactions)
     discussionOverrides.reactions = discussionReactions.split(",");
 
+  const summaryOverrides = {};
+  const summaryEnabled = getInput("summaryEnabled");
+
+  if (summaryEnabled) summaryOverrides.enabled = summaryEnabled === "true";
+
   const inputAssets = parseAssets(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
@@ -66,6 +72,8 @@ function getConfigOverrides(getInput, base) {
     overrides.assets = [...base.assets, ...inputAssets];
   if (Object.keys(discussionOverrides).length > 0)
     overrides.discussion = discussionOverrides;
+  if (Object.keys(summaryOverrides).length > 0)
+    overrides.summary = summaryOverrides;
   if (draft) overrides.draft = draft === "true";
   if (generateReleaseNotes)
     overrides.generateReleaseNotes = generateReleaseNotes === "true";

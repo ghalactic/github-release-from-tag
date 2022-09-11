@@ -13,6 +13,10 @@ Versioning].
 
 - Actions [job summaries][v3.1-job-summaries] will now include information about
   the user that created the tag.
+- Added the `summaryEnabled` input, which can be used to disable
+  [job summary][v3.1-job-summaries] creation.
+- Added the `summary.enabled` config option, which can be used to disable
+  [job summary][v3.1-job-summaries] creation.
 - Added the `taggerAvatarUrl` output, which contains the avatar URL of the
   GitHub user who created the tag.
 - Added the `taggerLogin` output, which contains the username of the GitHub user

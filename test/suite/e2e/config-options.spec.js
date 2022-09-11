@@ -50,6 +50,8 @@ reactions:
   - heart
   - rocket
   - eyes
+summary:
+  enabled: false
 `;
 
     const files = [

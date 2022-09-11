@@ -77,6 +77,20 @@ export const config = {
         enum: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
       },
     },
+    summary: {
+      description: "Options for creating GitHub Actions job summaries.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        enabled: {
+          description:
+            "Set to false to disable GitHub Actions job summary creation.",
+          type: "boolean",
+          default: true,
+        },
+      },
+    },
   },
 };
 

@@ -25,3 +25,5 @@ reactions:
   - heart
   - rocket
   - eyes
+summary:
+  enabled: false

@@ -536,6 +536,25 @@ and links will be displayed on the Actions run summary page:
 
 ![Example release summary](/assets/images/release-summary.png)
 
+You can disable this feature via the [configuration file], or via
+[action inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/release.eloquent.yml:
+summary:
+  enabled: false
+```
+
+```yaml
+# In your workflow:
+- uses: eloquent/github-release-action@v3
+  with:
+    summaryEnabled: "false"
+```
+
 ## Configuration
 
 > **Tip:** Try to use as _little_ configuration as possible. Everything here is
@@ -585,6 +604,10 @@ discussion:
 
   # Reactions to create for discussions linked to releases.
   reactions: ["+1", "-1", laugh, hooray, confused, heart, rocket, eyes]
+
+summary:
+  # Set to false to disable GitHub Actions job summary creation.
+  enabled: false
 ```
 
 ### Action inputs
@@ -635,6 +658,9 @@ published:
 
     # Reactions to create for discussions linked to releases.
     discussionReactions: +1,-1,laugh,hooray,confused,heart,rocket,eyes
+
+    # Set to "false" to disable GitHub Actions job summary creation.
+    summaryEnabled: "false"
 ```
 
 ## Action outputs
