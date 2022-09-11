@@ -1,3 +1,5 @@
+import { DISCUSSION_ID, DISCUSSION_NUMBER, DISCUSSION_URL } from "./outputs.js";
+
 export async function getDiscussionIdByUrl({
   graphql,
   owner,
@@ -17,8 +19,8 @@ export async function getDiscussionIdByUrl({
 
   const number = getDiscussionNumberByUrl(url);
 
-  setOutput("discussionNumber", number);
-  setOutput("discussionUrl", url);
+  setOutput(DISCUSSION_NUMBER, number);
+  setOutput(DISCUSSION_URL, url);
 
   const result = await graphql({
     query,
@@ -29,7 +31,7 @@ export async function getDiscussionIdByUrl({
 
   const id = result.repository.discussion.id;
 
-  setOutput("discussionId", id);
+  setOutput(DISCUSSION_ID, id);
 
   return id;
 }

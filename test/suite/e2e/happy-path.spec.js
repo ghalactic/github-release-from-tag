@@ -343,6 +343,16 @@ paragraph
         expect(outputs.releaseWasCreated).toBe("true");
       });
 
+      it("should produce the correct taggerAvatarUrl output", () => {
+        expect(outputs.taggerAvatarUrl).toContain(
+          "https://avatars.githubusercontent.com/"
+        );
+      });
+
+      it("should produce the correct taggerLogin output", () => {
+        expect(outputs.taggerLogin).toMatch(/^.+$/);
+      });
+
       it("should produce the correct tagBody output", () => {
         expect(outputs.tagBody).toContain("# Heading 1");
       });

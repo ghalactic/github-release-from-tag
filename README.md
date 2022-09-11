@@ -671,6 +671,12 @@ releaseBody: |
 
   ## What's Changed ...
 
+# The avatar URL of the GitHub user who created the tag.
+taggerAvatarUrl: "https://avatars.githubusercontent.com/u/100152?u=2d625417e12ad2b9cf55a3897e9a36b1bc145133&v=4"
+
+# The username of the GitHub user who created the tag.
+taggerLogin: "ezzatron"
+
 # The name of the tag that caused the release.
 tagName: "1.0.0"
 

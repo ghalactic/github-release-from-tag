@@ -101,6 +101,12 @@ outputs:
     description: >-
       Contains "true" for any tag considered "stable" (e.g. "v1", stable SemVer
       tags), or an empty string otherwise.
+  taggerAvatarUrl:
+    description: >-
+      The avatar URL of the GitHub user who created the tag.
+  taggerLogin:
+    description: >-
+      The username of the GitHub user who created the tag.
   tagName:
     description: >-
       The name of the tag that caused the release to be published.

@@ -19,12 +19,29 @@ import {
   readTagAnnotation,
 } from "./git.js";
 import {
+  ASSETS,
+  RELEASE_BODY,
+  RELEASE_ID,
+  RELEASE_NAME,
+  RELEASE_UPLOAD_URL,
+  RELEASE_URL,
+  RELEASE_WAS_CREATED,
+  TAGGER_AVATAR_URL,
+  TAGGER_LOGIN,
+  TAG_BODY,
+  TAG_IS_SEM_VER,
+  TAG_IS_STABLE,
+  TAG_NAME,
+  TAG_SUBJECT,
+} from "./outputs.js";
+import {
   createDiscussionReactions,
   createReleaseReactions,
 } from "./reaction.js";
 import { parseRef } from "./ref.js";
 import { createOrUpdateRelease } from "./release.js";
 import { renderSummary } from "./summary.js";
+import { getTagger } from "./tagger.js";
 
 try {
   await main();
@@ -51,9 +68,9 @@ async function main() {
 
   info(`Detected tag ${JSON.stringify(tag)}`);
 
-  setOutput("tagIsSemVer", isSemVer ? "true" : "");
-  setOutput("tagIsStable", isStable ? "true" : "");
-  setOutput("tagName", tag);
+  setOutput(TAG_IS_SEM_VER, isSemVer ? "true" : "");
+  setOutput(TAG_IS_STABLE, isStable ? "true" : "");
+  setOutput(TAG_NAME, tag);
 
   if (!(await fetchTagAnnotation({ group, tag }))) {
     setFailed("Unable to fetch the tag annotation");
@@ -103,14 +120,21 @@ async function main() {
     return;
   }
 
-  setOutput("tagBody", tagBody);
-  setOutput("tagSubject", tagSubject);
+  setOutput(TAG_BODY, tagBody);
+  setOutput(TAG_SUBJECT, tagSubject);
 
   const {
     graphql,
     request,
     rest: { reactions, repos },
   } = getOctokit(getInput("token"));
+
+  const tagger = await getTagger({ graphql, owner, repo, tag });
+
+  if (tagger) {
+    setOutput(TAGGER_AVATAR_URL, tagger.avatarUrl);
+    setOutput(TAGGER_LOGIN, tagger.login);
+  }
 
   const releaseBody = await renderReleaseBody({
     config,
@@ -125,7 +149,7 @@ async function main() {
     tagBody,
   });
 
-  setOutput("releaseBody", releaseBody);
+  setOutput(RELEASE_BODY, releaseBody);
 
   const [release, wasCreated] = await createOrUpdateRelease({
     config,
@@ -140,11 +164,11 @@ async function main() {
     tagSubject,
   });
 
-  setOutput("releaseId", release.id);
-  setOutput("releaseName", release.name);
-  setOutput("releaseUploadUrl", release.upload_url);
-  setOutput("releaseUrl", release.html_url);
-  setOutput("releaseWasCreated", wasCreated ? "true" : "");
+  setOutput(RELEASE_ID, release.id);
+  setOutput(RELEASE_NAME, release.name);
+  setOutput(RELEASE_UPLOAD_URL, release.upload_url);
+  setOutput(RELEASE_URL, release.html_url);
+  setOutput(RELEASE_WAS_CREATED, wasCreated ? "true" : "");
 
   info(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`, {
     title: `Released - ${tagSubject}`,
@@ -165,7 +189,7 @@ async function main() {
 
   if (!assetResult) setFailed("Unable to modify release assets");
 
-  setOutput("assets", JSON.stringify(assets));
+  setOutput(ASSETS, JSON.stringify(assets));
 
   await createReleaseReactions({
     config,

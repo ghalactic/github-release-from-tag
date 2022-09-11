@@ -1,24 +1,5 @@
 import { dump } from "js-yaml";
-
-const OUTPUT_NAMES = [
-  "assets",
-  "discussionId",
-  "discussionNumber",
-  "discussionUrl",
-  "generatedReleaseNotes",
-  "releaseBody",
-  "releaseId",
-  "releaseName",
-  "releaseUploadUrl",
-  "releaseUrl",
-  "releaseWasCreated",
-  "tagBody",
-  "tagBodyRendered",
-  "tagIsSemVer",
-  "tagIsStable",
-  "tagName",
-  "tagSubject",
-];
+import * as outputs from "../../src/outputs.js";
 
 const { GITHUB_ACTIONS, GITHUB_SHA } = process.env;
 
@@ -39,7 +20,7 @@ export function buildTagName(version, runId, label) {
 export function buildWorkflow(branchName, publishOptions = {}, preSteps = []) {
   const exposeSteps = [];
 
-  for (const name of OUTPUT_NAMES) {
+  for (const name of Object.values(outputs)) {
     exposeSteps.push({
       name: `Expose outputs.${name}`,
       env: {

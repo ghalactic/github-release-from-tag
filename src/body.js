@@ -1,4 +1,5 @@
 import { createProcessor } from "./markdown.js";
+import { GENERATED_RELEASE_NOTES, TAG_BODY_RENDERED } from "./outputs.js";
 
 export async function renderReleaseBody({
   config,
@@ -26,7 +27,7 @@ export async function renderReleaseBody({
       }
     );
 
-    setOutput("tagBodyRendered", renderedTagBody);
+    setOutput(TAG_BODY_RENDERED, renderedTagBody);
     parts.push(renderedTagBody);
   }
 
@@ -43,7 +44,7 @@ export async function renderReleaseBody({
       }
     );
 
-    setOutput("generatedReleaseNotes", releaseNotes);
+    setOutput(GENERATED_RELEASE_NOTES, releaseNotes);
 
     parts.push("", releaseNotes);
   }

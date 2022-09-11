@@ -7,6 +7,15 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Added
+
+- Added the `taggerAvatarUrl` output, which contains the avatar URL of the
+  GitHub user who created the tag.
+- Added the `taggerLogin` output, which contains the username of the GitHub user
+  who created the tag.
+
 ## [v3.0.0] - 2022-09-10
 
 [v3.0.0]: https://github.com/eloquent/github-release-action/releases/v3.0.0
