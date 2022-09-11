@@ -3,7 +3,7 @@ import { toMarkdown } from "mdast-util-to-markdown";
 
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
-export function renderSummary({ release, tagger, wasCreated }) {
+export function renderSummary({ release, serverUrl, tagger, wasCreated }) {
   const { body, discussion_url, draft, html_url, name, prerelease, tag_name } =
     release;
   const hasTagger = tagger?.avatarUrl && tagger?.login;
@@ -205,7 +205,7 @@ export function renderSummary({ release, tagger, wasCreated }) {
         type: "definition",
         identifier: "tagger-url",
         label: "tagger-url",
-        url: `https://github.com/${encodeURIComponent(tagger.login)}`,
+        url: `${serverUrl}/${encodeURIComponent(tagger.login)}`,
         title: null,
       });
     }

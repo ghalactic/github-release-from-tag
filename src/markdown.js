@@ -4,12 +4,20 @@ import remarkGithub from "remark-github";
 import { visit } from "unist-util-visit";
 
 const SOFT_BREAK_PATTERN = /$[^$]/gms;
+const GITHUB_SERVER_URL_PATTERN = /^https:\/\/github\.com/;
 
-export function createProcessor({ owner, repo }) {
+export function createProcessor({ serverUrl, owner, repo }) {
   const createRemark = remark()
     .use(remarkGfm)
     .use(remarkGithub, {
       repository: `${owner}/${repo}`,
+
+      buildUrl(values, defaultBuildUrl) {
+        return defaultBuildUrl(values).replace(
+          GITHUB_SERVER_URL_PATTERN,
+          serverUrl
+        );
+      },
     })
     .use(stripSoftBreaks)
     .freeze();
