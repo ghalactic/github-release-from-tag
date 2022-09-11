@@ -53,8 +53,6 @@ form
 one
 paragraph
 
-#1
-
 @actions
 `;
 
@@ -166,7 +164,6 @@ paragraph
       ${"markdown heading 1"}  | ${`//h1[normalize-space()='Heading 1']`}
       ${"markdown heading 2"}  | ${`//h2[normalize-space()='Heading 2']`}
       ${"markdown paragraphs"} | ${`//*[normalize-space()='this should form one paragraph']`}
-      ${"issue link"}          | ${`//a[@href='https://github.com/${owner}/${repo}/issues/1'][normalize-space()='#1']`}
       ${"mention"}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
       ${"release notes"}       | ${`//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`}
     `(
