@@ -1,8 +1,8 @@
-### Released `name-a`
+### Released [`name-a`][release-url]
 
-| Tag          | Stability | Release                 |
-| :----------- | :-------- | :---------------------- |
-| `tag-name-a` | ✅ Stable  | [`name-a`][release-url] |
+| Tag          | Stability |
+| :----------- | :-------- |
+| `tag-name-a` | ✅ Stable  |
 
 <details><summary><strong>Release body</strong></summary>
 

@@ -37,8 +37,16 @@ export function renderSummary({ release, tagger }) {
             value: draft ? "Drafted release " : "Released ",
           },
           {
-            type: "inlineCode",
-            value: name,
+            type: "linkReference",
+            identifier: "release-url",
+            label: "release-url",
+            referenceType: "full",
+            children: [
+              {
+                type: "inlineCode",
+                value: name,
+              },
+            ],
           },
         ],
       },
@@ -106,12 +114,6 @@ export function renderSummary({ release, tagger }) {
           value: "Stability",
         },
       ],
-      [
-        {
-          type: "text",
-          value: "Release",
-        },
-      ],
     ];
 
     const cells = [
@@ -125,20 +127,6 @@ export function renderSummary({ release, tagger }) {
         {
           type: "text",
           value: prerelease ? "⚠️ Pre-release" : "✅ Stable",
-        },
-      ],
-      [
-        {
-          type: "linkReference",
-          identifier: "release-url",
-          label: "release-url",
-          referenceType: "full",
-          children: [
-            {
-              type: "inlineCode",
-              value: name,
-            },
-          ],
         },
       ],
     ];
