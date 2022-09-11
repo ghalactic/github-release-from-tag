@@ -49,7 +49,7 @@ export function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
             referenceType: "full",
             children: [
               {
-                type: "inlineCode",
+                type: "text",
                 value: name,
               },
             ],

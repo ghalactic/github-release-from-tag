@@ -1,4 +1,4 @@
-### Released [`name-a`][release-url]
+### Released [name-a][release-url]
 
 | Tag                     | Stability |
 | :---------------------- | :-------- |
