@@ -91,7 +91,9 @@ outputs:
       The "body" portion of the tag annotation.
   tagBodyRendered:
     description: >-
-      The "body" portion of the tag annotation, rendered as HTML.
+      The "body" portion of the tag annotation, rendered as Markdown. This
+      represents the Markdown after it has been "processed", and may differ
+      greatly from the original input Markdown.
   tagIsSemVer:
     description: >-
       Contains "true" for SemVer version tags, or an empty string otherwise.
