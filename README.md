@@ -653,16 +653,16 @@ This action makes a number of outputs available:
 releaseId: "68429422"
 
 # The URL of the published release.
-releaseUrl: "https://github.com/owner/repo/releases/tag/1.0.0"
+releaseUrl: https://github.com/owner/repo/releases/tag/1.0.0
 
 # The asset upload URL for the published release (as an RFC 6570 URI Template).
-releaseUploadUrl: "https://uploads.github.com/repos/owner/repo/releases/68429422/assets{?name,label}"
+releaseUploadUrl: https://uploads.github.com/repos/owner/repo/releases/68429422/assets{?name,label}
 
 # Contains "true" if a new release was created.
 releaseWasCreated: "true"
 
 # The name of the published release.
-releaseName: "1.0.0 Leopard Venom 🐆"
+releaseName: 1.0.0 Leopard Venom 🐆
 
 # The body of the published release.
 releaseBody: |
@@ -672,13 +672,13 @@ releaseBody: |
   ## What's Changed ...
 
 # The avatar URL of the GitHub user who created the tag.
-taggerAvatarUrl: "https://avatars.githubusercontent.com/u/100152?u=2d625417e12ad2b9cf55a3897e9a36b1bc145133&v=4"
+taggerAvatarUrl: https://avatars.githubusercontent.com/u/100152?u=2d625417e12ad2b9cf55a3897e9a36b1bc145133&v=4
 
 # The username of the GitHub user who created the tag.
-taggerLogin: "ezzatron"
+taggerLogin: ezzatron
 
 # The name of the tag that caused the release.
-tagName: "1.0.0"
+tagName: 1.0.0
 
 # Contains "true" for any tag considered "stable".
 tagIsStable: "true"
@@ -700,19 +700,19 @@ tagBody: |
 # The "body" portion of the tag annotation, rendered as Markdown. This
 # represents the Markdown after it has been "processed", and may differ greatly
 # from the original input Markdown.
-tagBodyRendered: "This is the first _stable_ release 🎉"
+tagBodyRendered: This is the first _stable_ release 🎉
 
 # The generated release notes produced by GitHub. See "Automated release notes".
 generatedReleaseNotes: "## What's Changed ..."
 
 # The ID of the release discussion.
-discussionId: "D_kwDOG4Ywls4APsqF"
+discussionId: D_kwDOG4Ywls4APsqF
 
 # The unique number of the release discussion.
 discussionNumber: "93"
 
 # The URL of the release discussion.
-discussionUrl: "https://github.com/owner/repo/discussions/93"
+discussionUrl: https://github.com/owner/repo/discussions/93
 
 # A JSON array of objects describing the release assets.
 assets: |
