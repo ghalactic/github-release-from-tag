@@ -7,7 +7,9 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
-## Unreleased
+## [v3.1.1] - 2022-09-13
+
+[v3.1.1]: https://github.com/eloquent/github-release-action/releases/v3.1.1
 
 ### Changed
 
