@@ -28,13 +28,13 @@ to when you [publish a GitHub Release manually].
 
 - [Minimal configuration, or often **zero** configuration](#configuration)
 - [SemVer stability determines **pre-release** status](#release-stability)
-- [Markdown support in tag annotation messages](#release-name-and-body)
+- [**Markdown** support in tag annotation messages](#release-name-and-body)
 - [Asset uploading with support for **labels**](#release-assets)
-- [Automated release notes support](#automated-release-notes)
-- [Release discussion creation](#release-discussions)
+- [Automated **release notes** support](#automated-release-notes)
+- [Release **discussion** creation](#release-discussions)
 - [Releases can be created as **drafts**](#draft-releases)
 - [Creation of initial **🚀 reactions ❤️** to promote engagement](#reactions)
-- [Creation of job summaries for the Actions run summary page](#job-summaries)
+- [Creation of **job summaries** for the Actions run summary page](#job-summaries)
 - [Works with GitHub Enterprise Server (GHES)](#github-enterprise-server-support)
 
 ## Usage
