@@ -7,6 +7,15 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Changed
+
+- The attribution comment will now be appended to the end of the release body
+  instead of the beginning. This is a precaution, in case having the comment at
+  the beginning of the body might cause Dependabot to truncate more of the
+  actual release notes.
+
 ## [v3.1.0] - 2022-09-11
 
 [v3.1.0]: https://github.com/eloquent/github-release-action/releases/v3.1.0
