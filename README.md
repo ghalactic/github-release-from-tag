@@ -35,6 +35,7 @@ to when you [publish a GitHub Release manually].
 - [Releases can be created as **drafts**](#draft-releases)
 - [Creation of initial **🚀 reactions ❤️** to promote engagement](#reactions)
 - [Creation of job summaries for the Actions run summary page](#job-summaries)
+- [Works with GitHub Enterprise Server (GHES)](#github-enterprise-server-support)
 
 ## Usage
 
@@ -785,6 +786,39 @@ can be accessed:
     DOWNLOAD_URL: ${{ fromJSON(steps.publishRelease.outputs.assets)[0].downloadUrl }}
   run: echo Download the first asset from $DOWNLOAD_URL
 ```
+
+## GitHub Enterprise Server support
+
+This action works with [GitHub Enterprise Server (GHES)]. Depending on how your
+enterprise is configured, you may have to work with an administrator to either:
+
+- [Use GitHub Connect to allow access to the action]; or
+- [Manually sync the action to your enterprise].
+
+[github enterprise server (ghes)]: https://docs.github.com/enterprise-server/admin/overview/about-github-enterprise-server
+[use github connect to allow access to the action]: https://docs.github.com/enterprise-server/admin/github-actions/managing-access-to-actions-from-githubcom/enabling-automatic-access-to-githubcom-actions-using-github-connect
+[manually sync the action to your enterprise]: https://docs.github.com/enterprise-server/admin/github-actions/managing-access-to-actions-from-githubcom/manually-syncing-actions-from-githubcom
+
+### GitHub Enterprise Server version feature support
+
+Feature support on GitHub Enterprise Server often lags behind other versions of
+GitHub. This action may not work correctly if you try to use features on an
+enterprise that does not have support for those features.
+
+Here are some key features that can be used by this action, and which version of
+GitHub Enterprise Server introduced support:
+
+| Feature                                                     | 3.1 | 3.2 | 3.3 | 3.4 | 3.5 | 3.6 |
+| :---------------------------------------------------------- | :-- | :-- | :-- | :-- | :-- | :-- |
+| [Release reactions][ghes-3-2-release-reactions]             | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| [Generated release notes][ghes-3-4-generated-release-notes] | ❌  | ❌  | ❌  | ✅  | ✅  | ✅  |
+| [Discussions][ghes-3-6-discussions]                         | ❌  | ❌  | ❌  | ❌  | ❌  | ✅  |
+| [Job summaries][ghes-3-6-job-summaries]                     | ❌  | ❌  | ❌  | ❌  | ❌  | ✅  |
+
+[ghes-3-2-release-reactions]: https://docs.github.com/enterprise-server@3.2/rest/reactions#create-reaction-for-a-release
+[ghes-3-4-generated-release-notes]: https://docs.github.com/enterprise-server@3.4/admin/release-notes#releases-changes
+[ghes-3-6-discussions]: https://docs.github.com/enterprise-server@3.6/admin/release-notes#community-experience
+[ghes-3-6-job-summaries]: https://docs.github.com/enterprise-server@3.6/admin/release-notes#github-actions
 
 ## FAQ
 
