@@ -7,6 +7,16 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v3.1.2] - 2022-11-21
+
+[v3.1.2]: https://github.com/eloquent/github-release-action/releases/v3.1.2
+
+### Fixed
+
+- Replaced usage of [deprecated `set-output`] GitHub Actions command.
+
+[deprecated `set-output`]: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+
 ## [v3.1.1] - 2022-09-13
 
 [v3.1.1]: https://github.com/eloquent/github-release-action/releases/v3.1.1
