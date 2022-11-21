@@ -28,7 +28,7 @@ describeOrSkip("End-to-end tests", () => {
         {
           name: "List assets",
           id: "listAssets",
-          run: `echo ::set-output name=assets::$(cat assets.json)`,
+          run: `echo "assets=$(cat assets.json)" >> $GITHUB_OUTPUT`,
         },
       ]
     );

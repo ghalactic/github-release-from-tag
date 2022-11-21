@@ -449,7 +449,7 @@ value for this input is up to you, but any value from a [context] (e.g.
 ```yaml
 # Executing a script that outputs JSON describing the assets to upload.
 - id: listAssets
-  run: echo ::set-output name=assets::$(bash list-assets.sh)
+  run: echo "assets=$(bash list-assets.sh)" >> $GITHUB_OUTPUT
 
 - uses: eloquent/github-release-action@v3
   with:
