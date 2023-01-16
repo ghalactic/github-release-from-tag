@@ -7,6 +7,14 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v3.1.3] - 2023-01-17
+
+[v3.1.3]: https://github.com/eloquent/github-release-action/releases/v3.1.3
+
+### Fixed
+
+- Fixed rendering of workflow summaries.
+
 ## [v3.1.2] - 2022-11-21
 
 [v3.1.2]: https://github.com/eloquent/github-release-action/releases/v3.1.2
