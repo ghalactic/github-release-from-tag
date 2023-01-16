@@ -162,7 +162,7 @@ export function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
 
     return createDetailsAST("<strong>Release body</strong>", [
       {
-        type: "text",
+        type: "html",
         value: BODY_TOKEN,
       },
     ]);
