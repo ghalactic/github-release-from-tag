@@ -3,6 +3,26 @@ import { exec, getExecOutput } from "@actions/exec";
 const SIGNATURE_PATTERN =
   /-----BEGIN (\w+) SIGNATURE-----.*?-----END \1 SIGNATURE-----/gs;
 
+export async function configureGit({ env, group, info, silent = false }) {
+  return group("Marking the GitHub workspace as a safe directory", async () => {
+    const { GITHUB_WORKSPACE = "" } = env;
+
+    if (GITHUB_WORKSPACE === "") {
+      info("No GitHub workspace defined");
+
+      return true;
+    }
+
+    const exitCode = await exec(
+      "git",
+      ["config", "--global", "--add", "safe.directory", GITHUB_WORKSPACE],
+      { silent }
+    );
+
+    return exitCode === 0;
+  });
+}
+
 export async function determineRef({ group, info, silent = false }) {
   return group("Determining the current Git ref", async () => {
     const { stdout } = await getExecOutput(

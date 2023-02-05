@@ -13,6 +13,7 @@ import { modifyReleaseAssets } from "./asset.js";
 import { renderReleaseBody } from "./body.js";
 import { readConfig } from "./config/reading.js";
 import {
+  configureGit,
   determineRef,
   determineTagType,
   fetchTagAnnotation,
@@ -56,6 +57,14 @@ async function main() {
   const {
     repo: { owner, repo },
   } = context;
+
+  const isConfigured = await configureGit({ env, group, info });
+
+  if (!isConfigured) {
+    setFailed("Unable to configure Git");
+
+    return;
+  }
 
   const ref = await determineRef({ group, info });
   const { isTag, isSemVer, isStable, tag } = parseRef(ref);
