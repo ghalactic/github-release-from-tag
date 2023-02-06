@@ -7,6 +7,17 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v3.1.4] - 2023-02-06
+
+[v3.1.4]: https://github.com/eloquent/github-release-action/releases/v3.1.4
+
+### Fixed
+
+- Fixed Git "dubious ownership" error that occurs due to the way GitHub Actions
+  sets up ownership of the workspace directory. This action now explicitly adds
+  the workspace directory to Git's list of "safe" directories to avoid the
+  error.
+
 ## [v3.1.3] - 2023-01-17
 
 [v3.1.3]: https://github.com/eloquent/github-release-action/releases/v3.1.3
