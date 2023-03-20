@@ -42,7 +42,7 @@ import {
 import { parseRef } from "./ref.js";
 import { createOrUpdateRelease } from "./release.js";
 import { renderSummary } from "./summary.js";
-import { getTagger, getTagHtmlUrl } from "./tags.js";
+import { getTagHtmlUrl, getTagger } from "./tags.js";
 
 try {
   await main();
