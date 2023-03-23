@@ -6,7 +6,8 @@ you _probably wish_ GitHub would just do without the need to use GitHub Actions.
 [github action]: https://docs.github.com/actions
 [github releases]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases
 
-![Example release summary][img-release-summary]
+![Example release summary][img-release-summary-light]
+![Example release summary][img-release-summary-dark]
 
 ## Overview
 
@@ -534,7 +535,8 @@ discussion:
 When a release is created or updated, a summary containing useful information
 and links will be displayed on the Actions run summary page:
 
-![Example release summary][img-release-summary]
+![Example release summary][img-release-summary-light]
+![Example release summary][img-release-summary-dark]
 
 You can disable this feature via the [configuration file], or via
 [action inputs]:
@@ -840,4 +842,5 @@ for publishing GitHub releases which are better suited.
 
 <!-- Images -->
 
-[img-release-summary]: /assets/images/release-summary.svg "Example release summary"
+[img-release-summary-light]: /assets/images/release-summary-light.svg#gh-light-mode-only "Example release summary"
+[img-release-summary-dark]: /assets/images/release-summary-dark.svg#gh-dark-mode-only "Example release summary"
