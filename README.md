@@ -6,8 +6,10 @@ you _probably wish_ GitHub would just do without the need to use GitHub Actions.
 [github action]: https://docs.github.com/actions
 [github releases]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases
 
-![Example release summary][img-release-summary-light]
-![Example release summary][img-release-summary-dark]
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/assets/images/release-summary-dark.svg">
+  <img alt="Example release job summary" src="/assets/images/release-summary-light.svg#gh-light-mode-only">
+</picture>
 
 ## Overview
 
@@ -535,8 +537,10 @@ discussion:
 When a release is created or updated, a summary containing useful information
 and links will be displayed on the Actions run summary page:
 
-![Example release summary][img-release-summary-light]
-![Example release summary][img-release-summary-dark]
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/assets/images/release-summary-dark.svg">
+  <img alt="Example release job summary" src="/assets/images/release-summary-light.svg#gh-light-mode-only">
+</picture>
 
 You can disable this feature via the [configuration file], or via
 [action inputs]:
@@ -839,8 +843,3 @@ annotation message.
 
 Technically yes, but it's not recommended. These tools have their own solutions
 for publishing GitHub releases which are better suited.
-
-<!-- Images -->
-
-[img-release-summary-light]: /assets/images/release-summary-light.svg#gh-light-mode-only "Example release summary"
-[img-release-summary-dark]: /assets/images/release-summary-dark.svg#gh-dark-mode-only "Example release summary"
