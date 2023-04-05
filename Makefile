@@ -16,11 +16,4 @@ precommit:: verify-generated
 ################################################################################
 
 dist/main.js: artifacts/link-dependencies.touch $(JS_SOURCE_FILES)
-	$(JS_EXEC) esbuild \
-		--bundle \
-		--sourcemap \
-		--platform=node \
-		--target=node16 \
-		--format=esm \
-		--outfile="$@" \
-		src/main.js
+	node script/build.js dist/main.js
