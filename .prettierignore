@@ -1,5 +1,6 @@
 /.makefiles/
 /artifacts/
+/dist/
 /test/fixture/config/invalid-yaml/
 /test/fixture/markdown-processor/
 /test/fixture/summary/

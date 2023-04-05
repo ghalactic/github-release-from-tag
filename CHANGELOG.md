@@ -11,6 +11,7 @@ Versioning].
 
 ### Improved
 
+- Switched from Docker to Node.js runtime for faster startup times.
 - Added [`@octokit/plugin-retry`] to improve resilience against transient
   network issues.
 
