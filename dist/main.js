@@ -22897,9 +22897,9 @@ var require_public_api = __commonJS({
   }
 });
 
-// node_modules/@octokit/request/node_modules/node-fetch/lib/index.js
+// node_modules/node-fetch/lib/index.js
 var require_lib3 = __commonJS({
-  "node_modules/@octokit/request/node_modules/node-fetch/lib/index.js"(exports, module) {
+  "node_modules/node-fetch/lib/index.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function _interopDefault(ex) {
@@ -29628,21 +29628,35 @@ function looksLikeAVFileValue(value) {
 }
 
 // node_modules/mdast-util-to-string/lib/index.js
+var emptyOptions = {};
 function toString(value, options) {
-  const includeImageAlt = (options || {}).includeImageAlt;
-  return one(
-    value,
-    typeof includeImageAlt === "boolean" ? includeImageAlt : true
-  );
+  const settings = options || emptyOptions;
+  const includeImageAlt = typeof settings.includeImageAlt === "boolean" ? settings.includeImageAlt : true;
+  const includeHtml = typeof settings.includeHtml === "boolean" ? settings.includeHtml : true;
+  return one(value, includeImageAlt, includeHtml);
 }
-function one(value, includeImageAlt) {
-  return node(value) && ("value" in value && value.value || includeImageAlt && "alt" in value && value.alt || "children" in value && all(value.children, includeImageAlt)) || Array.isArray(value) && all(value, includeImageAlt) || "";
+function one(value, includeImageAlt, includeHtml) {
+  if (node(value)) {
+    if ("value" in value) {
+      return value.type === "html" && !includeHtml ? "" : value.value;
+    }
+    if (includeImageAlt && "alt" in value && value.alt) {
+      return value.alt;
+    }
+    if ("children" in value) {
+      return all(value.children, includeImageAlt, includeHtml);
+    }
+  }
+  if (Array.isArray(value)) {
+    return all(value, includeImageAlt, includeHtml);
+  }
+  return "";
 }
-function all(values, includeImageAlt) {
+function all(values, includeImageAlt, includeHtml) {
   const result = [];
   let index2 = -1;
   while (++index2 < values.length) {
-    result[index2] = one(values[index2], includeImageAlt);
+    result[index2] = one(values[index2], includeImageAlt, includeHtml);
   }
   return result.join("");
 }
@@ -38447,7 +38461,7 @@ function tokenizePotentialGfmFootnoteCall(effects, ok2, nok) {
         end: self2.now()
       })
     );
-    if (id.charCodeAt(0) !== 94 || !defined.includes(id.slice(1))) {
+    if (id.codePointAt(0) !== 94 || !defined.includes(id.slice(1))) {
       return nok(code3);
     }
     effects.enter("gfmFootnoteCallLabelMarker");
@@ -38539,22 +38553,32 @@ function tokenizeGfmFootnoteCall(effects, ok2, nok) {
     return callData;
   }
   function callData(code3) {
-    let token;
-    if (code3 === null || code3 === 91 || size++ > 999) {
+    if (
+      // Too long.
+      size > 999 || // Closing brace with nothing.
+      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      // `\n` and `[` not being supported makes sense.
+      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+    ) {
       return nok(code3);
     }
     if (code3 === 93) {
-      if (!data) {
+      effects.exit("chunkString");
+      const token = effects.exit("gfmFootnoteCallString");
+      if (!defined.includes(normalizeIdentifier(self2.sliceSerialize(token)))) {
         return nok(code3);
       }
-      effects.exit("chunkString");
-      token = effects.exit("gfmFootnoteCallString");
-      return defined.includes(normalizeIdentifier(self2.sliceSerialize(token))) ? end(code3) : nok(code3);
+      effects.enter("gfmFootnoteCallLabelMarker");
+      effects.consume(code3);
+      effects.exit("gfmFootnoteCallLabelMarker");
+      effects.exit("gfmFootnoteCall");
+      return ok2;
     }
-    effects.consume(code3);
     if (!markdownLineEndingOrSpace(code3)) {
       data = true;
     }
+    size++;
+    effects.consume(code3);
     return code3 === 92 ? callEscape : callData;
   }
   function callEscape(code3) {
@@ -38564,13 +38588,6 @@ function tokenizeGfmFootnoteCall(effects, ok2, nok) {
       return callData;
     }
     return callData(code3);
-  }
-  function end(code3) {
-    effects.enter("gfmFootnoteCallLabelMarker");
-    effects.consume(code3);
-    effects.exit("gfmFootnoteCallLabelMarker");
-    effects.exit("gfmFootnoteCall");
-    return ok2;
   }
 }
 function tokenizeDefinitionStart(effects, ok2, nok) {
@@ -38586,28 +38603,32 @@ function tokenizeDefinitionStart(effects, ok2, nok) {
     effects.enter("gfmFootnoteDefinitionLabelMarker");
     effects.consume(code3);
     effects.exit("gfmFootnoteDefinitionLabelMarker");
-    return labelStart;
+    return labelAtMarker;
   }
-  function labelStart(code3) {
+  function labelAtMarker(code3) {
     if (code3 === 94) {
       effects.enter("gfmFootnoteDefinitionMarker");
       effects.consume(code3);
       effects.exit("gfmFootnoteDefinitionMarker");
       effects.enter("gfmFootnoteDefinitionLabelString");
-      return atBreak;
+      effects.enter("chunkString").contentType = "string";
+      return labelInside;
     }
     return nok(code3);
   }
-  function atBreak(code3) {
-    let token;
-    if (code3 === null || code3 === 91 || size > 999) {
+  function labelInside(code3) {
+    if (
+      // Too long.
+      size > 999 || // Closing brace with nothing.
+      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      // `\n` and `[` not being supported makes sense.
+      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+    ) {
       return nok(code3);
     }
     if (code3 === 93) {
-      if (!data) {
-        return nok(code3);
-      }
-      token = effects.exit("gfmFootnoteDefinitionLabelString");
+      effects.exit("chunkString");
+      const token = effects.exit("gfmFootnoteDefinitionLabelString");
       identifier = normalizeIdentifier(self2.sliceSerialize(token));
       effects.enter("gfmFootnoteDefinitionLabelMarker");
       effects.consume(code3);
@@ -38615,49 +38636,38 @@ function tokenizeDefinitionStart(effects, ok2, nok) {
       effects.exit("gfmFootnoteDefinitionLabel");
       return labelAfter;
     }
-    if (markdownLineEnding(code3)) {
-      effects.enter("lineEnding");
-      effects.consume(code3);
-      effects.exit("lineEnding");
-      size++;
-      return atBreak;
-    }
-    effects.enter("chunkString").contentType = "string";
-    return label(code3);
-  }
-  function label(code3) {
-    if (code3 === null || markdownLineEnding(code3) || code3 === 91 || code3 === 93 || size > 999) {
-      effects.exit("chunkString");
-      return atBreak(code3);
-    }
     if (!markdownLineEndingOrSpace(code3)) {
       data = true;
     }
     size++;
     effects.consume(code3);
-    return code3 === 92 ? labelEscape : label;
+    return code3 === 92 ? labelEscape : labelInside;
   }
   function labelEscape(code3) {
     if (code3 === 91 || code3 === 92 || code3 === 93) {
       effects.consume(code3);
       size++;
-      return label;
+      return labelInside;
     }
-    return label(code3);
+    return labelInside(code3);
   }
   function labelAfter(code3) {
     if (code3 === 58) {
       effects.enter("definitionMarker");
       effects.consume(code3);
       effects.exit("definitionMarker");
-      return factorySpace(effects, done, "gfmFootnoteDefinitionWhitespace");
+      if (!defined.includes(identifier)) {
+        defined.push(identifier);
+      }
+      return factorySpace(
+        effects,
+        whitespaceAfter,
+        "gfmFootnoteDefinitionWhitespace"
+      );
     }
     return nok(code3);
   }
-  function done(code3) {
-    if (!defined.includes(identifier)) {
-      defined.push(identifier);
-    }
+  function whitespaceAfter(code3) {
     return ok2(code3);
   }
 }
@@ -38682,8 +38692,9 @@ function tokenizeIndent2(effects, ok2, nok) {
 }
 
 // node_modules/micromark-extension-gfm-strikethrough/lib/syntax.js
-function gfmStrikethrough(options = {}) {
-  let single = options.singleTilde;
+function gfmStrikethrough(options) {
+  const options_ = options || {};
+  let single = options_.singleTilde;
   const tokenizer = {
     tokenize: tokenizeStrikethrough,
     resolveAll: resolveAllStrikethrough
@@ -38728,16 +38739,16 @@ function gfmStrikethrough(options = {}) {
               ["exit", events[open][1], context],
               ["enter", text5, context]
             ];
-            splice(
-              nextEvents,
-              nextEvents.length,
-              0,
-              resolveAll(
-                context.parser.constructs.insideSpan.null,
-                events.slice(open + 1, index2),
-                context
-              )
-            );
+            const insideSpan2 = context.parser.constructs.insideSpan.null;
+            if (insideSpan2) {
+              splice(
+                nextEvents,
+                nextEvents.length,
+                0,
+                // @ts-expect-error: to do: update `mdast-util-types` to allow explicit `undefined`s.
+                resolveAll(insideSpan2, events.slice(open + 1, index2), context)
+              );
+            }
             splice(nextEvents, nextEvents.length, 0, [
               ["exit", text5, context],
               ["enter", events[index2][1], context],
@@ -39259,29 +39270,30 @@ function tokenizeTasklistCheck(effects, ok2, nok) {
       effects.consume(code3);
       effects.exit("taskListCheckMarker");
       effects.exit("taskListCheck");
+      return after;
+    }
+    return nok(code3);
+  }
+  function after(code3) {
+    if (markdownLineEnding(code3)) {
+      return ok2(code3);
+    }
+    if (markdownSpace(code3)) {
       return effects.check(
         {
           tokenize: spaceThenNonSpace
         },
         ok2,
         nok
-      );
+      )(code3);
     }
     return nok(code3);
   }
 }
 function spaceThenNonSpace(effects, ok2, nok) {
-  const self2 = this;
   return factorySpace(effects, after, "whitespace");
   function after(code3) {
-    const tail = self2.events[self2.events.length - 1];
-    return (
-      // We either found spaces…
-      (tail && tail[1].type === "whitespace" || // …or it was followed by a line ending, in which case, there has to be
-      // non-whitespace after that line ending, because otherwise we’d get an
-      // EOF as the content is closed with blank lines.
-      markdownLineEnding(code3)) && code3 !== null ? ok2(code3) : nok(code3)
-    );
+    return code3 === null ? nok(code3) : ok2(code3);
   }
 }
 
@@ -43487,12 +43499,13 @@ async function createOrUpdateRelease({
   const createdRelease = await group2(
     "Attempting to create a release",
     async () => {
+      var _a, _b;
       try {
         const { data } = await repos.createRelease(params);
         info2(JSON.stringify(data, null, 2));
         return data;
       } catch (error2) {
-        const errors = error2.response?.data?.errors ?? [];
+        const errors = ((_b = (_a = error2.response) == null ? void 0 : _a.data) == null ? void 0 : _b.errors) ?? [];
         const isExisting = errors.some(
           ({ resource, code: code3 }) => resource === "Release" && code3 === "already_exists"
         );
@@ -43532,7 +43545,7 @@ async function createOrUpdateRelease({
 var BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
   const { body, discussion_url, draft, html_url, name, prerelease, tag_name } = release;
-  const hasTagger = tagger?.avatarUrl && tagger?.login;
+  const hasTagger = (tagger == null ? void 0 : tagger.avatarUrl) && (tagger == null ? void 0 : tagger.login);
   const rendered = toMarkdown(
     {
       type: "root",
@@ -43750,6 +43763,7 @@ function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
 // src/tags.js
 import { join as join2 } from "path";
 async function getTagger({ graphql, owner, repo, tag }) {
+  var _a, _b;
   const query = `
     query getTaggerByRef ($owner: String!, $repo: String!, $ref: String!) {
       repository (owner: $owner, name: $repo) {
@@ -43774,7 +43788,7 @@ async function getTagger({ graphql, owner, repo, tag }) {
     repo,
     ref: `refs/tags/${tag}`
   });
-  return result.repository.ref.target?.tagger?.user;
+  return (_b = (_a = result.repository.ref.target) == null ? void 0 : _a.tagger) == null ? void 0 : _b.user;
 }
 async function getTagHtmlUrl({ repos, owner, repo, tag }) {
   const { data } = await repos.get({ owner, repo });
