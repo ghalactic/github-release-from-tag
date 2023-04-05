@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: "16"
       - name: Install dependencies
-        run: make node_modules
+        run: make link-dependencies
       - name: Make
         run: make ci
         env:
