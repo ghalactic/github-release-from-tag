@@ -7,6 +7,15 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Improved
+
+- Added [`@octokit/plugin-retry`] to improve resilience against transient
+  network issues.
+
+[`@octokit/plugin-retry`]: https://github.com/octokit/plugin-retry.js
+
 ## [v3.1.4] - 2023-02-06
 
 [v3.1.4]: https://github.com/eloquent/github-release-action/releases/v3.1.4
