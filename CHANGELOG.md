@@ -7,7 +7,9 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
-## Unreleased
+## [v3.2.0] - 2023-04-06
+
+[v3.2.0]: https://github.com/eloquent/github-release-action/releases/v3.2.0
 
 ### Improved
 
