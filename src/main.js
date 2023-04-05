@@ -8,7 +8,6 @@ import {
   summary,
   warning,
 } from "@actions/core";
-import { context, getOctokit } from "@actions/github";
 import { modifyReleaseAssets } from "./asset.js";
 import { renderReleaseBody } from "./body.js";
 import { readConfig } from "./config/reading.js";
@@ -19,6 +18,7 @@ import {
   fetchTagAnnotation,
   readTagAnnotation,
 } from "./git.js";
+import { createOctokit } from "./octokit.js";
 import {
   ASSETS,
   RELEASE_BODY,
@@ -54,9 +54,7 @@ async function main() {
   const config = await readConfig({ getInput, group, info });
 
   const { env } = process;
-  const {
-    repo: { owner, repo },
-  } = context;
+  const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
 
   const isConfigured = await configureGit({ env, group, info });
 
@@ -136,7 +134,7 @@ async function main() {
     graphql,
     request,
     rest: { reactions, repos },
-  } = getOctokit(getInput("token"));
+  } = createOctokit(getInput("token"));
 
   const tagger = await getTagger({ graphql, owner, repo, tag });
 
