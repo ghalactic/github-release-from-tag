@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "es-jest": "^2.0.0",
-    "esbuild": "^0.17.15",
+    "esbuild": "^0.17.16",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "jest": "^29.0.1",
