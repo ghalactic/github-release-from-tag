@@ -26,7 +26,7 @@
     "jest-mock-process": "^2.0.0",
     "jest-puppeteer": "^8.0.5",
     "octokit": "^2.0.4",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.8",
     "prettier-plugin-organize-imports": "^3.0.1",
     "puppeteer": "^19.9.1",
     "typescript": "^5.0.4"
