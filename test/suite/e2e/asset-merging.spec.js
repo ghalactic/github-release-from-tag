@@ -2,7 +2,6 @@ import {
   buildBranchName,
   buildTagName,
   buildWorkflow,
-  describeOrSkip,
   SETUP_TIMEOUT,
 } from "../../helpers/e2e.js";
 import { readRunId } from "../../helpers/gha.js";
@@ -13,7 +12,7 @@ import {
   waitForCompletedTagWorkflowRun,
 } from "../../helpers/octokit.js";
 
-describeOrSkip("End-to-end tests", () => {
+describe("End-to-end tests", () => {
   describe("Asset merging", () => {
     const label = "asset-merging";
     const runId = readRunId();

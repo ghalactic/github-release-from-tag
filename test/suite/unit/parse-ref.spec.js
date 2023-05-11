@@ -1,4 +1,4 @@
-import { parseRef } from "../../src/ref.js";
+import { parseRef } from "../../../src/ref.js";
 
 const shorthandFixtures = {
   validStable: [

@@ -1,10 +1,10 @@
 import { dump } from "js-yaml";
 import { join } from "path";
-import { readConfig } from "../../src/config/reading.js";
-import { getInput, group, info } from "../mocks/actions-core.js";
+import { readConfig } from "../../../src/config/reading.js";
+import { getInput, group, info } from "../../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
-const fixturesPath = join(__dirname, "../fixture/config");
+const fixturesPath = join(__dirname, "../../fixture/config");
 
 describe("readConfig()", () => {
   let originalCwd;

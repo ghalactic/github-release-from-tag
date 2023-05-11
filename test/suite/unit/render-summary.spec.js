@@ -1,9 +1,9 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 import { join } from "path";
-import { renderSummary } from "../../src/summary";
+import { renderSummary } from "../../../src/summary";
 
-const fixturesPath = join(__dirname, "../fixture/summary");
+const fixturesPath = join(__dirname, "../../fixture/summary");
 
 describe("renderSummary()", () => {
   it.each`

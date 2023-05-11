@@ -1,7 +1,7 @@
 import { dump } from "js-yaml";
 import * as outputs from "../../src/outputs.js";
 
-const { GITHUB_ACTIONS, GITHUB_SHA } = process.env;
+const { GITHUB_SHA } = process.env;
 
 export const SETUP_TIMEOUT = 3 * 60 * 1000; // 3 minutes
 
@@ -62,6 +62,3 @@ export function buildWorkflow(branchName, publishOptions = {}, preSteps = []) {
     },
   });
 }
-
-export const describeOrSkip =
-  GITHUB_ACTIONS == "true" ? describe : describe.skip;

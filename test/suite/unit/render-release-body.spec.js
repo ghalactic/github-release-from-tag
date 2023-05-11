@@ -1,6 +1,6 @@
-import { renderReleaseBody } from "../../src/body.js";
-import { group, info, setOutput } from "../mocks/actions-core.js";
-import { createRepos } from "../mocks/oktokit-repos.js";
+import { renderReleaseBody } from "../../../src/body.js";
+import { group, info, setOutput } from "../../mocks/actions-core.js";
+import { createRepos } from "../../mocks/oktokit-repos.js";
 
 describe("renderReleaseBody()", () => {
   const repos = createRepos();

@@ -2,15 +2,15 @@ import { exec } from "@actions/exec";
 import { mkdtemp, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
-import { readTagAnnotation } from "../../src/git.js";
-import { group } from "../mocks/actions-core.js";
+import { determineTagType } from "../../../src/git.js";
+import { group } from "../../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
 
 const silent = true;
 const execGit = async (...args) => exec("git", args, { silent });
 
-describe("readTagAnnotation()", () => {
+describe("determineTagType()", () => {
   let originalCwd, mainPath;
 
   beforeEach(async () => {
@@ -51,18 +51,22 @@ describe("readTagAnnotation()", () => {
         mainPath,
         "tag",
         "--annotate",
-        "--message=subject-a\nsubject-b\n\nbody-a\nbody-b",
+        "--message=tag-message-a",
         "tag-a"
       );
+      await execGit("-C", mainPath, "tag", "--no-sign", "tag-b"); // signing would create annotated tags
 
       chdir(mainPath);
     });
 
-    it("should read the tag subject and body", async () => {
-      expect(await readTagAnnotation({ group, tag: "tag-a", silent })).toEqual([
+    it("should determine the tag type for defined tags", async () => {
+      expect(await determineTagType({ group, tag: "tag-a", silent })).toEqual([
         true,
-        "subject-a subject-b",
-        "body-a\nbody-b",
+        "tag",
+      ]);
+      expect(await determineTagType({ group, tag: "tag-b", silent })).toEqual([
+        true,
+        "commit",
       ]);
     });
   });
@@ -72,10 +76,9 @@ describe("readTagAnnotation()", () => {
       chdir(mainPath);
     });
 
-    it("should fail to read the tag subject and body", async () => {
-      expect(await readTagAnnotation({ group, tag: "tag-a", silent })).toEqual([
+    it("should fail to determine the tag type", async () => {
+      expect(await determineTagType({ group, tag: "tag-a", silent })).toEqual([
         false,
-        "",
         "",
       ]);
     });

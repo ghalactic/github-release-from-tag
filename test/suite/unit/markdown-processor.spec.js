@@ -1,8 +1,8 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { createProcessor } from "../../src/markdown.js";
+import { createProcessor } from "../../../src/markdown.js";
 
-const fixturesPath = join(__dirname, "../fixture/markdown-processor");
+const fixturesPath = join(__dirname, "../../fixture/markdown-processor");
 
 describe("Markdown processor", () => {
   const process = createProcessor();

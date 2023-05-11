@@ -1,4 +1,4 @@
-import { validateConfig } from "../../src/config/validation.js";
+import { validateConfig } from "../../../src/config/validation.js";
 
 const nonArrayData = [["a"], [null], [true], [false], [111], [{}]];
 
