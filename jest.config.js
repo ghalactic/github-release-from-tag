@@ -13,7 +13,7 @@ const common = {
 
 /** @type {import('jest').Config} */
 const config = {
-  collectCoverageFrom: ["src/**/*"],
+  collectCoverageFrom: ["<rootDir>/src/**", "!<rootDir>/src/type/**"],
   coverageDirectory: "artifacts/coverage/jest",
   projects: [
     {
