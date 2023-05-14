@@ -13371,7 +13371,7 @@ var require_codegen = __commonJS({
         return "{" + opts._n + super.render(opts) + "}" + opts._n;
       }
     };
-    var Root = class extends ParentNode {
+    var Root2 = class extends ParentNode {
     };
     var Else = class extends BlockNode {
     };
@@ -13560,7 +13560,7 @@ var require_codegen = __commonJS({
         this.opts = { ...opts, _n: opts.lines ? "\n" : "" };
         this._extScope = extScope;
         this._scope = new scope_1.Scope({ parent: extScope });
-        this._nodes = [new Root()];
+        this._nodes = [new Root2()];
       }
       toString() {
         return this._root.render(this.opts);
@@ -20809,18 +20809,18 @@ var require_is_plain_object = __commonJS({
   "node_modules/is-plain-object/dist/is-plain-object.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function isObject2(o) {
+    function isObject3(o) {
       return Object.prototype.toString.call(o) === "[object Object]";
     }
     function isPlainObject2(o) {
       var ctor, prot;
-      if (isObject2(o) === false)
+      if (isObject3(o) === false)
         return false;
       ctor = o.constructor;
       if (ctor === void 0)
         return true;
       prot = ctor.prototype;
-      if (isObject2(prot) === false)
+      if (isObject3(prot) === false)
         return false;
       if (prot.hasOwnProperty("isPrototypeOf") === false) {
         return false;
@@ -28587,10 +28587,10 @@ var require_dist_node13 = __commonJS({
   }
 });
 
-// src/main.js
+// src/main.ts
 var import_core = __toESM(require_core(), 1);
 
-// src/asset.js
+// src/asset.ts
 var import_glob = __toESM(require_glob(), 1);
 var import_mime_types = __toESM(require_mime_types(), 1);
 import { readFile, stat } from "fs/promises";
@@ -28638,7 +28638,7 @@ async function modifyReleaseAssets({
     );
     const isSuccess = uploadResult.isSuccess && updateResult.isSuccess;
     const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(
-      compareApiAsset
+      compareAsset
     );
     return [isSuccess, sortedAssets];
   });
@@ -28659,12 +28659,12 @@ async function modifyReleaseAssets({
   async function uploadAsset(desired) {
     const { upload_url: url } = release;
     const { label, name, path: path2 } = desired;
-    const contentType = (0, import_mime_types.lookup)(path2);
+    const contentType = (0, import_mime_types.lookup)(path2) || "application/octet-stream";
     const data = await readFile(path2);
     info2(
       `Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`
     );
-    const { data: apiAsset } = await request({
+    const { data: assetData } = await request({
       method: "POST",
       url,
       name,
@@ -28674,7 +28674,7 @@ async function modifyReleaseAssets({
         "Content-Type": contentType
       }
     });
-    const normalized = normalizeApiAsset(apiAsset);
+    const normalized = normalizeAssetData(assetData);
     info2(
       `Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(
         normalized,
@@ -28696,10 +28696,9 @@ async function findAssets(info2, warning2, assets2) {
       seen.add(lowercaseName);
       return true;
     }
+    const quotedName = JSON.stringify(name);
     warning2(
-      `Release asset ${JSON.stringify(
-        name
-      )} found multiple times. Only the first instance will be used.`
+      `Release asset ${quotedName} found multiple times. Only the first instance will be used.`
     );
     return false;
   });
@@ -28726,17 +28725,22 @@ async function findAsset(info2, asset) {
     );
   }
   if (assets2.length > 1)
-    return assets2.map(normalizeAsset);
+    return assets2.map(normalizeAssetConfig);
   const [{ path: path2 }] = assets2;
-  const { name, label } = asset;
-  return [normalizeAsset({ label, name, path: path2 })];
+  const { name, label, optional } = asset;
+  return [normalizeAssetConfig({ label, name, path: path2, optional })];
 }
-function normalizeAsset(asset) {
-  const { label = "", path: path2, name } = asset;
+function normalizeAssetConfig({
+  label = "",
+  path: path2,
+  name = "",
+  optional = false
+}) {
   return {
     label,
     name: name || basename(path2),
-    path: path2
+    path: path2,
+    optional
   };
 }
 function diffAssets(existingAssets, desiredAssets) {
@@ -28763,14 +28767,14 @@ function analyzeResults(results) {
   const assets2 = [];
   let failureCount = 0;
   const failureReasons = [];
-  for (const { status, value, reason } of results) {
-    if (status === "fulfilled") {
+  for (const result of results) {
+    if (result.status === "fulfilled") {
       ++successCount;
-      assets2.push(value);
+      assets2.push(result.value);
     } else {
       isSuccess = false;
       ++failureCount;
-      failureReasons.push(reason);
+      failureReasons.push(result.reason);
     }
   }
   return {
@@ -28781,19 +28785,19 @@ function analyzeResults(results) {
     failureReasons
   };
 }
-async function logResults(info2, error2, result, messageTemplate) {
-  const { successCount, failureCount, failureReasons } = result;
-  const message = messageTemplate.replace("{successCount}", successCount).replace("{failureCount}", failureCount);
+async function logResults(info2, error2, resultAnalysis, messageTemplate) {
+  const { successCount, failureCount, failureReasons } = resultAnalysis;
+  const message = messageTemplate.replace("{successCount}", successCount.toString()).replace("{failureCount}", failureCount.toString());
   if (failureCount > 0) {
     info2(`${message}:`);
     for (const reason of failureReasons)
-      error2(reason.stack);
+      error2(reason.stack ?? "");
     info2("");
   } else {
     info2(message);
   }
 }
-function normalizeApiAsset(apiAsset) {
+function normalizeAssetData(data) {
   const {
     url: apiUrl,
     browser_download_url: downloadUrl,
@@ -28807,7 +28811,7 @@ function normalizeApiAsset(apiAsset) {
     download_count: downloadCount,
     created_at: createdAt,
     updated_at: updatedAt
-  } = apiAsset;
+  } = data;
   return {
     apiUrl,
     downloadUrl,
@@ -28823,9 +28827,30 @@ function normalizeApiAsset(apiAsset) {
     updatedAt
   };
 }
-function compareApiAsset(a, b) {
+function compareAsset(a, b) {
   return a.name.localeCompare(b.name);
 }
+
+// src/constant/output.ts
+var ASSETS = "assets";
+var DISCUSSION_ID = "discussionId";
+var DISCUSSION_NUMBER = "discussionNumber";
+var DISCUSSION_URL = "discussionUrl";
+var GENERATED_RELEASE_NOTES = "generatedReleaseNotes";
+var RELEASE_BODY = "releaseBody";
+var RELEASE_ID = "releaseId";
+var RELEASE_NAME = "releaseName";
+var RELEASE_UPLOAD_URL = "releaseUploadUrl";
+var RELEASE_URL = "releaseUrl";
+var RELEASE_WAS_CREATED = "releaseWasCreated";
+var TAG_BODY = "tagBody";
+var TAG_BODY_RENDERED = "tagBodyRendered";
+var TAGGER_AVATAR_URL = "taggerAvatarUrl";
+var TAGGER_LOGIN = "taggerLogin";
+var TAG_IS_SEM_VER = "tagIsSemVer";
+var TAG_IS_STABLE = "tagIsStable";
+var TAG_NAME = "tagName";
+var TAG_SUBJECT = "tagSubject";
 
 // node_modules/bail/index.js
 function bail(error2) {
@@ -40202,8 +40227,15 @@ function remarkGfm(options = {}) {
   }
 }
 
-// src/markdown.js
+// src/markdown.ts
 var SOFT_BREAK_PATTERN = /$[^$]/gms;
+var stripSoftBreaks = () => {
+  return (tree) => {
+    visit(tree, "text", (node2) => {
+      node2.value = node2.value.replace(SOFT_BREAK_PATTERN, " ");
+    });
+  };
+};
 function createProcessor() {
   const createRemark = remark().use(remarkGfm).use(stripSoftBreaks).freeze();
   return async function process2(original) {
@@ -40211,36 +40243,8 @@ function createProcessor() {
     return String(await processor.process(original));
   };
 }
-function stripSoftBreaks() {
-  return (tree) => {
-    visit(tree, "text", (node2) => {
-      node2.value = node2.value.replace(SOFT_BREAK_PATTERN, " ");
-    });
-  };
-}
 
-// src/outputs.js
-var ASSETS = "assets";
-var DISCUSSION_ID = "discussionId";
-var DISCUSSION_NUMBER = "discussionNumber";
-var DISCUSSION_URL = "discussionUrl";
-var GENERATED_RELEASE_NOTES = "generatedReleaseNotes";
-var RELEASE_BODY = "releaseBody";
-var RELEASE_ID = "releaseId";
-var RELEASE_NAME = "releaseName";
-var RELEASE_UPLOAD_URL = "releaseUploadUrl";
-var RELEASE_URL = "releaseUrl";
-var RELEASE_WAS_CREATED = "releaseWasCreated";
-var TAG_BODY = "tagBody";
-var TAG_BODY_RENDERED = "tagBodyRendered";
-var TAGGER_AVATAR_URL = "taggerAvatarUrl";
-var TAGGER_LOGIN = "taggerLogin";
-var TAG_IS_SEM_VER = "tagIsSemVer";
-var TAG_IS_STABLE = "tagIsStable";
-var TAG_NAME = "tagName";
-var TAG_SUBJECT = "tagSubject";
-
-// src/body.js
+// src/body.ts
 async function renderReleaseBody({
   config: config2,
   env,
@@ -40289,7 +40293,7 @@ async function renderReleaseBody({
   return parts.join("\n");
 }
 
-// src/config/reading.js
+// src/config/reading.ts
 import { readFile as readFile2 } from "fs/promises";
 
 // node_modules/js-yaml/dist/js-yaml.mjs
@@ -42949,12 +42953,60 @@ var safeLoad = renamed("safeLoad", "load");
 var safeLoadAll = renamed("safeLoadAll", "loadAll");
 var safeDump = renamed("safeDump", "dump");
 
-// src/config/validation.js
+// src/constant/reaction.ts
+var THUMBS_UP = "+1";
+var THUMBS_DOWN = "-1";
+var LAUGH = "laugh";
+var HOORAY = "hooray";
+var CONFUSED = "confused";
+var HEART = "heart";
+var ROCKET = "rocket";
+var EYES = "eyes";
+var DISCUSSION_REACTIONS = [
+  THUMBS_UP,
+  THUMBS_DOWN,
+  LAUGH,
+  HOORAY,
+  CONFUSED,
+  HEART,
+  ROCKET,
+  EYES
+];
+var RELEASE_REACTIONS = [
+  THUMBS_UP,
+  LAUGH,
+  HOORAY,
+  HEART,
+  ROCKET,
+  EYES
+];
+var REACTION_NAMES = {
+  [THUMBS_UP]: "THUMBS_UP",
+  [THUMBS_DOWN]: "THUMBS_DOWN",
+  [LAUGH]: "LAUGH",
+  [HOORAY]: "HOORAY",
+  [CONFUSED]: "CONFUSED",
+  [HEART]: "HEART",
+  [ROCKET]: "ROCKET",
+  [EYES]: "EYES"
+};
+
+// src/guard.ts
+function isError(value) {
+  return value instanceof Error;
+}
+function isObject2(value) {
+  return typeof value === "object" && value != null;
+}
+
+// src/config/validation.ts
 var import_ajv = __toESM(require_ajv(), 1);
 
-// src/config/schema.js
+// src/constant/schema-id.ts
 var CONFIG = "https://lqnt.co/github-release-action/config.schema.json";
 var ASSETS2 = "https://lqnt.co/github-release-action/assets.schema.json";
+
+// src/config/schema.ts
 var config = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: CONFIG,
@@ -42985,16 +43037,7 @@ var config = {
           items: {
             description: "A reaction to create for discussions linked to releases.",
             type: "string",
-            enum: [
-              "+1",
-              "-1",
-              "laugh",
-              "hooray",
-              "confused",
-              "heart",
-              "rocket",
-              "eyes"
-            ]
+            enum: DISCUSSION_REACTIONS
           }
         }
       }
@@ -43020,7 +43063,7 @@ var config = {
       items: {
         description: "A reaction to create for releases.",
         type: "string",
-        enum: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"]
+        enum: RELEASE_REACTIONS
       }
     },
     summary: {
@@ -43074,27 +43117,41 @@ var assets = {
   }
 };
 
-// src/config/validation.js
-var ajv = new import_ajv.default({
+// src/config/validation.ts
+var Ajv = import_ajv.default.default;
+var ajv = new Ajv({
   schemas: [assets, config],
   allErrors: true,
   useDefaults: true
 });
-var validateConfig = createValidate(CONFIG, "release configuration");
+var validateConfig = createValidate(
+  CONFIG,
+  "release configuration"
+);
 var validateAssets = createValidate(
   ASSETS2,
   "release assets configuration"
 );
-function createValidate(schema2, label) {
+var ValidateError = class extends Error {
+  errors;
+  constructor(message, errors) {
+    super(message);
+    this.errors = errors;
+  }
+};
+function createValidate(schemaId, label) {
   return function validate2(value) {
-    const validator = ajv.getSchema(schema2);
-    const isValid = validator(value);
-    if (isValid)
+    const validator = ajv.getSchema(schemaId);
+    if (!validator)
+      throw new Error(`Undefined schema ${schemaId}`);
+    if (validator(value))
       return value;
-    const { errors } = validator;
-    const error2 = new Error(`Invalid ${label}:
-${renderErrors(errors)}`);
-    error2.errors = errors;
+    const errors = validator.errors ?? [];
+    const error2 = new ValidateError(
+      `Invalid ${label}:
+${renderErrors(errors)}`,
+      errors
+    );
     throw error2;
   };
 }
@@ -43108,23 +43165,34 @@ function renderError(error2) {
   return `${message}${subject}`;
 }
 
-// src/config/reading.js
-async function readConfig({ getInput: getInput2, group: group2, info: info2 }) {
+// src/config/reading.ts
+async function readConfig({
+  getInput: getInput2,
+  group: group2,
+  info: info2
+}) {
   return group2("Reading release configuration", async () => {
-    const [hasYaml, yaml] = await readConfigFile();
-    if (!hasYaml)
+    const yaml = await readConfigFile();
+    if (typeof yaml === "undefined") {
       info2("No configuration found at .github/release.eloquent.yml");
-    const base2 = parseConfig(hasYaml, yaml);
-    const [overrides, hasOverrides] = getConfigOverrides(getInput2, base2);
-    if (hasOverrides) {
+    }
+    const base2 = parseConfig(yaml);
+    const overrides = getConfigOverrides(getInput2, base2);
+    let discussion, summary2;
+    if (overrides) {
       info2(`Base configuration: ${JSON.stringify(base2, null, 2)}`);
       info2(`Configuration overrides: ${JSON.stringify(overrides, null, 2)}`);
+      discussion = { ...base2.discussion, ...overrides.discussion };
+      summary2 = { ...base2.summary, ...overrides.summary };
+    } else {
+      discussion = base2.discussion;
+      summary2 = base2.summary;
     }
     const effective = {
       ...base2,
       ...overrides,
-      discussion: { ...base2.discussion, ...overrides.discussion },
-      summary: { ...base2.summary, ...overrides.summary }
+      discussion,
+      summary: summary2
     };
     info2(`Effective configuration: ${JSON.stringify(effective, null, 2)}`);
     return effective;
@@ -43135,21 +43203,21 @@ async function readConfigFile() {
   try {
     data = await readFile2(".github/release.eloquent.yml");
   } catch (error2) {
-    if (error2.code !== "ENOENT")
+    if (!isFileNotFoundError(error2))
       throw error2;
-    return [false, void 0];
+    return void 0;
   }
-  const yaml = data.toString().trim();
-  return [yaml.length > 0, yaml];
+  return data.toString().trim();
 }
 function getConfigOverrides(getInput2, base2) {
   const discussionOverrides = {};
   const discussionCategory = getInput2("discussionCategory");
-  const discussionReactions = getInput2("discussionReactions");
   if (discussionCategory)
     discussionOverrides.category = discussionCategory;
-  if (discussionReactions)
-    discussionOverrides.reactions = discussionReactions.split(",");
+  const discussionReactions = getInput2("discussionReactions");
+  if (discussionReactions) {
+    discussionOverrides.reactions = parseInputDiscussionReactions(discussionReactions);
+  }
   const summaryOverrides = {};
   const summaryEnabled = getInput2("summaryEnabled");
   if (summaryEnabled)
@@ -43160,30 +43228,34 @@ function getConfigOverrides(getInput2, base2) {
   const prerelease = getInput2("prerelease");
   const reactions = getInput2("reactions");
   const overrides = {};
-  if (inputAssets.length > 0)
+  if (inputAssets.length > 0) {
     overrides.assets = [...base2.assets, ...inputAssets];
-  if (Object.keys(discussionOverrides).length > 0)
+  }
+  if (Object.keys(discussionOverrides).length > 0) {
     overrides.discussion = discussionOverrides;
-  if (Object.keys(summaryOverrides).length > 0)
+  }
+  if (Object.keys(summaryOverrides).length > 0) {
     overrides.summary = summaryOverrides;
+  }
   if (draft)
     overrides.draft = draft === "true";
-  if (generateReleaseNotes)
+  if (generateReleaseNotes) {
     overrides.generateReleaseNotes = generateReleaseNotes === "true";
+  }
   if (prerelease)
     overrides.prerelease = prerelease === "true";
   if (reactions)
-    overrides.reactions = reactions.split(",");
-  return [overrides, Object.keys(overrides).length > 0];
+    overrides.reactions = parseReleaseReactions(reactions);
+  return Object.keys(overrides).length > 0 ? overrides : void 0;
 }
-function parseConfig(hasYaml, yaml) {
-  if (!hasYaml)
+function parseConfig(yaml) {
+  if (!yaml)
     return validateConfig({});
   let parsed;
   try {
     parsed = load(yaml);
   } catch (error2) {
-    const message = JSON.stringify(error2.message);
+    const message = isError(error2) ? JSON.stringify(error2.message) : "unknown cause";
     const original = JSON.stringify(yaml);
     throw new Error(
       `Parsing of release configuration failed with ${message}. Provided value: ${original}`
@@ -43199,7 +43271,7 @@ function parseAssets(getInput2) {
   try {
     parsed = load(yaml);
   } catch (error2) {
-    const message = JSON.stringify(error2.message);
+    const message = isError(error2) ? JSON.stringify(error2.message) : "unknown cause";
     const original = JSON.stringify(yaml);
     throw new Error(
       `Parsing of assets action input failed with ${message}. Provided value: ${original}`
@@ -43208,13 +43280,58 @@ function parseAssets(getInput2) {
   try {
     return validateAssets(parsed);
   } catch (error2) {
+    if (!isError(error2))
+      throw error2;
     throw new Error(`Validation of assets action input failed: ${error2.stack}`);
   }
 }
+function parseInputDiscussionReactions(reactionList) {
+  const reactions = [];
+  for (const reaction of reactionList.split(",")) {
+    if (!isDiscussionReaction(reaction)) {
+      const quotedReaction = JSON.stringify(reaction);
+      throw new Error(
+        `Validation of discussionReactions action input failed. Invalid reaction ${quotedReaction}.`
+      );
+    }
+    reactions.push(reaction);
+  }
+  return reactions;
+}
+function parseReleaseReactions(reactionList) {
+  const reactions = [];
+  for (const reaction of reactionList.split(",")) {
+    if (!isReleaseReaction(reaction)) {
+      const quotedReaction = JSON.stringify(reaction);
+      throw new Error(
+        `Validation of reactions action input failed. Invalid reaction ${quotedReaction}.`
+      );
+    }
+    reactions.push(reaction);
+  }
+  return reactions;
+}
+function isDiscussionReaction(reaction) {
+  return DISCUSSION_REACTIONS.includes(reaction);
+}
+function isFileNotFoundError(value) {
+  if (!isObject2(value))
+    return false;
+  const code3 = value.code;
+  return code3 === "ENOENT";
+}
+function isReleaseReaction(reaction) {
+  return RELEASE_REACTIONS.includes(reaction);
+}
 
-// src/git.js
+// src/git.ts
 var import_exec = __toESM(require_exec(), 1);
-async function configureGit({ env, group: group2, info: info2, silent = false }) {
+async function configureGit({
+  env,
+  group: group2,
+  info: info2,
+  silent = false
+}) {
   return group2("Marking the GitHub workspace as a safe directory", async () => {
     const { GITHUB_WORKSPACE = "" } = env;
     if (GITHUB_WORKSPACE === "") {
@@ -43229,7 +43346,11 @@ async function configureGit({ env, group: group2, info: info2, silent = false })
     return exitCode === 0;
   });
 }
-async function determineRef({ group: group2, info: info2, silent = false }) {
+async function determineRef({
+  group: group2,
+  info: info2,
+  silent = false
+}) {
   return group2("Determining the current Git ref", async () => {
     const { stdout } = await (0, import_exec.getExecOutput)(
       "git",
@@ -43241,7 +43362,11 @@ async function determineRef({ group: group2, info: info2, silent = false }) {
     return ref;
   });
 }
-async function determineTagType({ group: group2, silent = false, tag }) {
+async function determineTagType({
+  group: group2,
+  silent = false,
+  tag
+}) {
   try {
     const { stdout: type2 } = await group2(
       "Determining the tag type",
@@ -43254,7 +43379,11 @@ async function determineTagType({ group: group2, silent = false, tag }) {
     return [false, ""];
   }
 }
-async function fetchTagAnnotation({ group: group2, silent = false, tag }) {
+async function fetchTagAnnotation({
+  group: group2,
+  silent = false,
+  tag
+}) {
   try {
     const exitCode = await group2(
       "Fetching the tag annotation",
@@ -43275,7 +43404,11 @@ async function fetchTagAnnotation({ group: group2, silent = false, tag }) {
     return false;
   }
 }
-async function readTagAnnotation({ group: group2, silent = false, tag }) {
+async function readTagAnnotation({
+  group: group2,
+  silent = false,
+  tag
+}) {
   try {
     const { stdout: tagSubject } = await group2(
       "Reading the tag annotation subject",
@@ -43303,15 +43436,22 @@ async function readTagAnnotation({ group: group2, silent = false, tag }) {
   }
 }
 
-// src/octokit.js
+// src/octokit.ts
 var import_action = __toESM(require_dist_node12(), 1);
 var import_plugin_retry = __toESM(require_dist_node13(), 1);
 function createOctokit(token) {
   const CustomOctokit = import_action.Octokit.plugin(import_plugin_retry.retry);
   return new CustomOctokit({ auth: token });
 }
+function isRequestError(value) {
+  if (!isObject2(value))
+    return false;
+  const response = value.response;
+  const data = response == null ? void 0 : response.data;
+  return typeof data === "object" && data != null;
+}
 
-// src/discussion.js
+// src/discussion.ts
 async function getDiscussionIdByUrl({
   graphql,
   owner,
@@ -43347,17 +43487,7 @@ function getDiscussionNumberByUrl(url) {
   return parseInt(numberString, 10);
 }
 
-// src/reaction.js
-var GRAPHQL_REACTION_CONTENT = {
-  "+1": "THUMBS_UP",
-  "-1": "THUMBS_DOWN",
-  laugh: "LAUGH",
-  hooray: "HOORAY",
-  confused: "CONFUSED",
-  heart: "HEART",
-  rocket: "ROCKET",
-  eyes: "EYES"
-};
+// src/reaction.ts
 async function createDiscussionReactions({
   config: config2,
   graphql,
@@ -43382,7 +43512,7 @@ async function createDiscussionReactions({
       owner,
       repo,
       setOutput: setOutput2,
-      url: release.discussion_url
+      url: release.discussion_url ?? ""
     });
     await Promise.all(config2.discussion.reactions.map(createReaction));
     async function createReaction(content3) {
@@ -43396,7 +43526,7 @@ async function createDiscussionReactions({
       await graphql({
         query,
         discussionId,
-        content: GRAPHQL_REACTION_CONTENT[content3]
+        content: REACTION_NAMES[content3]
       });
       info2(`Created ${content3} reaction`);
     }
@@ -43429,7 +43559,7 @@ async function createReleaseReactions({
   });
 }
 
-// src/ref.js
+// src/ref.ts
 var SHORTHAND_PATTERN = /^v?([1-9]\d*)(\.\d+)?$/;
 var SEMVER_PATTERN = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
 function parseRef(ref) {
@@ -43438,7 +43568,8 @@ function parseRef(ref) {
     return {
       isTag: false,
       isSemVer: false,
-      isStable: false
+      isStable: false,
+      tag: void 0
     };
   }
   const [
@@ -43479,7 +43610,7 @@ function parseRef(ref) {
   };
 }
 
-// src/release.js
+// src/release.ts
 async function createOrUpdateRelease({
   config: config2,
   group: group2,
@@ -43505,13 +43636,14 @@ async function createOrUpdateRelease({
   const createdRelease = await group2(
     "Attempting to create a release",
     async () => {
-      var _a, _b;
       try {
         const { data } = await repos.createRelease(params);
         info2(JSON.stringify(data, null, 2));
         return data;
       } catch (error2) {
-        const errors = ((_b = (_a = error2.response) == null ? void 0 : _a.data) == null ? void 0 : _b.errors) ?? [];
+        if (!isRequestError(error2))
+          throw error2;
+        const errors = error2.response.data.errors ?? [];
         const isExisting = errors.some(
           ({ resource, code: code3 }) => resource === "Release" && code3 === "already_exists"
         );
@@ -43547,10 +43679,17 @@ async function createOrUpdateRelease({
   return [updatedRelease, false];
 }
 
-// src/summary.js
+// src/summary.ts
 var BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
-function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
-  const { body, discussion_url, draft, html_url, name, prerelease, tag_name } = release;
+function renderSummary({
+  release,
+  tagger,
+  tagHtmlUrl,
+  wasCreated
+}) {
+  const { discussion_url, draft, html_url, prerelease, tag_name } = release;
+  const body = release.body ?? "";
+  const name = release.name ?? "";
   const hasTagger = (tagger == null ? void 0 : tagger.avatarUrl) && (tagger == null ? void 0 : tagger.login);
   const rendered = toMarkdown(
     {
@@ -43754,21 +43893,30 @@ function renderSummary({ release, tagger, tagHtmlUrl, wasCreated }) {
             children: heading2
           }))
         },
-        ...rows.map((row) => ({
-          type: "tableRow",
-          children: row.map((cell) => ({
-            type: "tableCell",
-            children: cell
-          }))
-        }))
+        ...rows.map(
+          (row) => ({
+            type: "tableRow",
+            children: row.map(
+              (children) => ({
+                type: "tableCell",
+                children
+              })
+            )
+          })
+        )
       ]
     };
   }
 }
 
-// src/tags.js
+// src/tags.ts
 import { join as join2 } from "path";
-async function getTagger({ graphql, owner, repo, tag }) {
+async function getTagger({
+  graphql,
+  owner,
+  repo,
+  tag
+}) {
   var _a, _b;
   const query = `
     query getTaggerByRef ($owner: String!, $repo: String!, $ref: String!) {
@@ -43796,23 +43944,28 @@ async function getTagger({ graphql, owner, repo, tag }) {
   });
   return (_b = (_a = result.repository.ref.target) == null ? void 0 : _a.tagger) == null ? void 0 : _b.user;
 }
-async function getTagHtmlUrl({ repos, owner, repo, tag }) {
+async function getTagHtmlUrl({
+  repos,
+  owner,
+  repo,
+  tag
+}) {
   const { data } = await repos.get({ owner, repo });
   const url = new URL(data.html_url);
   url.pathname = join2(url.pathname, "tree", tag);
   return url.toString();
 }
 
-// src/main.js
-try {
-  await main();
-} catch (e) {
-  (0, import_core.setFailed)(e.stack);
-}
+// src/main.ts
+main().catch((error2) => {
+  const stack = isError(error2) ? error2.stack : void 0;
+  (0, import_core.setFailed)(stack ?? "unknown cause");
+});
 async function main() {
   const config2 = await readConfig({ getInput: import_core.getInput, group: import_core.group, info: import_core.info });
   const { env } = process;
-  const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
+  const { GITHUB_REPOSITORY = "" } = env;
+  const [owner, repo] = GITHUB_REPOSITORY.split("/");
   const isConfigured = await configureGit({ env, group: import_core.group, info: import_core.info });
   if (!isConfigured) {
     (0, import_core.setFailed)("Unable to configure Git");
@@ -43902,9 +44055,7 @@ async function main() {
   (0, import_core.setOutput)(RELEASE_UPLOAD_URL, release.upload_url);
   (0, import_core.setOutput)(RELEASE_URL, release.html_url);
   (0, import_core.setOutput)(RELEASE_WAS_CREATED, wasCreated ? "true" : "");
-  (0, import_core.info)(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`, {
-    title: `Released - ${tagSubject}`
-  });
+  (0, import_core.info)(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`);
   const [assetResult, assets2] = await modifyReleaseAssets({
     config: config2,
     error: import_core.error,
