@@ -24,7 +24,7 @@
     "@types/mdast": "^3.0.11",
     "@types/mime-types": "^2.1.1",
     "es-jest": "^2.0.0",
-    "esbuild": "^0.17.18",
+    "esbuild": "^0.17.19",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "jest": "^29.0.1",
