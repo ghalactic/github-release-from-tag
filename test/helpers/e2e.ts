@@ -47,8 +47,12 @@ export function buildWorkflow(
     },
     jobs: {
       publish: {
-        "runs-on": "ubuntu-latest",
         name: "Publish release",
+        "runs-on": "ubuntu-latest",
+        permissions: {
+          contents: "write",
+          discussions: "write",
+        },
         steps: [
           {
             name: "Checkout",

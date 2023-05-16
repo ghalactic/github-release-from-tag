@@ -55,8 +55,10 @@ on:
       - "*"
 jobs:
   publish:
-    runs-on: ubuntu-latest
     name: Publish release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -92,8 +94,10 @@ on:
         required: true
 jobs:
   publish:
-    runs-on: ubuntu-latest
     name: Publish release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -104,10 +108,6 @@ jobs:
 ```
 
 ### GitHub token
-
-Generally speaking, **you do not need to supply this action with a custom GitHub
-token** unless you run into some kind of permissions issue, which should not
-happen under normal operation.
 
 By default, this action uses [automatic token authentication] to obtain the
 token used to manage releases. If for some reason you want to supply a different
@@ -122,6 +122,24 @@ token, you can do so via [action inputs]:
   with:
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 ```
+
+The token requires the following permissions:
+
+- **Write** access to **repository contents**, in order to create releases.
+- **Write** access to **discussions**, in order to create [release discussions].
+
+[release discussions]: #release-discussions
+
+For information on how to grant these permissions, see [Modifying the
+permissions for the `GITHUB_TOKEN`].
+
+[modifying the permissions for the `github_token`]: https://docs.github.com/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+
+> **Note:** In February 2023, the default token permissions for new repos
+> [changed to be read-only]. If your repo was created before this time, the
+> default token would have been pre-configured with write access.
+
+[changed to be read-only]: https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
 
 ### Release stability
 
