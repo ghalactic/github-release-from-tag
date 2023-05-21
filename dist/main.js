@@ -24302,42 +24302,76 @@ var require_dist_node4 = __commonJS({
 
 // node_modules/@octokit/request/dist-node/index.js
 var require_dist_node5 = __commonJS({
-  "node_modules/@octokit/request/dist-node/index.js"(exports) {
+  "node_modules/@octokit/request/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var endpoint = require_dist_node2();
-    var universalUserAgent = require_dist_node();
-    var isPlainObject2 = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib3());
-    var requestError = require_dist_node4();
-    var VERSION = "6.2.3";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      // If the importer is in node compatibility mode or this is not an ESM
+      // file that has been converted to a CommonJS file using a Babel-
+      // compatible transform (i.e. "__esModule" has not been set), then set
+      // "default" to the CommonJS "module.exports" for node compatibility.
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      request: () => request
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_endpoint = require_dist_node2();
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "6.2.5";
+    var import_is_plain_object = require_is_plain_object();
+    var import_node_fetch = __toESM2(require_lib3());
+    var import_request_error = require_dist_node4();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
     function fetchWrapper(requestOptions) {
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if (isPlainObject2.isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
+      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
       }
       let headers = {};
       let status;
       let url;
       const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || /* istanbul ignore next */
-      nodeFetch;
-      return fetch(requestOptions.url, Object.assign(
-        {
-          method: requestOptions.method,
-          body: requestOptions.body,
-          headers: requestOptions.headers,
-          redirect: requestOptions.redirect
-        },
-        // `requestOptions.request.agent` type is incompatible
-        // see https://github.com/octokit/types.ts/pull/264
-        requestOptions.request
-      )).then(async (response) => {
+      import_node_fetch.default;
+      return fetch(
+        requestOptions.url,
+        Object.assign(
+          {
+            method: requestOptions.method,
+            body: requestOptions.body,
+            headers: requestOptions.headers,
+            redirect: requestOptions.redirect,
+            // duplex must be set if request.body is ReadableStream or Async Iterables.
+            // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
+            ...requestOptions.body && { duplex: "half" }
+          },
+          // `requestOptions.request.agent` type is incompatible
+          // see https://github.com/octokit/types.ts/pull/264
+          requestOptions.request
+        )
+      ).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -24346,7 +24380,9 @@ var require_dist_node5 = __commonJS({
         if ("deprecation" in headers) {
           const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
           const deprecationLink = matches && matches.pop();
-          log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
+          log.warn(
+            `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
+          );
         }
         if (status === 204 || status === 205) {
           return;
@@ -24355,7 +24391,7 @@ var require_dist_node5 = __commonJS({
           if (status < 400) {
             return;
           }
-          throw new requestError.RequestError(response.statusText, status, {
+          throw new import_request_error.RequestError(response.statusText, status, {
             response: {
               url,
               status,
@@ -24366,7 +24402,7 @@ var require_dist_node5 = __commonJS({
           });
         }
         if (status === 304) {
-          throw new requestError.RequestError("Not modified", status, {
+          throw new import_request_error.RequestError("Not modified", status, {
             response: {
               url,
               status,
@@ -24378,7 +24414,7 @@ var require_dist_node5 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
+          const error2 = new import_request_error.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -24398,11 +24434,11 @@ var require_dist_node5 = __commonJS({
           data
         };
       }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
+        if (error2 instanceof import_request_error.RequestError)
           throw error2;
         else if (error2.name === "AbortError")
           throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
+        throw new import_request_error.RequestError(error2.message, 500, {
           request: requestOptions
         });
       });
@@ -24436,7 +24472,9 @@ var require_dist_node5 = __commonJS({
           return fetchWrapper(endpoint2.parse(endpointOptions));
         }
         const request2 = (route2, parameters2) => {
-          return fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
+          return fetchWrapper(
+            endpoint2.parse(endpoint2.merge(route2, parameters2))
+          );
         };
         Object.assign(request2, {
           endpoint: endpoint2,
@@ -24449,23 +24487,45 @@ var require_dist_node5 = __commonJS({
         defaults: withDefaults.bind(null, endpoint2)
       });
     }
-    var request = withDefaults(endpoint.endpoint, {
+    var request = withDefaults(import_endpoint.endpoint, {
       headers: {
-        "user-agent": `octokit-request.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+        "user-agent": `octokit-request.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
       }
     });
-    exports.request = request;
   }
 });
 
 // node_modules/@octokit/graphql/dist-node/index.js
 var require_dist_node6 = __commonJS({
-  "node_modules/@octokit/graphql/dist-node/index.js"(exports) {
+  "node_modules/@octokit/graphql/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var request = require_dist_node5();
-    var universalUserAgent = require_dist_node();
-    var VERSION = "5.0.5";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      GraphqlResponseError: () => GraphqlResponseError,
+      graphql: () => graphql2,
+      withCustomRequest: () => withCustomRequest
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_request = require_dist_node5();
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "5.0.6";
     function _buildMessageForResponseErrors(data) {
       return `Request failed due to following response errors:
 ` + data.errors.map((e) => ` - ${e.message}`).join("\n");
@@ -24484,24 +24544,36 @@ var require_dist_node6 = __commonJS({
         }
       }
     };
-    var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
+    var NON_VARIABLE_OPTIONS = [
+      "method",
+      "baseUrl",
+      "url",
+      "headers",
+      "request",
+      "query",
+      "mediaType"
+    ];
     var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
     var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
     function graphql(request2, query, options) {
       if (options) {
         if (typeof query === "string" && "query" in options) {
-          return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
+          return Promise.reject(
+            new Error(`[@octokit/graphql] "query" cannot be used as variable name`)
+          );
         }
         for (const key in options) {
           if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
             continue;
-          return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
+          return Promise.reject(
+            new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`)
+          );
         }
       }
-      const parsedOptions = typeof query === "string" ? Object.assign({
-        query
-      }, options) : query;
-      const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
+      const parsedOptions = typeof query === "string" ? Object.assign({ query }, options) : query;
+      const requestOptions = Object.keys(
+        parsedOptions
+      ).reduce((result, key) => {
         if (NON_VARIABLE_OPTIONS.includes(key)) {
           result[key] = parsedOptions[key];
           return result;
@@ -24522,7 +24594,11 @@ var require_dist_node6 = __commonJS({
           for (const key of Object.keys(response.headers)) {
             headers[key] = response.headers[key];
           }
-          throw new GraphqlResponseError(requestOptions, headers, response.data);
+          throw new GraphqlResponseError(
+            requestOptions,
+            headers,
+            response.data
+          );
         }
         return response.data.data;
       });
@@ -24537,9 +24613,9 @@ var require_dist_node6 = __commonJS({
         endpoint: newRequest.endpoint
       });
     }
-    var graphql$1 = withDefaults(request.request, {
+    var graphql2 = withDefaults(import_request.request, {
       headers: {
-        "user-agent": `octokit-graphql.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+        "user-agent": `octokit-graphql.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
       },
       method: "POST",
       url: "/graphql"
@@ -24550,9 +24626,6 @@ var require_dist_node6 = __commonJS({
         url: "/graphql"
       });
     }
-    exports.GraphqlResponseError = GraphqlResponseError;
-    exports.graphql = graphql$1;
-    exports.withCustomRequest = withCustomRequest;
   }
 });
 
@@ -24604,85 +24677,37 @@ var require_dist_node7 = __commonJS({
 
 // node_modules/@octokit/core/dist-node/index.js
 var require_dist_node8 = __commonJS({
-  "node_modules/@octokit/core/dist-node/index.js"(exports) {
+  "node_modules/@octokit/core/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var universalUserAgent = require_dist_node();
-    var beforeAfterHook = require_before_after_hook();
-    var request = require_dist_node5();
-    var graphql = require_dist_node6();
-    var authToken = require_dist_node7();
-    var VERSION = "4.2.0";
-    var Octokit2 = class {
-      constructor(options = {}) {
-        const hook = new beforeAfterHook.Collection();
-        const requestDefaults = {
-          baseUrl: request.request.endpoint.DEFAULTS.baseUrl,
-          headers: {},
-          request: Object.assign({}, options.request, {
-            // @ts-ignore internal usage only, no need to type
-            hook: hook.bind(null, "request")
-          }),
-          mediaType: {
-            previews: [],
-            format: ""
-          }
-        };
-        requestDefaults.headers["user-agent"] = [options.userAgent, `octokit-core.js/${VERSION} ${universalUserAgent.getUserAgent()}`].filter(Boolean).join(" ");
-        if (options.baseUrl) {
-          requestDefaults.baseUrl = options.baseUrl;
-        }
-        if (options.previews) {
-          requestDefaults.mediaType.previews = options.previews;
-        }
-        if (options.timeZone) {
-          requestDefaults.headers["time-zone"] = options.timeZone;
-        }
-        this.request = request.request.defaults(requestDefaults);
-        this.graphql = graphql.withCustomRequest(this.request).defaults(requestDefaults);
-        this.log = Object.assign({
-          debug: () => {
-          },
-          info: () => {
-          },
-          warn: console.warn.bind(console),
-          error: console.error.bind(console)
-        }, options.log);
-        this.hook = hook;
-        if (!options.authStrategy) {
-          if (!options.auth) {
-            this.auth = async () => ({
-              type: "unauthenticated"
-            });
-          } else {
-            const auth = authToken.createTokenAuth(options.auth);
-            hook.wrap("request", auth.hook);
-            this.auth = auth;
-          }
-        } else {
-          const {
-            authStrategy,
-            ...otherOptions
-          } = options;
-          const auth = authStrategy(Object.assign({
-            request: this.request,
-            log: this.log,
-            // we pass the current octokit instance as well as its constructor options
-            // to allow for authentication strategies that return a new octokit instance
-            // that shares the same internal state as the current one. The original
-            // requirement for this was the "event-octokit" authentication strategy
-            // of https://github.com/probot/octokit-auth-probot.
-            octokit: this,
-            octokitOptions: otherOptions
-          }, options.auth));
-          hook.wrap("request", auth.hook);
-          this.auth = auth;
-        }
-        const classConstructor = this.constructor;
-        classConstructor.plugins.forEach((plugin) => {
-          Object.assign(this, plugin(this, options));
-        });
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
       }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      Octokit: () => Octokit2
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_universal_user_agent = require_dist_node();
+    var import_before_after_hook = require_before_after_hook();
+    var import_request = require_dist_node5();
+    var import_graphql = require_dist_node6();
+    var import_auth_token = require_dist_node7();
+    var VERSION = "4.2.1";
+    var Octokit2 = class {
       static defaults(defaults) {
         const OctokitWithDefaults = class extends this {
           constructor(...args) {
@@ -24691,9 +24716,16 @@ var require_dist_node8 = __commonJS({
               super(defaults(options));
               return;
             }
-            super(Object.assign({}, defaults, options, options.userAgent && defaults.userAgent ? {
-              userAgent: `${options.userAgent} ${defaults.userAgent}`
-            } : null));
+            super(
+              Object.assign(
+                {},
+                defaults,
+                options,
+                options.userAgent && defaults.userAgent ? {
+                  userAgent: `${options.userAgent} ${defaults.userAgent}`
+                } : null
+              )
+            );
           }
         };
         return OctokitWithDefaults;
@@ -24708,46 +24740,178 @@ var require_dist_node8 = __commonJS({
         var _a;
         const currentPlugins = this.plugins;
         const NewOctokit = (_a = class extends this {
-        }, _a.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a);
+        }, _a.plugins = currentPlugins.concat(
+          newPlugins.filter((plugin) => !currentPlugins.includes(plugin))
+        ), _a);
         return NewOctokit;
+      }
+      constructor(options = {}) {
+        const hook = new import_before_after_hook.Collection();
+        const requestDefaults = {
+          baseUrl: import_request.request.endpoint.DEFAULTS.baseUrl,
+          headers: {},
+          request: Object.assign({}, options.request, {
+            // @ts-ignore internal usage only, no need to type
+            hook: hook.bind(null, "request")
+          }),
+          mediaType: {
+            previews: [],
+            format: ""
+          }
+        };
+        requestDefaults.headers["user-agent"] = [
+          options.userAgent,
+          `octokit-core.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
+        ].filter(Boolean).join(" ");
+        if (options.baseUrl) {
+          requestDefaults.baseUrl = options.baseUrl;
+        }
+        if (options.previews) {
+          requestDefaults.mediaType.previews = options.previews;
+        }
+        if (options.timeZone) {
+          requestDefaults.headers["time-zone"] = options.timeZone;
+        }
+        this.request = import_request.request.defaults(requestDefaults);
+        this.graphql = (0, import_graphql.withCustomRequest)(this.request).defaults(requestDefaults);
+        this.log = Object.assign(
+          {
+            debug: () => {
+            },
+            info: () => {
+            },
+            warn: console.warn.bind(console),
+            error: console.error.bind(console)
+          },
+          options.log
+        );
+        this.hook = hook;
+        if (!options.authStrategy) {
+          if (!options.auth) {
+            this.auth = async () => ({
+              type: "unauthenticated"
+            });
+          } else {
+            const auth = (0, import_auth_token.createTokenAuth)(options.auth);
+            hook.wrap("request", auth.hook);
+            this.auth = auth;
+          }
+        } else {
+          const { authStrategy, ...otherOptions } = options;
+          const auth = authStrategy(
+            Object.assign(
+              {
+                request: this.request,
+                log: this.log,
+                // we pass the current octokit instance as well as its constructor options
+                // to allow for authentication strategies that return a new octokit instance
+                // that shares the same internal state as the current one. The original
+                // requirement for this was the "event-octokit" authentication strategy
+                // of https://github.com/probot/octokit-auth-probot.
+                octokit: this,
+                octokitOptions: otherOptions
+              },
+              options.auth
+            )
+          );
+          hook.wrap("request", auth.hook);
+          this.auth = auth;
+        }
+        const classConstructor = this.constructor;
+        classConstructor.plugins.forEach((plugin) => {
+          Object.assign(this, plugin(this, options));
+        });
       }
     };
     Octokit2.VERSION = VERSION;
     Octokit2.plugins = [];
-    exports.Octokit = Octokit2;
   }
 });
 
 // node_modules/@octokit/auth-action/dist-node/index.js
 var require_dist_node9 = __commonJS({
-  "node_modules/@octokit/auth-action/dist-node/index.js"(exports) {
+  "node_modules/@octokit/auth-action/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var authToken = require_dist_node7();
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      createActionAuth: () => createActionAuth
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_auth_token = require_dist_node7();
     var createActionAuth = function createActionAuth2() {
       if (!process.env.GITHUB_ACTION) {
-        throw new Error("[@octokit/auth-action] `GITHUB_ACTION` environment variable is not set. @octokit/auth-action is meant to be used in GitHub Actions only.");
+        throw new Error(
+          "[@octokit/auth-action] `GITHUB_ACTION` environment variable is not set. @octokit/auth-action is meant to be used in GitHub Actions only."
+        );
       }
-      const definitions = [process.env.GITHUB_TOKEN, process.env.INPUT_GITHUB_TOKEN, process.env.INPUT_TOKEN].filter(Boolean);
+      const definitions = [
+        process.env.GITHUB_TOKEN,
+        process.env.INPUT_GITHUB_TOKEN,
+        process.env.INPUT_TOKEN
+      ].filter(Boolean);
       if (definitions.length === 0) {
-        throw new Error("[@octokit/auth-action] `GITHUB_TOKEN` variable is not set. It must be set on either `env:` or `with:`. See https://github.com/octokit/auth-action.js#createactionauth");
+        throw new Error(
+          "[@octokit/auth-action] `GITHUB_TOKEN` variable is not set. It must be set on either `env:` or `with:`. See https://github.com/octokit/auth-action.js#createactionauth"
+        );
       }
       if (definitions.length > 1) {
-        throw new Error("[@octokit/auth-action] The token variable is specified more than once. Use either `with.token`, `with.GITHUB_TOKEN`, or `env.GITHUB_TOKEN`. See https://github.com/octokit/auth-action.js#createactionauth");
+        throw new Error(
+          "[@octokit/auth-action] The token variable is specified more than once. Use either `with.token`, `with.GITHUB_TOKEN`, or `env.GITHUB_TOKEN`. See https://github.com/octokit/auth-action.js#createactionauth"
+        );
       }
       const token = definitions.pop();
-      return authToken.createTokenAuth(token);
+      return (0, import_auth_token.createTokenAuth)(token);
     };
-    exports.createActionAuth = createActionAuth;
   }
 });
 
 // node_modules/@octokit/plugin-paginate-rest/dist-node/index.js
 var require_dist_node10 = __commonJS({
-  "node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports) {
+  "node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "6.0.0";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      composePaginateRest: () => composePaginateRest,
+      isPaginatingEndpoint: () => isPaginatingEndpoint,
+      paginateRest: () => paginateRest,
+      paginatingEndpoints: () => paginatingEndpoints
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var VERSION = "6.1.2";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -24786,20 +24950,14 @@ var require_dist_node10 = __commonJS({
         [Symbol.asyncIterator]: () => ({
           async next() {
             if (!url)
-              return {
-                done: true
-              };
+              return { done: true };
             try {
-              const response = await requestMethod({
-                method,
-                url,
-                headers
-              });
+              const response = await requestMethod({ method, url, headers });
               const normalizedResponse = normalizePaginatedListResponse(response);
-              url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1];
-              return {
-                value: normalizedResponse
-              };
+              url = ((normalizedResponse.headers.link || "").match(
+                /<([^>]+)>;\s*rel="next"/
+              ) || [])[1];
+              return { value: normalizedResponse };
             } catch (error2) {
               if (error2.status !== 409)
                 throw error2;
@@ -24821,7 +24979,12 @@ var require_dist_node10 = __commonJS({
         mapFn = parameters;
         parameters = void 0;
       }
-      return gather(octokit, [], iterator(octokit, route, parameters)[Symbol.asyncIterator](), mapFn);
+      return gather(
+        octokit,
+        [],
+        iterator(octokit, route, parameters)[Symbol.asyncIterator](),
+        mapFn
+      );
     }
     function gather(octokit, results, iterator2, mapFn) {
       return iterator2.next().then((result) => {
@@ -24832,7 +24995,9 @@ var require_dist_node10 = __commonJS({
         function done() {
           earlyExit = true;
         }
-        results = results.concat(mapFn ? mapFn(result.value, done) : result.value.data);
+        results = results.concat(
+          mapFn ? mapFn(result.value, done) : result.value.data
+        );
         if (earlyExit) {
           return results;
         }
@@ -24842,7 +25007,230 @@ var require_dist_node10 = __commonJS({
     var composePaginateRest = Object.assign(paginate, {
       iterator
     });
-    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/dependabot/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/required_workflows", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/actions/variables", "GET /orgs/{org}/actions/variables/{name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/codespaces/secrets", "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories", "GET /orgs/{org}/dependabot/alerts", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/members/{username}/codespaces", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{org}/{repo}/actions/required_workflows", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/variables", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/alerts", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /repositories/{repository_id}/environments/{environment_name}/variables", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/ssh_signing_keys", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/ssh_signing_keys", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+    var paginatingEndpoints = [
+      "GET /app/hook/deliveries",
+      "GET /app/installation-requests",
+      "GET /app/installations",
+      "GET /enterprises/{enterprise}/dependabot/alerts",
+      "GET /enterprises/{enterprise}/secret-scanning/alerts",
+      "GET /events",
+      "GET /gists",
+      "GET /gists/public",
+      "GET /gists/starred",
+      "GET /gists/{gist_id}/comments",
+      "GET /gists/{gist_id}/commits",
+      "GET /gists/{gist_id}/forks",
+      "GET /installation/repositories",
+      "GET /issues",
+      "GET /licenses",
+      "GET /marketplace_listing/plans",
+      "GET /marketplace_listing/plans/{plan_id}/accounts",
+      "GET /marketplace_listing/stubbed/plans",
+      "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts",
+      "GET /networks/{owner}/{repo}/events",
+      "GET /notifications",
+      "GET /organizations",
+      "GET /organizations/{org}/personal-access-token-requests",
+      "GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories",
+      "GET /organizations/{org}/personal-access-tokens",
+      "GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories",
+      "GET /orgs/{org}/actions/cache/usage-by-repository",
+      "GET /orgs/{org}/actions/permissions/repositories",
+      "GET /orgs/{org}/actions/required_workflows",
+      "GET /orgs/{org}/actions/runners",
+      "GET /orgs/{org}/actions/secrets",
+      "GET /orgs/{org}/actions/secrets/{secret_name}/repositories",
+      "GET /orgs/{org}/actions/variables",
+      "GET /orgs/{org}/actions/variables/{name}/repositories",
+      "GET /orgs/{org}/blocks",
+      "GET /orgs/{org}/code-scanning/alerts",
+      "GET /orgs/{org}/codespaces",
+      "GET /orgs/{org}/codespaces/secrets",
+      "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories",
+      "GET /orgs/{org}/dependabot/alerts",
+      "GET /orgs/{org}/dependabot/secrets",
+      "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories",
+      "GET /orgs/{org}/events",
+      "GET /orgs/{org}/failed_invitations",
+      "GET /orgs/{org}/hooks",
+      "GET /orgs/{org}/hooks/{hook_id}/deliveries",
+      "GET /orgs/{org}/installations",
+      "GET /orgs/{org}/invitations",
+      "GET /orgs/{org}/invitations/{invitation_id}/teams",
+      "GET /orgs/{org}/issues",
+      "GET /orgs/{org}/members",
+      "GET /orgs/{org}/members/{username}/codespaces",
+      "GET /orgs/{org}/migrations",
+      "GET /orgs/{org}/migrations/{migration_id}/repositories",
+      "GET /orgs/{org}/outside_collaborators",
+      "GET /orgs/{org}/packages",
+      "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
+      "GET /orgs/{org}/projects",
+      "GET /orgs/{org}/public_members",
+      "GET /orgs/{org}/repos",
+      "GET /orgs/{org}/secret-scanning/alerts",
+      "GET /orgs/{org}/teams",
+      "GET /orgs/{org}/teams/{team_slug}/discussions",
+      "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments",
+      "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions",
+      "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions",
+      "GET /orgs/{org}/teams/{team_slug}/invitations",
+      "GET /orgs/{org}/teams/{team_slug}/members",
+      "GET /orgs/{org}/teams/{team_slug}/projects",
+      "GET /orgs/{org}/teams/{team_slug}/repos",
+      "GET /orgs/{org}/teams/{team_slug}/teams",
+      "GET /projects/columns/{column_id}/cards",
+      "GET /projects/{project_id}/collaborators",
+      "GET /projects/{project_id}/columns",
+      "GET /repos/{org}/{repo}/actions/required_workflows",
+      "GET /repos/{owner}/{repo}/actions/artifacts",
+      "GET /repos/{owner}/{repo}/actions/caches",
+      "GET /repos/{owner}/{repo}/actions/organization-secrets",
+      "GET /repos/{owner}/{repo}/actions/organization-variables",
+      "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs",
+      "GET /repos/{owner}/{repo}/actions/runners",
+      "GET /repos/{owner}/{repo}/actions/runs",
+      "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts",
+      "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs",
+      "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs",
+      "GET /repos/{owner}/{repo}/actions/secrets",
+      "GET /repos/{owner}/{repo}/actions/variables",
+      "GET /repos/{owner}/{repo}/actions/workflows",
+      "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs",
+      "GET /repos/{owner}/{repo}/assignees",
+      "GET /repos/{owner}/{repo}/branches",
+      "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations",
+      "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs",
+      "GET /repos/{owner}/{repo}/code-scanning/alerts",
+      "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances",
+      "GET /repos/{owner}/{repo}/code-scanning/analyses",
+      "GET /repos/{owner}/{repo}/codespaces",
+      "GET /repos/{owner}/{repo}/codespaces/devcontainers",
+      "GET /repos/{owner}/{repo}/codespaces/secrets",
+      "GET /repos/{owner}/{repo}/collaborators",
+      "GET /repos/{owner}/{repo}/comments",
+      "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions",
+      "GET /repos/{owner}/{repo}/commits",
+      "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments",
+      "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls",
+      "GET /repos/{owner}/{repo}/commits/{ref}/check-runs",
+      "GET /repos/{owner}/{repo}/commits/{ref}/check-suites",
+      "GET /repos/{owner}/{repo}/commits/{ref}/status",
+      "GET /repos/{owner}/{repo}/commits/{ref}/statuses",
+      "GET /repos/{owner}/{repo}/contributors",
+      "GET /repos/{owner}/{repo}/dependabot/alerts",
+      "GET /repos/{owner}/{repo}/dependabot/secrets",
+      "GET /repos/{owner}/{repo}/deployments",
+      "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses",
+      "GET /repos/{owner}/{repo}/environments",
+      "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies",
+      "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps",
+      "GET /repos/{owner}/{repo}/events",
+      "GET /repos/{owner}/{repo}/forks",
+      "GET /repos/{owner}/{repo}/hooks",
+      "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries",
+      "GET /repos/{owner}/{repo}/invitations",
+      "GET /repos/{owner}/{repo}/issues",
+      "GET /repos/{owner}/{repo}/issues/comments",
+      "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
+      "GET /repos/{owner}/{repo}/issues/events",
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/events",
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/labels",
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions",
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline",
+      "GET /repos/{owner}/{repo}/keys",
+      "GET /repos/{owner}/{repo}/labels",
+      "GET /repos/{owner}/{repo}/milestones",
+      "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels",
+      "GET /repos/{owner}/{repo}/notifications",
+      "GET /repos/{owner}/{repo}/pages/builds",
+      "GET /repos/{owner}/{repo}/projects",
+      "GET /repos/{owner}/{repo}/pulls",
+      "GET /repos/{owner}/{repo}/pulls/comments",
+      "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions",
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments",
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments",
+      "GET /repos/{owner}/{repo}/releases",
+      "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
+      "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
+      "GET /repos/{owner}/{repo}/secret-scanning/alerts",
+      "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
+      "GET /repos/{owner}/{repo}/security-advisories",
+      "GET /repos/{owner}/{repo}/stargazers",
+      "GET /repos/{owner}/{repo}/subscribers",
+      "GET /repos/{owner}/{repo}/tags",
+      "GET /repos/{owner}/{repo}/teams",
+      "GET /repos/{owner}/{repo}/topics",
+      "GET /repositories",
+      "GET /repositories/{repository_id}/environments/{environment_name}/secrets",
+      "GET /repositories/{repository_id}/environments/{environment_name}/variables",
+      "GET /search/code",
+      "GET /search/commits",
+      "GET /search/issues",
+      "GET /search/labels",
+      "GET /search/repositories",
+      "GET /search/topics",
+      "GET /search/users",
+      "GET /teams/{team_id}/discussions",
+      "GET /teams/{team_id}/discussions/{discussion_number}/comments",
+      "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions",
+      "GET /teams/{team_id}/discussions/{discussion_number}/reactions",
+      "GET /teams/{team_id}/invitations",
+      "GET /teams/{team_id}/members",
+      "GET /teams/{team_id}/projects",
+      "GET /teams/{team_id}/repos",
+      "GET /teams/{team_id}/teams",
+      "GET /user/blocks",
+      "GET /user/codespaces",
+      "GET /user/codespaces/secrets",
+      "GET /user/emails",
+      "GET /user/followers",
+      "GET /user/following",
+      "GET /user/gpg_keys",
+      "GET /user/installations",
+      "GET /user/installations/{installation_id}/repositories",
+      "GET /user/issues",
+      "GET /user/keys",
+      "GET /user/marketplace_purchases",
+      "GET /user/marketplace_purchases/stubbed",
+      "GET /user/memberships/orgs",
+      "GET /user/migrations",
+      "GET /user/migrations/{migration_id}/repositories",
+      "GET /user/orgs",
+      "GET /user/packages",
+      "GET /user/packages/{package_type}/{package_name}/versions",
+      "GET /user/public_emails",
+      "GET /user/repos",
+      "GET /user/repository_invitations",
+      "GET /user/social_accounts",
+      "GET /user/ssh_signing_keys",
+      "GET /user/starred",
+      "GET /user/subscriptions",
+      "GET /user/teams",
+      "GET /users",
+      "GET /users/{username}/events",
+      "GET /users/{username}/events/orgs/{org}",
+      "GET /users/{username}/events/public",
+      "GET /users/{username}/followers",
+      "GET /users/{username}/following",
+      "GET /users/{username}/gists",
+      "GET /users/{username}/gpg_keys",
+      "GET /users/{username}/keys",
+      "GET /users/{username}/orgs",
+      "GET /users/{username}/packages",
+      "GET /users/{username}/projects",
+      "GET /users/{username}/received_events",
+      "GET /users/{username}/received_events/public",
+      "GET /users/{username}/repos",
+      "GET /users/{username}/social_accounts",
+      "GET /users/{username}/ssh_signing_keys",
+      "GET /users/{username}/starred",
+      "GET /users/{username}/subscriptions"
+    ];
     function isPaginatingEndpoint(arg) {
       if (typeof arg === "string") {
         return paginatingEndpoints.includes(arg);
@@ -24858,10 +25246,6 @@ var require_dist_node10 = __commonJS({
       };
     }
     paginateRest.VERSION = VERSION;
-    exports.composePaginateRest = composePaginateRest;
-    exports.isPaginatingEndpoint = isPaginatingEndpoint;
-    exports.paginateRest = paginateRest;
-    exports.paginatingEndpoints = paginatingEndpoints;
   }
 });
 
@@ -24959,6 +25343,8 @@ var require_dist_node11 = __commonJS({
         listLabelsForSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
         listOrgVariables: ["GET /orgs/{org}/actions/variables"],
+        listRepoOrganizationSecrets: ["GET /repos/{owner}/{repo}/actions/organization-secrets"],
+        listRepoOrganizationVariables: ["GET /repos/{owner}/{repo}/actions/organization-variables"],
         listRepoRequiredWorkflows: ["GET /repos/{org}/{repo}/actions/required_workflows"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
         listRepoVariables: ["GET /repos/{owner}/{repo}/actions/variables"],
@@ -24986,6 +25372,7 @@ var require_dist_node11 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
         removeSelectedRepoFromOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"],
         removeSelectedRepoFromRequiredWorkflow: ["DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"],
+        reviewCustomGatesForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule"],
         reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
         setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
         setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
@@ -25062,6 +25449,7 @@ var require_dist_node11 = __commonJS({
         listAccountsForPlan: ["GET /marketplace_listing/plans/{plan_id}/accounts"],
         listAccountsForPlanStubbed: ["GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"],
         listInstallationReposForAuthenticatedUser: ["GET /user/installations/{installation_id}/repositories"],
+        listInstallationRequestsForAuthenticatedApp: ["GET /app/installation-requests"],
         listInstallations: ["GET /app/installations"],
         listInstallationsForAuthenticatedUser: ["GET /user/installations"],
         listPlans: ["GET /marketplace_listing/plans"],
@@ -25113,6 +25501,7 @@ var require_dist_node11 = __commonJS({
         }],
         getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
         getCodeqlDatabase: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"],
+        getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
         listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
         listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
@@ -25123,6 +25512,7 @@ var require_dist_node11 = __commonJS({
         listCodeqlDatabases: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases"],
         listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"],
+        updateDefaultSetup: ["PATCH /repos/{owner}/{repo}/code-scanning/default-setup"],
         uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
       },
       codesOfConduct: {
@@ -25139,6 +25529,7 @@ var require_dist_node11 = __commonJS({
         createOrUpdateSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}"],
         createWithPrForAuthenticatedUser: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"],
         createWithRepoForAuthenticatedUser: ["POST /repos/{owner}/{repo}/codespaces"],
+        deleteCodespacesBillingUsers: ["DELETE /orgs/{org}/codespaces/billing/selected_users"],
         deleteForAuthenticatedUser: ["DELETE /user/codespaces/{codespace_name}"],
         deleteFromOrganization: ["DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}"],
@@ -25173,6 +25564,7 @@ var require_dist_node11 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
         repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
         setCodespacesBilling: ["PUT /orgs/{org}/codespaces/billing"],
+        setCodespacesBillingUsers: ["POST /orgs/{org}/codespaces/billing/selected_users"],
         setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
         setSelectedReposForOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories"],
         startForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/start"],
@@ -25203,15 +25595,11 @@ var require_dist_node11 = __commonJS({
       },
       dependencyGraph: {
         createRepositorySnapshot: ["POST /repos/{owner}/{repo}/dependency-graph/snapshots"],
-        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"]
+        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"],
+        exportSbom: ["GET /repos/{owner}/{repo}/dependency-graph/sbom"]
       },
       emojis: {
         get: ["GET /emojis"]
-      },
-      enterpriseAdmin: {
-        addCustomLabelsToSelfHostedRunnerForEnterprise: ["POST /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
-        enableSelectedOrganizationGithubActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"],
-        listLabelsForSelfHostedRunnerForEnterprise: ["GET /enterprises/{enterprise}/actions/runners/{runner_id}/labels"]
       },
       gists: {
         checkIsStarred: ["GET /gists/{gist_id}/star"],
@@ -25373,6 +25761,7 @@ var require_dist_node11 = __commonJS({
         convertMemberToOutsideCollaborator: ["PUT /orgs/{org}/outside_collaborators/{username}"],
         createInvitation: ["POST /orgs/{org}/invitations"],
         createWebhook: ["POST /orgs/{org}/hooks"],
+        delete: ["DELETE /orgs/{org}"],
         deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
         enableOrDisableSecurityProductOnAllOrgRepos: ["POST /orgs/{org}/{security_product}/{enablement}"],
         get: ["GET /orgs/{org}"],
@@ -25391,6 +25780,10 @@ var require_dist_node11 = __commonJS({
         listMembers: ["GET /orgs/{org}/members"],
         listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
+        listPatGrantRepositories: ["GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories"],
+        listPatGrantRequestRepositories: ["GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories"],
+        listPatGrantRequests: ["GET /organizations/{org}/personal-access-token-requests"],
+        listPatGrants: ["GET /organizations/{org}/personal-access-tokens"],
         listPendingInvitations: ["GET /orgs/{org}/invitations"],
         listPublicMembers: ["GET /orgs/{org}/public_members"],
         listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
@@ -25403,11 +25796,15 @@ var require_dist_node11 = __commonJS({
         removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
         removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
         removeSecurityManagerTeam: ["DELETE /orgs/{org}/security-managers/teams/{team_slug}"],
+        reviewPatGrantRequest: ["POST /organizations/{org}/personal-access-token-requests/{pat_request_id}"],
+        reviewPatGrantRequestsInBulk: ["POST /organizations/{org}/personal-access-token-requests"],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
         setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
         unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
         update: ["PATCH /orgs/{org}"],
         updateMembershipForAuthenticatedUser: ["PATCH /user/memberships/orgs/{org}"],
+        updatePatAccess: ["POST /organizations/{org}/personal-access-tokens/{pat_id}"],
+        updatePatAccesses: ["POST /organizations/{org}/personal-access-tokens"],
         updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
         updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
       },
@@ -25433,6 +25830,9 @@ var require_dist_node11 = __commonJS({
         getPackageVersionForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        listDockerMigrationConflictingPackagesForAuthenticatedUser: ["GET /user/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForOrganization: ["GET /orgs/{org}/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForUser: ["GET /users/{username}/docker/conflicts"],
         listPackagesForAuthenticatedUser: ["GET /user/packages"],
         listPackagesForOrganization: ["GET /orgs/{org}/packages"],
         listPackagesForUser: ["GET /users/{username}/packages"],
@@ -25555,6 +25955,7 @@ var require_dist_node11 = __commonJS({
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
         createDeployment: ["POST /repos/{owner}/{repo}/deployments"],
         createDeploymentBranchPolicy: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
+        createDeploymentProtectionRule: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
         createForAuthenticatedUser: ["POST /user/repos"],
@@ -25562,9 +25963,11 @@ var require_dist_node11 = __commonJS({
         createInOrg: ["POST /orgs/{org}/repos"],
         createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
+        createOrgRuleset: ["POST /orgs/{org}/rulesets"],
         createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
+        createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
         createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
         createUsingTemplate: ["POST /repos/{template_owner}/{template_repo}/generate"],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
@@ -25585,13 +25988,16 @@ var require_dist_node11 = __commonJS({
         deleteDeploymentBranchPolicy: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         deleteFile: ["DELETE /repos/{owner}/{repo}/contents/{path}"],
         deleteInvitation: ["DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        deleteOrgRuleset: ["DELETE /orgs/{org}/rulesets/{ruleset_id}"],
         deletePagesSite: ["DELETE /repos/{owner}/{repo}/pages"],
         deletePullRequestReviewProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         deleteRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}"],
         deleteReleaseAsset: ["DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         deleteTagProtection: ["DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"],
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
         disableAutomatedSecurityFixes: ["DELETE /repos/{owner}/{repo}/automated-security-fixes"],
+        disableDeploymentProtectionRule: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         disableLfsForRepo: ["DELETE /repos/{owner}/{repo}/lfs"],
         disableVulnerabilityAlerts: ["DELETE /repos/{owner}/{repo}/vulnerability-alerts"],
         downloadArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}", {}, {
@@ -25606,6 +26012,7 @@ var require_dist_node11 = __commonJS({
         get: ["GET /repos/{owner}/{repo}"],
         getAccessRestrictions: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
         getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        getAllDeploymentProtectionRules: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
         getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
         getAllTopics: ["GET /repos/{owner}/{repo}/topics"],
@@ -25613,6 +26020,7 @@ var require_dist_node11 = __commonJS({
         getAutolink: ["GET /repos/{owner}/{repo}/autolinks/{autolink_id}"],
         getBranch: ["GET /repos/{owner}/{repo}/branches/{branch}"],
         getBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection"],
+        getBranchRules: ["GET /repos/{owner}/{repo}/rules/branches/{branch}"],
         getClones: ["GET /repos/{owner}/{repo}/traffic/clones"],
         getCodeFrequencyStats: ["GET /repos/{owner}/{repo}/stats/code_frequency"],
         getCollaboratorPermissionLevel: ["GET /repos/{owner}/{repo}/collaborators/{username}/permission"],
@@ -25624,6 +26032,7 @@ var require_dist_node11 = __commonJS({
         getCommunityProfileMetrics: ["GET /repos/{owner}/{repo}/community/profile"],
         getContent: ["GET /repos/{owner}/{repo}/contents/{path}"],
         getContributorsStats: ["GET /repos/{owner}/{repo}/stats/contributors"],
+        getCustomDeploymentProtectionRule: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
         getDeploymentBranchPolicy: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
@@ -25631,6 +26040,8 @@ var require_dist_node11 = __commonJS({
         getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
+        getOrgRuleset: ["GET /orgs/{org}/rulesets/{ruleset_id}"],
+        getOrgRulesets: ["GET /orgs/{org}/rulesets"],
         getPages: ["GET /repos/{owner}/{repo}/pages"],
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
         getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
@@ -25642,6 +26053,8 @@ var require_dist_node11 = __commonJS({
         getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
         getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
+        getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
+        getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
         getStatusChecksProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
         getTeamsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams"],
         getTopPaths: ["GET /repos/{owner}/{repo}/traffic/popular/paths"],
@@ -25660,6 +26073,7 @@ var require_dist_node11 = __commonJS({
         listCommitStatusesForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/statuses"],
         listCommits: ["GET /repos/{owner}/{repo}/commits"],
         listContributors: ["GET /repos/{owner}/{repo}/contributors"],
+        listCustomDeploymentRuleIntegrations: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps"],
         listDeployKeys: ["GET /repos/{owner}/{repo}/keys"],
         listDeploymentBranchPolicies: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
         listDeploymentStatuses: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
@@ -25723,9 +26137,11 @@ var require_dist_node11 = __commonJS({
         updateDeploymentBranchPolicy: ["PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         updateInformationAboutPagesSite: ["PUT /repos/{owner}/{repo}/pages"],
         updateInvitation: ["PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        updateOrgRuleset: ["PUT /orgs/{org}/rulesets/{ruleset_id}"],
         updatePullRequestReviewProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         updateRelease: ["PATCH /repos/{owner}/{repo}/releases/{release_id}"],
         updateReleaseAsset: ["PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        updateRepoRuleset: ["PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         updateStatusCheckPotection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks", {}, {
           renamed: ["repos", "updateStatusCheckProtection"]
         }],
@@ -25747,14 +26163,18 @@ var require_dist_node11 = __commonJS({
       },
       secretScanning: {
         getAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"],
-        getSecurityAnalysisSettingsForEnterprise: ["GET /enterprises/{enterprise}/code_security_and_analysis"],
         listAlertsForEnterprise: ["GET /enterprises/{enterprise}/secret-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/secret-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/secret-scanning/alerts"],
         listLocationsForAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"],
-        patchSecurityAnalysisSettingsForEnterprise: ["PATCH /enterprises/{enterprise}/code_security_and_analysis"],
-        postSecurityProductEnablementForEnterprise: ["POST /enterprises/{enterprise}/{security_product}/{enablement}"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"]
+      },
+      securityAdvisories: {
+        createPrivateVulnerabilityReport: ["POST /repos/{owner}/{repo}/security-advisories/reports"],
+        createRepositoryAdvisory: ["POST /repos/{owner}/{repo}/security-advisories"],
+        getRepositoryAdvisory: ["GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}"],
+        listRepositoryAdvisories: ["GET /repos/{owner}/{repo}/security-advisories"],
+        updateRepositoryAdvisory: ["PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}"]
       },
       teams: {
         addOrUpdateMembershipForUserInOrg: ["PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"],
@@ -25793,6 +26213,7 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "addEmailForAuthenticatedUser"]
         }],
         addEmailForAuthenticatedUser: ["POST /user/emails"],
+        addSocialAccountForAuthenticatedUser: ["POST /user/social_accounts"],
         block: ["PUT /user/blocks/{username}"],
         checkBlocked: ["GET /user/blocks/{username}"],
         checkFollowingForUser: ["GET /users/{username}/following/{target_user}"],
@@ -25818,6 +26239,7 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "deletePublicSshKeyForAuthenticatedUser"]
         }],
         deletePublicSshKeyForAuthenticatedUser: ["DELETE /user/keys/{key_id}"],
+        deleteSocialAccountForAuthenticatedUser: ["DELETE /user/social_accounts"],
         deleteSshSigningKeyForAuthenticatedUser: ["DELETE /user/ssh_signing_keys/{ssh_signing_key_id}"],
         follow: ["PUT /user/following/{username}"],
         getAuthenticated: ["GET /user"],
@@ -25862,6 +26284,8 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "listPublicSshKeysForAuthenticatedUser"]
         }],
         listPublicSshKeysForAuthenticatedUser: ["GET /user/keys"],
+        listSocialAccountsForAuthenticatedUser: ["GET /user/social_accounts"],
+        listSocialAccountsForUser: ["GET /users/{username}/social_accounts"],
         listSshSigningKeysForAuthenticatedUser: ["GET /user/ssh_signing_keys"],
         listSshSigningKeysForUser: ["GET /users/{username}/ssh_signing_keys"],
         setPrimaryEmailVisibilityForAuthenticated: ["PATCH /user/email/visibility", {}, {
@@ -25873,7 +26297,7 @@ var require_dist_node11 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "7.0.1";
+    var VERSION = "7.1.2";
     function endpointsToMethods(octokit, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -26700,208 +27124,181 @@ var require_src = __commonJS({
   }
 });
 
-// node_modules/agent-base/dist/src/promisify.js
-var require_promisify = __commonJS({
-  "node_modules/agent-base/dist/src/promisify.js"(exports) {
+// node_modules/agent-base/dist/helpers.js
+var require_helpers = __commonJS({
+  "node_modules/agent-base/dist/helpers.js"(exports) {
     "use strict";
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
     Object.defineProperty(exports, "__esModule", { value: true });
-    function promisify(fn) {
-      return function(req, opts) {
-        return new Promise((resolve, reject) => {
-          fn.call(this, req, opts, (err, rtn) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(rtn);
-            }
-          });
-        });
-      };
+    exports.req = exports.json = exports.toBuffer = void 0;
+    var http = __importStar(__require("http"));
+    var https = __importStar(__require("https"));
+    async function toBuffer(stream) {
+      let length = 0;
+      const chunks = [];
+      for await (const chunk of stream) {
+        length += chunk.length;
+        chunks.push(chunk);
+      }
+      return Buffer.concat(chunks, length);
     }
-    exports.default = promisify;
+    exports.toBuffer = toBuffer;
+    async function json2(stream) {
+      const buf = await toBuffer(stream);
+      const str2 = buf.toString("utf8");
+      try {
+        return JSON.parse(str2);
+      } catch (_err) {
+        const err = _err;
+        err.message += ` (input: ${str2})`;
+        throw err;
+      }
+    }
+    exports.json = json2;
+    function req(url, opts = {}) {
+      const href = typeof url === "string" ? url : url.href;
+      const req2 = (href.startsWith("https:") ? https : http).request(url, opts);
+      const promise = new Promise((resolve, reject) => {
+        req2.once("response", resolve).once("error", reject).end();
+      });
+      req2.then = promise.then.bind(promise);
+      return req2;
+    }
+    exports.req = req;
   }
 });
 
-// node_modules/agent-base/dist/src/index.js
-var require_src2 = __commonJS({
-  "node_modules/agent-base/dist/src/index.js"(exports, module) {
+// node_modules/agent-base/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/agent-base/dist/index.js"(exports) {
     "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : { "default": mod };
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
     };
-    var events_1 = __require("events");
-    var debug_1 = __importDefault(require_src());
-    var promisify_1 = __importDefault(require_promisify());
-    var debug = debug_1.default("agent-base");
-    function isAgent(v) {
-      return Boolean(v) && typeof v.addRequest === "function";
-    }
+    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
+      for (var p in m)
+        if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p))
+          __createBinding(exports2, m, p);
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Agent = void 0;
+    var http = __importStar(__require("http"));
+    __exportStar(require_helpers(), exports);
     function isSecureEndpoint() {
       const { stack } = new Error();
       if (typeof stack !== "string")
         return false;
       return stack.split("\n").some((l) => l.indexOf("(https.js:") !== -1 || l.indexOf("node:https:") !== -1);
     }
-    function createAgent(callback, opts) {
-      return new createAgent.Agent(callback, opts);
-    }
-    (function(createAgent2) {
-      class Agent extends events_1.EventEmitter {
-        constructor(callback, _opts) {
-          super();
-          let opts = _opts;
-          if (typeof callback === "function") {
-            this.callback = callback;
-          } else if (callback) {
-            opts = callback;
-          }
-          this.timeout = null;
-          if (opts && typeof opts.timeout === "number") {
-            this.timeout = opts.timeout;
-          }
-          this.maxFreeSockets = 1;
-          this.maxSockets = 1;
-          this.maxTotalSockets = Infinity;
-          this.sockets = {};
-          this.freeSockets = {};
-          this.requests = {};
-          this.options = {};
+    var INTERNAL = Symbol("AgentBaseInternalState");
+    var Agent = class extends http.Agent {
+      constructor(opts) {
+        super(opts);
+        this[INTERNAL] = {};
+      }
+      createSocket(req, options, cb) {
+        let secureEndpoint = typeof options.secureEndpoint === "boolean" ? options.secureEndpoint : void 0;
+        if (typeof secureEndpoint === "undefined" && typeof options.protocol === "string") {
+          secureEndpoint = options.protocol === "https:";
         }
-        get defaultPort() {
-          if (typeof this.explicitDefaultPort === "number") {
-            return this.explicitDefaultPort;
-          }
-          return isSecureEndpoint() ? 443 : 80;
+        if (typeof secureEndpoint === "undefined") {
+          secureEndpoint = isSecureEndpoint();
         }
-        set defaultPort(v) {
-          this.explicitDefaultPort = v;
+        const connectOpts = { ...options, secureEndpoint };
+        Promise.resolve().then(() => this.connect(req, connectOpts)).then((socket) => {
+          if (socket instanceof http.Agent) {
+            return socket.addRequest(req, connectOpts);
+          }
+          this[INTERNAL].currentSocket = socket;
+          super.createSocket(req, options, cb);
+        }, cb);
+      }
+      createConnection() {
+        const socket = this[INTERNAL].currentSocket;
+        this[INTERNAL].currentSocket = void 0;
+        if (!socket) {
+          throw new Error("No socket was returned in the `connect()` function");
         }
-        get protocol() {
-          if (typeof this.explicitProtocol === "string") {
-            return this.explicitProtocol;
-          }
-          return isSecureEndpoint() ? "https:" : "http:";
-        }
-        set protocol(v) {
-          this.explicitProtocol = v;
-        }
-        callback(req, opts, fn) {
-          throw new Error('"agent-base" has no default implementation, you must subclass and override `callback()`');
-        }
-        /**
-         * Called by node-core's "_http_client.js" module when creating
-         * a new HTTP request with this Agent instance.
-         *
-         * @api public
-         */
-        addRequest(req, _opts) {
-          const opts = Object.assign({}, _opts);
-          if (typeof opts.secureEndpoint !== "boolean") {
-            opts.secureEndpoint = isSecureEndpoint();
-          }
-          if (opts.host == null) {
-            opts.host = "localhost";
-          }
-          if (opts.port == null) {
-            opts.port = opts.secureEndpoint ? 443 : 80;
-          }
-          if (opts.protocol == null) {
-            opts.protocol = opts.secureEndpoint ? "https:" : "http:";
-          }
-          if (opts.host && opts.path) {
-            delete opts.path;
-          }
-          delete opts.agent;
-          delete opts.hostname;
-          delete opts._defaultAgent;
-          delete opts.defaultPort;
-          delete opts.createConnection;
-          req._last = true;
-          req.shouldKeepAlive = false;
-          let timedOut = false;
-          let timeoutId = null;
-          const timeoutMs = opts.timeout || this.timeout;
-          const onerror = (err) => {
-            if (req._hadError)
-              return;
-            req.emit("error", err);
-            req._hadError = true;
-          };
-          const ontimeout = () => {
-            timeoutId = null;
-            timedOut = true;
-            const err = new Error(`A "socket" was not created for HTTP request before ${timeoutMs}ms`);
-            err.code = "ETIMEOUT";
-            onerror(err);
-          };
-          const callbackError = (err) => {
-            if (timedOut)
-              return;
-            if (timeoutId !== null) {
-              clearTimeout(timeoutId);
-              timeoutId = null;
-            }
-            onerror(err);
-          };
-          const onsocket = (socket) => {
-            if (timedOut)
-              return;
-            if (timeoutId != null) {
-              clearTimeout(timeoutId);
-              timeoutId = null;
-            }
-            if (isAgent(socket)) {
-              debug("Callback returned another Agent instance %o", socket.constructor.name);
-              socket.addRequest(req, opts);
-              return;
-            }
-            if (socket) {
-              socket.once("free", () => {
-                this.freeSocket(socket, opts);
-              });
-              req.onSocket(socket);
-              return;
-            }
-            const err = new Error(`no Duplex stream was returned to agent-base for \`${req.method} ${req.path}\``);
-            onerror(err);
-          };
-          if (typeof this.callback !== "function") {
-            onerror(new Error("`callback` is not defined"));
-            return;
-          }
-          if (!this.promisifiedCallback) {
-            if (this.callback.length >= 3) {
-              debug("Converting legacy callback function to promise");
-              this.promisifiedCallback = promisify_1.default(this.callback);
-            } else {
-              this.promisifiedCallback = this.callback;
-            }
-          }
-          if (typeof timeoutMs === "number" && timeoutMs > 0) {
-            timeoutId = setTimeout(ontimeout, timeoutMs);
-          }
-          if ("port" in opts && typeof opts.port !== "number") {
-            opts.port = Number(opts.port);
-          }
-          try {
-            debug("Resolving socket for %o request: %o", opts.protocol, `${req.method} ${req.path}`);
-            Promise.resolve(this.promisifiedCallback(req, opts)).then(onsocket, callbackError);
-          } catch (err) {
-            Promise.reject(err).catch(callbackError);
-          }
-        }
-        freeSocket(socket, opts) {
-          debug("Freeing socket %o %o", socket.constructor.name, opts);
-          socket.destroy();
-        }
-        destroy() {
-          debug("Destroying agent %o", this.constructor.name);
+        return socket;
+      }
+      get defaultPort() {
+        return this[INTERNAL].defaultPort ?? (this.protocol === "https:" ? 443 : 80);
+      }
+      set defaultPort(v) {
+        if (this[INTERNAL]) {
+          this[INTERNAL].defaultPort = v;
         }
       }
-      createAgent2.Agent = Agent;
-      createAgent2.prototype = createAgent2.Agent.prototype;
-    })(createAgent || (createAgent = {}));
-    module.exports = createAgent;
+      get protocol() {
+        return this[INTERNAL].protocol ?? (isSecureEndpoint() ? "https:" : "http:");
+      }
+      set protocol(v) {
+        if (this[INTERNAL]) {
+          this[INTERNAL].protocol = v;
+        }
+      }
+    };
+    exports.Agent = Agent;
   }
 });
 
@@ -26913,8 +27310,9 @@ var require_parse_proxy_response = __commonJS({
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.parseProxyResponse = void 0;
     var debug_1 = __importDefault(require_src());
-    var debug = debug_1.default("https-proxy-agent:parse-proxy-response");
+    var debug = (0, debug_1.default)("https-proxy-agent:parse-proxy-response");
     function parseProxyResponse(socket) {
       return new Promise((resolve, reject) => {
         let buffersLength = 0;
@@ -26953,11 +27351,41 @@ var require_parse_proxy_response = __commonJS({
             read();
             return;
           }
-          const firstLine = buffered.toString("ascii", 0, buffered.indexOf("\r\n"));
-          const statusCode = +firstLine.split(" ")[1];
+          const headerParts = buffered.toString("ascii").split("\r\n");
+          const firstLine = headerParts.shift();
+          if (!firstLine) {
+            throw new Error("No header received");
+          }
+          const firstLineParts = firstLine.split(" ");
+          const statusCode = +firstLineParts[1];
+          const statusText = firstLineParts.slice(2).join(" ");
+          const headers = {};
+          for (const header of headerParts) {
+            if (!header)
+              continue;
+            const firstColon = header.indexOf(":");
+            if (firstColon === -1) {
+              throw new Error(`Invalid header: "${header}"`);
+            }
+            const key = header.slice(0, firstColon).toLowerCase();
+            const value = header.slice(firstColon + 1).trimStart();
+            const current = headers[key];
+            if (typeof current === "string") {
+              headers[key] = [current, value];
+            } else if (Array.isArray(current)) {
+              current.push(value);
+            } else {
+              headers[key] = value;
+            }
+          }
           debug("got proxy server response: %o", firstLine);
+          cleanup();
           resolve({
-            statusCode,
+            connect: {
+              statusCode,
+              statusText,
+              headers
+            },
             buffered
           });
         }
@@ -26967,153 +27395,146 @@ var require_parse_proxy_response = __commonJS({
         read();
       });
     }
-    exports.default = parseProxyResponse;
+    exports.parseProxyResponse = parseProxyResponse;
   }
 });
 
-// node_modules/https-proxy-agent/dist/agent.js
-var require_agent = __commonJS({
-  "node_modules/https-proxy-agent/dist/agent.js"(exports) {
+// node_modules/https-proxy-agent/dist/index.js
+var require_dist2 = __commonJS({
+  "node_modules/https-proxy-agent/dist/index.js"(exports) {
     "use strict";
-    var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
-      function adopt(value) {
-        return value instanceof P ? value : new P(function(resolve) {
-          resolve(value);
-        });
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
       }
-      return new (P || (P = Promise))(function(resolve, reject) {
-        function fulfilled(value) {
-          try {
-            step(generator.next(value));
-          } catch (e) {
-            reject(e);
-          }
-        }
-        function rejected(value) {
-          try {
-            step(generator["throw"](value));
-          } catch (e) {
-            reject(e);
-          }
-        }
-        function step(result) {
-          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-        }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-      });
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
     };
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    var net_1 = __importDefault(__require("net"));
-    var tls_1 = __importDefault(__require("tls"));
-    var url_1 = __importDefault(__require("url"));
+    exports.HttpsProxyAgent = void 0;
+    var net = __importStar(__require("net"));
+    var tls = __importStar(__require("tls"));
     var assert_1 = __importDefault(__require("assert"));
     var debug_1 = __importDefault(require_src());
-    var agent_base_1 = require_src2();
-    var parse_proxy_response_1 = __importDefault(require_parse_proxy_response());
-    var debug = debug_1.default("https-proxy-agent:agent");
+    var agent_base_1 = require_dist();
+    var parse_proxy_response_1 = require_parse_proxy_response();
+    var debug = (0, debug_1.default)("https-proxy-agent");
     var HttpsProxyAgent = class extends agent_base_1.Agent {
-      constructor(_opts) {
-        let opts;
-        if (typeof _opts === "string") {
-          opts = url_1.default.parse(_opts);
-        } else {
-          opts = _opts;
-        }
-        if (!opts) {
-          throw new Error("an HTTP(S) proxy server `host` and `port` must be specified!");
-        }
-        debug("creating new HttpsProxyAgent instance: %o", opts);
+      get secureProxy() {
+        return isHTTPS(this.proxy.protocol);
+      }
+      constructor(proxy, opts) {
         super(opts);
-        const proxy = Object.assign({}, opts);
-        this.secureProxy = opts.secureProxy || isHTTPS(proxy.protocol);
-        proxy.host = proxy.hostname || proxy.host;
-        if (typeof proxy.port === "string") {
-          proxy.port = parseInt(proxy.port, 10);
-        }
-        if (!proxy.port && proxy.host) {
-          proxy.port = this.secureProxy ? 443 : 80;
-        }
-        if (this.secureProxy && !("ALPNProtocols" in proxy)) {
-          proxy.ALPNProtocols = ["http 1.1"];
-        }
-        if (proxy.host && proxy.path) {
-          delete proxy.path;
-          delete proxy.pathname;
-        }
-        this.proxy = proxy;
+        this.options = { path: void 0 };
+        this.proxy = typeof proxy === "string" ? new URL(proxy) : proxy;
+        this.proxyHeaders = (opts == null ? void 0 : opts.headers) ?? {};
+        debug("Creating new HttpsProxyAgent instance: %o", this.proxy.href);
+        const host = (this.proxy.hostname || this.proxy.host).replace(/^\[|\]$/g, "");
+        const port = this.proxy.port ? parseInt(this.proxy.port, 10) : this.secureProxy ? 443 : 80;
+        this.connectOpts = {
+          // Attempt to negotiate http/1.1 for proxy servers that support http/2
+          ALPNProtocols: ["http/1.1"],
+          ...opts ? omit(opts, "headers") : null,
+          host,
+          port
+        };
       }
       /**
        * Called when the node-core HTTP client library is creating a
        * new HTTP request.
-       *
-       * @api protected
        */
-      callback(req, opts) {
-        return __awaiter(this, void 0, void 0, function* () {
-          const { proxy, secureProxy } = this;
-          let socket;
-          if (secureProxy) {
-            debug("Creating `tls.Socket`: %o", proxy);
-            socket = tls_1.default.connect(proxy);
-          } else {
-            debug("Creating `net.Socket`: %o", proxy);
-            socket = net_1.default.connect(proxy);
-          }
-          const headers = Object.assign({}, proxy.headers);
-          const hostname = `${opts.host}:${opts.port}`;
-          let payload = `CONNECT ${hostname} HTTP/1.1\r
+      async connect(req, opts) {
+        const { proxy, secureProxy } = this;
+        if (!opts.host) {
+          throw new TypeError('No "host" provided');
+        }
+        let socket;
+        if (secureProxy) {
+          debug("Creating `tls.Socket`: %o", this.connectOpts);
+          socket = tls.connect(this.connectOpts);
+        } else {
+          debug("Creating `net.Socket`: %o", this.connectOpts);
+          socket = net.connect(this.connectOpts);
+        }
+        const headers = typeof this.proxyHeaders === "function" ? this.proxyHeaders() : { ...this.proxyHeaders };
+        const host = net.isIPv6(opts.host) ? `[${opts.host}]` : opts.host;
+        let payload = `CONNECT ${host}:${opts.port} HTTP/1.1\r
 `;
-          if (proxy.auth) {
-            headers["Proxy-Authorization"] = `Basic ${Buffer.from(proxy.auth).toString("base64")}`;
-          }
-          let { host, port, secureEndpoint } = opts;
-          if (!isDefaultPort(port, secureEndpoint)) {
-            host += `:${port}`;
-          }
-          headers.Host = host;
-          headers.Connection = "close";
-          for (const name of Object.keys(headers)) {
-            payload += `${name}: ${headers[name]}\r
+        if (proxy.username || proxy.password) {
+          const auth = `${decodeURIComponent(proxy.username)}:${decodeURIComponent(proxy.password)}`;
+          headers["Proxy-Authorization"] = `Basic ${Buffer.from(auth).toString("base64")}`;
+        }
+        headers.Host = `${host}:${opts.port}`;
+        if (!headers["Proxy-Connection"]) {
+          headers["Proxy-Connection"] = this.keepAlive ? "Keep-Alive" : "close";
+        }
+        for (const name of Object.keys(headers)) {
+          payload += `${name}: ${headers[name]}\r
 `;
-          }
-          const proxyResponsePromise = parse_proxy_response_1.default(socket);
-          socket.write(`${payload}\r
+        }
+        const proxyResponsePromise = (0, parse_proxy_response_1.parseProxyResponse)(socket);
+        socket.write(`${payload}\r
 `);
-          const { statusCode, buffered } = yield proxyResponsePromise;
-          if (statusCode === 200) {
-            req.once("socket", resume);
-            if (opts.secureEndpoint) {
-              debug("Upgrading socket connection to TLS");
-              const servername = opts.servername || opts.host;
-              return tls_1.default.connect(Object.assign(Object.assign({}, omit(opts, "host", "hostname", "path", "port")), {
-                socket,
-                servername
-              }));
-            }
-            return socket;
+        const { connect, buffered } = await proxyResponsePromise;
+        req.emit("proxyConnect", connect);
+        this.emit("proxyConnect", connect, req);
+        if (connect.statusCode === 200) {
+          req.once("socket", resume);
+          if (opts.secureEndpoint) {
+            debug("Upgrading socket connection to TLS");
+            const servername = opts.servername || opts.host;
+            return tls.connect({
+              ...omit(opts, "host", "path", "port"),
+              socket,
+              servername: net.isIP(servername) ? void 0 : servername
+            });
           }
-          socket.destroy();
-          const fakeSocket = new net_1.default.Socket({ writable: false });
-          fakeSocket.readable = true;
-          req.once("socket", (s) => {
-            debug("replaying proxy buffer for failed request");
-            assert_1.default(s.listenerCount("data") > 0);
-            s.push(buffered);
-            s.push(null);
-          });
-          return fakeSocket;
+          return socket;
+        }
+        socket.destroy();
+        const fakeSocket = new net.Socket({ writable: false });
+        fakeSocket.readable = true;
+        req.once("socket", (s) => {
+          debug("Replaying proxy buffer for failed request");
+          (0, assert_1.default)(s.listenerCount("data") > 0);
+          s.push(buffered);
+          s.push(null);
         });
+        return fakeSocket;
       }
     };
-    exports.default = HttpsProxyAgent;
+    HttpsProxyAgent.protocols = ["http", "https"];
+    exports.HttpsProxyAgent = HttpsProxyAgent;
     function resume(socket) {
       socket.resume();
-    }
-    function isDefaultPort(port, secure) {
-      return Boolean(!secure && port === 80 || secure && port === 443);
     }
     function isHTTPS(protocol) {
       return typeof protocol === "string" ? /^https:?$/i.test(protocol) : false;
@@ -27131,25 +27552,6 @@ var require_agent = __commonJS({
   }
 });
 
-// node_modules/https-proxy-agent/dist/index.js
-var require_dist = __commonJS({
-  "node_modules/https-proxy-agent/dist/index.js"(exports, module) {
-    "use strict";
-    var __importDefault = exports && exports.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : { "default": mod };
-    };
-    var agent_1 = __importDefault(require_agent());
-    function createHttpsProxyAgent(opts) {
-      return new agent_1.default(opts);
-    }
-    (function(createHttpsProxyAgent2) {
-      createHttpsProxyAgent2.HttpsProxyAgent = agent_1.default;
-      createHttpsProxyAgent2.prototype = agent_1.default.prototype;
-    })(createHttpsProxyAgent || (createHttpsProxyAgent = {}));
-    module.exports = createHttpsProxyAgent;
-  }
-});
-
 // node_modules/@octokit/action/dist-node/index.js
 var require_dist_node12 = __commonJS({
   "node_modules/@octokit/action/dist-node/index.js"(exports) {
@@ -27159,8 +27561,8 @@ var require_dist_node12 = __commonJS({
     var authAction = require_dist_node9();
     var pluginPaginateRest = require_dist_node10();
     var pluginRestEndpointMethods = require_dist_node11();
-    var VERSION = "5.0.2";
-    var HttpsProxyAgent = require_dist();
+    var httpsProxyAgent = require_dist2();
+    var VERSION = "5.0.4";
     var DEFAULTS = {
       authStrategy: authAction.createActionAuth,
       baseUrl: getApiBaseUrl(),
@@ -27169,11 +27571,11 @@ var require_dist_node12 = __commonJS({
     function getProxyAgent() {
       const httpProxy = process.env["HTTP_PROXY"] || process.env["http_proxy"];
       if (httpProxy) {
-        return new HttpsProxyAgent(httpProxy);
+        return new httpsProxyAgent.HttpsProxyAgent(httpProxy);
       }
       const httpsProxy = process.env["HTTPS_PROXY"] || process.env["https_proxy"];
       if (httpsProxy) {
-        return new HttpsProxyAgent(httpsProxy);
+        return new httpsProxyAgent.HttpsProxyAgent(httpsProxy);
       }
       return void 0;
     }
@@ -36463,9 +36865,6 @@ function remarkParse(options) {
   Object.assign(this, { Parser: parser });
 }
 
-// node_modules/remark-parse/index.js
-var remark_parse_default = remarkParse;
-
 // node_modules/zwitch/index.js
 var own4 = {}.hasOwnProperty;
 function zwitch(key, options) {
@@ -38039,15 +38438,12 @@ function remarkStringify(options) {
   Object.assign(this, { Compiler: compiler2 });
 }
 
-// node_modules/remark-stringify/index.js
-var remark_stringify_default = remarkStringify;
-
 // node_modules/remark/index.js
-var remark = unified().use(remark_parse_default).use(remark_stringify_default).freeze();
+var remark = unified().use(remarkParse).use(remarkStringify).freeze();
 
 // node_modules/micromark-extension-gfm-autolink-literal/lib/syntax.js
-var www = {
-  tokenize: tokenizeWww,
+var wwwPrefix = {
+  tokenize: tokenizeWwwPrefix,
   partial: true
 };
 var domain = {
@@ -38058,21 +38454,21 @@ var path = {
   tokenize: tokenizePath,
   partial: true
 };
-var punctuation = {
-  tokenize: tokenizePunctuation,
+var trail = {
+  tokenize: tokenizeTrail,
   partial: true
 };
-var namedCharacterReference = {
-  tokenize: tokenizeNamedCharacterReference,
+var emailDomainDotTrail = {
+  tokenize: tokenizeEmailDomainDotTrail,
   partial: true
 };
 var wwwAutolink = {
   tokenize: tokenizeWwwAutolink,
   previous: previousWww
 };
-var httpAutolink = {
-  tokenize: tokenizeHttpAutolink,
-  previous: previousHttp
+var protocolAutolink = {
+  tokenize: tokenizeProtocolAutolink,
+  previous: previousProtocol
 };
 var emailAutolink = {
   tokenize: tokenizeEmailAutolink,
@@ -38095,17 +38491,17 @@ text4[43] = emailAutolink;
 text4[45] = emailAutolink;
 text4[46] = emailAutolink;
 text4[95] = emailAutolink;
-text4[72] = [emailAutolink, httpAutolink];
-text4[104] = [emailAutolink, httpAutolink];
+text4[72] = [emailAutolink, protocolAutolink];
+text4[104] = [emailAutolink, protocolAutolink];
 text4[87] = [emailAutolink, wwwAutolink];
 text4[119] = [emailAutolink, wwwAutolink];
 function tokenizeEmailAutolink(effects, ok2, nok) {
   const self2 = this;
-  let hasDot;
-  let hasDigitInLastSegment;
+  let dot;
+  let data;
   return start;
   function start(code3) {
-    if (!gfmAtext(code3) || !previousEmail(self2.previous) || previousUnbalanced(self2.events)) {
+    if (!gfmAtext(code3) || !previousEmail.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
       return nok(code3);
     }
     effects.enter("literalAutolink");
@@ -38119,44 +38515,32 @@ function tokenizeEmailAutolink(effects, ok2, nok) {
     }
     if (code3 === 64) {
       effects.consume(code3);
-      return label;
+      return emailDomain;
     }
     return nok(code3);
   }
-  function label(code3) {
+  function emailDomain(code3) {
     if (code3 === 46) {
-      return effects.check(punctuation, done, dotContinuation)(code3);
+      return effects.check(
+        emailDomainDotTrail,
+        emailDomainAfter,
+        emailDomainDot
+      )(code3);
     }
-    if (code3 === 45 || code3 === 95) {
-      return effects.check(punctuation, nok, dashOrUnderscoreContinuation)(code3);
-    }
-    if (asciiAlphanumeric(code3)) {
-      if (!hasDigitInLastSegment && asciiDigit(code3)) {
-        hasDigitInLastSegment = true;
-      }
+    if (code3 === 45 || code3 === 95 || asciiAlphanumeric(code3)) {
+      data = true;
       effects.consume(code3);
-      return label;
+      return emailDomain;
     }
-    return done(code3);
+    return emailDomainAfter(code3);
   }
-  function dotContinuation(code3) {
+  function emailDomainDot(code3) {
     effects.consume(code3);
-    hasDot = true;
-    hasDigitInLastSegment = void 0;
-    return label;
+    dot = true;
+    return emailDomain;
   }
-  function dashOrUnderscoreContinuation(code3) {
-    effects.consume(code3);
-    return afterDashOrUnderscore;
-  }
-  function afterDashOrUnderscore(code3) {
-    if (code3 === 46) {
-      return effects.check(punctuation, nok, dotContinuation)(code3);
-    }
-    return label(code3);
-  }
-  function done(code3) {
-    if (hasDot && !hasDigitInLastSegment) {
+  function emailDomainAfter(code3) {
+    if (data && dot && asciiAlpha(self2.previous)) {
       effects.exit("literalAutolinkEmail");
       effects.exit("literalAutolink");
       return ok2(code3);
@@ -38166,257 +38550,223 @@ function tokenizeEmailAutolink(effects, ok2, nok) {
 }
 function tokenizeWwwAutolink(effects, ok2, nok) {
   const self2 = this;
-  return start;
-  function start(code3) {
-    if (code3 !== 87 && code3 !== 119 || !previousWww(self2.previous) || previousUnbalanced(self2.events)) {
+  return wwwStart;
+  function wwwStart(code3) {
+    if (code3 !== 87 && code3 !== 119 || !previousWww.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
       return nok(code3);
     }
     effects.enter("literalAutolink");
     effects.enter("literalAutolinkWww");
     return effects.check(
-      www,
-      effects.attempt(domain, effects.attempt(path, done), nok),
+      wwwPrefix,
+      effects.attempt(domain, effects.attempt(path, wwwAfter), nok),
       nok
     )(code3);
   }
-  function done(code3) {
+  function wwwAfter(code3) {
     effects.exit("literalAutolinkWww");
     effects.exit("literalAutolink");
     return ok2(code3);
   }
 }
-function tokenizeHttpAutolink(effects, ok2, nok) {
+function tokenizeProtocolAutolink(effects, ok2, nok) {
   const self2 = this;
-  return start;
-  function start(code3) {
-    if (code3 !== 72 && code3 !== 104 || !previousHttp(self2.previous) || previousUnbalanced(self2.events)) {
-      return nok(code3);
-    }
-    effects.enter("literalAutolink");
-    effects.enter("literalAutolinkHttp");
-    effects.consume(code3);
-    return t1;
-  }
-  function t1(code3) {
-    if (code3 === 84 || code3 === 116) {
+  let buffer2 = "";
+  let seen = false;
+  return protocolStart;
+  function protocolStart(code3) {
+    if ((code3 === 72 || code3 === 104) && previousProtocol.call(self2, self2.previous) && !previousUnbalanced(self2.events)) {
+      effects.enter("literalAutolink");
+      effects.enter("literalAutolinkHttp");
+      buffer2 += String.fromCodePoint(code3);
       effects.consume(code3);
-      return t2;
+      return protocolPrefixInside;
     }
     return nok(code3);
   }
-  function t2(code3) {
-    if (code3 === 84 || code3 === 116) {
+  function protocolPrefixInside(code3) {
+    if (asciiAlpha(code3) && buffer2.length < 5) {
+      buffer2 += String.fromCodePoint(code3);
       effects.consume(code3);
-      return p;
+      return protocolPrefixInside;
     }
-    return nok(code3);
-  }
-  function p(code3) {
-    if (code3 === 80 || code3 === 112) {
-      effects.consume(code3);
-      return s;
-    }
-    return nok(code3);
-  }
-  function s(code3) {
-    if (code3 === 83 || code3 === 115) {
-      effects.consume(code3);
-      return colon;
-    }
-    return colon(code3);
-  }
-  function colon(code3) {
     if (code3 === 58) {
-      effects.consume(code3);
-      return slash1;
+      const protocol = buffer2.toLowerCase();
+      if (protocol === "http" || protocol === "https") {
+        effects.consume(code3);
+        return protocolSlashesInside;
+      }
     }
     return nok(code3);
   }
-  function slash1(code3) {
+  function protocolSlashesInside(code3) {
     if (code3 === 47) {
       effects.consume(code3);
-      return slash2;
+      if (seen) {
+        return afterProtocol;
+      }
+      seen = true;
+      return protocolSlashesInside;
     }
     return nok(code3);
   }
-  function slash2(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
-      return after;
-    }
-    return nok(code3);
+  function afterProtocol(code3) {
+    return code3 === null || asciiControl(code3) || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || unicodePunctuation(code3) ? nok(code3) : effects.attempt(domain, effects.attempt(path, protocolAfter), nok)(code3);
   }
-  function after(code3) {
-    return code3 === null || asciiControl(code3) || unicodeWhitespace(code3) || unicodePunctuation(code3) ? nok(code3) : effects.attempt(domain, effects.attempt(path, done), nok)(code3);
-  }
-  function done(code3) {
+  function protocolAfter(code3) {
     effects.exit("literalAutolinkHttp");
     effects.exit("literalAutolink");
     return ok2(code3);
   }
 }
-function tokenizeWww(effects, ok2, nok) {
-  return start;
-  function start(code3) {
-    effects.consume(code3);
-    return w2;
-  }
-  function w2(code3) {
-    if (code3 === 87 || code3 === 119) {
+function tokenizeWwwPrefix(effects, ok2, nok) {
+  let size = 0;
+  return wwwPrefixInside;
+  function wwwPrefixInside(code3) {
+    if ((code3 === 87 || code3 === 119) && size < 3) {
+      size++;
       effects.consume(code3);
-      return w3;
+      return wwwPrefixInside;
+    }
+    if (code3 === 46 && size === 3) {
+      effects.consume(code3);
+      return wwwPrefixAfter;
     }
     return nok(code3);
   }
-  function w3(code3) {
-    if (code3 === 87 || code3 === 119) {
-      effects.consume(code3);
-      return dot;
-    }
-    return nok(code3);
-  }
-  function dot(code3) {
-    if (code3 === 46) {
-      effects.consume(code3);
-      return after;
-    }
-    return nok(code3);
-  }
-  function after(code3) {
-    return code3 === null || markdownLineEnding(code3) ? nok(code3) : ok2(code3);
+  function wwwPrefixAfter(code3) {
+    return code3 === null ? nok(code3) : ok2(code3);
   }
 }
 function tokenizeDomain(effects, ok2, nok) {
-  let hasUnderscoreInLastSegment;
-  let hasUnderscoreInLastLastSegment;
-  return domain2;
-  function domain2(code3) {
-    if (code3 === 38) {
-      return effects.check(
-        namedCharacterReference,
-        done,
-        punctuationContinuation
-      )(code3);
-    }
+  let underscoreInLastSegment;
+  let underscoreInLastLastSegment;
+  let seen;
+  return domainInside;
+  function domainInside(code3) {
     if (code3 === 46 || code3 === 95) {
-      return effects.check(punctuation, done, punctuationContinuation)(code3);
+      return effects.check(trail, domainAfter, domainAtPunctuation)(code3);
     }
-    if (code3 === null || asciiControl(code3) || unicodeWhitespace(code3) || code3 !== 45 && unicodePunctuation(code3)) {
-      return done(code3);
+    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || code3 !== 45 && unicodePunctuation(code3)) {
+      return domainAfter(code3);
+    }
+    seen = true;
+    effects.consume(code3);
+    return domainInside;
+  }
+  function domainAtPunctuation(code3) {
+    if (code3 === 95) {
+      underscoreInLastSegment = true;
+    } else {
+      underscoreInLastLastSegment = underscoreInLastSegment;
+      underscoreInLastSegment = void 0;
     }
     effects.consume(code3);
-    return domain2;
+    return domainInside;
   }
-  function punctuationContinuation(code3) {
-    if (code3 === 46) {
-      hasUnderscoreInLastLastSegment = hasUnderscoreInLastSegment;
-      hasUnderscoreInLastSegment = void 0;
-      effects.consume(code3);
-      return domain2;
+  function domainAfter(code3) {
+    if (underscoreInLastLastSegment || underscoreInLastSegment || !seen) {
+      return nok(code3);
     }
-    if (code3 === 95)
-      hasUnderscoreInLastSegment = true;
-    effects.consume(code3);
-    return domain2;
-  }
-  function done(code3) {
-    if (!hasUnderscoreInLastLastSegment && !hasUnderscoreInLastSegment) {
-      return ok2(code3);
-    }
-    return nok(code3);
+    return ok2(code3);
   }
 }
 function tokenizePath(effects, ok2) {
-  let balance = 0;
-  return inPath;
-  function inPath(code3) {
-    if (code3 === 38) {
-      return effects.check(
-        namedCharacterReference,
-        ok2,
-        continuedPunctuation
-      )(code3);
-    }
+  let sizeOpen = 0;
+  let sizeClose = 0;
+  return pathInside;
+  function pathInside(code3) {
     if (code3 === 40) {
-      balance++;
+      sizeOpen++;
+      effects.consume(code3);
+      return pathInside;
     }
-    if (code3 === 41) {
-      return effects.check(
-        punctuation,
-        parenAtPathEnd,
-        continuedPunctuation
-      )(code3);
+    if (code3 === 41 && sizeClose < sizeOpen) {
+      return pathAtPunctuation(code3);
     }
-    if (pathEnd(code3)) {
+    if (code3 === 33 || code3 === 34 || code3 === 38 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 60 || code3 === 63 || code3 === 93 || code3 === 95 || code3 === 126) {
+      return effects.check(trail, ok2, pathAtPunctuation)(code3);
+    }
+    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
       return ok2(code3);
     }
-    if (trailingPunctuation(code3)) {
-      return effects.check(punctuation, ok2, continuedPunctuation)(code3);
+    effects.consume(code3);
+    return pathInside;
+  }
+  function pathAtPunctuation(code3) {
+    if (code3 === 41) {
+      sizeClose++;
     }
     effects.consume(code3);
-    return inPath;
-  }
-  function continuedPunctuation(code3) {
-    effects.consume(code3);
-    return inPath;
-  }
-  function parenAtPathEnd(code3) {
-    balance--;
-    return balance < 0 ? ok2(code3) : continuedPunctuation(code3);
+    return pathInside;
   }
 }
-function tokenizeNamedCharacterReference(effects, ok2, nok) {
-  return start;
-  function start(code3) {
-    effects.consume(code3);
-    return inside;
-  }
-  function inside(code3) {
-    if (asciiAlpha(code3)) {
+function tokenizeTrail(effects, ok2, nok) {
+  return trail2;
+  function trail2(code3) {
+    if (code3 === 33 || code3 === 34 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 63 || code3 === 95 || code3 === 126) {
       effects.consume(code3);
-      return inside;
+      return trail2;
     }
-    if (code3 === 59) {
+    if (code3 === 38) {
       effects.consume(code3);
-      return after;
+      return trailCharRefStart;
+    }
+    if (code3 === 93) {
+      effects.consume(code3);
+      return trailBracketAfter;
+    }
+    if (
+      // `<` is an end.
+      code3 === 60 || // So is whitespace.
+      code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)
+    ) {
+      return ok2(code3);
     }
     return nok(code3);
   }
-  function after(code3) {
-    return pathEnd(code3) ? ok2(code3) : nok(code3);
+  function trailBracketAfter(code3) {
+    if (code3 === null || code3 === 40 || code3 === 91 || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
+      return ok2(code3);
+    }
+    return trail2(code3);
+  }
+  function trailCharRefStart(code3) {
+    return asciiAlpha(code3) ? trailCharRefInside(code3) : nok(code3);
+  }
+  function trailCharRefInside(code3) {
+    if (code3 === 59) {
+      effects.consume(code3);
+      return trail2;
+    }
+    if (asciiAlpha(code3)) {
+      effects.consume(code3);
+      return trailCharRefInside;
+    }
+    return nok(code3);
   }
 }
-function tokenizePunctuation(effects, ok2, nok) {
+function tokenizeEmailDomainDotTrail(effects, ok2, nok) {
   return start;
   function start(code3) {
     effects.consume(code3);
     return after;
   }
   function after(code3) {
-    if (trailingPunctuation(code3)) {
-      effects.consume(code3);
-      return after;
-    }
-    return pathEnd(code3) ? ok2(code3) : nok(code3);
+    return asciiAlphanumeric(code3) ? nok(code3) : ok2(code3);
   }
 }
-function trailingPunctuation(code3) {
-  return code3 === 33 || code3 === 34 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 60 || code3 === 63 || code3 === 95 || code3 === 126;
+function previousWww(code3) {
+  return code3 === null || code3 === 40 || code3 === 42 || code3 === 95 || code3 === 91 || code3 === 93 || code3 === 126 || markdownLineEndingOrSpace(code3);
 }
-function pathEnd(code3) {
-  return code3 === null || code3 === 60 || markdownLineEndingOrSpace(code3);
+function previousProtocol(code3) {
+  return !asciiAlpha(code3);
+}
+function previousEmail(code3) {
+  return !(code3 === 47 || gfmAtext(code3));
 }
 function gfmAtext(code3) {
   return code3 === 43 || code3 === 45 || code3 === 46 || code3 === 95 || asciiAlphanumeric(code3);
-}
-function previousWww(code3) {
-  return code3 === null || code3 === 40 || code3 === 42 || code3 === 95 || code3 === 126 || markdownLineEndingOrSpace(code3);
-}
-function previousHttp(code3) {
-  return code3 === null || !asciiAlpha(code3);
-}
-function previousEmail(code3) {
-  return code3 !== 47 && previousHttp(code3);
 }
 function previousUnbalanced(events) {
   let index2 = events.length;
@@ -38833,424 +39183,520 @@ function gfmStrikethrough(options) {
   }
 }
 
+// node_modules/micromark-extension-gfm-table/lib/edit-map.js
+var EditMap = class {
+  /**
+   * Create a new edit map.
+   */
+  constructor() {
+    this.map = [];
+  }
+  /**
+   * Create an edit: a remove and/or add at a certain place.
+   *
+   * @param {number} index
+   * @param {number} remove
+   * @param {Array<Event>} add
+   * @returns {void}
+   */
+  add(index2, remove, add) {
+    addImpl(this, index2, remove, add);
+  }
+  // To do: not used here.
+  // /**
+  //  * Create an edit: but insert `add` before existing additions.
+  //  *
+  //  * @param {number} index
+  //  * @param {number} remove
+  //  * @param {Array<Event>} add
+  //  * @returns {void}
+  //  */
+  // addBefore(index, remove, add) {
+  //   addImpl(this, index, remove, add, true)
+  // }
+  /**
+   * Done, change the events.
+   *
+   * @param {Array<Event>} events
+   * @returns {void}
+   */
+  consume(events) {
+    this.map.sort((a, b) => a[0] - b[0]);
+    if (this.map.length === 0) {
+      return;
+    }
+    let index2 = this.map.length;
+    const vecs = [];
+    while (index2 > 0) {
+      index2 -= 1;
+      vecs.push(events.slice(this.map[index2][0] + this.map[index2][1]));
+      vecs.push(this.map[index2][2]);
+      events.length = this.map[index2][0];
+    }
+    vecs.push([...events]);
+    events.length = 0;
+    let slice = vecs.pop();
+    while (slice) {
+      events.push(...slice);
+      slice = vecs.pop();
+    }
+    this.map.length = 0;
+  }
+};
+function addImpl(editMap, at, remove, add) {
+  let index2 = 0;
+  if (remove === 0 && add.length === 0) {
+    return;
+  }
+  while (index2 < editMap.map.length) {
+    if (editMap.map[index2][0] === at) {
+      editMap.map[index2][1] += remove;
+      editMap.map[index2][2].push(...add);
+      return;
+    }
+    index2 += 1;
+  }
+  editMap.map.push([at, remove, add]);
+}
+
+// node_modules/micromark-extension-gfm-table/lib/infer.js
+function gfmTableAlign(events, index2) {
+  let inDelimiterRow = false;
+  const align = [];
+  while (index2 < events.length) {
+    const event = events[index2];
+    if (inDelimiterRow) {
+      if (event[0] === "enter") {
+        if (event[1].type === "tableContent") {
+          align.push(
+            events[index2 + 1][1].type === "tableDelimiterMarker" ? "left" : "none"
+          );
+        }
+      } else if (event[1].type === "tableContent") {
+        if (events[index2 - 1][1].type === "tableDelimiterMarker") {
+          const alignIndex = align.length - 1;
+          align[alignIndex] = align[alignIndex] === "left" ? "center" : "right";
+        }
+      } else if (event[1].type === "tableDelimiterRow") {
+        break;
+      }
+    } else if (event[0] === "enter" && event[1].type === "tableDelimiterRow") {
+      inDelimiterRow = true;
+    }
+    index2 += 1;
+  }
+  return align;
+}
+
 // node_modules/micromark-extension-gfm-table/lib/syntax.js
 var gfmTable = {
   flow: {
     null: {
       tokenize: tokenizeTable,
-      resolve: resolveTable
+      resolveAll: resolveTable
     }
   }
 };
-var nextPrefixedOrBlank = {
-  tokenize: tokenizeNextPrefixedOrBlank,
-  partial: true
-};
+function tokenizeTable(effects, ok2, nok) {
+  const self2 = this;
+  let size = 0;
+  let sizeB = 0;
+  let seen;
+  return start;
+  function start(code3) {
+    let index2 = self2.events.length - 1;
+    while (index2 > -1) {
+      const type2 = self2.events[index2][1].type;
+      if (type2 === "lineEnding" || // Note: markdown-rs uses `whitespace` instead of `linePrefix`
+      type2 === "linePrefix")
+        index2--;
+      else
+        break;
+    }
+    const tail = index2 > -1 ? self2.events[index2][1].type : null;
+    const next = tail === "tableHead" || tail === "tableRow" ? bodyRowStart : headRowBefore;
+    if (next === bodyRowStart && self2.parser.lazy[self2.now().line]) {
+      return nok(code3);
+    }
+    return next(code3);
+  }
+  function headRowBefore(code3) {
+    effects.enter("tableHead");
+    effects.enter("tableRow");
+    return headRowStart(code3);
+  }
+  function headRowStart(code3) {
+    if (code3 === 124) {
+      return headRowBreak(code3);
+    }
+    seen = true;
+    sizeB += 1;
+    return headRowBreak(code3);
+  }
+  function headRowBreak(code3) {
+    if (code3 === null) {
+      return nok(code3);
+    }
+    if (markdownLineEnding(code3)) {
+      if (sizeB > 1) {
+        sizeB = 0;
+        self2.interrupt = true;
+        effects.exit("tableRow");
+        effects.enter("lineEnding");
+        effects.consume(code3);
+        effects.exit("lineEnding");
+        return headDelimiterStart;
+      }
+      return nok(code3);
+    }
+    if (markdownSpace(code3)) {
+      return factorySpace(effects, headRowBreak, "whitespace")(code3);
+    }
+    sizeB += 1;
+    if (seen) {
+      seen = false;
+      size += 1;
+    }
+    if (code3 === 124) {
+      effects.enter("tableCellDivider");
+      effects.consume(code3);
+      effects.exit("tableCellDivider");
+      seen = true;
+      return headRowBreak;
+    }
+    effects.enter("data");
+    return headRowData(code3);
+  }
+  function headRowData(code3) {
+    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+      effects.exit("data");
+      return headRowBreak(code3);
+    }
+    effects.consume(code3);
+    return code3 === 92 ? headRowEscape : headRowData;
+  }
+  function headRowEscape(code3) {
+    if (code3 === 92 || code3 === 124) {
+      effects.consume(code3);
+      return headRowData;
+    }
+    return headRowData(code3);
+  }
+  function headDelimiterStart(code3) {
+    self2.interrupt = false;
+    if (self2.parser.lazy[self2.now().line]) {
+      return nok(code3);
+    }
+    effects.enter("tableDelimiterRow");
+    seen = false;
+    if (markdownSpace(code3)) {
+      return factorySpace(
+        effects,
+        headDelimiterBefore,
+        "linePrefix",
+        self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
+      )(code3);
+    }
+    return headDelimiterBefore(code3);
+  }
+  function headDelimiterBefore(code3) {
+    if (code3 === 45 || code3 === 58) {
+      return headDelimiterValueBefore(code3);
+    }
+    if (code3 === 124) {
+      seen = true;
+      effects.enter("tableCellDivider");
+      effects.consume(code3);
+      effects.exit("tableCellDivider");
+      return headDelimiterCellBefore;
+    }
+    return headDelimiterNok(code3);
+  }
+  function headDelimiterCellBefore(code3) {
+    if (markdownSpace(code3)) {
+      return factorySpace(effects, headDelimiterValueBefore, "whitespace")(code3);
+    }
+    return headDelimiterValueBefore(code3);
+  }
+  function headDelimiterValueBefore(code3) {
+    if (code3 === 58) {
+      sizeB += 1;
+      seen = true;
+      effects.enter("tableDelimiterMarker");
+      effects.consume(code3);
+      effects.exit("tableDelimiterMarker");
+      return headDelimiterLeftAlignmentAfter;
+    }
+    if (code3 === 45) {
+      sizeB += 1;
+      return headDelimiterLeftAlignmentAfter(code3);
+    }
+    if (code3 === null || markdownLineEnding(code3)) {
+      return headDelimiterCellAfter(code3);
+    }
+    return headDelimiterNok(code3);
+  }
+  function headDelimiterLeftAlignmentAfter(code3) {
+    if (code3 === 45) {
+      effects.enter("tableDelimiterFiller");
+      return headDelimiterFiller(code3);
+    }
+    return headDelimiterNok(code3);
+  }
+  function headDelimiterFiller(code3) {
+    if (code3 === 45) {
+      effects.consume(code3);
+      return headDelimiterFiller;
+    }
+    if (code3 === 58) {
+      seen = true;
+      effects.exit("tableDelimiterFiller");
+      effects.enter("tableDelimiterMarker");
+      effects.consume(code3);
+      effects.exit("tableDelimiterMarker");
+      return headDelimiterRightAlignmentAfter;
+    }
+    effects.exit("tableDelimiterFiller");
+    return headDelimiterRightAlignmentAfter(code3);
+  }
+  function headDelimiterRightAlignmentAfter(code3) {
+    if (markdownSpace(code3)) {
+      return factorySpace(effects, headDelimiterCellAfter, "whitespace")(code3);
+    }
+    return headDelimiterCellAfter(code3);
+  }
+  function headDelimiterCellAfter(code3) {
+    if (code3 === 124) {
+      return headDelimiterBefore(code3);
+    }
+    if (code3 === null || markdownLineEnding(code3)) {
+      if (!seen || size !== sizeB) {
+        return headDelimiterNok(code3);
+      }
+      effects.exit("tableDelimiterRow");
+      effects.exit("tableHead");
+      return ok2(code3);
+    }
+    return headDelimiterNok(code3);
+  }
+  function headDelimiterNok(code3) {
+    return nok(code3);
+  }
+  function bodyRowStart(code3) {
+    effects.enter("tableRow");
+    return bodyRowBreak(code3);
+  }
+  function bodyRowBreak(code3) {
+    if (code3 === 124) {
+      effects.enter("tableCellDivider");
+      effects.consume(code3);
+      effects.exit("tableCellDivider");
+      return bodyRowBreak;
+    }
+    if (code3 === null || markdownLineEnding(code3)) {
+      effects.exit("tableRow");
+      return ok2(code3);
+    }
+    if (markdownSpace(code3)) {
+      return factorySpace(effects, bodyRowBreak, "whitespace")(code3);
+    }
+    effects.enter("data");
+    return bodyRowData(code3);
+  }
+  function bodyRowData(code3) {
+    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+      effects.exit("data");
+      return bodyRowBreak(code3);
+    }
+    effects.consume(code3);
+    return code3 === 92 ? bodyRowEscape : bodyRowData;
+  }
+  function bodyRowEscape(code3) {
+    if (code3 === 92 || code3 === 124) {
+      effects.consume(code3);
+      return bodyRowData;
+    }
+    return bodyRowData(code3);
+  }
+}
 function resolveTable(events, context) {
   let index2 = -1;
-  let inHead;
-  let inDelimiterRow;
-  let inRow;
-  let contentStart;
-  let contentEnd;
-  let cellStart;
-  let seenCellInRow;
+  let inFirstCellAwaitingPipe = true;
+  let rowKind = 0;
+  let lastCell = [0, 0, 0, 0];
+  let cell = [0, 0, 0, 0];
+  let afterHeadAwaitingFirstBodyRow = false;
+  let lastTableEnd = 0;
+  let currentTable;
+  let currentBody;
+  let currentCell;
+  const map5 = new EditMap();
   while (++index2 < events.length) {
-    const token = events[index2][1];
-    if (inRow) {
-      if (token.type === "temporaryTableCellContent") {
-        contentStart = contentStart || index2;
-        contentEnd = index2;
+    const event = events[index2];
+    const token = event[1];
+    if (event[0] === "enter") {
+      if (token.type === "tableHead") {
+        afterHeadAwaitingFirstBodyRow = false;
+        if (lastTableEnd !== 0) {
+          flushTableEnd(map5, context, lastTableEnd, currentTable, currentBody);
+          currentBody = void 0;
+          lastTableEnd = 0;
+        }
+        currentTable = {
+          type: "table",
+          start: Object.assign({}, token.start),
+          // Note: correct end is set later.
+          end: Object.assign({}, token.end)
+        };
+        map5.add(index2, 0, [["enter", currentTable, context]]);
+      } else if (token.type === "tableRow" || token.type === "tableDelimiterRow") {
+        inFirstCellAwaitingPipe = true;
+        currentCell = void 0;
+        lastCell = [0, 0, 0, 0];
+        cell = [0, index2 + 1, 0, 0];
+        if (afterHeadAwaitingFirstBodyRow) {
+          afterHeadAwaitingFirstBodyRow = false;
+          currentBody = {
+            type: "tableBody",
+            start: Object.assign({}, token.start),
+            // Note: correct end is set later.
+            end: Object.assign({}, token.end)
+          };
+          map5.add(index2, 0, [["enter", currentBody, context]]);
+        }
+        rowKind = token.type === "tableDelimiterRow" ? 2 : currentBody ? 3 : 1;
+      } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
+        inFirstCellAwaitingPipe = false;
+        if (cell[2] === 0) {
+          if (lastCell[1] !== 0) {
+            cell[0] = cell[1];
+            currentCell = flushCell(
+              map5,
+              context,
+              lastCell,
+              rowKind,
+              void 0,
+              currentCell
+            );
+            lastCell = [0, 0, 0, 0];
+          }
+          cell[2] = index2;
+        }
+      } else if (token.type === "tableCellDivider") {
+        if (inFirstCellAwaitingPipe) {
+          inFirstCellAwaitingPipe = false;
+        } else {
+          if (lastCell[1] !== 0) {
+            cell[0] = cell[1];
+            currentCell = flushCell(
+              map5,
+              context,
+              lastCell,
+              rowKind,
+              void 0,
+              currentCell
+            );
+          }
+          lastCell = cell;
+          cell = [lastCell[1], index2, 0, 0];
+        }
       }
-      if (
-        // Combine separate content parts into one.
-        (token.type === "tableCellDivider" || token.type === "tableRow") && contentEnd
-      ) {
-        const content3 = {
-          type: "tableContent",
-          start: events[contentStart][1].start,
-          end: events[contentEnd][1].end
-        };
-        const text5 = {
-          type: "chunkText",
-          start: content3.start,
-          end: content3.end,
-          // @ts-expect-error It’s fine.
-          contentType: "text"
-        };
-        events.splice(
-          contentStart,
-          contentEnd - contentStart + 1,
-          ["enter", content3, context],
-          ["enter", text5, context],
-          ["exit", text5, context],
-          ["exit", content3, context]
+    } else if (token.type === "tableHead") {
+      afterHeadAwaitingFirstBodyRow = true;
+      lastTableEnd = index2;
+    } else if (token.type === "tableRow" || token.type === "tableDelimiterRow") {
+      lastTableEnd = index2;
+      if (lastCell[1] !== 0) {
+        cell[0] = cell[1];
+        currentCell = flushCell(
+          map5,
+          context,
+          lastCell,
+          rowKind,
+          index2,
+          currentCell
         );
-        index2 -= contentEnd - contentStart - 3;
-        contentStart = void 0;
-        contentEnd = void 0;
+      } else if (cell[1] !== 0) {
+        currentCell = flushCell(map5, context, cell, rowKind, index2, currentCell);
       }
+      rowKind = 0;
+    } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
+      cell[3] = index2;
     }
-    if (events[index2][0] === "exit" && cellStart !== void 0 && cellStart + (seenCellInRow ? 0 : 1) < index2 && (token.type === "tableCellDivider" || token.type === "tableRow" && (cellStart + 3 < index2 || events[cellStart][1].type !== "whitespace"))) {
-      const cell = {
-        type: inDelimiterRow ? "tableDelimiter" : inHead ? "tableHeader" : "tableData",
-        start: events[cellStart][1].start,
-        end: events[index2][1].end
-      };
-      events.splice(index2 + (token.type === "tableCellDivider" ? 1 : 0), 0, [
-        "exit",
-        cell,
-        context
-      ]);
-      events.splice(cellStart, 0, ["enter", cell, context]);
-      index2 += 2;
-      cellStart = index2 + 1;
-      seenCellInRow = true;
-    }
-    if (token.type === "tableRow") {
-      inRow = events[index2][0] === "enter";
-      if (inRow) {
-        cellStart = index2 + 1;
-        seenCellInRow = false;
-      }
-    }
-    if (token.type === "tableDelimiterRow") {
-      inDelimiterRow = events[index2][0] === "enter";
-      if (inDelimiterRow) {
-        cellStart = index2 + 1;
-        seenCellInRow = false;
-      }
-    }
-    if (token.type === "tableHead") {
-      inHead = events[index2][0] === "enter";
+  }
+  if (lastTableEnd !== 0) {
+    flushTableEnd(map5, context, lastTableEnd, currentTable, currentBody);
+  }
+  map5.consume(context.events);
+  index2 = -1;
+  while (++index2 < context.events.length) {
+    const event = context.events[index2];
+    if (event[0] === "enter" && event[1].type === "table") {
+      event[1]._align = gfmTableAlign(context.events, index2);
     }
   }
   return events;
 }
-function tokenizeTable(effects, ok2, nok) {
-  const self2 = this;
-  const align = [];
-  let tableHeaderCount = 0;
-  let seenDelimiter;
-  let hasDash;
-  return start;
-  function start(code3) {
-    effects.enter("table")._align = align;
-    effects.enter("tableHead");
-    effects.enter("tableRow");
-    if (code3 === 124) {
-      return cellDividerHead(code3);
-    }
-    tableHeaderCount++;
-    effects.enter("temporaryTableCellContent");
-    return inCellContentHead(code3);
+function flushCell(map5, context, range, rowKind, rowEnd, previousCell) {
+  const groupName = rowKind === 1 ? "tableHeader" : rowKind === 2 ? "tableDelimiter" : "tableData";
+  const valueName = "tableContent";
+  if (range[0] !== 0) {
+    previousCell.end = Object.assign({}, getPoint(context.events, range[0]));
+    map5.add(range[0], 0, [["exit", previousCell, context]]);
   }
-  function cellDividerHead(code3) {
-    effects.enter("tableCellDivider");
-    effects.consume(code3);
-    effects.exit("tableCellDivider");
-    seenDelimiter = true;
-    return cellBreakHead;
-  }
-  function cellBreakHead(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return atRowEndHead(code3);
-    }
-    if (markdownSpace(code3)) {
-      effects.enter("whitespace");
-      effects.consume(code3);
-      return inWhitespaceHead;
-    }
-    if (seenDelimiter) {
-      seenDelimiter = void 0;
-      tableHeaderCount++;
-    }
-    if (code3 === 124) {
-      return cellDividerHead(code3);
-    }
-    effects.enter("temporaryTableCellContent");
-    return inCellContentHead(code3);
-  }
-  function inWhitespaceHead(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
-      return inWhitespaceHead;
-    }
-    effects.exit("whitespace");
-    return cellBreakHead(code3);
-  }
-  function inCellContentHead(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
-      effects.exit("temporaryTableCellContent");
-      return cellBreakHead(code3);
-    }
-    effects.consume(code3);
-    return code3 === 92 ? inCellContentEscapeHead : inCellContentHead;
-  }
-  function inCellContentEscapeHead(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
-      return inCellContentHead;
-    }
-    return inCellContentHead(code3);
-  }
-  function atRowEndHead(code3) {
-    if (code3 === null) {
-      return nok(code3);
-    }
-    effects.exit("tableRow");
-    effects.exit("tableHead");
-    const originalInterrupt = self2.interrupt;
-    self2.interrupt = true;
-    return effects.attempt(
-      {
-        tokenize: tokenizeRowEnd,
-        partial: true
-      },
-      function(code4) {
-        self2.interrupt = originalInterrupt;
-        effects.enter("tableDelimiterRow");
-        return atDelimiterRowBreak(code4);
-      },
-      function(code4) {
-        self2.interrupt = originalInterrupt;
-        return nok(code4);
+  const now = getPoint(context.events, range[1]);
+  previousCell = {
+    type: groupName,
+    start: Object.assign({}, now),
+    // Note: correct end is set later.
+    end: Object.assign({}, now)
+  };
+  map5.add(range[1], 0, [["enter", previousCell, context]]);
+  if (range[2] !== 0) {
+    const relatedStart = getPoint(context.events, range[2]);
+    const relatedEnd = getPoint(context.events, range[3]);
+    const valueToken = {
+      type: valueName,
+      start: Object.assign({}, relatedStart),
+      end: Object.assign({}, relatedEnd)
+    };
+    map5.add(range[2], 0, [["enter", valueToken, context]]);
+    if (rowKind !== 2) {
+      const start = context.events[range[2]];
+      const end = context.events[range[3]];
+      start[1].end = Object.assign({}, end[1].end);
+      start[1].type = "chunkText";
+      start[1].contentType = "text";
+      if (range[3] > range[2] + 1) {
+        const a = range[2] + 1;
+        const b = range[3] - range[2] - 1;
+        map5.add(a, b, []);
       }
-    )(code3);
+    }
+    map5.add(range[3] + 1, 0, [["exit", valueToken, context]]);
   }
-  function atDelimiterRowBreak(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return rowEndDelimiter(code3);
-    }
-    if (markdownSpace(code3)) {
-      effects.enter("whitespace");
-      effects.consume(code3);
-      return inWhitespaceDelimiter;
-    }
-    if (code3 === 45) {
-      effects.enter("tableDelimiterFiller");
-      effects.consume(code3);
-      hasDash = true;
-      align.push("none");
-      return inFillerDelimiter;
-    }
-    if (code3 === 58) {
-      effects.enter("tableDelimiterAlignment");
-      effects.consume(code3);
-      effects.exit("tableDelimiterAlignment");
-      align.push("left");
-      return afterLeftAlignment;
-    }
-    if (code3 === 124) {
-      effects.enter("tableCellDivider");
-      effects.consume(code3);
-      effects.exit("tableCellDivider");
-      return atDelimiterRowBreak;
-    }
-    return nok(code3);
+  if (rowEnd !== void 0) {
+    previousCell.end = Object.assign({}, getPoint(context.events, rowEnd));
+    map5.add(rowEnd, 0, [["exit", previousCell, context]]);
+    previousCell = void 0;
   }
-  function inWhitespaceDelimiter(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
-      return inWhitespaceDelimiter;
-    }
-    effects.exit("whitespace");
-    return atDelimiterRowBreak(code3);
-  }
-  function inFillerDelimiter(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
-      return inFillerDelimiter;
-    }
-    effects.exit("tableDelimiterFiller");
-    if (code3 === 58) {
-      effects.enter("tableDelimiterAlignment");
-      effects.consume(code3);
-      effects.exit("tableDelimiterAlignment");
-      align[align.length - 1] = align[align.length - 1] === "left" ? "center" : "right";
-      return afterRightAlignment;
-    }
-    return atDelimiterRowBreak(code3);
-  }
-  function afterLeftAlignment(code3) {
-    if (code3 === 45) {
-      effects.enter("tableDelimiterFiller");
-      effects.consume(code3);
-      hasDash = true;
-      return inFillerDelimiter;
-    }
-    return nok(code3);
-  }
-  function afterRightAlignment(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return rowEndDelimiter(code3);
-    }
-    if (markdownSpace(code3)) {
-      effects.enter("whitespace");
-      effects.consume(code3);
-      return inWhitespaceDelimiter;
-    }
-    if (code3 === 124) {
-      effects.enter("tableCellDivider");
-      effects.consume(code3);
-      effects.exit("tableCellDivider");
-      return atDelimiterRowBreak;
-    }
-    return nok(code3);
-  }
-  function rowEndDelimiter(code3) {
-    effects.exit("tableDelimiterRow");
-    if (!hasDash || tableHeaderCount !== align.length) {
-      return nok(code3);
-    }
-    if (code3 === null) {
-      return tableClose(code3);
-    }
-    return effects.check(
-      nextPrefixedOrBlank,
-      tableClose,
-      effects.attempt(
-        {
-          tokenize: tokenizeRowEnd,
-          partial: true
-        },
-        factorySpace(effects, bodyStart, "linePrefix", 4),
-        tableClose
-      )
-    )(code3);
-  }
-  function tableClose(code3) {
-    effects.exit("table");
-    return ok2(code3);
-  }
-  function bodyStart(code3) {
-    effects.enter("tableBody");
-    return rowStartBody(code3);
-  }
-  function rowStartBody(code3) {
-    effects.enter("tableRow");
-    if (code3 === 124) {
-      return cellDividerBody(code3);
-    }
-    effects.enter("temporaryTableCellContent");
-    return inCellContentBody(code3);
-  }
-  function cellDividerBody(code3) {
-    effects.enter("tableCellDivider");
-    effects.consume(code3);
-    effects.exit("tableCellDivider");
-    return cellBreakBody;
-  }
-  function cellBreakBody(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return atRowEndBody(code3);
-    }
-    if (markdownSpace(code3)) {
-      effects.enter("whitespace");
-      effects.consume(code3);
-      return inWhitespaceBody;
-    }
-    if (code3 === 124) {
-      return cellDividerBody(code3);
-    }
-    effects.enter("temporaryTableCellContent");
-    return inCellContentBody(code3);
-  }
-  function inWhitespaceBody(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
-      return inWhitespaceBody;
-    }
-    effects.exit("whitespace");
-    return cellBreakBody(code3);
-  }
-  function inCellContentBody(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
-      effects.exit("temporaryTableCellContent");
-      return cellBreakBody(code3);
-    }
-    effects.consume(code3);
-    return code3 === 92 ? inCellContentEscapeBody : inCellContentBody;
-  }
-  function inCellContentEscapeBody(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
-      return inCellContentBody;
-    }
-    return inCellContentBody(code3);
-  }
-  function atRowEndBody(code3) {
-    effects.exit("tableRow");
-    if (code3 === null) {
-      return tableBodyClose(code3);
-    }
-    return effects.check(
-      nextPrefixedOrBlank,
-      tableBodyClose,
-      effects.attempt(
-        {
-          tokenize: tokenizeRowEnd,
-          partial: true
-        },
-        factorySpace(effects, rowStartBody, "linePrefix", 4),
-        tableBodyClose
-      )
-    )(code3);
-  }
-  function tableBodyClose(code3) {
-    effects.exit("tableBody");
-    return tableClose(code3);
-  }
-  function tokenizeRowEnd(effects2, ok3, nok2) {
-    return start2;
-    function start2(code3) {
-      effects2.enter("lineEnding");
-      effects2.consume(code3);
-      effects2.exit("lineEnding");
-      return factorySpace(effects2, prefixed, "linePrefix");
-    }
-    function prefixed(code3) {
-      if (self2.parser.lazy[self2.now().line] || code3 === null || markdownLineEnding(code3)) {
-        return nok2(code3);
-      }
-      const tail = self2.events[self2.events.length - 1];
-      if (!self2.parser.constructs.disable.null.includes("codeIndented") && tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4) {
-        return nok2(code3);
-      }
-      self2._gfmTableDynamicInterruptHack = true;
-      return effects2.check(
-        self2.parser.constructs.flow,
-        function(code4) {
-          self2._gfmTableDynamicInterruptHack = false;
-          return nok2(code4);
-        },
-        function(code4) {
-          self2._gfmTableDynamicInterruptHack = false;
-          return ok3(code4);
-        }
-      )(code3);
-    }
-  }
+  return previousCell;
 }
-function tokenizeNextPrefixedOrBlank(effects, ok2, nok) {
-  let size = 0;
-  return start;
-  function start(code3) {
-    effects.enter("check");
-    effects.consume(code3);
-    return whitespace;
+function flushTableEnd(map5, context, index2, table, tableBody) {
+  const exits = [];
+  const related = getPoint(context.events, index2);
+  if (tableBody) {
+    tableBody.end = Object.assign({}, related);
+    exits.push(["exit", tableBody, context]);
   }
-  function whitespace(code3) {
-    if (code3 === -1 || code3 === 32) {
-      effects.consume(code3);
-      size++;
-      return size === 4 ? ok2 : whitespace;
-    }
-    if (code3 === null || markdownLineEndingOrSpace(code3)) {
-      return ok2(code3);
-    }
-    return nok(code3);
-  }
+  table.end = Object.assign({}, related);
+  exits.push(["exit", table, context]);
+  map5.add(index2 + 1, 0, exits);
+}
+function getPoint(events, index2) {
+  const event = events[index2];
+  const side = event[0] === "enter" ? "start" : "end";
+  return event[1][side];
 }
 
 // node_modules/micromark-extension-gfm-task-list-item/lib/syntax.js
@@ -39627,17 +40073,17 @@ function splitUrl(url) {
     return [url, void 0];
   }
   url = url.slice(0, trailExec.index);
-  let trail = trailExec[0];
-  let closingParenIndex = trail.indexOf(")");
+  let trail2 = trailExec[0];
+  let closingParenIndex = trail2.indexOf(")");
   const openingParens = ccount(url, "(");
   let closingParens = ccount(url, ")");
   while (closingParenIndex !== -1 && openingParens > closingParens) {
-    url += trail.slice(0, closingParenIndex + 1);
-    trail = trail.slice(closingParenIndex + 1);
-    closingParenIndex = trail.indexOf(")");
+    url += trail2.slice(0, closingParenIndex + 1);
+    trail2 = trail2.slice(closingParenIndex + 1);
+    closingParenIndex = trail2.indexOf(")");
     closingParens++;
   }
-  return [url, trail];
+  return [url, trail2];
 }
 function previous2(match, email) {
   const code3 = match.input.charCodeAt(match.index - 1);
