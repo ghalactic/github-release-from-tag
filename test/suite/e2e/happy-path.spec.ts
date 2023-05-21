@@ -113,7 +113,7 @@ paragraph
     ];
 
     // points to a commit history with PRs for generating release notes
-    const parentCommit = "4b8277d28bee33b7c323164b2f2750adf98917be";
+    const parentCommit = "9db47d2f820af6941f9ccbb9885898fce0cc760a";
 
     let workflowRun: WorkflowRunData;
     let annotations: AnnotationData[];
