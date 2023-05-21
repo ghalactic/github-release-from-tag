@@ -16,7 +16,7 @@ describe("readTagAnnotation()", () => {
   beforeEach(async () => {
     originalCwd = cwd();
 
-    mainPath = await mkdtemp(join(tmpdir(), "lqnt-"));
+    mainPath = await mkdtemp(join(tmpdir(), "ghalactic-"));
   });
 
   afterEach(async () => {

@@ -1,4 +1,4 @@
 export const CONFIG =
-  "https://lqnt.co/github-release-action/config.schema.json";
+  "https://ghalactic.github.io/github-release-from-tag/schema/config.schema.json";
 export const ASSETS =
-  "https://lqnt.co/github-release-action/assets.schema.json";
+  "https://ghalactic.github.io/github-release-from-tag/schema/assets.schema.json";

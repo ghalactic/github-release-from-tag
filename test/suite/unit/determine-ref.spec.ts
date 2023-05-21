@@ -22,7 +22,7 @@ describe("determineRef()", () => {
   beforeEach(async () => {
     originalCwd = cwd();
 
-    const mainPath = await mkdtemp(join(tmpdir(), "lqnt-"));
+    const mainPath = await mkdtemp(join(tmpdir(), "ghalactic-"));
     const originPath = join(mainPath, "origin");
     const clonePath = join(mainPath, "clone");
 

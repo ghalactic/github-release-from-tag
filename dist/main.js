@@ -43449,8 +43449,8 @@ function isObject2(value) {
 var import_ajv = __toESM(require_ajv(), 1);
 
 // src/constant/schema-id.ts
-var CONFIG = "https://lqnt.co/github-release-action/config.schema.json";
-var ASSETS2 = "https://lqnt.co/github-release-action/assets.schema.json";
+var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.schema.json";
+var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.schema.json";
 
 // src/config/schema.ts
 var config = {
