@@ -18,4 +18,4 @@ jobs:
       - name: Make
         run: make ci
         env:
-          FIXTURE_GITHUB_TOKEN: ${{ secrets.FIXTURE_GITHUB_TOKEN }}
+          FIXTURES_GITHUB_TOKEN: ${{ secrets.FIXTURES_GITHUB_TOKEN }}

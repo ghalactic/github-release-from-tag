@@ -10,7 +10,7 @@ let octokit: Octokit;
 
 export function createOctokit(): Octokit {
   if (octokit == null) {
-    octokit = new Octokit({ auth: process.env.FIXTURE_GITHUB_TOKEN });
+    octokit = new Octokit({ auth: process.env.FIXTURES_GITHUB_TOKEN });
   }
 
   return octokit;
