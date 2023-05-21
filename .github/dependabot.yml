@@ -6,11 +6,11 @@ updates:
     schedule:
       interval: weekly
     reviewers:
-      - eloquent/dependabot-reviewers
+      - ghalactic/dependabot-reviewers
   - package-ecosystem: github-actions
     directory: /
     registries: "*"
     schedule:
       interval: weekly
     reviewers:
-      - eloquent/dependabot-reviewers
+      - ghalactic/dependabot-reviewers

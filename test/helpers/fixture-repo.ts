@@ -1,2 +1,2 @@
-export const owner = "eloquent-fixtures";
-export const repo = "github-release-action-ci";
+export const owner = "ghalactic-fixtures";
+export const repo = "github-release-from-tag-ci";

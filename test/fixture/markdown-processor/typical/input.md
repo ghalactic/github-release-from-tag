@@ -12,6 +12,6 @@
 - **[BC BREAK]** Tag names like `v1` and `v1.2` are now considered "stable" as
   per [GitHub's recommendations for action versioning].
 
-[v2.0-token-action-input]: https://github.lqnt.co/eloquent/github-release-action/tree/v2.0.0#action-inputs
-[v2.0-markdown-line-breaks]: https://github.lqnt.co/eloquent/github-release-action/tree/v2.0.0#markdown-line-breaks
+[v2.0-token-action-input]: https://github.lqnt.co/ghalactic/github-release-from-tag/tree/v2.0.0#action-inputs
+[v2.0-markdown-line-breaks]: https://github.lqnt.co/ghalactic/github-release-from-tag/tree/v2.0.0#markdown-line-breaks
 [github's recommendations for action versioning]: https://github.lqnt.co/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations

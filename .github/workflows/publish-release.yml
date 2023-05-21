@@ -22,6 +22,6 @@ jobs:
             echo "Tag is not SemVer"
           fi
       - name: Publish release
-        uses: eloquent/github-release-action@main
+        uses: ghalactic/github-release-from-tag@main
         with:
           discussionCategory: ${{ steps.check-tag.outputs.is-semver == 'true' && 'Releases' || '' }}

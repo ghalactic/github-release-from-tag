@@ -63,7 +63,7 @@ export function buildWorkflow(
 
           {
             name: "Publish release",
-            uses: `eloquent/github-release-action@${GITHUB_SHA || "main"}`,
+            uses: `ghalactic/github-release-from-tag@${GITHUB_SHA || "main"}`,
             with: publishOptions,
             id: "publishRelease",
           },

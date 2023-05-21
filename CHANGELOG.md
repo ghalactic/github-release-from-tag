@@ -9,7 +9,7 @@ Versioning].
 
 ## [v3.2.1] - 2023-05-14
 
-[v3.2.1]: https://github.com/eloquent/github-release-action/releases/v3.2.1
+[v3.2.1]: https://github.com/ghalactic/github-release-from-tag/releases/v3.2.1
 
 ### Other
 
@@ -17,7 +17,7 @@ Versioning].
 
 ## [v3.2.0] - 2023-04-06
 
-[v3.2.0]: https://github.com/eloquent/github-release-action/releases/v3.2.0
+[v3.2.0]: https://github.com/ghalactic/github-release-from-tag/releases/v3.2.0
 
 ### Improved
 
@@ -29,7 +29,7 @@ Versioning].
 
 ## [v3.1.4] - 2023-02-06
 
-[v3.1.4]: https://github.com/eloquent/github-release-action/releases/v3.1.4
+[v3.1.4]: https://github.com/ghalactic/github-release-from-tag/releases/v3.1.4
 
 ### Fixed
 
@@ -40,7 +40,7 @@ Versioning].
 
 ## [v3.1.3] - 2023-01-17
 
-[v3.1.3]: https://github.com/eloquent/github-release-action/releases/v3.1.3
+[v3.1.3]: https://github.com/ghalactic/github-release-from-tag/releases/v3.1.3
 
 ### Fixed
 
@@ -48,7 +48,7 @@ Versioning].
 
 ## [v3.1.2] - 2022-11-21
 
-[v3.1.2]: https://github.com/eloquent/github-release-action/releases/v3.1.2
+[v3.1.2]: https://github.com/ghalactic/github-release-from-tag/releases/v3.1.2
 
 ### Fixed
 
@@ -58,7 +58,7 @@ Versioning].
 
 ## [v3.1.1] - 2022-09-13
 
-[v3.1.1]: https://github.com/eloquent/github-release-action/releases/v3.1.1
+[v3.1.1]: https://github.com/ghalactic/github-release-from-tag/releases/v3.1.1
 
 ### Changed
 
@@ -69,7 +69,7 @@ Versioning].
 
 ## [v3.1.0] - 2022-09-11
 
-[v3.1.0]: https://github.com/eloquent/github-release-action/releases/v3.1.0
+[v3.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v3.1.0
 
 ### Added
 
@@ -84,7 +84,7 @@ Versioning].
 - Added the `taggerLogin` output, which contains the username of the GitHub user
   who created the tag.
 
-[v3.1-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.1.0#job-summaries
+[v3.1-job-summaries]: https://github.com/ghalactic/github-release-from-tag/tree/v3.1.0#job-summaries
 
 ### Changed
 
@@ -97,14 +97,14 @@ Versioning].
 
 ## [v3.0.0] - 2022-09-10
 
-[v3.0.0]: https://github.com/eloquent/github-release-action/releases/v3.0.0
+[v3.0.0]: https://github.com/ghalactic/github-release-from-tag/releases/v3.0.0
 
 ### Added
 
 - Actions [job summaries][v3.0-job-summaries] will now be created when the
   action is successful.
 
-[v3.0-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.0.0#job-summaries
+[v3.0-job-summaries]: https://github.com/ghalactic/github-release-from-tag/tree/v3.0.0#job-summaries
 
 ### Removed
 
@@ -112,7 +112,7 @@ Versioning].
   the action is successful. This feature has been replaced by
   [job summaries][v3.0-job-summaries].
 
-[v3.0-job-summaries]: https://github.com/eloquent/github-release-action/tree/v3.0.0#job-summaries
+[v3.0-job-summaries]: https://github.com/ghalactic/github-release-from-tag/tree/v3.0.0#job-summaries
 
 ### Changed
 
@@ -132,7 +132,7 @@ Versioning].
 [`remark-gfm`]: https://github.com/remarkjs/remark-gfm
 [`remark-github`]: https://github.com/remarkjs/remark-github
 [remark]: https://remark.js.org/
-[v3.0-markdown-line-breaks]: https://github.com/eloquent/github-release-action/tree/v3.0.0#markdown-line-breaks
+[v3.0-markdown-line-breaks]: https://github.com/ghalactic/github-release-from-tag/tree/v3.0.0#markdown-line-breaks
 
 ### Fixed
 
@@ -141,12 +141,12 @@ Versioning].
   manage their releases ([#36]).
 - Issue links in release bodies should no longer fail to render ([#37]).
 
-[#36]: https://github.com/eloquent/github-release-action/issues/36
-[#37]: https://github.com/eloquent/github-release-action/issues/37
+[#36]: https://github.com/ghalactic/github-release-from-tag/issues/36
+[#37]: https://github.com/ghalactic/github-release-from-tag/issues/37
 
 ## [v2.1.2] - 2022-09-01
 
-[v2.1.2]: https://github.com/eloquent/github-release-action/releases/v2.1.2
+[v2.1.2]: https://github.com/ghalactic/github-release-from-tag/releases/v2.1.2
 
 ### Fixed
 
@@ -155,7 +155,7 @@ Versioning].
 
 ## [v2.1.1] - 2022-09-01
 
-[v2.1.1]: https://github.com/eloquent/github-release-action/releases/v2.1.1
+[v2.1.1]: https://github.com/ghalactic/github-release-from-tag/releases/v2.1.1
 
 ### Fixed
 
@@ -167,7 +167,7 @@ Versioning].
 
 ## [v2.1.0] - 2022-08-03
 
-[v2.1.0]: https://github.com/eloquent/github-release-action/releases/v2.1.0
+[v2.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v2.1.0
 
 ### Added
 
@@ -175,12 +175,12 @@ Versioning].
   the new `assets` action input.
 - Support for [optional release assets][v2.1-optional-release-assets].
 
-[v2.1-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#release-assets
-[v2.1-optional-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.1.0#optional-release-assets
+[v2.1-release-assets]: https://github.com/ghalactic/github-release-from-tag/tree/v2.1.0#release-assets
+[v2.1-optional-release-assets]: https://github.com/ghalactic/github-release-from-tag/tree/v2.1.0#optional-release-assets
 
 ## [v2.0.0] - 2022-06-05
 
-[v2.0.0]: https://github.com/eloquent/github-release-action/releases/v2.0.0
+[v2.0.0]: https://github.com/ghalactic/github-release-from-tag/releases/v2.0.0
 
 ### Changed
 
@@ -196,8 +196,8 @@ Versioning].
 - **[BC BREAK]** Tag names like `v1` and `v1.2` are now considered "stable" as
   per [GitHub's recommendations for action versioning].
 
-[v2.0-token-action-input]: https://github.com/eloquent/github-release-action/tree/v2.0.0#action-inputs
-[v2.0-markdown-line-breaks]: https://github.com/eloquent/github-release-action/tree/v2.0.0#markdown-line-breaks
+[v2.0-token-action-input]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#action-inputs
+[v2.0-markdown-line-breaks]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#markdown-line-breaks
 [github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
 ### Added
@@ -210,9 +210,9 @@ Versioning].
   discussions.
 - Support for overriding [release stability][v2.0-release-stability] detection.
 
-[v2.0-release-assets]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-assets
-[v2.0-automated-release-notes]: https://github.com/eloquent/github-release-action/tree/v2.0.0#automated-release-notes
-[v2.0-release-discussions]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-discussions
-[v2.0-draft-releases]: https://github.com/eloquent/github-release-action/tree/v2.0.0#draft-releases
-[v2.0-reactions]: https://github.com/eloquent/github-release-action/tree/v2.0.0#reactions
-[v2.0-release-stability]: https://github.com/eloquent/github-release-action/tree/v2.0.0#release-stability
+[v2.0-release-assets]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#release-assets
+[v2.0-automated-release-notes]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#automated-release-notes
+[v2.0-release-discussions]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#release-discussions
+[v2.0-draft-releases]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#draft-releases
+[v2.0-reactions]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#reactions
+[v2.0-release-stability]: https://github.com/ghalactic/github-release-from-tag/tree/v2.0.0#release-stability
