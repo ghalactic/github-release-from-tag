@@ -84,7 +84,7 @@ paragraph
 
     const files = [
       {
-        path: ".github/release.eloquent.yml",
+        path: ".github/github-release-from-tag.yml",
         content: config,
       },
       {

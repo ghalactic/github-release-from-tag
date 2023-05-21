@@ -170,7 +170,7 @@ can be done via the [configuration file], or via [action inputs]:
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 prerelease: true # or false
 ```
 
@@ -206,7 +206,7 @@ this feature via the [configuration file], or via [action inputs]:
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 draft: true
 ```
 
@@ -308,7 +308,7 @@ inputs]:
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 generateReleaseNotes: true
 ```
 
@@ -358,7 +358,7 @@ with a release, and made available for download from GitHub. Release assets
 [configuration file]: #the-configuration-file
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 assets:
   - path: path/to/asset-a
   - path: path/to/asset-b-*
@@ -397,7 +397,7 @@ If **a single file** matches the `path` glob pattern, you can additionally
 specify a custom `name` and/or `label` for the asset:
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 assets:
   - path: path/to/asset-a.yaml
     name: custom-name.yml
@@ -440,7 +440,7 @@ Assets can be made "optional" — that is, they will simply be skipped if the
 by setting the `optional` property to `true`:
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 assets:
   - path: path/to/assets/*
     optional: true
@@ -487,7 +487,7 @@ this feature via the [configuration file], or via [action inputs]:
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 discussion:
   category: Announcements
 ```
@@ -518,7 +518,7 @@ file], or via [action inputs]:
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 reactions: ["+1", laugh, hooray, heart, rocket, eyes]
 ```
 
@@ -534,7 +534,7 @@ for release discussions (which support a couple of additional reactions like �
 and 😕):
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 discussion:
   category: Announcements
   reactions: ["+1", "-1", laugh, hooray, confused, heart, rocket, eyes]
@@ -567,7 +567,7 @@ You can disable this feature via the [configuration file], or via
 [action inputs]: #action-inputs
 
 ```yaml
-# In .github/release.eloquent.yml:
+# In .github/github-release-from-tag.yml:
 summary:
   enabled: false
 ```
@@ -596,7 +596,7 @@ affecting how releases are published:
 [json schema definition]: src/config/schema.js
 
 ```yaml
-# .github/release.eloquent.yml
+# .github/github-release-from-tag.yml
 
 # Set to true to produce releases in a draft state.
 draft: true

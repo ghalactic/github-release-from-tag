@@ -28,7 +28,7 @@ export async function readConfig({
     const yaml = await readConfigFile();
 
     if (typeof yaml === "undefined") {
-      info("No configuration found at .github/release.eloquent.yml");
+      info("No configuration found at .github/github-release-from-tag.yml");
     }
 
     const base = parseConfig(yaml);
@@ -63,7 +63,7 @@ async function readConfigFile(): Promise<string | undefined> {
   let data;
 
   try {
-    data = await readFile(".github/release.eloquent.yml");
+    data = await readFile(".github/github-release-from-tag.yml");
   } catch (error) {
     if (!isFileNotFoundError(error)) throw error;
 

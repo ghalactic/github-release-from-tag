@@ -43620,7 +43620,7 @@ async function readConfig({
   return group2("Reading release configuration", async () => {
     const yaml = await readConfigFile();
     if (typeof yaml === "undefined") {
-      info2("No configuration found at .github/release.eloquent.yml");
+      info2("No configuration found at .github/github-release-from-tag.yml");
     }
     const base2 = parseConfig(yaml);
     const overrides = getConfigOverrides(getInput2, base2);
@@ -43647,7 +43647,7 @@ async function readConfig({
 async function readConfigFile() {
   let data;
   try {
-    data = await readFile2(".github/release.eloquent.yml");
+    data = await readFile2(".github/github-release-from-tag.yml");
   } catch (error2) {
     if (!isFileNotFoundError(error2))
       throw error2;
