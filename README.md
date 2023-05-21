@@ -63,7 +63,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Publish release
-        uses: ghalactic/github-release-from-tag@v3
+        uses: ghalactic/github-release-from-tag@v4
 ```
 
 It's also possible to use [`if` conditionals] to restrict the release publishing
@@ -73,7 +73,7 @@ step inside a multi-purpose workflow, so that it only runs on tag pushes:
 
 ```yaml
 - name: Publish release
-  uses: ghalactic/github-release-from-tag@v3
+  uses: ghalactic/github-release-from-tag@v4
   if: github.ref_type == 'tag'
 ```
 
@@ -104,7 +104,7 @@ jobs:
         with:
           ref: refs/tags/${{ github.event.inputs.tag }}
       - name: Publish release
-        uses: ghalactic/github-release-from-tag@v3
+        uses: ghalactic/github-release-from-tag@v4
 ```
 
 ### GitHub token
@@ -118,7 +118,7 @@ token, you can do so via [action inputs]:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 ```
@@ -176,7 +176,7 @@ prerelease: true # or false
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     prerelease: "true" # or "false"
 ```
@@ -212,7 +212,7 @@ draft: true
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     draft: "true"
 ```
@@ -314,7 +314,7 @@ generateReleaseNotes: true
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     generateReleaseNotes: "true"
 ```
@@ -366,7 +366,7 @@ assets:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     # Note the "|" character - this example uses a YAML multiline string.
     assets: |
@@ -406,7 +406,7 @@ assets:
 
 ```yaml
 # In your workflow (using YAML):
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     # Note the "|" character - this example uses a YAML multiline string.
     assets: |
@@ -417,7 +417,7 @@ assets:
 
 ```yaml
 # In your workflow (using JSON):
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     # Note the "|" character - this example uses a YAML multiline string.
     assets: |
@@ -448,7 +448,7 @@ assets:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     # Note the "|" character - this example uses a YAML multiline string.
     assets: |
@@ -472,7 +472,7 @@ value for this input is up to you, but any value from a [context] (e.g.
 - id: listAssets
   run: echo "assets=$(bash list-assets.sh)" >> $GITHUB_OUTPUT
 
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     assets: ${{ steps.listAssets.outputs.assets }}
 ```
@@ -494,7 +494,7 @@ discussion:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     discussionCategory: Announcements
 ```
@@ -524,7 +524,7 @@ reactions: ["+1", laugh, hooray, heart, rocket, eyes]
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     reactions: +1,laugh,hooray,heart,rocket,eyes
 ```
@@ -542,7 +542,7 @@ discussion:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     discussionCategory: Announcements
     discussionReactions: +1,-1,laugh,hooray,confused,heart,rocket,eyes
@@ -574,7 +574,7 @@ summary:
 
 ```yaml
 # In your workflow:
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     summaryEnabled: "false"
 ```
@@ -647,7 +647,7 @@ published:
 [action metadata file]: action.yml
 
 ```yaml
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   with:
     # Set to "true" to produce releases in a draft state.
     draft: "true"
@@ -791,7 +791,7 @@ add an `id` to the step that uses this action, and reference the output you
 need as demonstrated below:
 
 ```yaml
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   id: publishRelease
 - env:
     RELEASE_URL: ${{ steps.publishRelease.outputs.releaseUrl }}
@@ -804,7 +804,7 @@ can be accessed:
 > **Note:** The assets are ordered by their `name` property.
 
 ```yaml
-- uses: ghalactic/github-release-from-tag@v3
+- uses: ghalactic/github-release-from-tag@v4
   id: publishRelease
 - env:
     DOWNLOAD_URL: ${{ fromJSON(steps.publishRelease.outputs.assets)[0].downloadUrl }}
