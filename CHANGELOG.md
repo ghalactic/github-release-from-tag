@@ -7,6 +7,36 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v4.0.0] - 2023-05-21
+
+[v4.0.0]: https://github.com/ghalactic/github-release-from-tag/releases/v4.0.0
+
+This action has been migrated to a new organization named [Ghalactic] that is
+dedicated to housing high-quality GitHub actions. Please update your workflows
+to reference the action's new location at
+`ghalactic/github-release-from-tag@v4`.
+
+[ghalactic]: https://ghalactic.github.io/
+
+### Migrating from `v3` to `v4`
+
+- Update the [uses] value from `eloquent/github-release-action@v3` to
+  `ghalactic/github-release-from-tag@v4`.
+- Rename any [configuration files] from `.github/release.eloquent.yml` to
+  `.github/github-release-from-tag.yml`.
+
+[uses]: https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsuses
+[configuration files]: https://github.com/ghalactic/github-release-from-tag/tree/v4.0.0#the-configuration-file
+
+### Backwards-compatibility breaks
+
+- Configuration files must now be located at
+  `.github/github-release-from-tag.yml`.
+
+### Changed
+
+- The repo was moved to `ghalactic/github-release-from-tag`.
+
 ## [v3.2.1] - 2023-05-14
 
 [v3.2.1]: https://github.com/ghalactic/github-release-from-tag/releases/v3.2.1
