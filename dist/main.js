@@ -27244,27 +27244,34 @@ var require_dist = __commonJS({
     exports.Agent = void 0;
     var http = __importStar(__require("http"));
     __exportStar(require_helpers(), exports);
-    function isSecureEndpoint() {
-      const { stack } = new Error();
-      if (typeof stack !== "string")
-        return false;
-      return stack.split("\n").some((l) => l.indexOf("(https.js:") !== -1 || l.indexOf("node:https:") !== -1);
-    }
     var INTERNAL = Symbol("AgentBaseInternalState");
     var Agent = class extends http.Agent {
       constructor(opts) {
         super(opts);
         this[INTERNAL] = {};
       }
+      /**
+       * Determine whether this is an `http` or `https` request.
+       */
+      isSecureEndpoint(options) {
+        if (options) {
+          if (typeof options.secureEndpoint === "boolean") {
+            return options.secureEndpoint;
+          }
+          if (typeof options.protocol === "string") {
+            return options.protocol === "https:";
+          }
+        }
+        const { stack } = new Error();
+        if (typeof stack !== "string")
+          return false;
+        return stack.split("\n").some((l) => l.indexOf("(https.js:") !== -1 || l.indexOf("node:https:") !== -1);
+      }
       createSocket(req, options, cb) {
-        let secureEndpoint = typeof options.secureEndpoint === "boolean" ? options.secureEndpoint : void 0;
-        if (typeof secureEndpoint === "undefined" && typeof options.protocol === "string") {
-          secureEndpoint = options.protocol === "https:";
-        }
-        if (typeof secureEndpoint === "undefined") {
-          secureEndpoint = isSecureEndpoint();
-        }
-        const connectOpts = { ...options, secureEndpoint };
+        const connectOpts = {
+          ...options,
+          secureEndpoint: this.isSecureEndpoint(options)
+        };
         Promise.resolve().then(() => this.connect(req, connectOpts)).then((socket) => {
           if (socket instanceof http.Agent) {
             return socket.addRequest(req, connectOpts);
@@ -27290,7 +27297,7 @@ var require_dist = __commonJS({
         }
       }
       get protocol() {
-        return this[INTERNAL].protocol ?? (isSecureEndpoint() ? "https:" : "http:");
+        return this[INTERNAL].protocol ?? (this.isSecureEndpoint() ? "https:" : "http:");
       }
       set protocol(v) {
         if (this[INTERNAL]) {
@@ -27327,14 +27334,12 @@ var require_parse_proxy_response = __commonJS({
         function cleanup() {
           socket.removeListener("end", onend);
           socket.removeListener("error", onerror);
-          socket.removeListener("close", onclose);
           socket.removeListener("readable", read);
         }
-        function onclose(err) {
-          debug("onclose had error %o", err);
-        }
         function onend() {
+          cleanup();
           debug("onend");
+          reject(new Error("Proxy connection ended before receiving CONNECT response"));
         }
         function onerror(err) {
           cleanup();
@@ -27354,7 +27359,8 @@ var require_parse_proxy_response = __commonJS({
           const headerParts = buffered.toString("ascii").split("\r\n");
           const firstLine = headerParts.shift();
           if (!firstLine) {
-            throw new Error("No header received");
+            socket.destroy();
+            return reject(new Error("No header received from proxy CONNECT response"));
           }
           const firstLineParts = firstLine.split(" ");
           const statusCode = +firstLineParts[1];
@@ -27365,7 +27371,8 @@ var require_parse_proxy_response = __commonJS({
               continue;
             const firstColon = header.indexOf(":");
             if (firstColon === -1) {
-              throw new Error(`Invalid header: "${header}"`);
+              socket.destroy();
+              return reject(new Error(`Invalid header from proxy CONNECT response: "${header}"`));
             }
             const key = header.slice(0, firstColon).toLowerCase();
             const value = header.slice(firstColon + 1).trimStart();
@@ -27378,7 +27385,7 @@ var require_parse_proxy_response = __commonJS({
               headers[key] = value;
             }
           }
-          debug("got proxy server response: %o", firstLine);
+          debug("got proxy server response: %o %o", firstLine, headers);
           cleanup();
           resolve({
             connect: {
@@ -27390,7 +27397,6 @@ var require_parse_proxy_response = __commonJS({
           });
         }
         socket.on("error", onerror);
-        socket.on("close", onclose);
         socket.on("end", onend);
         read();
       });
@@ -27448,9 +27454,6 @@ var require_dist2 = __commonJS({
     var parse_proxy_response_1 = require_parse_proxy_response();
     var debug = (0, debug_1.default)("https-proxy-agent");
     var HttpsProxyAgent = class extends agent_base_1.Agent {
-      get secureProxy() {
-        return isHTTPS(this.proxy.protocol);
-      }
       constructor(proxy, opts) {
         super(opts);
         this.options = { path: void 0 };
@@ -27458,7 +27461,7 @@ var require_dist2 = __commonJS({
         this.proxyHeaders = (opts == null ? void 0 : opts.headers) ?? {};
         debug("Creating new HttpsProxyAgent instance: %o", this.proxy.href);
         const host = (this.proxy.hostname || this.proxy.host).replace(/^\[|\]$/g, "");
-        const port = this.proxy.port ? parseInt(this.proxy.port, 10) : this.secureProxy ? 443 : 80;
+        const port = this.proxy.port ? parseInt(this.proxy.port, 10) : this.proxy.protocol === "https:" ? 443 : 80;
         this.connectOpts = {
           // Attempt to negotiate http/1.1 for proxy servers that support http/2
           ALPNProtocols: ["http/1.1"],
@@ -27472,12 +27475,12 @@ var require_dist2 = __commonJS({
        * new HTTP request.
        */
       async connect(req, opts) {
-        const { proxy, secureProxy } = this;
+        const { proxy } = this;
         if (!opts.host) {
           throw new TypeError('No "host" provided');
         }
         let socket;
-        if (secureProxy) {
+        if (proxy.protocol === "https:") {
           debug("Creating `tls.Socket`: %o", this.connectOpts);
           socket = tls.connect(this.connectOpts);
         } else {
@@ -27536,9 +27539,6 @@ var require_dist2 = __commonJS({
     function resume(socket) {
       socket.resume();
     }
-    function isHTTPS(protocol) {
-      return typeof protocol === "string" ? /^https:?$/i.test(protocol) : false;
-    }
     function omit(obj, ...keys2) {
       const ret = {};
       let key;
@@ -27562,7 +27562,7 @@ var require_dist_node12 = __commonJS({
     var pluginPaginateRest = require_dist_node10();
     var pluginRestEndpointMethods = require_dist_node11();
     var httpsProxyAgent = require_dist2();
-    var VERSION = "5.0.4";
+    var VERSION = "5.0.5";
     var DEFAULTS = {
       authStrategy: authAction.createActionAuth,
       baseUrl: getApiBaseUrl(),
