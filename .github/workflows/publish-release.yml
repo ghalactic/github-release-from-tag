@@ -1,0 +1,17 @@
+# DO NOT EDIT - This file is managed by ghalactic/repos.
+name: Publish release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    name: Ghalactic
+    uses: ghalactic/repos/.github/workflows/shared-publish-release.yml@main
+    secrets: inherit
+    with:
+      discussionCategory: Releases
+      releaseActionVersion: main
+      tag: ${{ github.ref_name }}
