@@ -27554,32 +27554,58 @@ var require_dist2 = __commonJS({
 
 // node_modules/@octokit/action/dist-node/index.js
 var require_dist_node12 = __commonJS({
-  "node_modules/@octokit/action/dist-node/index.js"(exports) {
+  "node_modules/@octokit/action/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var core2 = require_dist_node8();
-    var authAction = require_dist_node9();
-    var pluginPaginateRest = require_dist_node10();
-    var pluginRestEndpointMethods = require_dist_node11();
-    var httpsProxyAgent = require_dist2();
-    var VERSION = "5.0.5";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      Octokit: () => Octokit2,
+      RestEndpointMethodTypes: () => import_plugin_rest_endpoint_methods2.RestEndpointMethodTypes
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_core2 = require_dist_node8();
+    var import_auth_action = require_dist_node9();
+    var import_plugin_paginate_rest = require_dist_node10();
+    var import_plugin_rest_endpoint_methods = require_dist_node11();
+    var import_plugin_rest_endpoint_methods2 = require_dist_node11();
+    var VERSION = "5.0.6";
+    var import_https_proxy_agent = require_dist2();
     var DEFAULTS = {
-      authStrategy: authAction.createActionAuth,
+      authStrategy: import_auth_action.createActionAuth,
       baseUrl: getApiBaseUrl(),
       userAgent: `octokit-action.js/${VERSION}`
     };
     function getProxyAgent() {
       const httpProxy = process.env["HTTP_PROXY"] || process.env["http_proxy"];
       if (httpProxy) {
-        return new httpsProxyAgent.HttpsProxyAgent(httpProxy);
+        return new import_https_proxy_agent.HttpsProxyAgent(httpProxy);
       }
       const httpsProxy = process.env["HTTPS_PROXY"] || process.env["https_proxy"];
       if (httpsProxy) {
-        return new httpsProxyAgent.HttpsProxyAgent(httpsProxy);
+        return new import_https_proxy_agent.HttpsProxyAgent(httpsProxy);
       }
       return void 0;
     }
-    var Octokit2 = core2.Octokit.plugin(pluginPaginateRest.paginateRest, pluginRestEndpointMethods.legacyRestEndpointMethods).defaults(function buildDefaults(options) {
+    var Octokit2 = import_core2.Octokit.plugin(
+      import_plugin_paginate_rest.paginateRest,
+      import_plugin_rest_endpoint_methods.legacyRestEndpointMethods
+    ).defaults(function buildDefaults(options) {
       return {
         ...DEFAULTS,
         ...options,
@@ -27592,7 +27618,6 @@ var require_dist_node12 = __commonJS({
     function getApiBaseUrl() {
       return process.env["GITHUB_API_URL"] || "https://api.github.com";
     }
-    exports.Octokit = Octokit2;
   }
 });
 
