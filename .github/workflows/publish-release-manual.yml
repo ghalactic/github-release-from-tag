@@ -1,0 +1,20 @@
+# DO NOT EDIT - This file is managed by ghalactic/repos.
+name: Publish release (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag to publish
+        type: string
+        required: true
+
+jobs:
+  publish:
+    name: Ghalactic
+    uses: ghalactic/repos/.github/workflows/shared-publish-release.yml@main
+    secrets: inherit
+    with:
+      discussionCategory: Releases
+      releaseActionVersion: main
+      tag: ${{ github.event.inputs.tag }}
