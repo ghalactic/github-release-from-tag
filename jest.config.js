@@ -26,7 +26,7 @@ const config = {
 };
 
 if (isGHA) {
-  process.setMaxListeners(20);
+  process.setMaxListeners(100);
 
   Object.assign(config, {
     // allow all E2E tests to run in parallel, since they are mostly idle
