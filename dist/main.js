@@ -988,12 +988,12 @@ var require_lib = __commonJS({
     var RetryableHttpVerbs = ["OPTIONS", "GET", "DELETE", "HEAD"];
     var ExponentialBackoffCeiling = 10;
     var ExponentialBackoffTimeSlice = 5;
-    var HttpClientError = class extends Error {
+    var HttpClientError = class _HttpClientError extends Error {
       constructor(message, statusCode) {
         super(message);
         this.name = "HttpClientError";
         this.statusCode = statusCode;
-        Object.setPrototypeOf(this, HttpClientError.prototype);
+        Object.setPrototypeOf(this, _HttpClientError.prototype);
       }
     };
     exports.HttpClientError = HttpClientError;
@@ -1584,13 +1584,13 @@ var require_oidc_utils = __commonJS({
     var http_client_1 = require_lib();
     var auth_1 = require_auth();
     var core_1 = require_core();
-    var OidcClient = class {
+    var OidcClient = class _OidcClient {
       static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
           allowRetries: allowRetry,
           maxRetries: maxRetry
         };
-        return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
+        return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(_OidcClient.getRequestToken())], requestOptions);
       }
       static getRequestToken() {
         const token = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
@@ -1609,7 +1609,7 @@ var require_oidc_utils = __commonJS({
       static getCall(id_token_url) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-          const httpclient = OidcClient.createHttpClient();
+          const httpclient = _OidcClient.createHttpClient();
           const res = yield httpclient.getJson(id_token_url).catch((error2) => {
             throw new Error(`Failed to get ID Token. 
  
@@ -1627,13 +1627,13 @@ var require_oidc_utils = __commonJS({
       static getIDToken(audience) {
         return __awaiter(this, void 0, void 0, function* () {
           try {
-            let id_token_url = OidcClient.getIDTokenUrl();
+            let id_token_url = _OidcClient.getIDTokenUrl();
             if (audience) {
               const encodedAudience = encodeURIComponent(audience);
               id_token_url = `${id_token_url}&audience=${encodedAudience}`;
             }
             core_1.debug(`ID token url is ${id_token_url}`);
-            const id_token = yield OidcClient.getCall(id_token_url);
+            const id_token = yield _OidcClient.getCall(id_token_url);
             core_1.setSecret(id_token);
             return id_token;
           } catch (error2) {
@@ -3487,7 +3487,7 @@ var require_internal_pattern = __commonJS({
     var internal_match_kind_1 = require_internal_match_kind();
     var internal_path_1 = require_internal_path();
     var IS_WINDOWS = process.platform === "win32";
-    var Pattern = class {
+    var Pattern = class _Pattern {
       constructor(patternOrNegate, isImplicitPattern = false, segments, homedir) {
         this.negate = false;
         let pattern;
@@ -3496,7 +3496,7 @@ var require_internal_pattern = __commonJS({
         } else {
           segments = segments || [];
           assert_1.default(segments.length, `Parameter 'segments' must not empty`);
-          const root2 = Pattern.getLiteral(segments[0]);
+          const root2 = _Pattern.getLiteral(segments[0]);
           assert_1.default(root2 && pathHelper.hasAbsoluteRoot(root2), `Parameter 'segments' first element must be a root path`);
           pattern = new internal_path_1.Path(segments).toString().trim();
           if (patternOrNegate) {
@@ -3507,14 +3507,14 @@ var require_internal_pattern = __commonJS({
           this.negate = !this.negate;
           pattern = pattern.substr(1).trim();
         }
-        pattern = Pattern.fixupPattern(pattern, homedir);
+        pattern = _Pattern.fixupPattern(pattern, homedir);
         this.segments = new internal_path_1.Path(pattern).segments;
         this.trailingSeparator = pathHelper.normalizeSeparators(pattern).endsWith(path2.sep);
         pattern = pathHelper.safeTrimTrailingSeparator(pattern);
         let foundGlob = false;
-        const searchSegments = this.segments.map((x) => Pattern.getLiteral(x)).filter((x) => !foundGlob && !(foundGlob = x === ""));
+        const searchSegments = this.segments.map((x) => _Pattern.getLiteral(x)).filter((x) => !foundGlob && !(foundGlob = x === ""));
         this.searchPath = new internal_path_1.Path(searchSegments).toString();
-        this.rootRegExp = new RegExp(Pattern.regExpEscape(searchSegments[0]), IS_WINDOWS ? "i" : "");
+        this.rootRegExp = new RegExp(_Pattern.regExpEscape(searchSegments[0]), IS_WINDOWS ? "i" : "");
         this.isImplicitPattern = isImplicitPattern;
         const minimatchOptions = {
           dot: true,
@@ -3565,31 +3565,31 @@ var require_internal_pattern = __commonJS({
        */
       static fixupPattern(pattern, homedir) {
         assert_1.default(pattern, "pattern cannot be empty");
-        const literalSegments = new internal_path_1.Path(pattern).segments.map((x) => Pattern.getLiteral(x));
+        const literalSegments = new internal_path_1.Path(pattern).segments.map((x) => _Pattern.getLiteral(x));
         assert_1.default(literalSegments.every((x, i) => (x !== "." || i === 0) && x !== ".."), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
         assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
         pattern = pathHelper.normalizeSeparators(pattern);
         if (pattern === "." || pattern.startsWith(`.${path2.sep}`)) {
-          pattern = Pattern.globEscape(process.cwd()) + pattern.substr(1);
+          pattern = _Pattern.globEscape(process.cwd()) + pattern.substr(1);
         } else if (pattern === "~" || pattern.startsWith(`~${path2.sep}`)) {
           homedir = homedir || os.homedir();
           assert_1.default(homedir, "Unable to determine HOME directory");
           assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
-          pattern = Pattern.globEscape(homedir) + pattern.substr(1);
+          pattern = _Pattern.globEscape(homedir) + pattern.substr(1);
         } else if (IS_WINDOWS && (pattern.match(/^[A-Z]:$/i) || pattern.match(/^[A-Z]:[^\\]/i))) {
           let root2 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", pattern.substr(0, 2));
           if (pattern.length > 2 && !root2.endsWith("\\")) {
             root2 += "\\";
           }
-          pattern = Pattern.globEscape(root2) + pattern.substr(2);
+          pattern = _Pattern.globEscape(root2) + pattern.substr(2);
         } else if (IS_WINDOWS && (pattern === "\\" || pattern.match(/^\\[^\\]/))) {
           let root2 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", "\\");
           if (!root2.endsWith("\\")) {
             root2 += "\\";
           }
-          pattern = Pattern.globEscape(root2) + pattern.substr(1);
+          pattern = _Pattern.globEscape(root2) + pattern.substr(1);
         } else {
-          pattern = pathHelper.ensureAbsoluteRoot(Pattern.globEscape(process.cwd()), pattern);
+          pattern = pathHelper.ensureAbsoluteRoot(_Pattern.globEscape(process.cwd()), pattern);
         }
         return pathHelper.normalizeSeparators(pattern);
       }
@@ -3793,7 +3793,7 @@ var require_internal_globber = __commonJS({
     var internal_pattern_1 = require_internal_pattern();
     var internal_search_state_1 = require_internal_search_state();
     var IS_WINDOWS = process.platform === "win32";
-    var DefaultGlobber = class {
+    var DefaultGlobber = class _DefaultGlobber {
       constructor(options) {
         this.patterns = [];
         this.searchPaths = [];
@@ -3857,7 +3857,7 @@ var require_internal_globber = __commonJS({
               continue;
             }
             const stats = yield __await(
-              DefaultGlobber.stat(item, options, traversalChain)
+              _DefaultGlobber.stat(item, options, traversalChain)
               // Broken symlink, or symlink cycle detected, or no longer exists
             );
             if (!stats) {
@@ -3883,7 +3883,7 @@ var require_internal_globber = __commonJS({
        */
       static create(patterns, options) {
         return __awaiter(this, void 0, void 0, function* () {
-          const result = new DefaultGlobber(options);
+          const result = new _DefaultGlobber(options);
           if (IS_WINDOWS) {
             patterns = patterns.replace(/\r\n/g, "\n");
             patterns = patterns.replace(/\r/g, "\n");
@@ -13376,7 +13376,7 @@ var require_codegen = __commonJS({
     var Else = class extends BlockNode {
     };
     Else.kind = "else";
-    var If = class extends BlockNode {
+    var If = class _If extends BlockNode {
       constructor(condition, nodes) {
         super(nodes);
         this.condition = condition;
@@ -13399,10 +13399,10 @@ var require_codegen = __commonJS({
         }
         if (e) {
           if (cond === false)
-            return e instanceof If ? e : e.nodes;
+            return e instanceof _If ? e : e.nodes;
           if (this.nodes.length)
             return this;
-          return new If(not(cond), e instanceof If ? [e] : e.nodes);
+          return new _If(not(cond), e instanceof _If ? [e] : e.nodes);
         }
         if (cond === false || !this.nodes.length)
           return void 0;
@@ -20466,7 +20466,7 @@ var require_toolrunner = __commonJS({
       return args;
     }
     exports.argStringToArray = argStringToArray;
-    var ExecState = class extends events.EventEmitter {
+    var ExecState = class _ExecState extends events.EventEmitter {
       constructor(options, toolPath) {
         super();
         this.processClosed = false;
@@ -20493,7 +20493,7 @@ var require_toolrunner = __commonJS({
         if (this.processClosed) {
           this._setResult();
         } else if (this.processExited) {
-          this.timeout = timers_1.setTimeout(ExecState.HandleTimeout, this.delay, this);
+          this.timeout = timers_1.setTimeout(_ExecState.HandleTimeout, this.delay, this);
         }
       }
       _debug(message) {
@@ -22920,7 +22920,7 @@ var require_lib3 = __commonJS({
     var Readable = Stream.Readable;
     var BUFFER = Symbol("buffer");
     var TYPE = Symbol("type");
-    var Blob = class {
+    var Blob = class _Blob {
       constructor() {
         this[TYPE] = "";
         const blobParts = arguments[0];
@@ -22939,7 +22939,7 @@ var require_lib3 = __commonJS({
               buffer2 = Buffer.from(element.buffer, element.byteOffset, element.byteLength);
             } else if (element instanceof ArrayBuffer) {
               buffer2 = Buffer.from(element);
-            } else if (element instanceof Blob) {
+            } else if (element instanceof _Blob) {
               buffer2 = element[BUFFER];
             } else {
               buffer2 = Buffer.from(typeof element === "string" ? element : String(element));
@@ -23001,7 +23001,7 @@ var require_lib3 = __commonJS({
         const span = Math.max(relativeEnd - relativeStart, 0);
         const buffer2 = this[BUFFER];
         const slicedBuffer = buffer2.slice(relativeStart, relativeStart + span);
-        const blob = new Blob([], { type: arguments[2] });
+        const blob = new _Blob([], { type: arguments[2] });
         blob[BUFFER] = slicedBuffer;
         return blob;
       }
@@ -23378,7 +23378,7 @@ var require_lib3 = __commonJS({
       return void 0;
     }
     var MAP = Symbol("map");
-    var Headers = class {
+    var Headers = class _Headers {
       /**
        * Headers class
        *
@@ -23388,7 +23388,7 @@ var require_lib3 = __commonJS({
       constructor() {
         let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
         this[MAP] = /* @__PURE__ */ Object.create(null);
-        if (init instanceof Headers) {
+        if (init instanceof _Headers) {
           const rawHeaders = init.raw();
           const headerNames = Object.keys(rawHeaders);
           for (const headerName of headerNames) {
@@ -23657,7 +23657,7 @@ var require_lib3 = __commonJS({
     }
     var INTERNALS$1 = Symbol("Response internals");
     var STATUS_CODES = http.STATUS_CODES;
-    var Response = class {
+    var Response = class _Response {
       constructor() {
         let body = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null;
         let opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
@@ -23705,7 +23705,7 @@ var require_lib3 = __commonJS({
        * @return  Response
        */
       clone() {
-        return new Response(clone(this), {
+        return new _Response(clone(this), {
           url: this.url,
           status: this.status,
           statusText: this.statusText,
@@ -23749,7 +23749,7 @@ var require_lib3 = __commonJS({
       const proto = signal && typeof signal === "object" && Object.getPrototypeOf(signal);
       return !!(proto && proto.constructor.name === "AbortSignal");
     }
-    var Request = class {
+    var Request = class _Request {
       constructor(input) {
         let init = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
         let parsedURL;
@@ -23819,7 +23819,7 @@ var require_lib3 = __commonJS({
        * @return  Request
        */
       clone() {
-        return new Request(this);
+        return new _Request(this);
       }
     };
     Body.mixIn(Request.prototype);
@@ -24828,8 +24828,79 @@ var require_dist_node8 = __commonJS({
   }
 });
 
-// node_modules/@octokit/auth-action/dist-node/index.js
+// node_modules/@octokit/auth-action/node_modules/@octokit/auth-token/dist-node/index.js
 var require_dist_node9 = __commonJS({
+  "node_modules/@octokit/auth-action/node_modules/@octokit/auth-token/dist-node/index.js"(exports, module) {
+    "use strict";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      createTokenAuth: () => createTokenAuth
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
+    var REGEX_IS_INSTALLATION = /^ghs_/;
+    var REGEX_IS_USER_TO_SERVER = /^ghu_/;
+    async function auth(token) {
+      const isApp = token.split(/\./).length === 3;
+      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
+      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
+      const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
+      return {
+        type: "token",
+        token,
+        tokenType
+      };
+    }
+    function withAuthorizationPrefix(token) {
+      if (token.split(/\./).length === 3) {
+        return `bearer ${token}`;
+      }
+      return `token ${token}`;
+    }
+    async function hook(token, request, route, parameters) {
+      const endpoint = request.endpoint.merge(
+        route,
+        parameters
+      );
+      endpoint.headers.authorization = withAuthorizationPrefix(token);
+      return request(endpoint);
+    }
+    var createTokenAuth = function createTokenAuth2(token) {
+      if (!token) {
+        throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
+      }
+      if (typeof token !== "string") {
+        throw new Error(
+          "[@octokit/auth-token] Token passed to createTokenAuth is not a string"
+        );
+      }
+      token = token.replace(/^(token|bearer) +/i, "");
+      return Object.assign(auth.bind(null, token), {
+        hook: hook.bind(null, token)
+      });
+    };
+  }
+});
+
+// node_modules/@octokit/auth-action/dist-node/index.js
+var require_dist_node10 = __commonJS({
   "node_modules/@octokit/auth-action/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -24854,7 +24925,7 @@ var require_dist_node9 = __commonJS({
       createActionAuth: () => createActionAuth
     });
     module.exports = __toCommonJS2(dist_src_exports);
-    var import_auth_token = require_dist_node7();
+    var import_auth_token = require_dist_node9();
     var createActionAuth = function createActionAuth2() {
       if (!process.env.GITHUB_ACTION) {
         throw new Error(
@@ -24882,9 +24953,9 @@ var require_dist_node9 = __commonJS({
   }
 });
 
-// node_modules/@octokit/plugin-paginate-rest/dist-node/index.js
-var require_dist_node10 = __commonJS({
-  "node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports, module) {
+// node_modules/@octokit/action/node_modules/@octokit/plugin-paginate-rest/dist-node/index.js
+var require_dist_node11 = __commonJS({
+  "node_modules/@octokit/action/node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -24911,7 +24982,7 @@ var require_dist_node10 = __commonJS({
       paginatingEndpoints: () => paginatingEndpoints
     });
     module.exports = __toCommonJS2(dist_src_exports);
-    var VERSION = "6.1.2";
+    var VERSION = "7.1.2";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -25068,6 +25139,7 @@ var require_dist_node10 = __commonJS({
       "GET /orgs/{org}/projects",
       "GET /orgs/{org}/public_members",
       "GET /orgs/{org}/repos",
+      "GET /orgs/{org}/rulesets",
       "GET /orgs/{org}/secret-scanning/alerts",
       "GET /orgs/{org}/teams",
       "GET /orgs/{org}/teams/{team_slug}/discussions",
@@ -25157,6 +25229,8 @@ var require_dist_node10 = __commonJS({
       "GET /repos/{owner}/{repo}/releases",
       "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
       "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
+      "GET /repos/{owner}/{repo}/rules/branches/{branch}",
+      "GET /repos/{owner}/{repo}/rulesets",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
       "GET /repos/{owner}/{repo}/security-advisories",
@@ -25250,7 +25324,7 @@ var require_dist_node10 = __commonJS({
 });
 
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js
-var require_dist_node11 = __commonJS({
+var require_dist_node12 = __commonJS({
   "node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -27553,7 +27627,7 @@ var require_dist2 = __commonJS({
 });
 
 // node_modules/@octokit/action/dist-node/index.js
-var require_dist_node12 = __commonJS({
+var require_dist_node13 = __commonJS({
   "node_modules/@octokit/action/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -27575,16 +27649,14 @@ var require_dist_node12 = __commonJS({
     var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var dist_src_exports = {};
     __export2(dist_src_exports, {
-      Octokit: () => Octokit2,
-      RestEndpointMethodTypes: () => import_plugin_rest_endpoint_methods2.RestEndpointMethodTypes
+      Octokit: () => Octokit2
     });
     module.exports = __toCommonJS2(dist_src_exports);
     var import_core2 = require_dist_node8();
-    var import_auth_action = require_dist_node9();
-    var import_plugin_paginate_rest = require_dist_node10();
-    var import_plugin_rest_endpoint_methods = require_dist_node11();
-    var import_plugin_rest_endpoint_methods2 = require_dist_node11();
-    var VERSION = "5.0.6";
+    var import_auth_action = require_dist_node10();
+    var import_plugin_paginate_rest = require_dist_node11();
+    var import_plugin_rest_endpoint_methods = require_dist_node12();
+    var VERSION = "6.0.3";
     var import_https_proxy_agent = require_dist2();
     var DEFAULTS = {
       authStrategy: import_auth_action.createActionAuth,
@@ -28940,16 +29012,136 @@ var require_light = __commonJS({
   }
 });
 
-// node_modules/@octokit/plugin-retry/dist-node/index.js
-var require_dist_node13 = __commonJS({
-  "node_modules/@octokit/plugin-retry/dist-node/index.js"(exports) {
+// node_modules/@octokit/plugin-retry/node_modules/@octokit/request-error/dist-node/index.js
+var require_dist_node14 = __commonJS({
+  "node_modules/@octokit/plugin-retry/node_modules/@octokit/request-error/dist-node/index.js"(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var Bottleneck = _interopDefault(require_light());
-    var requestError = require_dist_node4();
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      // If the importer is in node compatibility mode or this is not an ESM
+      // file that has been converted to a CommonJS file using a Babel-
+      // compatible transform (i.e. "__esModule" has not been set), then set
+      // "default" to the CommonJS "module.exports" for node compatibility.
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// node_modules/@octokit/plugin-retry/dist-node/index.js
+var require_dist_node15 = __commonJS({
+  "node_modules/@octokit/plugin-retry/dist-node/index.js"(exports, module) {
+    "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all2) => {
+      for (var name in all2)
+        __defProp2(target, name, { get: all2[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      // If the importer is in node compatibility mode or this is not an ESM
+      // file that has been converted to a CommonJS file using a Babel-
+      // compatible transform (i.e. "__esModule" has not been set), then set
+      // "default" to the CommonJS "module.exports" for node compatibility.
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      VERSION: () => VERSION,
+      retry: () => retry2
+    });
+    module.exports = __toCommonJS2(dist_src_exports);
+    var import_core2 = require_dist_node8();
     async function errorRequest(state, octokit, error2, options) {
       if (!error2.request || !error2.request.request) {
         throw error2;
@@ -28961,8 +29153,10 @@ var require_dist_node13 = __commonJS({
       }
       throw error2;
     }
+    var import_light = __toESM2(require_light());
+    var import_request_error = require_dist_node14();
     async function wrapRequest(state, octokit, request, options) {
-      const limiter = new Bottleneck();
+      const limiter = new import_light.default();
       limiter.on("failed", function(error2, info2) {
         const maxRetries = ~~error2.request.request.retries;
         const after = ~~error2.request.request.retryAfter;
@@ -28971,12 +29165,17 @@ var require_dist_node13 = __commonJS({
           return after * state.retryAfterBaseValue;
         }
       });
-      return limiter.schedule(requestWithGraphqlErrorHandling.bind(null, state, octokit, request), options);
+      return limiter.schedule(
+        requestWithGraphqlErrorHandling.bind(null, state, octokit, request),
+        options
+      );
     }
     async function requestWithGraphqlErrorHandling(state, octokit, request, options) {
       const response = await request(request, options);
-      if (response.data && response.data.errors && /Something went wrong while executing your query/.test(response.data.errors[0].message)) {
-        const error2 = new requestError.RequestError(response.data.errors[0].message, 500, {
+      if (response.data && response.data.errors && /Something went wrong while executing your query/.test(
+        response.data.errors[0].message
+      )) {
+        const error2 = new import_request_error.RequestError(response.data.errors[0].message, 500, {
           request: options,
           response
         });
@@ -28984,14 +29183,17 @@ var require_dist_node13 = __commonJS({
       }
       return response;
     }
-    var VERSION = "4.1.3";
+    var VERSION = "5.0.4";
     function retry2(octokit, octokitOptions) {
-      const state = Object.assign({
-        enabled: true,
-        retryAfterBaseValue: 1e3,
-        doNotRetry: [400, 401, 403, 404, 422],
-        retries: 3
-      }, octokitOptions.retry);
+      const state = Object.assign(
+        {
+          enabled: true,
+          retryAfterBaseValue: 1e3,
+          doNotRetry: [400, 401, 403, 404, 422],
+          retries: 3
+        },
+        octokitOptions.retry
+      );
       if (state.enabled) {
         octokit.hook.error("request", errorRequest.bind(null, state, octokit));
         octokit.hook.wrap("request", wrapRequest.bind(null, state, octokit));
@@ -29009,8 +29211,6 @@ var require_dist_node13 = __commonJS({
       };
     }
     retry2.VERSION = VERSION;
-    exports.VERSION = VERSION;
-    exports.retry = retry2;
   }
 });
 
@@ -43908,8 +44108,8 @@ async function readTagAnnotation({
 }
 
 // src/octokit.ts
-var import_action = __toESM(require_dist_node12(), 1);
-var import_plugin_retry = __toESM(require_dist_node13(), 1);
+var import_action = __toESM(require_dist_node13(), 1);
+var import_plugin_retry = __toESM(require_dist_node15(), 1);
 function createOctokit(token) {
   const CustomOctokit = import_action.Octokit.plugin(import_plugin_retry.retry);
   return new CustomOctokit({ auth: token });
