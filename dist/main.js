@@ -15,7 +15,7 @@ var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require
 }) : x)(function(x) {
   if (typeof require !== "undefined")
     return require.apply(this, arguments);
-  throw new Error('Dynamic require of "' + x + '" is not supported');
+  throw Error('Dynamic require of "' + x + '" is not supported');
 });
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
@@ -24120,7 +24120,7 @@ var require_lib3 = __commonJS({
         const headers = response.headers;
         if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
           response.once("close", function(hadError) {
-            const hasDataListener = socket.listenerCount("data") > 0;
+            const hasDataListener = socket && socket.listenerCount("data") > 0;
             if (hasDataListener && !hadError) {
               const err = new Error("Premature close");
               err.code = "ERR_STREAM_PREMATURE_CLOSE";
