@@ -15,7 +15,7 @@ var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require
 }) : x)(function(x) {
   if (typeof require !== "undefined")
     return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
+  throw new Error('Dynamic require of "' + x + '" is not supported');
 });
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
@@ -20833,30 +20833,11 @@ var require_is_plain_object = __commonJS({
 
 // node_modules/@octokit/endpoint/dist-node/index.js
 var require_dist_node2 = __commonJS({
-  "node_modules/@octokit/endpoint/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/endpoint/dist-node/index.js"(exports) {
     "use strict";
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export2(dist_src_exports, {
-      endpoint: () => endpoint
-    });
-    module.exports = __toCommonJS2(dist_src_exports);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var isPlainObject2 = require_is_plain_object();
+    var universalUserAgent = require_dist_node();
     function lowercaseKeys(object) {
       if (!object) {
         return {};
@@ -20866,17 +20847,20 @@ var require_dist_node2 = __commonJS({
         return newObj;
       }, {});
     }
-    var import_is_plain_object = require_is_plain_object();
     function mergeDeep(defaults, options) {
       const result = Object.assign({}, defaults);
       Object.keys(options).forEach((key) => {
-        if ((0, import_is_plain_object.isPlainObject)(options[key])) {
+        if (isPlainObject2.isPlainObject(options[key])) {
           if (!(key in defaults))
-            Object.assign(result, { [key]: options[key] });
+            Object.assign(result, {
+              [key]: options[key]
+            });
           else
             result[key] = mergeDeep(defaults[key], options[key]);
         } else {
-          Object.assign(result, { [key]: options[key] });
+          Object.assign(result, {
+            [key]: options[key]
+          });
         }
       });
       return result;
@@ -20892,7 +20876,12 @@ var require_dist_node2 = __commonJS({
     function merge2(defaults, route, options) {
       if (typeof route === "string") {
         let [method, url] = route.split(" ");
-        options = Object.assign(url ? { method, url } : { url: method }, options);
+        options = Object.assign(url ? {
+          method,
+          url
+        } : {
+          url: method
+        }, options);
       } else {
         options = Object.assign({}, route);
       }
@@ -20903,9 +20892,7 @@ var require_dist_node2 = __commonJS({
       if (defaults && defaults.mediaType.previews.length) {
         mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
       }
-      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map(
-        (preview) => preview.replace(/-preview/, "")
-      );
+      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map((preview) => preview.replace(/-preview/, ""));
       return mergedOptions;
     }
     function addQueryParameters(url, parameters) {
@@ -20973,16 +20960,12 @@ var require_dist_node2 = __commonJS({
           if (modifier && modifier !== "*") {
             value = value.substring(0, parseInt(modifier, 10));
           }
-          result.push(
-            encodeValue(operator, value, isKeyOperator(operator) ? key : "")
-          );
+          result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
         } else {
           if (modifier === "*") {
             if (Array.isArray(value)) {
               value.filter(isDefined).forEach(function(value2) {
-                result.push(
-                  encodeValue(operator, value2, isKeyOperator(operator) ? key : "")
-                );
+                result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
               });
             } else {
               Object.keys(value).forEach(function(k) {
@@ -21032,50 +21015,40 @@ var require_dist_node2 = __commonJS({
     }
     function expand(template, context) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
-      return template.replace(
-        /\{([^\{\}]+)\}|([^\{\}]+)/g,
-        function(_, expression, literal) {
-          if (expression) {
-            let operator = "";
-            const values = [];
-            if (operators.indexOf(expression.charAt(0)) !== -1) {
-              operator = expression.charAt(0);
-              expression = expression.substr(1);
-            }
-            expression.split(/,/g).forEach(function(variable) {
-              var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-              values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
-            });
-            if (operator && operator !== "+") {
-              var separator = ",";
-              if (operator === "?") {
-                separator = "&";
-              } else if (operator !== "#") {
-                separator = operator;
-              }
-              return (values.length !== 0 ? operator : "") + values.join(separator);
-            } else {
-              return values.join(",");
-            }
-          } else {
-            return encodeReserved(literal);
+      return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
+        if (expression) {
+          let operator = "";
+          const values = [];
+          if (operators.indexOf(expression.charAt(0)) !== -1) {
+            operator = expression.charAt(0);
+            expression = expression.substr(1);
           }
+          expression.split(/,/g).forEach(function(variable) {
+            var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+            values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
+          });
+          if (operator && operator !== "+") {
+            var separator = ",";
+            if (operator === "?") {
+              separator = "&";
+            } else if (operator !== "#") {
+              separator = operator;
+            }
+            return (values.length !== 0 ? operator : "") + values.join(separator);
+          } else {
+            return values.join(",");
+          }
+        } else {
+          return encodeReserved(literal);
         }
-      );
+      });
     }
     function parse3(options) {
       let method = options.method.toUpperCase();
       let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
       let headers = Object.assign({}, options.headers);
       let body;
-      let parameters = omit(options, [
-        "method",
-        "baseUrl",
-        "url",
-        "headers",
-        "request",
-        "mediaType"
-      ]);
+      let parameters = omit(options, ["method", "baseUrl", "url", "headers", "request", "mediaType"]);
       const urlVariableNames = extractUrlVariableNames(url);
       url = parseUrl(url).expand(parameters);
       if (!/^http/.test(url)) {
@@ -21086,12 +21059,7 @@ var require_dist_node2 = __commonJS({
       const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
       if (!isBinaryRequest) {
         if (options.mediaType.format) {
-          headers.accept = headers.accept.split(/,/).map(
-            (preview) => preview.replace(
-              /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
-              `application/vnd$1$2.${options.mediaType.format}`
-            )
-          ).join(",");
+          headers.accept = headers.accept.split(/,/).map((preview) => preview.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`)).join(",");
         }
         if (options.mediaType.previews.length) {
           const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
@@ -21118,11 +21086,15 @@ var require_dist_node2 = __commonJS({
       if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
         body = "";
       }
-      return Object.assign(
-        { method, url, headers },
-        typeof body !== "undefined" ? { body } : null,
-        options.request ? { request: options.request } : null
-      );
+      return Object.assign({
+        method,
+        url,
+        headers
+      }, typeof body !== "undefined" ? {
+        body
+      } : null, options.request ? {
+        request: options.request
+      } : null);
     }
     function endpointWithDefaults(defaults, route, options) {
       return parse3(merge2(defaults, route, options));
@@ -21137,9 +21109,8 @@ var require_dist_node2 = __commonJS({
         parse: parse3
       });
     }
-    var import_universal_user_agent = require_dist_node();
-    var VERSION = "7.0.6";
-    var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
+    var VERSION = "7.0.5";
+    var userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`;
     var DEFAULTS = {
       method: "GET",
       baseUrl: "https://api.github.com",
@@ -21153,6 +21124,7 @@ var require_dist_node2 = __commonJS({
       }
     };
     var endpoint = withDefaults(null, DEFAULTS);
+    exports.endpoint = endpoint;
   }
 });
 
@@ -24366,7 +24338,7 @@ var require_dist_node5 = __commonJS({
     module.exports = __toCommonJS2(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "6.2.8";
+    var VERSION = "6.2.5";
     var import_is_plain_object = require_is_plain_object();
     var import_node_fetch = __toESM2(require_lib3());
     var import_request_error = require_dist_node4();
@@ -24657,32 +24629,11 @@ var require_dist_node6 = __commonJS({
   }
 });
 
-// node_modules/@octokit/core/node_modules/@octokit/auth-token/dist-node/index.js
+// node_modules/@octokit/auth-token/dist-node/index.js
 var require_dist_node7 = __commonJS({
-  "node_modules/@octokit/core/node_modules/@octokit/auth-token/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/auth-token/dist-node/index.js"(exports) {
     "use strict";
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export2(dist_src_exports, {
-      createTokenAuth: () => createTokenAuth
-    });
-    module.exports = __toCommonJS2(dist_src_exports);
+    Object.defineProperty(exports, "__esModule", { value: true });
     var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
     var REGEX_IS_INSTALLATION = /^ghs_/;
     var REGEX_IS_USER_TO_SERVER = /^ghu_/;
@@ -24704,10 +24655,7 @@ var require_dist_node7 = __commonJS({
       return `token ${token}`;
     }
     async function hook(token, request, route, parameters) {
-      const endpoint = request.endpoint.merge(
-        route,
-        parameters
-      );
+      const endpoint = request.endpoint.merge(route, parameters);
       endpoint.headers.authorization = withAuthorizationPrefix(token);
       return request(endpoint);
     }
@@ -24716,15 +24664,14 @@ var require_dist_node7 = __commonJS({
         throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
       }
       if (typeof token !== "string") {
-        throw new Error(
-          "[@octokit/auth-token] Token passed to createTokenAuth is not a string"
-        );
+        throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
       }
       token = token.replace(/^(token|bearer) +/i, "");
       return Object.assign(auth.bind(null, token), {
         hook: hook.bind(null, token)
       });
     };
+    exports.createTokenAuth = createTokenAuth;
   }
 });
 
@@ -24759,7 +24706,7 @@ var require_dist_node8 = __commonJS({
     var import_request = require_dist_node5();
     var import_graphql = require_dist_node6();
     var import_auth_token = require_dist_node7();
-    var VERSION = "4.2.4";
+    var VERSION = "4.2.1";
     var Octokit2 = class {
       static defaults(defaults) {
         const OctokitWithDefaults = class extends this {
@@ -24881,9 +24828,9 @@ var require_dist_node8 = __commonJS({
   }
 });
 
-// node_modules/@octokit/auth-token/dist-node/index.js
+// node_modules/@octokit/auth-action/node_modules/@octokit/auth-token/dist-node/index.js
 var require_dist_node9 = __commonJS({
-  "node_modules/@octokit/auth-token/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/auth-action/node_modules/@octokit/auth-token/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -25006,9 +24953,9 @@ var require_dist_node10 = __commonJS({
   }
 });
 
-// node_modules/@octokit/plugin-paginate-rest/dist-node/index.js
+// node_modules/@octokit/action/node_modules/@octokit/plugin-paginate-rest/dist-node/index.js
 var require_dist_node11 = __commonJS({
-  "node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/action/node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -25378,401 +25325,166 @@ var require_dist_node11 = __commonJS({
 
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js
 var require_dist_node12 = __commonJS({
-  "node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js"(exports) {
     "use strict";
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export2(dist_src_exports, {
-      legacyRestEndpointMethods: () => legacyRestEndpointMethods,
-      restEndpointMethods: () => restEndpointMethods
-    });
-    module.exports = __toCommonJS2(dist_src_exports);
-    var VERSION = "8.0.0";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Endpoints = {
       actions: {
-        addCustomLabelsToSelfHostedRunnerForOrg: [
-          "POST /orgs/{org}/actions/runners/{runner_id}/labels"
-        ],
-        addCustomLabelsToSelfHostedRunnerForRepo: [
-          "POST /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
-        ],
-        addSelectedRepoToOrgSecret: [
-          "PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        addSelectedRepoToOrgVariable: [
-          "PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"
-        ],
-        addSelectedRepoToRequiredWorkflow: [
-          "PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"
-        ],
-        approveWorkflowRun: [
-          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/approve"
-        ],
-        cancelWorkflowRun: [
-          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"
-        ],
-        createEnvironmentVariable: [
-          "POST /repositories/{repository_id}/environments/{environment_name}/variables"
-        ],
-        createOrUpdateEnvironmentSecret: [
-          "PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
-        ],
+        addCustomLabelsToSelfHostedRunnerForOrg: ["POST /orgs/{org}/actions/runners/{runner_id}/labels"],
+        addCustomLabelsToSelfHostedRunnerForRepo: ["POST /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
+        addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
+        addSelectedRepoToOrgVariable: ["PUT /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"],
+        addSelectedRepoToRequiredWorkflow: ["PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"],
+        approveWorkflowRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/approve"],
+        cancelWorkflowRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"],
+        createEnvironmentVariable: ["POST /repositories/{repository_id}/environments/{environment_name}/variables"],
+        createOrUpdateEnvironmentSecret: ["PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
         createOrUpdateOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}"],
-        createOrUpdateRepoSecret: [
-          "PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}"
-        ],
+        createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
         createOrgVariable: ["POST /orgs/{org}/actions/variables"],
-        createRegistrationTokenForOrg: [
-          "POST /orgs/{org}/actions/runners/registration-token"
-        ],
-        createRegistrationTokenForRepo: [
-          "POST /repos/{owner}/{repo}/actions/runners/registration-token"
-        ],
+        createRegistrationTokenForOrg: ["POST /orgs/{org}/actions/runners/registration-token"],
+        createRegistrationTokenForRepo: ["POST /repos/{owner}/{repo}/actions/runners/registration-token"],
         createRemoveTokenForOrg: ["POST /orgs/{org}/actions/runners/remove-token"],
-        createRemoveTokenForRepo: [
-          "POST /repos/{owner}/{repo}/actions/runners/remove-token"
-        ],
+        createRemoveTokenForRepo: ["POST /repos/{owner}/{repo}/actions/runners/remove-token"],
         createRepoVariable: ["POST /repos/{owner}/{repo}/actions/variables"],
         createRequiredWorkflow: ["POST /orgs/{org}/actions/required_workflows"],
-        createWorkflowDispatch: [
-          "POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches"
-        ],
-        deleteActionsCacheById: [
-          "DELETE /repos/{owner}/{repo}/actions/caches/{cache_id}"
-        ],
-        deleteActionsCacheByKey: [
-          "DELETE /repos/{owner}/{repo}/actions/caches{?key,ref}"
-        ],
-        deleteArtifact: [
-          "DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"
-        ],
-        deleteEnvironmentSecret: [
-          "DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
-        ],
-        deleteEnvironmentVariable: [
-          "DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
-        ],
+        createWorkflowDispatch: ["POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches"],
+        deleteActionsCacheById: ["DELETE /repos/{owner}/{repo}/actions/caches/{cache_id}"],
+        deleteActionsCacheByKey: ["DELETE /repos/{owner}/{repo}/actions/caches{?key,ref}"],
+        deleteArtifact: ["DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+        deleteEnvironmentSecret: ["DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
+        deleteEnvironmentVariable: ["DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
         deleteOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}"],
-        deleteRepoSecret: [
-          "DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name}"
-        ],
-        deleteRepoVariable: [
-          "DELETE /repos/{owner}/{repo}/actions/variables/{name}"
-        ],
-        deleteRequiredWorkflow: [
-          "DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}"
-        ],
-        deleteSelfHostedRunnerFromOrg: [
-          "DELETE /orgs/{org}/actions/runners/{runner_id}"
-        ],
-        deleteSelfHostedRunnerFromRepo: [
-          "DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}"
-        ],
+        deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
+        deleteRepoVariable: ["DELETE /repos/{owner}/{repo}/actions/variables/{name}"],
+        deleteRequiredWorkflow: ["DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}"],
+        deleteSelfHostedRunnerFromOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}"],
+        deleteSelfHostedRunnerFromRepo: ["DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}"],
         deleteWorkflowRun: ["DELETE /repos/{owner}/{repo}/actions/runs/{run_id}"],
-        deleteWorkflowRunLogs: [
-          "DELETE /repos/{owner}/{repo}/actions/runs/{run_id}/logs"
-        ],
-        disableSelectedRepositoryGithubActionsOrganization: [
-          "DELETE /orgs/{org}/actions/permissions/repositories/{repository_id}"
-        ],
-        disableWorkflow: [
-          "PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable"
-        ],
-        downloadArtifact: [
-          "GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}"
-        ],
-        downloadJobLogsForWorkflowRun: [
-          "GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs"
-        ],
-        downloadWorkflowRunAttemptLogs: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/logs"
-        ],
-        downloadWorkflowRunLogs: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/logs"
-        ],
-        enableSelectedRepositoryGithubActionsOrganization: [
-          "PUT /orgs/{org}/actions/permissions/repositories/{repository_id}"
-        ],
-        enableWorkflow: [
-          "PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable"
-        ],
-        generateRunnerJitconfigForOrg: [
-          "POST /orgs/{org}/actions/runners/generate-jitconfig"
-        ],
-        generateRunnerJitconfigForRepo: [
-          "POST /repos/{owner}/{repo}/actions/runners/generate-jitconfig"
-        ],
+        deleteWorkflowRunLogs: ["DELETE /repos/{owner}/{repo}/actions/runs/{run_id}/logs"],
+        disableSelectedRepositoryGithubActionsOrganization: ["DELETE /orgs/{org}/actions/permissions/repositories/{repository_id}"],
+        disableWorkflow: ["PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/disable"],
+        downloadArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/{archive_format}"],
+        downloadJobLogsForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}/logs"],
+        downloadWorkflowRunAttemptLogs: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/logs"],
+        downloadWorkflowRunLogs: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/logs"],
+        enableSelectedRepositoryGithubActionsOrganization: ["PUT /orgs/{org}/actions/permissions/repositories/{repository_id}"],
+        enableWorkflow: ["PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable"],
         getActionsCacheList: ["GET /repos/{owner}/{repo}/actions/caches"],
         getActionsCacheUsage: ["GET /repos/{owner}/{repo}/actions/cache/usage"],
-        getActionsCacheUsageByRepoForOrg: [
-          "GET /orgs/{org}/actions/cache/usage-by-repository"
-        ],
+        getActionsCacheUsageByRepoForOrg: ["GET /orgs/{org}/actions/cache/usage-by-repository"],
         getActionsCacheUsageForOrg: ["GET /orgs/{org}/actions/cache/usage"],
-        getAllowedActionsOrganization: [
-          "GET /orgs/{org}/actions/permissions/selected-actions"
-        ],
-        getAllowedActionsRepository: [
-          "GET /repos/{owner}/{repo}/actions/permissions/selected-actions"
-        ],
+        getAllowedActionsOrganization: ["GET /orgs/{org}/actions/permissions/selected-actions"],
+        getAllowedActionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions/selected-actions"],
         getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
-        getEnvironmentPublicKey: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"
-        ],
-        getEnvironmentSecret: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
-        ],
-        getEnvironmentVariable: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
-        ],
-        getGithubActionsDefaultWorkflowPermissionsOrganization: [
-          "GET /orgs/{org}/actions/permissions/workflow"
-        ],
-        getGithubActionsDefaultWorkflowPermissionsRepository: [
-          "GET /repos/{owner}/{repo}/actions/permissions/workflow"
-        ],
-        getGithubActionsPermissionsOrganization: [
-          "GET /orgs/{org}/actions/permissions"
-        ],
-        getGithubActionsPermissionsRepository: [
-          "GET /repos/{owner}/{repo}/actions/permissions"
-        ],
+        getEnvironmentPublicKey: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"],
+        getEnvironmentSecret: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
+        getEnvironmentVariable: ["GET /repositories/{repository_id}/environments/{environment_name}/variables/{name}"],
+        getGithubActionsDefaultWorkflowPermissionsOrganization: ["GET /orgs/{org}/actions/permissions/workflow"],
+        getGithubActionsDefaultWorkflowPermissionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions/workflow"],
+        getGithubActionsPermissionsOrganization: ["GET /orgs/{org}/actions/permissions"],
+        getGithubActionsPermissionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions"],
         getJobForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}"],
         getOrgPublicKey: ["GET /orgs/{org}/actions/secrets/public-key"],
         getOrgSecret: ["GET /orgs/{org}/actions/secrets/{secret_name}"],
         getOrgVariable: ["GET /orgs/{org}/actions/variables/{name}"],
-        getPendingDeploymentsForRun: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"
-        ],
-        getRepoPermissions: [
-          "GET /repos/{owner}/{repo}/actions/permissions",
-          {},
-          { renamed: ["actions", "getGithubActionsPermissionsRepository"] }
-        ],
+        getPendingDeploymentsForRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
+        getRepoPermissions: ["GET /repos/{owner}/{repo}/actions/permissions", {}, {
+          renamed: ["actions", "getGithubActionsPermissionsRepository"]
+        }],
         getRepoPublicKey: ["GET /repos/{owner}/{repo}/actions/secrets/public-key"],
-        getRepoRequiredWorkflow: [
-          "GET /repos/{org}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}"
-        ],
-        getRepoRequiredWorkflowUsage: [
-          "GET /repos/{org}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/timing"
-        ],
+        getRepoRequiredWorkflow: ["GET /repos/{org}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}"],
+        getRepoRequiredWorkflowUsage: ["GET /repos/{org}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/timing"],
         getRepoSecret: ["GET /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
         getRepoVariable: ["GET /repos/{owner}/{repo}/actions/variables/{name}"],
-        getRequiredWorkflow: [
-          "GET /orgs/{org}/actions/required_workflows/{required_workflow_id}"
-        ],
-        getReviewsForRun: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/approvals"
-        ],
+        getRequiredWorkflow: ["GET /orgs/{org}/actions/required_workflows/{required_workflow_id}"],
+        getReviewsForRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/approvals"],
         getSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}"],
-        getSelfHostedRunnerForRepo: [
-          "GET /repos/{owner}/{repo}/actions/runners/{runner_id}"
-        ],
+        getSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}"],
         getWorkflow: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}"],
-        getWorkflowAccessToRepository: [
-          "GET /repos/{owner}/{repo}/actions/permissions/access"
-        ],
+        getWorkflowAccessToRepository: ["GET /repos/{owner}/{repo}/actions/permissions/access"],
         getWorkflowRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}"],
-        getWorkflowRunAttempt: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}"
-        ],
-        getWorkflowRunUsage: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing"
-        ],
-        getWorkflowUsage: [
-          "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
-        ],
+        getWorkflowRunAttempt: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}"],
+        getWorkflowRunUsage: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing"],
+        getWorkflowUsage: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"],
         listArtifactsForRepo: ["GET /repos/{owner}/{repo}/actions/artifacts"],
-        listEnvironmentSecrets: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets"
-        ],
-        listEnvironmentVariables: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/variables"
-        ],
-        listJobsForWorkflowRun: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"
-        ],
-        listJobsForWorkflowRunAttempt: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs"
-        ],
-        listLabelsForSelfHostedRunnerForOrg: [
-          "GET /orgs/{org}/actions/runners/{runner_id}/labels"
-        ],
-        listLabelsForSelfHostedRunnerForRepo: [
-          "GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
-        ],
+        listEnvironmentSecrets: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets"],
+        listEnvironmentVariables: ["GET /repositories/{repository_id}/environments/{environment_name}/variables"],
+        listJobsForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"],
+        listJobsForWorkflowRunAttempt: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs"],
+        listLabelsForSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}/labels"],
+        listLabelsForSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
         listOrgVariables: ["GET /orgs/{org}/actions/variables"],
-        listRepoOrganizationSecrets: [
-          "GET /repos/{owner}/{repo}/actions/organization-secrets"
-        ],
-        listRepoOrganizationVariables: [
-          "GET /repos/{owner}/{repo}/actions/organization-variables"
-        ],
-        listRepoRequiredWorkflows: [
-          "GET /repos/{org}/{repo}/actions/required_workflows"
-        ],
+        listRepoOrganizationSecrets: ["GET /repos/{owner}/{repo}/actions/organization-secrets"],
+        listRepoOrganizationVariables: ["GET /repos/{owner}/{repo}/actions/organization-variables"],
+        listRepoRequiredWorkflows: ["GET /repos/{org}/{repo}/actions/required_workflows"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
         listRepoVariables: ["GET /repos/{owner}/{repo}/actions/variables"],
         listRepoWorkflows: ["GET /repos/{owner}/{repo}/actions/workflows"],
-        listRequiredWorkflowRuns: [
-          "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs"
-        ],
+        listRequiredWorkflowRuns: ["GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs"],
         listRequiredWorkflows: ["GET /orgs/{org}/actions/required_workflows"],
         listRunnerApplicationsForOrg: ["GET /orgs/{org}/actions/runners/downloads"],
-        listRunnerApplicationsForRepo: [
-          "GET /repos/{owner}/{repo}/actions/runners/downloads"
-        ],
-        listSelectedReposForOrgSecret: [
-          "GET /orgs/{org}/actions/secrets/{secret_name}/repositories"
-        ],
-        listSelectedReposForOrgVariable: [
-          "GET /orgs/{org}/actions/variables/{name}/repositories"
-        ],
-        listSelectedRepositoriesEnabledGithubActionsOrganization: [
-          "GET /orgs/{org}/actions/permissions/repositories"
-        ],
-        listSelectedRepositoriesRequiredWorkflow: [
-          "GET /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories"
-        ],
+        listRunnerApplicationsForRepo: ["GET /repos/{owner}/{repo}/actions/runners/downloads"],
+        listSelectedReposForOrgSecret: ["GET /orgs/{org}/actions/secrets/{secret_name}/repositories"],
+        listSelectedReposForOrgVariable: ["GET /orgs/{org}/actions/variables/{name}/repositories"],
+        listSelectedRepositoriesEnabledGithubActionsOrganization: ["GET /orgs/{org}/actions/permissions/repositories"],
+        listSelectedRepositoriesRequiredWorkflow: ["GET /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories"],
         listSelfHostedRunnersForOrg: ["GET /orgs/{org}/actions/runners"],
         listSelfHostedRunnersForRepo: ["GET /repos/{owner}/{repo}/actions/runners"],
-        listWorkflowRunArtifacts: [
-          "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts"
-        ],
-        listWorkflowRuns: [
-          "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"
-        ],
+        listWorkflowRunArtifacts: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts"],
+        listWorkflowRuns: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"],
         listWorkflowRunsForRepo: ["GET /repos/{owner}/{repo}/actions/runs"],
-        reRunJobForWorkflowRun: [
-          "POST /repos/{owner}/{repo}/actions/jobs/{job_id}/rerun"
-        ],
+        reRunJobForWorkflowRun: ["POST /repos/{owner}/{repo}/actions/jobs/{job_id}/rerun"],
         reRunWorkflow: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun"],
-        reRunWorkflowFailedJobs: [
-          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs"
-        ],
-        removeAllCustomLabelsFromSelfHostedRunnerForOrg: [
-          "DELETE /orgs/{org}/actions/runners/{runner_id}/labels"
-        ],
-        removeAllCustomLabelsFromSelfHostedRunnerForRepo: [
-          "DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
-        ],
-        removeCustomLabelFromSelfHostedRunnerForOrg: [
-          "DELETE /orgs/{org}/actions/runners/{runner_id}/labels/{name}"
-        ],
-        removeCustomLabelFromSelfHostedRunnerForRepo: [
-          "DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels/{name}"
-        ],
-        removeSelectedRepoFromOrgSecret: [
-          "DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        removeSelectedRepoFromOrgVariable: [
-          "DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"
-        ],
-        removeSelectedRepoFromRequiredWorkflow: [
-          "DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"
-        ],
-        reviewCustomGatesForRun: [
-          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule"
-        ],
-        reviewPendingDeploymentsForRun: [
-          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"
-        ],
-        setAllowedActionsOrganization: [
-          "PUT /orgs/{org}/actions/permissions/selected-actions"
-        ],
-        setAllowedActionsRepository: [
-          "PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"
-        ],
-        setCustomLabelsForSelfHostedRunnerForOrg: [
-          "PUT /orgs/{org}/actions/runners/{runner_id}/labels"
-        ],
-        setCustomLabelsForSelfHostedRunnerForRepo: [
-          "PUT /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
-        ],
-        setGithubActionsDefaultWorkflowPermissionsOrganization: [
-          "PUT /orgs/{org}/actions/permissions/workflow"
-        ],
-        setGithubActionsDefaultWorkflowPermissionsRepository: [
-          "PUT /repos/{owner}/{repo}/actions/permissions/workflow"
-        ],
-        setGithubActionsPermissionsOrganization: [
-          "PUT /orgs/{org}/actions/permissions"
-        ],
-        setGithubActionsPermissionsRepository: [
-          "PUT /repos/{owner}/{repo}/actions/permissions"
-        ],
-        setSelectedReposForOrgSecret: [
-          "PUT /orgs/{org}/actions/secrets/{secret_name}/repositories"
-        ],
-        setSelectedReposForOrgVariable: [
-          "PUT /orgs/{org}/actions/variables/{name}/repositories"
-        ],
-        setSelectedReposToRequiredWorkflow: [
-          "PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories"
-        ],
-        setSelectedRepositoriesEnabledGithubActionsOrganization: [
-          "PUT /orgs/{org}/actions/permissions/repositories"
-        ],
-        setWorkflowAccessToRepository: [
-          "PUT /repos/{owner}/{repo}/actions/permissions/access"
-        ],
-        updateEnvironmentVariable: [
-          "PATCH /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
-        ],
+        reRunWorkflowFailedJobs: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs"],
+        removeAllCustomLabelsFromSelfHostedRunnerForOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}/labels"],
+        removeAllCustomLabelsFromSelfHostedRunnerForRepo: ["DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
+        removeCustomLabelFromSelfHostedRunnerForOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}/labels/{name}"],
+        removeCustomLabelFromSelfHostedRunnerForRepo: ["DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels/{name}"],
+        removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
+        removeSelectedRepoFromOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"],
+        removeSelectedRepoFromRequiredWorkflow: ["DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"],
+        reviewCustomGatesForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule"],
+        reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
+        setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
+        setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
+        setCustomLabelsForSelfHostedRunnerForOrg: ["PUT /orgs/{org}/actions/runners/{runner_id}/labels"],
+        setCustomLabelsForSelfHostedRunnerForRepo: ["PUT /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
+        setGithubActionsDefaultWorkflowPermissionsOrganization: ["PUT /orgs/{org}/actions/permissions/workflow"],
+        setGithubActionsDefaultWorkflowPermissionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/workflow"],
+        setGithubActionsPermissionsOrganization: ["PUT /orgs/{org}/actions/permissions"],
+        setGithubActionsPermissionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions"],
+        setSelectedReposForOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}/repositories"],
+        setSelectedReposForOrgVariable: ["PUT /orgs/{org}/actions/variables/{name}/repositories"],
+        setSelectedReposToRequiredWorkflow: ["PUT /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories"],
+        setSelectedRepositoriesEnabledGithubActionsOrganization: ["PUT /orgs/{org}/actions/permissions/repositories"],
+        setWorkflowAccessToRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/access"],
+        updateEnvironmentVariable: ["PATCH /repositories/{repository_id}/environments/{environment_name}/variables/{name}"],
         updateOrgVariable: ["PATCH /orgs/{org}/actions/variables/{name}"],
-        updateRepoVariable: [
-          "PATCH /repos/{owner}/{repo}/actions/variables/{name}"
-        ],
-        updateRequiredWorkflow: [
-          "PATCH /orgs/{org}/actions/required_workflows/{required_workflow_id}"
-        ]
+        updateRepoVariable: ["PATCH /repos/{owner}/{repo}/actions/variables/{name}"],
+        updateRequiredWorkflow: ["PATCH /orgs/{org}/actions/required_workflows/{required_workflow_id}"]
       },
       activity: {
         checkRepoIsStarredByAuthenticatedUser: ["GET /user/starred/{owner}/{repo}"],
         deleteRepoSubscription: ["DELETE /repos/{owner}/{repo}/subscription"],
-        deleteThreadSubscription: [
-          "DELETE /notifications/threads/{thread_id}/subscription"
-        ],
+        deleteThreadSubscription: ["DELETE /notifications/threads/{thread_id}/subscription"],
         getFeeds: ["GET /feeds"],
         getRepoSubscription: ["GET /repos/{owner}/{repo}/subscription"],
         getThread: ["GET /notifications/threads/{thread_id}"],
-        getThreadSubscriptionForAuthenticatedUser: [
-          "GET /notifications/threads/{thread_id}/subscription"
-        ],
+        getThreadSubscriptionForAuthenticatedUser: ["GET /notifications/threads/{thread_id}/subscription"],
         listEventsForAuthenticatedUser: ["GET /users/{username}/events"],
         listNotificationsForAuthenticatedUser: ["GET /notifications"],
-        listOrgEventsForAuthenticatedUser: [
-          "GET /users/{username}/events/orgs/{org}"
-        ],
+        listOrgEventsForAuthenticatedUser: ["GET /users/{username}/events/orgs/{org}"],
         listPublicEvents: ["GET /events"],
         listPublicEventsForRepoNetwork: ["GET /networks/{owner}/{repo}/events"],
         listPublicEventsForUser: ["GET /users/{username}/events/public"],
         listPublicOrgEvents: ["GET /orgs/{org}/events"],
         listReceivedEventsForUser: ["GET /users/{username}/received_events"],
-        listReceivedPublicEventsForUser: [
-          "GET /users/{username}/received_events/public"
-        ],
+        listReceivedPublicEventsForUser: ["GET /users/{username}/received_events/public"],
         listRepoEvents: ["GET /repos/{owner}/{repo}/events"],
-        listRepoNotificationsForAuthenticatedUser: [
-          "GET /repos/{owner}/{repo}/notifications"
-        ],
+        listRepoNotificationsForAuthenticatedUser: ["GET /repos/{owner}/{repo}/notifications"],
         listReposStarredByAuthenticatedUser: ["GET /user/starred"],
         listReposStarredByUser: ["GET /users/{username}/starred"],
         listReposWatchedByUser: ["GET /users/{username}/subscriptions"],
@@ -25783,26 +25495,18 @@ var require_dist_node12 = __commonJS({
         markRepoNotificationsAsRead: ["PUT /repos/{owner}/{repo}/notifications"],
         markThreadAsRead: ["PATCH /notifications/threads/{thread_id}"],
         setRepoSubscription: ["PUT /repos/{owner}/{repo}/subscription"],
-        setThreadSubscription: [
-          "PUT /notifications/threads/{thread_id}/subscription"
-        ],
+        setThreadSubscription: ["PUT /notifications/threads/{thread_id}/subscription"],
         starRepoForAuthenticatedUser: ["PUT /user/starred/{owner}/{repo}"],
         unstarRepoForAuthenticatedUser: ["DELETE /user/starred/{owner}/{repo}"]
       },
       apps: {
-        addRepoToInstallation: [
-          "PUT /user/installations/{installation_id}/repositories/{repository_id}",
-          {},
-          { renamed: ["apps", "addRepoToInstallationForAuthenticatedUser"] }
-        ],
-        addRepoToInstallationForAuthenticatedUser: [
-          "PUT /user/installations/{installation_id}/repositories/{repository_id}"
-        ],
+        addRepoToInstallation: ["PUT /user/installations/{installation_id}/repositories/{repository_id}", {}, {
+          renamed: ["apps", "addRepoToInstallationForAuthenticatedUser"]
+        }],
+        addRepoToInstallationForAuthenticatedUser: ["PUT /user/installations/{installation_id}/repositories/{repository_id}"],
         checkToken: ["POST /applications/{client_id}/token"],
         createFromManifest: ["POST /app-manifests/{code}/conversions"],
-        createInstallationAccessToken: [
-          "POST /app/installations/{installation_id}/access_tokens"
-        ],
+        createInstallationAccessToken: ["POST /app/installations/{installation_id}/access_tokens"],
         deleteAuthorization: ["DELETE /applications/{client_id}/grant"],
         deleteInstallation: ["DELETE /app/installations/{installation_id}"],
         deleteToken: ["DELETE /applications/{client_id}/token"],
@@ -25811,132 +25515,78 @@ var require_dist_node12 = __commonJS({
         getInstallation: ["GET /app/installations/{installation_id}"],
         getOrgInstallation: ["GET /orgs/{org}/installation"],
         getRepoInstallation: ["GET /repos/{owner}/{repo}/installation"],
-        getSubscriptionPlanForAccount: [
-          "GET /marketplace_listing/accounts/{account_id}"
-        ],
-        getSubscriptionPlanForAccountStubbed: [
-          "GET /marketplace_listing/stubbed/accounts/{account_id}"
-        ],
+        getSubscriptionPlanForAccount: ["GET /marketplace_listing/accounts/{account_id}"],
+        getSubscriptionPlanForAccountStubbed: ["GET /marketplace_listing/stubbed/accounts/{account_id}"],
         getUserInstallation: ["GET /users/{username}/installation"],
         getWebhookConfigForApp: ["GET /app/hook/config"],
         getWebhookDelivery: ["GET /app/hook/deliveries/{delivery_id}"],
         listAccountsForPlan: ["GET /marketplace_listing/plans/{plan_id}/accounts"],
-        listAccountsForPlanStubbed: [
-          "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"
-        ],
-        listInstallationReposForAuthenticatedUser: [
-          "GET /user/installations/{installation_id}/repositories"
-        ],
-        listInstallationRequestsForAuthenticatedApp: [
-          "GET /app/installation-requests"
-        ],
+        listAccountsForPlanStubbed: ["GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"],
+        listInstallationReposForAuthenticatedUser: ["GET /user/installations/{installation_id}/repositories"],
+        listInstallationRequestsForAuthenticatedApp: ["GET /app/installation-requests"],
         listInstallations: ["GET /app/installations"],
         listInstallationsForAuthenticatedUser: ["GET /user/installations"],
         listPlans: ["GET /marketplace_listing/plans"],
         listPlansStubbed: ["GET /marketplace_listing/stubbed/plans"],
         listReposAccessibleToInstallation: ["GET /installation/repositories"],
         listSubscriptionsForAuthenticatedUser: ["GET /user/marketplace_purchases"],
-        listSubscriptionsForAuthenticatedUserStubbed: [
-          "GET /user/marketplace_purchases/stubbed"
-        ],
+        listSubscriptionsForAuthenticatedUserStubbed: ["GET /user/marketplace_purchases/stubbed"],
         listWebhookDeliveries: ["GET /app/hook/deliveries"],
-        redeliverWebhookDelivery: [
-          "POST /app/hook/deliveries/{delivery_id}/attempts"
-        ],
-        removeRepoFromInstallation: [
-          "DELETE /user/installations/{installation_id}/repositories/{repository_id}",
-          {},
-          { renamed: ["apps", "removeRepoFromInstallationForAuthenticatedUser"] }
-        ],
-        removeRepoFromInstallationForAuthenticatedUser: [
-          "DELETE /user/installations/{installation_id}/repositories/{repository_id}"
-        ],
+        redeliverWebhookDelivery: ["POST /app/hook/deliveries/{delivery_id}/attempts"],
+        removeRepoFromInstallation: ["DELETE /user/installations/{installation_id}/repositories/{repository_id}", {}, {
+          renamed: ["apps", "removeRepoFromInstallationForAuthenticatedUser"]
+        }],
+        removeRepoFromInstallationForAuthenticatedUser: ["DELETE /user/installations/{installation_id}/repositories/{repository_id}"],
         resetToken: ["PATCH /applications/{client_id}/token"],
         revokeInstallationAccessToken: ["DELETE /installation/token"],
         scopeToken: ["POST /applications/{client_id}/token/scoped"],
         suspendInstallation: ["PUT /app/installations/{installation_id}/suspended"],
-        unsuspendInstallation: [
-          "DELETE /app/installations/{installation_id}/suspended"
-        ],
+        unsuspendInstallation: ["DELETE /app/installations/{installation_id}/suspended"],
         updateWebhookConfigForApp: ["PATCH /app/hook/config"]
       },
       billing: {
         getGithubActionsBillingOrg: ["GET /orgs/{org}/settings/billing/actions"],
-        getGithubActionsBillingUser: [
-          "GET /users/{username}/settings/billing/actions"
-        ],
+        getGithubActionsBillingUser: ["GET /users/{username}/settings/billing/actions"],
         getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
-        getGithubPackagesBillingUser: [
-          "GET /users/{username}/settings/billing/packages"
-        ],
-        getSharedStorageBillingOrg: [
-          "GET /orgs/{org}/settings/billing/shared-storage"
-        ],
-        getSharedStorageBillingUser: [
-          "GET /users/{username}/settings/billing/shared-storage"
-        ]
+        getGithubPackagesBillingUser: ["GET /users/{username}/settings/billing/packages"],
+        getSharedStorageBillingOrg: ["GET /orgs/{org}/settings/billing/shared-storage"],
+        getSharedStorageBillingUser: ["GET /users/{username}/settings/billing/shared-storage"]
       },
       checks: {
         create: ["POST /repos/{owner}/{repo}/check-runs"],
         createSuite: ["POST /repos/{owner}/{repo}/check-suites"],
         get: ["GET /repos/{owner}/{repo}/check-runs/{check_run_id}"],
         getSuite: ["GET /repos/{owner}/{repo}/check-suites/{check_suite_id}"],
-        listAnnotations: [
-          "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations"
-        ],
+        listAnnotations: ["GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations"],
         listForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/check-runs"],
-        listForSuite: [
-          "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs"
-        ],
+        listForSuite: ["GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs"],
         listSuitesForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/check-suites"],
-        rerequestRun: [
-          "POST /repos/{owner}/{repo}/check-runs/{check_run_id}/rerequest"
-        ],
-        rerequestSuite: [
-          "POST /repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest"
-        ],
-        setSuitesPreferences: [
-          "PATCH /repos/{owner}/{repo}/check-suites/preferences"
-        ],
+        rerequestRun: ["POST /repos/{owner}/{repo}/check-runs/{check_run_id}/rerequest"],
+        rerequestSuite: ["POST /repos/{owner}/{repo}/check-suites/{check_suite_id}/rerequest"],
+        setSuitesPreferences: ["PATCH /repos/{owner}/{repo}/check-suites/preferences"],
         update: ["PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}"]
       },
       codeScanning: {
-        deleteAnalysis: [
-          "DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"
-        ],
-        getAlert: [
-          "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}",
-          {},
-          { renamedParameters: { alert_id: "alert_number" } }
-        ],
-        getAnalysis: [
-          "GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
-        ],
-        getCodeqlDatabase: [
-          "GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
-        ],
+        deleteAnalysis: ["DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"],
+        getAlert: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}", {}, {
+          renamedParameters: {
+            alert_id: "alert_number"
+          }
+        }],
+        getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
+        getCodeqlDatabase: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"],
         getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
-        listAlertInstances: [
-          "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"
-        ],
+        listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
         listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/code-scanning/alerts"],
-        listAlertsInstances: [
-          "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances",
-          {},
-          { renamed: ["codeScanning", "listAlertInstances"] }
-        ],
-        listCodeqlDatabases: [
-          "GET /repos/{owner}/{repo}/code-scanning/codeql/databases"
-        ],
+        listAlertsInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", {}, {
+          renamed: ["codeScanning", "listAlertInstances"]
+        }],
+        listCodeqlDatabases: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases"],
         listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
-        updateAlert: [
-          "PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"
-        ],
-        updateDefaultSetup: [
-          "PATCH /repos/{owner}/{repo}/code-scanning/default-setup"
-        ],
+        updateAlert: ["PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"],
+        updateDefaultSetup: ["PATCH /repos/{owner}/{repo}/code-scanning/default-setup"],
         uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
       },
       codesOfConduct: {
@@ -25944,175 +25594,87 @@ var require_dist_node12 = __commonJS({
         getConductCode: ["GET /codes_of_conduct/{key}"]
       },
       codespaces: {
-        addRepositoryForSecretForAuthenticatedUser: [
-          "PUT /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        addSelectedRepoToOrgSecret: [
-          "PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        codespaceMachinesForAuthenticatedUser: [
-          "GET /user/codespaces/{codespace_name}/machines"
-        ],
+        addRepositoryForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        codespaceMachinesForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}/machines"],
         createForAuthenticatedUser: ["POST /user/codespaces"],
-        createOrUpdateOrgSecret: [
-          "PUT /orgs/{org}/codespaces/secrets/{secret_name}"
-        ],
-        createOrUpdateRepoSecret: [
-          "PUT /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"
-        ],
-        createOrUpdateSecretForAuthenticatedUser: [
-          "PUT /user/codespaces/secrets/{secret_name}"
-        ],
-        createWithPrForAuthenticatedUser: [
-          "POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"
-        ],
-        createWithRepoForAuthenticatedUser: [
-          "POST /repos/{owner}/{repo}/codespaces"
-        ],
-        deleteCodespacesBillingUsers: [
-          "DELETE /orgs/{org}/codespaces/billing/selected_users"
-        ],
+        createOrUpdateOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}"],
+        createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        createOrUpdateSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}"],
+        createWithPrForAuthenticatedUser: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"],
+        createWithRepoForAuthenticatedUser: ["POST /repos/{owner}/{repo}/codespaces"],
+        deleteCodespacesBillingUsers: ["DELETE /orgs/{org}/codespaces/billing/selected_users"],
         deleteForAuthenticatedUser: ["DELETE /user/codespaces/{codespace_name}"],
-        deleteFromOrganization: [
-          "DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"
-        ],
+        deleteFromOrganization: ["DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}"],
-        deleteRepoSecret: [
-          "DELETE /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"
-        ],
-        deleteSecretForAuthenticatedUser: [
-          "DELETE /user/codespaces/secrets/{secret_name}"
-        ],
-        exportForAuthenticatedUser: [
-          "POST /user/codespaces/{codespace_name}/exports"
-        ],
-        getCodespacesForUserInOrg: [
-          "GET /orgs/{org}/members/{username}/codespaces"
-        ],
-        getExportDetailsForAuthenticatedUser: [
-          "GET /user/codespaces/{codespace_name}/exports/{export_id}"
-        ],
+        deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        deleteSecretForAuthenticatedUser: ["DELETE /user/codespaces/secrets/{secret_name}"],
+        exportForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/exports"],
+        getCodespacesForUserInOrg: ["GET /orgs/{org}/members/{username}/codespaces"],
+        getExportDetailsForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}/exports/{export_id}"],
         getForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}"],
         getOrgPublicKey: ["GET /orgs/{org}/codespaces/secrets/public-key"],
         getOrgSecret: ["GET /orgs/{org}/codespaces/secrets/{secret_name}"],
-        getPublicKeyForAuthenticatedUser: [
-          "GET /user/codespaces/secrets/public-key"
-        ],
-        getRepoPublicKey: [
-          "GET /repos/{owner}/{repo}/codespaces/secrets/public-key"
-        ],
-        getRepoSecret: [
-          "GET /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"
-        ],
-        getSecretForAuthenticatedUser: [
-          "GET /user/codespaces/secrets/{secret_name}"
-        ],
-        listDevcontainersInRepositoryForAuthenticatedUser: [
-          "GET /repos/{owner}/{repo}/codespaces/devcontainers"
-        ],
+        getPublicKeyForAuthenticatedUser: ["GET /user/codespaces/secrets/public-key"],
+        getRepoPublicKey: ["GET /repos/{owner}/{repo}/codespaces/secrets/public-key"],
+        getRepoSecret: ["GET /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        getSecretForAuthenticatedUser: ["GET /user/codespaces/secrets/{secret_name}"],
+        listDevcontainersInRepositoryForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/devcontainers"],
         listForAuthenticatedUser: ["GET /user/codespaces"],
-        listInOrganization: [
-          "GET /orgs/{org}/codespaces",
-          {},
-          { renamedParameters: { org_id: "org" } }
-        ],
-        listInRepositoryForAuthenticatedUser: [
-          "GET /repos/{owner}/{repo}/codespaces"
-        ],
+        listInOrganization: ["GET /orgs/{org}/codespaces", {}, {
+          renamedParameters: {
+            org_id: "org"
+          }
+        }],
+        listInRepositoryForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces"],
         listOrgSecrets: ["GET /orgs/{org}/codespaces/secrets"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/codespaces/secrets"],
-        listRepositoriesForSecretForAuthenticatedUser: [
-          "GET /user/codespaces/secrets/{secret_name}/repositories"
-        ],
+        listRepositoriesForSecretForAuthenticatedUser: ["GET /user/codespaces/secrets/{secret_name}/repositories"],
         listSecretsForAuthenticatedUser: ["GET /user/codespaces/secrets"],
-        listSelectedReposForOrgSecret: [
-          "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories"
-        ],
-        preFlightWithRepoForAuthenticatedUser: [
-          "GET /repos/{owner}/{repo}/codespaces/new"
-        ],
-        publishForAuthenticatedUser: [
-          "POST /user/codespaces/{codespace_name}/publish"
-        ],
-        removeRepositoryForSecretForAuthenticatedUser: [
-          "DELETE /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        removeSelectedRepoFromOrgSecret: [
-          "DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        repoMachinesForAuthenticatedUser: [
-          "GET /repos/{owner}/{repo}/codespaces/machines"
-        ],
+        listSelectedReposForOrgSecret: ["GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories"],
+        preFlightWithRepoForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/new"],
+        publishForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/publish"],
+        removeRepositoryForSecretForAuthenticatedUser: ["DELETE /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
         setCodespacesBilling: ["PUT /orgs/{org}/codespaces/billing"],
-        setCodespacesBillingUsers: [
-          "POST /orgs/{org}/codespaces/billing/selected_users"
-        ],
-        setRepositoriesForSecretForAuthenticatedUser: [
-          "PUT /user/codespaces/secrets/{secret_name}/repositories"
-        ],
-        setSelectedReposForOrgSecret: [
-          "PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories"
-        ],
+        setCodespacesBillingUsers: ["POST /orgs/{org}/codespaces/billing/selected_users"],
+        setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
+        setSelectedReposForOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories"],
         startForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/start"],
         stopForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/stop"],
-        stopInOrganization: [
-          "POST /orgs/{org}/members/{username}/codespaces/{codespace_name}/stop"
-        ],
+        stopInOrganization: ["POST /orgs/{org}/members/{username}/codespaces/{codespace_name}/stop"],
         updateForAuthenticatedUser: ["PATCH /user/codespaces/{codespace_name}"]
       },
       dependabot: {
-        addSelectedRepoToOrgSecret: [
-          "PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        createOrUpdateOrgSecret: [
-          "PUT /orgs/{org}/dependabot/secrets/{secret_name}"
-        ],
-        createOrUpdateRepoSecret: [
-          "PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"
-        ],
+        addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"],
+        createOrUpdateOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}"],
+        createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/dependabot/secrets/{secret_name}"],
-        deleteRepoSecret: [
-          "DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"
-        ],
+        deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
         getAlert: ["GET /repos/{owner}/{repo}/dependabot/alerts/{alert_number}"],
         getOrgPublicKey: ["GET /orgs/{org}/dependabot/secrets/public-key"],
         getOrgSecret: ["GET /orgs/{org}/dependabot/secrets/{secret_name}"],
-        getRepoPublicKey: [
-          "GET /repos/{owner}/{repo}/dependabot/secrets/public-key"
-        ],
-        getRepoSecret: [
-          "GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"
-        ],
-        listAlertsForEnterprise: [
-          "GET /enterprises/{enterprise}/dependabot/alerts"
-        ],
+        getRepoPublicKey: ["GET /repos/{owner}/{repo}/dependabot/secrets/public-key"],
+        getRepoSecret: ["GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
+        listAlertsForEnterprise: ["GET /enterprises/{enterprise}/dependabot/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/dependabot/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/dependabot/alerts"],
         listOrgSecrets: ["GET /orgs/{org}/dependabot/secrets"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/dependabot/secrets"],
-        listSelectedReposForOrgSecret: [
-          "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories"
-        ],
-        removeSelectedRepoFromOrgSecret: [
-          "DELETE /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"
-        ],
-        setSelectedReposForOrgSecret: [
-          "PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories"
-        ],
-        updateAlert: [
-          "PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}"
-        ]
+        listSelectedReposForOrgSecret: ["GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories"],
+        removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"],
+        setSelectedReposForOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories"],
+        updateAlert: ["PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}"]
       },
       dependencyGraph: {
-        createRepositorySnapshot: [
-          "POST /repos/{owner}/{repo}/dependency-graph/snapshots"
-        ],
-        diffRange: [
-          "GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"
-        ],
+        createRepositorySnapshot: ["POST /repos/{owner}/{repo}/dependency-graph/snapshots"],
+        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"],
         exportSbom: ["GET /repos/{owner}/{repo}/dependency-graph/sbom"]
       },
-      emojis: { get: ["GET /emojis"] },
+      emojis: {
+        get: ["GET /emojis"]
+      },
       gists: {
         checkIsStarred: ["GET /gists/{gist_id}/star"],
         create: ["POST /gists"],
@@ -26158,52 +25720,34 @@ var require_dist_node12 = __commonJS({
         getRestrictionsForAuthenticatedUser: ["GET /user/interaction-limits"],
         getRestrictionsForOrg: ["GET /orgs/{org}/interaction-limits"],
         getRestrictionsForRepo: ["GET /repos/{owner}/{repo}/interaction-limits"],
-        getRestrictionsForYourPublicRepos: [
-          "GET /user/interaction-limits",
-          {},
-          { renamed: ["interactions", "getRestrictionsForAuthenticatedUser"] }
-        ],
+        getRestrictionsForYourPublicRepos: ["GET /user/interaction-limits", {}, {
+          renamed: ["interactions", "getRestrictionsForAuthenticatedUser"]
+        }],
         removeRestrictionsForAuthenticatedUser: ["DELETE /user/interaction-limits"],
         removeRestrictionsForOrg: ["DELETE /orgs/{org}/interaction-limits"],
-        removeRestrictionsForRepo: [
-          "DELETE /repos/{owner}/{repo}/interaction-limits"
-        ],
-        removeRestrictionsForYourPublicRepos: [
-          "DELETE /user/interaction-limits",
-          {},
-          { renamed: ["interactions", "removeRestrictionsForAuthenticatedUser"] }
-        ],
+        removeRestrictionsForRepo: ["DELETE /repos/{owner}/{repo}/interaction-limits"],
+        removeRestrictionsForYourPublicRepos: ["DELETE /user/interaction-limits", {}, {
+          renamed: ["interactions", "removeRestrictionsForAuthenticatedUser"]
+        }],
         setRestrictionsForAuthenticatedUser: ["PUT /user/interaction-limits"],
         setRestrictionsForOrg: ["PUT /orgs/{org}/interaction-limits"],
         setRestrictionsForRepo: ["PUT /repos/{owner}/{repo}/interaction-limits"],
-        setRestrictionsForYourPublicRepos: [
-          "PUT /user/interaction-limits",
-          {},
-          { renamed: ["interactions", "setRestrictionsForAuthenticatedUser"] }
-        ]
+        setRestrictionsForYourPublicRepos: ["PUT /user/interaction-limits", {}, {
+          renamed: ["interactions", "setRestrictionsForAuthenticatedUser"]
+        }]
       },
       issues: {
-        addAssignees: [
-          "POST /repos/{owner}/{repo}/issues/{issue_number}/assignees"
-        ],
+        addAssignees: ["POST /repos/{owner}/{repo}/issues/{issue_number}/assignees"],
         addLabels: ["POST /repos/{owner}/{repo}/issues/{issue_number}/labels"],
         checkUserCanBeAssigned: ["GET /repos/{owner}/{repo}/assignees/{assignee}"],
-        checkUserCanBeAssignedToIssue: [
-          "GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}"
-        ],
+        checkUserCanBeAssignedToIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}"],
         create: ["POST /repos/{owner}/{repo}/issues"],
-        createComment: [
-          "POST /repos/{owner}/{repo}/issues/{issue_number}/comments"
-        ],
+        createComment: ["POST /repos/{owner}/{repo}/issues/{issue_number}/comments"],
         createLabel: ["POST /repos/{owner}/{repo}/labels"],
         createMilestone: ["POST /repos/{owner}/{repo}/milestones"],
-        deleteComment: [
-          "DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}"
-        ],
+        deleteComment: ["DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}"],
         deleteLabel: ["DELETE /repos/{owner}/{repo}/labels/{name}"],
-        deleteMilestone: [
-          "DELETE /repos/{owner}/{repo}/milestones/{milestone_number}"
-        ],
+        deleteMilestone: ["DELETE /repos/{owner}/{repo}/milestones/{milestone_number}"],
         get: ["GET /repos/{owner}/{repo}/issues/{issue_number}"],
         getComment: ["GET /repos/{owner}/{repo}/issues/comments/{comment_id}"],
         getEvent: ["GET /repos/{owner}/{repo}/issues/events/{event_id}"],
@@ -26215,38 +25759,24 @@ var require_dist_node12 = __commonJS({
         listCommentsForRepo: ["GET /repos/{owner}/{repo}/issues/comments"],
         listEvents: ["GET /repos/{owner}/{repo}/issues/{issue_number}/events"],
         listEventsForRepo: ["GET /repos/{owner}/{repo}/issues/events"],
-        listEventsForTimeline: [
-          "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline"
-        ],
+        listEventsForTimeline: ["GET /repos/{owner}/{repo}/issues/{issue_number}/timeline"],
         listForAuthenticatedUser: ["GET /user/issues"],
         listForOrg: ["GET /orgs/{org}/issues"],
         listForRepo: ["GET /repos/{owner}/{repo}/issues"],
-        listLabelsForMilestone: [
-          "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels"
-        ],
+        listLabelsForMilestone: ["GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels"],
         listLabelsForRepo: ["GET /repos/{owner}/{repo}/labels"],
-        listLabelsOnIssue: [
-          "GET /repos/{owner}/{repo}/issues/{issue_number}/labels"
-        ],
+        listLabelsOnIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/labels"],
         listMilestones: ["GET /repos/{owner}/{repo}/milestones"],
         lock: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/lock"],
-        removeAllLabels: [
-          "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels"
-        ],
-        removeAssignees: [
-          "DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees"
-        ],
-        removeLabel: [
-          "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}"
-        ],
+        removeAllLabels: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels"],
+        removeAssignees: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees"],
+        removeLabel: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}"],
         setLabels: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/labels"],
         unlock: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/lock"],
         update: ["PATCH /repos/{owner}/{repo}/issues/{issue_number}"],
         updateComment: ["PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}"],
         updateLabel: ["PATCH /repos/{owner}/{repo}/labels/{name}"],
-        updateMilestone: [
-          "PATCH /repos/{owner}/{repo}/milestones/{milestone_number}"
-        ]
+        updateMilestone: ["PATCH /repos/{owner}/{repo}/milestones/{milestone_number}"]
       },
       licenses: {
         get: ["GET /licenses/{license}"],
@@ -26255,10 +25785,11 @@ var require_dist_node12 = __commonJS({
       },
       markdown: {
         render: ["POST /markdown"],
-        renderRaw: [
-          "POST /markdown/raw",
-          { headers: { "content-type": "text/plain; charset=utf-8" } }
-        ]
+        renderRaw: ["POST /markdown/raw", {
+          headers: {
+            "content-type": "text/plain; charset=utf-8"
+          }
+        }]
       },
       meta: {
         get: ["GET /meta"],
@@ -26269,18 +25800,10 @@ var require_dist_node12 = __commonJS({
       },
       migrations: {
         cancelImport: ["DELETE /repos/{owner}/{repo}/import"],
-        deleteArchiveForAuthenticatedUser: [
-          "DELETE /user/migrations/{migration_id}/archive"
-        ],
-        deleteArchiveForOrg: [
-          "DELETE /orgs/{org}/migrations/{migration_id}/archive"
-        ],
-        downloadArchiveForOrg: [
-          "GET /orgs/{org}/migrations/{migration_id}/archive"
-        ],
-        getArchiveForAuthenticatedUser: [
-          "GET /user/migrations/{migration_id}/archive"
-        ],
+        deleteArchiveForAuthenticatedUser: ["DELETE /user/migrations/{migration_id}/archive"],
+        deleteArchiveForOrg: ["DELETE /orgs/{org}/migrations/{migration_id}/archive"],
+        downloadArchiveForOrg: ["GET /orgs/{org}/migrations/{migration_id}/archive"],
+        getArchiveForAuthenticatedUser: ["GET /user/migrations/{migration_id}/archive"],
         getCommitAuthors: ["GET /repos/{owner}/{repo}/import/authors"],
         getImportStatus: ["GET /repos/{owner}/{repo}/import"],
         getLargeFiles: ["GET /repos/{owner}/{repo}/import/large_files"],
@@ -26288,55 +25811,39 @@ var require_dist_node12 = __commonJS({
         getStatusForOrg: ["GET /orgs/{org}/migrations/{migration_id}"],
         listForAuthenticatedUser: ["GET /user/migrations"],
         listForOrg: ["GET /orgs/{org}/migrations"],
-        listReposForAuthenticatedUser: [
-          "GET /user/migrations/{migration_id}/repositories"
-        ],
+        listReposForAuthenticatedUser: ["GET /user/migrations/{migration_id}/repositories"],
         listReposForOrg: ["GET /orgs/{org}/migrations/{migration_id}/repositories"],
-        listReposForUser: [
-          "GET /user/migrations/{migration_id}/repositories",
-          {},
-          { renamed: ["migrations", "listReposForAuthenticatedUser"] }
-        ],
+        listReposForUser: ["GET /user/migrations/{migration_id}/repositories", {}, {
+          renamed: ["migrations", "listReposForAuthenticatedUser"]
+        }],
         mapCommitAuthor: ["PATCH /repos/{owner}/{repo}/import/authors/{author_id}"],
         setLfsPreference: ["PATCH /repos/{owner}/{repo}/import/lfs"],
         startForAuthenticatedUser: ["POST /user/migrations"],
         startForOrg: ["POST /orgs/{org}/migrations"],
         startImport: ["PUT /repos/{owner}/{repo}/import"],
-        unlockRepoForAuthenticatedUser: [
-          "DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock"
-        ],
-        unlockRepoForOrg: [
-          "DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock"
-        ],
+        unlockRepoForAuthenticatedUser: ["DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock"],
+        unlockRepoForOrg: ["DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock"],
         updateImport: ["PATCH /repos/{owner}/{repo}/import"]
       },
       orgs: {
-        addSecurityManagerTeam: [
-          "PUT /orgs/{org}/security-managers/teams/{team_slug}"
-        ],
+        addSecurityManagerTeam: ["PUT /orgs/{org}/security-managers/teams/{team_slug}"],
         blockUser: ["PUT /orgs/{org}/blocks/{username}"],
         cancelInvitation: ["DELETE /orgs/{org}/invitations/{invitation_id}"],
         checkBlockedUser: ["GET /orgs/{org}/blocks/{username}"],
         checkMembershipForUser: ["GET /orgs/{org}/members/{username}"],
         checkPublicMembershipForUser: ["GET /orgs/{org}/public_members/{username}"],
-        convertMemberToOutsideCollaborator: [
-          "PUT /orgs/{org}/outside_collaborators/{username}"
-        ],
+        convertMemberToOutsideCollaborator: ["PUT /orgs/{org}/outside_collaborators/{username}"],
         createInvitation: ["POST /orgs/{org}/invitations"],
         createWebhook: ["POST /orgs/{org}/hooks"],
         delete: ["DELETE /orgs/{org}"],
         deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
-        enableOrDisableSecurityProductOnAllOrgRepos: [
-          "POST /orgs/{org}/{security_product}/{enablement}"
-        ],
+        enableOrDisableSecurityProductOnAllOrgRepos: ["POST /orgs/{org}/{security_product}/{enablement}"],
         get: ["GET /orgs/{org}"],
         getMembershipForAuthenticatedUser: ["GET /user/memberships/orgs/{org}"],
         getMembershipForUser: ["GET /orgs/{org}/memberships/{username}"],
         getWebhook: ["GET /orgs/{org}/hooks/{hook_id}"],
         getWebhookConfigForOrg: ["GET /orgs/{org}/hooks/{hook_id}/config"],
-        getWebhookDelivery: [
-          "GET /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}"
-        ],
+        getWebhookDelivery: ["GET /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}"],
         list: ["GET /organizations"],
         listAppInstallations: ["GET /orgs/{org}/installations"],
         listBlockedUsers: ["GET /orgs/{org}/blocks"],
@@ -26347,15 +25854,9 @@ var require_dist_node12 = __commonJS({
         listMembers: ["GET /orgs/{org}/members"],
         listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
-        listPatGrantRepositories: [
-          "GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories"
-        ],
-        listPatGrantRequestRepositories: [
-          "GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories"
-        ],
-        listPatGrantRequests: [
-          "GET /organizations/{org}/personal-access-token-requests"
-        ],
+        listPatGrantRepositories: ["GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories"],
+        listPatGrantRequestRepositories: ["GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories"],
+        listPatGrantRequests: ["GET /organizations/{org}/personal-access-token-requests"],
         listPatGrants: ["GET /organizations/{org}/personal-access-tokens"],
         listPendingInvitations: ["GET /orgs/{org}/invitations"],
         listPublicMembers: ["GET /orgs/{org}/public_members"],
@@ -26363,133 +25864,58 @@ var require_dist_node12 = __commonJS({
         listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
         listWebhooks: ["GET /orgs/{org}/hooks"],
         pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
-        redeliverWebhookDelivery: [
-          "POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
-        ],
+        redeliverWebhookDelivery: ["POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"],
         removeMember: ["DELETE /orgs/{org}/members/{username}"],
         removeMembershipForUser: ["DELETE /orgs/{org}/memberships/{username}"],
-        removeOutsideCollaborator: [
-          "DELETE /orgs/{org}/outside_collaborators/{username}"
-        ],
-        removePublicMembershipForAuthenticatedUser: [
-          "DELETE /orgs/{org}/public_members/{username}"
-        ],
-        removeSecurityManagerTeam: [
-          "DELETE /orgs/{org}/security-managers/teams/{team_slug}"
-        ],
-        reviewPatGrantRequest: [
-          "POST /organizations/{org}/personal-access-token-requests/{pat_request_id}"
-        ],
-        reviewPatGrantRequestsInBulk: [
-          "POST /organizations/{org}/personal-access-token-requests"
-        ],
+        removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
+        removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
+        removeSecurityManagerTeam: ["DELETE /orgs/{org}/security-managers/teams/{team_slug}"],
+        reviewPatGrantRequest: ["POST /organizations/{org}/personal-access-token-requests/{pat_request_id}"],
+        reviewPatGrantRequestsInBulk: ["POST /organizations/{org}/personal-access-token-requests"],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
-        setPublicMembershipForAuthenticatedUser: [
-          "PUT /orgs/{org}/public_members/{username}"
-        ],
+        setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
         unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
         update: ["PATCH /orgs/{org}"],
-        updateMembershipForAuthenticatedUser: [
-          "PATCH /user/memberships/orgs/{org}"
-        ],
-        updatePatAccess: [
-          "POST /organizations/{org}/personal-access-tokens/{pat_id}"
-        ],
+        updateMembershipForAuthenticatedUser: ["PATCH /user/memberships/orgs/{org}"],
+        updatePatAccess: ["POST /organizations/{org}/personal-access-tokens/{pat_id}"],
         updatePatAccesses: ["POST /organizations/{org}/personal-access-tokens"],
         updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
         updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
       },
       packages: {
-        deletePackageForAuthenticatedUser: [
-          "DELETE /user/packages/{package_type}/{package_name}"
-        ],
-        deletePackageForOrg: [
-          "DELETE /orgs/{org}/packages/{package_type}/{package_name}"
-        ],
-        deletePackageForUser: [
-          "DELETE /users/{username}/packages/{package_type}/{package_name}"
-        ],
-        deletePackageVersionForAuthenticatedUser: [
-          "DELETE /user/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        deletePackageVersionForOrg: [
-          "DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        deletePackageVersionForUser: [
-          "DELETE /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        getAllPackageVersionsForAPackageOwnedByAnOrg: [
-          "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
-          {},
-          { renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"] }
-        ],
-        getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: [
-          "GET /user/packages/{package_type}/{package_name}/versions",
-          {},
-          {
-            renamed: [
-              "packages",
-              "getAllPackageVersionsForPackageOwnedByAuthenticatedUser"
-            ]
-          }
-        ],
-        getAllPackageVersionsForPackageOwnedByAuthenticatedUser: [
-          "GET /user/packages/{package_type}/{package_name}/versions"
-        ],
-        getAllPackageVersionsForPackageOwnedByOrg: [
-          "GET /orgs/{org}/packages/{package_type}/{package_name}/versions"
-        ],
-        getAllPackageVersionsForPackageOwnedByUser: [
-          "GET /users/{username}/packages/{package_type}/{package_name}/versions"
-        ],
-        getPackageForAuthenticatedUser: [
-          "GET /user/packages/{package_type}/{package_name}"
-        ],
-        getPackageForOrganization: [
-          "GET /orgs/{org}/packages/{package_type}/{package_name}"
-        ],
-        getPackageForUser: [
-          "GET /users/{username}/packages/{package_type}/{package_name}"
-        ],
-        getPackageVersionForAuthenticatedUser: [
-          "GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        getPackageVersionForOrganization: [
-          "GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        getPackageVersionForUser: [
-          "GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"
-        ],
-        listDockerMigrationConflictingPackagesForAuthenticatedUser: [
-          "GET /user/docker/conflicts"
-        ],
-        listDockerMigrationConflictingPackagesForOrganization: [
-          "GET /orgs/{org}/docker/conflicts"
-        ],
-        listDockerMigrationConflictingPackagesForUser: [
-          "GET /users/{username}/docker/conflicts"
-        ],
+        deletePackageForAuthenticatedUser: ["DELETE /user/packages/{package_type}/{package_name}"],
+        deletePackageForOrg: ["DELETE /orgs/{org}/packages/{package_type}/{package_name}"],
+        deletePackageForUser: ["DELETE /users/{username}/packages/{package_type}/{package_name}"],
+        deletePackageVersionForAuthenticatedUser: ["DELETE /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        deletePackageVersionForOrg: ["DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        deletePackageVersionForUser: ["DELETE /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        getAllPackageVersionsForAPackageOwnedByAnOrg: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {}, {
+          renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"]
+        }],
+        getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions", {}, {
+          renamed: ["packages", "getAllPackageVersionsForPackageOwnedByAuthenticatedUser"]
+        }],
+        getAllPackageVersionsForPackageOwnedByAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions"],
+        getAllPackageVersionsForPackageOwnedByOrg: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions"],
+        getAllPackageVersionsForPackageOwnedByUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions"],
+        getPackageForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}"],
+        getPackageForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}"],
+        getPackageForUser: ["GET /users/{username}/packages/{package_type}/{package_name}"],
+        getPackageVersionForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        getPackageVersionForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        getPackageVersionForUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        listDockerMigrationConflictingPackagesForAuthenticatedUser: ["GET /user/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForOrganization: ["GET /orgs/{org}/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForUser: ["GET /users/{username}/docker/conflicts"],
         listPackagesForAuthenticatedUser: ["GET /user/packages"],
         listPackagesForOrganization: ["GET /orgs/{org}/packages"],
         listPackagesForUser: ["GET /users/{username}/packages"],
-        restorePackageForAuthenticatedUser: [
-          "POST /user/packages/{package_type}/{package_name}/restore{?token}"
-        ],
-        restorePackageForOrg: [
-          "POST /orgs/{org}/packages/{package_type}/{package_name}/restore{?token}"
-        ],
-        restorePackageForUser: [
-          "POST /users/{username}/packages/{package_type}/{package_name}/restore{?token}"
-        ],
-        restorePackageVersionForAuthenticatedUser: [
-          "POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
-        ],
-        restorePackageVersionForOrg: [
-          "POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
-        ],
-        restorePackageVersionForUser: [
-          "POST /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
-        ]
+        restorePackageForAuthenticatedUser: ["POST /user/packages/{package_type}/{package_name}/restore{?token}"],
+        restorePackageForOrg: ["POST /orgs/{org}/packages/{package_type}/{package_name}/restore{?token}"],
+        restorePackageForUser: ["POST /users/{username}/packages/{package_type}/{package_name}/restore{?token}"],
+        restorePackageVersionForAuthenticatedUser: ["POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"],
+        restorePackageVersionForOrg: ["POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"],
+        restorePackageVersionForUser: ["POST /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"]
       },
       projects: {
         addCollaborator: ["PUT /projects/{project_id}/collaborators/{username}"],
@@ -26504,9 +25930,7 @@ var require_dist_node12 = __commonJS({
         get: ["GET /projects/{project_id}"],
         getCard: ["GET /projects/columns/cards/{card_id}"],
         getColumn: ["GET /projects/columns/{column_id}"],
-        getPermissionForUser: [
-          "GET /projects/{project_id}/collaborators/{username}/permission"
-        ],
+        getPermissionForUser: ["GET /projects/{project_id}/collaborators/{username}/permission"],
         listCards: ["GET /projects/columns/{column_id}/cards"],
         listCollaborators: ["GET /projects/{project_id}/collaborators"],
         listColumns: ["GET /projects/{project_id}/columns"],
@@ -26515,9 +25939,7 @@ var require_dist_node12 = __commonJS({
         listForUser: ["GET /users/{username}/projects"],
         moveCard: ["POST /projects/columns/cards/{card_id}/moves"],
         moveColumn: ["POST /projects/columns/{column_id}/moves"],
-        removeCollaborator: [
-          "DELETE /projects/{project_id}/collaborators/{username}"
-        ],
+        removeCollaborator: ["DELETE /projects/{project_id}/collaborators/{username}"],
         update: ["PATCH /projects/{project_id}"],
         updateCard: ["PATCH /projects/columns/cards/{card_id}"],
         updateColumn: ["PATCH /projects/columns/{column_id}"]
@@ -26525,191 +25947,95 @@ var require_dist_node12 = __commonJS({
       pulls: {
         checkIfMerged: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/merge"],
         create: ["POST /repos/{owner}/{repo}/pulls"],
-        createReplyForReviewComment: [
-          "POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies"
-        ],
+        createReplyForReviewComment: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies"],
         createReview: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews"],
-        createReviewComment: [
-          "POST /repos/{owner}/{repo}/pulls/{pull_number}/comments"
-        ],
-        deletePendingReview: [
-          "DELETE /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"
-        ],
-        deleteReviewComment: [
-          "DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}"
-        ],
-        dismissReview: [
-          "PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals"
-        ],
+        createReviewComment: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/comments"],
+        deletePendingReview: ["DELETE /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"],
+        deleteReviewComment: ["DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}"],
+        dismissReview: ["PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/dismissals"],
         get: ["GET /repos/{owner}/{repo}/pulls/{pull_number}"],
-        getReview: [
-          "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"
-        ],
+        getReview: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"],
         getReviewComment: ["GET /repos/{owner}/{repo}/pulls/comments/{comment_id}"],
         list: ["GET /repos/{owner}/{repo}/pulls"],
-        listCommentsForReview: [
-          "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments"
-        ],
+        listCommentsForReview: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments"],
         listCommits: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/commits"],
         listFiles: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/files"],
-        listRequestedReviewers: [
-          "GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"
-        ],
-        listReviewComments: [
-          "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments"
-        ],
+        listRequestedReviewers: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"],
+        listReviewComments: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/comments"],
         listReviewCommentsForRepo: ["GET /repos/{owner}/{repo}/pulls/comments"],
         listReviews: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews"],
         merge: ["PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge"],
-        removeRequestedReviewers: [
-          "DELETE /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"
-        ],
-        requestReviewers: [
-          "POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"
-        ],
-        submitReview: [
-          "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events"
-        ],
+        removeRequestedReviewers: ["DELETE /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"],
+        requestReviewers: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers"],
+        submitReview: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/events"],
         update: ["PATCH /repos/{owner}/{repo}/pulls/{pull_number}"],
-        updateBranch: [
-          "PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch"
-        ],
-        updateReview: [
-          "PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"
-        ],
-        updateReviewComment: [
-          "PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id}"
-        ]
+        updateBranch: ["PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch"],
+        updateReview: ["PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"],
+        updateReviewComment: ["PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id}"]
       },
-      rateLimit: { get: ["GET /rate_limit"] },
+      rateLimit: {
+        get: ["GET /rate_limit"]
+      },
       reactions: {
-        createForCommitComment: [
-          "POST /repos/{owner}/{repo}/comments/{comment_id}/reactions"
-        ],
-        createForIssue: [
-          "POST /repos/{owner}/{repo}/issues/{issue_number}/reactions"
-        ],
-        createForIssueComment: [
-          "POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"
-        ],
-        createForPullRequestReviewComment: [
-          "POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"
-        ],
-        createForRelease: [
-          "POST /repos/{owner}/{repo}/releases/{release_id}/reactions"
-        ],
-        createForTeamDiscussionCommentInOrg: [
-          "POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"
-        ],
-        createForTeamDiscussionInOrg: [
-          "POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"
-        ],
-        deleteForCommitComment: [
-          "DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}"
-        ],
-        deleteForIssue: [
-          "DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}"
-        ],
-        deleteForIssueComment: [
-          "DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}"
-        ],
-        deleteForPullRequestComment: [
-          "DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}"
-        ],
-        deleteForRelease: [
-          "DELETE /repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"
-        ],
-        deleteForTeamDiscussion: [
-          "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}"
-        ],
-        deleteForTeamDiscussionComment: [
-          "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}"
-        ],
-        listForCommitComment: [
-          "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions"
-        ],
+        createForCommitComment: ["POST /repos/{owner}/{repo}/comments/{comment_id}/reactions"],
+        createForIssue: ["POST /repos/{owner}/{repo}/issues/{issue_number}/reactions"],
+        createForIssueComment: ["POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"],
+        createForPullRequestReviewComment: ["POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"],
+        createForRelease: ["POST /repos/{owner}/{repo}/releases/{release_id}/reactions"],
+        createForTeamDiscussionCommentInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"],
+        createForTeamDiscussionInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"],
+        deleteForCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForIssue: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}"],
+        deleteForIssueComment: ["DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForPullRequestComment: ["DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"],
+        deleteForTeamDiscussion: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}"],
+        deleteForTeamDiscussionComment: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}"],
+        listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions"],
         listForIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/reactions"],
-        listForIssueComment: [
-          "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"
-        ],
-        listForPullRequestReviewComment: [
-          "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"
-        ],
-        listForRelease: [
-          "GET /repos/{owner}/{repo}/releases/{release_id}/reactions"
-        ],
-        listForTeamDiscussionCommentInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"
-        ],
-        listForTeamDiscussionInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"
-        ]
+        listForIssueComment: ["GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"],
+        listForPullRequestReviewComment: ["GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"],
+        listForRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}/reactions"],
+        listForTeamDiscussionCommentInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"],
+        listForTeamDiscussionInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"]
       },
       repos: {
-        acceptInvitation: [
-          "PATCH /user/repository_invitations/{invitation_id}",
-          {},
-          { renamed: ["repos", "acceptInvitationForAuthenticatedUser"] }
-        ],
-        acceptInvitationForAuthenticatedUser: [
-          "PATCH /user/repository_invitations/{invitation_id}"
-        ],
-        addAppAccessRestrictions: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
-          {},
-          { mapToData: "apps" }
-        ],
+        acceptInvitation: ["PATCH /user/repository_invitations/{invitation_id}", {}, {
+          renamed: ["repos", "acceptInvitationForAuthenticatedUser"]
+        }],
+        acceptInvitationForAuthenticatedUser: ["PATCH /user/repository_invitations/{invitation_id}"],
+        addAppAccessRestrictions: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps", {}, {
+          mapToData: "apps"
+        }],
         addCollaborator: ["PUT /repos/{owner}/{repo}/collaborators/{username}"],
-        addStatusCheckContexts: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
-          {},
-          { mapToData: "contexts" }
-        ],
-        addTeamAccessRestrictions: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
-          {},
-          { mapToData: "teams" }
-        ],
-        addUserAccessRestrictions: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
-          {},
-          { mapToData: "users" }
-        ],
+        addStatusCheckContexts: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts", {}, {
+          mapToData: "contexts"
+        }],
+        addTeamAccessRestrictions: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams", {}, {
+          mapToData: "teams"
+        }],
+        addUserAccessRestrictions: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users", {}, {
+          mapToData: "users"
+        }],
         checkCollaborator: ["GET /repos/{owner}/{repo}/collaborators/{username}"],
-        checkVulnerabilityAlerts: [
-          "GET /repos/{owner}/{repo}/vulnerability-alerts"
-        ],
+        checkVulnerabilityAlerts: ["GET /repos/{owner}/{repo}/vulnerability-alerts"],
         codeownersErrors: ["GET /repos/{owner}/{repo}/codeowners/errors"],
         compareCommits: ["GET /repos/{owner}/{repo}/compare/{base}...{head}"],
-        compareCommitsWithBasehead: [
-          "GET /repos/{owner}/{repo}/compare/{basehead}"
-        ],
+        compareCommitsWithBasehead: ["GET /repos/{owner}/{repo}/compare/{basehead}"],
         createAutolink: ["POST /repos/{owner}/{repo}/autolinks"],
-        createCommitComment: [
-          "POST /repos/{owner}/{repo}/commits/{commit_sha}/comments"
-        ],
-        createCommitSignatureProtection: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"
-        ],
+        createCommitComment: ["POST /repos/{owner}/{repo}/commits/{commit_sha}/comments"],
+        createCommitSignatureProtection: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"],
         createCommitStatus: ["POST /repos/{owner}/{repo}/statuses/{sha}"],
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
         createDeployment: ["POST /repos/{owner}/{repo}/deployments"],
-        createDeploymentBranchPolicy: [
-          "POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"
-        ],
-        createDeploymentProtectionRule: [
-          "POST /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"
-        ],
-        createDeploymentStatus: [
-          "POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"
-        ],
+        createDeploymentBranchPolicy: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
+        createDeploymentProtectionRule: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
+        createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
         createForAuthenticatedUser: ["POST /user/repos"],
         createFork: ["POST /repos/{owner}/{repo}/forks"],
         createInOrg: ["POST /orgs/{org}/repos"],
-        createOrUpdateEnvironment: [
-          "PUT /repos/{owner}/{repo}/environments/{environment_name}"
-        ],
+        createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
         createOrgRuleset: ["POST /orgs/{org}/rulesets"],
         createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
@@ -26717,141 +26043,75 @@ var require_dist_node12 = __commonJS({
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
         createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
         createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
-        createUsingTemplate: [
-          "POST /repos/{template_owner}/{template_repo}/generate"
-        ],
+        createUsingTemplate: ["POST /repos/{template_owner}/{template_repo}/generate"],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
-        declineInvitation: [
-          "DELETE /user/repository_invitations/{invitation_id}",
-          {},
-          { renamed: ["repos", "declineInvitationForAuthenticatedUser"] }
-        ],
-        declineInvitationForAuthenticatedUser: [
-          "DELETE /user/repository_invitations/{invitation_id}"
-        ],
+        declineInvitation: ["DELETE /user/repository_invitations/{invitation_id}", {}, {
+          renamed: ["repos", "declineInvitationForAuthenticatedUser"]
+        }],
+        declineInvitationForAuthenticatedUser: ["DELETE /user/repository_invitations/{invitation_id}"],
         delete: ["DELETE /repos/{owner}/{repo}"],
-        deleteAccessRestrictions: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"
-        ],
-        deleteAdminBranchProtection: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"
-        ],
-        deleteAnEnvironment: [
-          "DELETE /repos/{owner}/{repo}/environments/{environment_name}"
-        ],
+        deleteAccessRestrictions: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
+        deleteAdminBranchProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        deleteAnEnvironment: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}"],
         deleteAutolink: ["DELETE /repos/{owner}/{repo}/autolinks/{autolink_id}"],
-        deleteBranchProtection: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection"
-        ],
+        deleteBranchProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection"],
         deleteCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}"],
-        deleteCommitSignatureProtection: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"
-        ],
+        deleteCommitSignatureProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"],
         deleteDeployKey: ["DELETE /repos/{owner}/{repo}/keys/{key_id}"],
-        deleteDeployment: [
-          "DELETE /repos/{owner}/{repo}/deployments/{deployment_id}"
-        ],
-        deleteDeploymentBranchPolicy: [
-          "DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"
-        ],
+        deleteDeployment: ["DELETE /repos/{owner}/{repo}/deployments/{deployment_id}"],
+        deleteDeploymentBranchPolicy: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         deleteFile: ["DELETE /repos/{owner}/{repo}/contents/{path}"],
-        deleteInvitation: [
-          "DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"
-        ],
+        deleteInvitation: ["DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"],
         deleteOrgRuleset: ["DELETE /orgs/{org}/rulesets/{ruleset_id}"],
         deletePagesSite: ["DELETE /repos/{owner}/{repo}/pages"],
-        deletePullRequestReviewProtection: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
-        ],
+        deletePullRequestReviewProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         deleteRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}"],
-        deleteReleaseAsset: [
-          "DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"
-        ],
+        deleteReleaseAsset: ["DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
-        deleteTagProtection: [
-          "DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"
-        ],
+        deleteTagProtection: ["DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"],
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
-        disableAutomatedSecurityFixes: [
-          "DELETE /repos/{owner}/{repo}/automated-security-fixes"
-        ],
-        disableDeploymentProtectionRule: [
-          "DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"
-        ],
+        disableAutomatedSecurityFixes: ["DELETE /repos/{owner}/{repo}/automated-security-fixes"],
+        disableDeploymentProtectionRule: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         disableLfsForRepo: ["DELETE /repos/{owner}/{repo}/lfs"],
-        disableVulnerabilityAlerts: [
-          "DELETE /repos/{owner}/{repo}/vulnerability-alerts"
-        ],
-        downloadArchive: [
-          "GET /repos/{owner}/{repo}/zipball/{ref}",
-          {},
-          { renamed: ["repos", "downloadZipballArchive"] }
-        ],
+        disableVulnerabilityAlerts: ["DELETE /repos/{owner}/{repo}/vulnerability-alerts"],
+        downloadArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}", {}, {
+          renamed: ["repos", "downloadZipballArchive"]
+        }],
         downloadTarballArchive: ["GET /repos/{owner}/{repo}/tarball/{ref}"],
         downloadZipballArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}"],
-        enableAutomatedSecurityFixes: [
-          "PUT /repos/{owner}/{repo}/automated-security-fixes"
-        ],
+        enableAutomatedSecurityFixes: ["PUT /repos/{owner}/{repo}/automated-security-fixes"],
         enableLfsForRepo: ["PUT /repos/{owner}/{repo}/lfs"],
-        enableVulnerabilityAlerts: [
-          "PUT /repos/{owner}/{repo}/vulnerability-alerts"
-        ],
-        generateReleaseNotes: [
-          "POST /repos/{owner}/{repo}/releases/generate-notes"
-        ],
+        enableVulnerabilityAlerts: ["PUT /repos/{owner}/{repo}/vulnerability-alerts"],
+        generateReleaseNotes: ["POST /repos/{owner}/{repo}/releases/generate-notes"],
         get: ["GET /repos/{owner}/{repo}"],
-        getAccessRestrictions: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"
-        ],
-        getAdminBranchProtection: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"
-        ],
-        getAllDeploymentProtectionRules: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"
-        ],
+        getAccessRestrictions: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
+        getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        getAllDeploymentProtectionRules: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
-        getAllStatusCheckContexts: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"
-        ],
+        getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
         getAllTopics: ["GET /repos/{owner}/{repo}/topics"],
-        getAppsWithAccessToProtectedBranch: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps"
-        ],
+        getAppsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps"],
         getAutolink: ["GET /repos/{owner}/{repo}/autolinks/{autolink_id}"],
         getBranch: ["GET /repos/{owner}/{repo}/branches/{branch}"],
-        getBranchProtection: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection"
-        ],
+        getBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection"],
         getBranchRules: ["GET /repos/{owner}/{repo}/rules/branches/{branch}"],
         getClones: ["GET /repos/{owner}/{repo}/traffic/clones"],
         getCodeFrequencyStats: ["GET /repos/{owner}/{repo}/stats/code_frequency"],
-        getCollaboratorPermissionLevel: [
-          "GET /repos/{owner}/{repo}/collaborators/{username}/permission"
-        ],
+        getCollaboratorPermissionLevel: ["GET /repos/{owner}/{repo}/collaborators/{username}/permission"],
         getCombinedStatusForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/status"],
         getCommit: ["GET /repos/{owner}/{repo}/commits/{ref}"],
         getCommitActivityStats: ["GET /repos/{owner}/{repo}/stats/commit_activity"],
         getCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}"],
-        getCommitSignatureProtection: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"
-        ],
+        getCommitSignatureProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"],
         getCommunityProfileMetrics: ["GET /repos/{owner}/{repo}/community/profile"],
         getContent: ["GET /repos/{owner}/{repo}/contents/{path}"],
         getContributorsStats: ["GET /repos/{owner}/{repo}/stats/contributors"],
-        getCustomDeploymentProtectionRule: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"
-        ],
+        getCustomDeploymentProtectionRule: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
-        getDeploymentBranchPolicy: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"
-        ],
-        getDeploymentStatus: [
-          "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"
-        ],
-        getEnvironment: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}"
-        ],
+        getDeploymentBranchPolicy: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
+        getDeploymentStatus: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"],
+        getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
         getOrgRuleset: ["GET /orgs/{org}/rulesets/{ruleset_id}"],
@@ -26860,9 +26120,7 @@ var require_dist_node12 = __commonJS({
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
         getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
         getParticipationStats: ["GET /repos/{owner}/{repo}/stats/participation"],
-        getPullRequestReviewProtection: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
-        ],
+        getPullRequestReviewProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         getPunchCardStats: ["GET /repos/{owner}/{repo}/stats/punch_card"],
         getReadme: ["GET /repos/{owner}/{repo}/readme"],
         getReadmeInDirectory: ["GET /repos/{owner}/{repo}/readme/{dir}"],
@@ -26871,50 +26129,28 @@ var require_dist_node12 = __commonJS({
         getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
         getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
-        getStatusChecksProtection: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
-        ],
-        getTeamsWithAccessToProtectedBranch: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams"
-        ],
+        getStatusChecksProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
+        getTeamsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams"],
         getTopPaths: ["GET /repos/{owner}/{repo}/traffic/popular/paths"],
         getTopReferrers: ["GET /repos/{owner}/{repo}/traffic/popular/referrers"],
-        getUsersWithAccessToProtectedBranch: [
-          "GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users"
-        ],
+        getUsersWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users"],
         getViews: ["GET /repos/{owner}/{repo}/traffic/views"],
         getWebhook: ["GET /repos/{owner}/{repo}/hooks/{hook_id}"],
-        getWebhookConfigForRepo: [
-          "GET /repos/{owner}/{repo}/hooks/{hook_id}/config"
-        ],
-        getWebhookDelivery: [
-          "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}"
-        ],
+        getWebhookConfigForRepo: ["GET /repos/{owner}/{repo}/hooks/{hook_id}/config"],
+        getWebhookDelivery: ["GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}"],
         listAutolinks: ["GET /repos/{owner}/{repo}/autolinks"],
         listBranches: ["GET /repos/{owner}/{repo}/branches"],
-        listBranchesForHeadCommit: [
-          "GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head"
-        ],
+        listBranchesForHeadCommit: ["GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head"],
         listCollaborators: ["GET /repos/{owner}/{repo}/collaborators"],
-        listCommentsForCommit: [
-          "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments"
-        ],
+        listCommentsForCommit: ["GET /repos/{owner}/{repo}/commits/{commit_sha}/comments"],
         listCommitCommentsForRepo: ["GET /repos/{owner}/{repo}/comments"],
-        listCommitStatusesForRef: [
-          "GET /repos/{owner}/{repo}/commits/{ref}/statuses"
-        ],
+        listCommitStatusesForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/statuses"],
         listCommits: ["GET /repos/{owner}/{repo}/commits"],
         listContributors: ["GET /repos/{owner}/{repo}/contributors"],
-        listCustomDeploymentRuleIntegrations: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps"
-        ],
+        listCustomDeploymentRuleIntegrations: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps"],
         listDeployKeys: ["GET /repos/{owner}/{repo}/keys"],
-        listDeploymentBranchPolicies: [
-          "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"
-        ],
-        listDeploymentStatuses: [
-          "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"
-        ],
+        listDeploymentBranchPolicies: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
+        listDeploymentStatuses: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         listDeployments: ["GET /repos/{owner}/{repo}/deployments"],
         listForAuthenticatedUser: ["GET /user/repos"],
         listForOrg: ["GET /orgs/{org}/repos"],
@@ -26925,117 +26161,70 @@ var require_dist_node12 = __commonJS({
         listLanguages: ["GET /repos/{owner}/{repo}/languages"],
         listPagesBuilds: ["GET /repos/{owner}/{repo}/pages/builds"],
         listPublic: ["GET /repositories"],
-        listPullRequestsAssociatedWithCommit: [
-          "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls"
-        ],
-        listReleaseAssets: [
-          "GET /repos/{owner}/{repo}/releases/{release_id}/assets"
-        ],
+        listPullRequestsAssociatedWithCommit: ["GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls"],
+        listReleaseAssets: ["GET /repos/{owner}/{repo}/releases/{release_id}/assets"],
         listReleases: ["GET /repos/{owner}/{repo}/releases"],
         listTagProtection: ["GET /repos/{owner}/{repo}/tags/protection"],
         listTags: ["GET /repos/{owner}/{repo}/tags"],
         listTeams: ["GET /repos/{owner}/{repo}/teams"],
-        listWebhookDeliveries: [
-          "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries"
-        ],
+        listWebhookDeliveries: ["GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries"],
         listWebhooks: ["GET /repos/{owner}/{repo}/hooks"],
         merge: ["POST /repos/{owner}/{repo}/merges"],
         mergeUpstream: ["POST /repos/{owner}/{repo}/merge-upstream"],
         pingWebhook: ["POST /repos/{owner}/{repo}/hooks/{hook_id}/pings"],
-        redeliverWebhookDelivery: [
-          "POST /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
-        ],
-        removeAppAccessRestrictions: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
-          {},
-          { mapToData: "apps" }
-        ],
-        removeCollaborator: [
-          "DELETE /repos/{owner}/{repo}/collaborators/{username}"
-        ],
-        removeStatusCheckContexts: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
-          {},
-          { mapToData: "contexts" }
-        ],
-        removeStatusCheckProtection: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
-        ],
-        removeTeamAccessRestrictions: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
-          {},
-          { mapToData: "teams" }
-        ],
-        removeUserAccessRestrictions: [
-          "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
-          {},
-          { mapToData: "users" }
-        ],
+        redeliverWebhookDelivery: ["POST /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"],
+        removeAppAccessRestrictions: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps", {}, {
+          mapToData: "apps"
+        }],
+        removeCollaborator: ["DELETE /repos/{owner}/{repo}/collaborators/{username}"],
+        removeStatusCheckContexts: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts", {}, {
+          mapToData: "contexts"
+        }],
+        removeStatusCheckProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
+        removeTeamAccessRestrictions: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams", {}, {
+          mapToData: "teams"
+        }],
+        removeUserAccessRestrictions: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users", {}, {
+          mapToData: "users"
+        }],
         renameBranch: ["POST /repos/{owner}/{repo}/branches/{branch}/rename"],
         replaceAllTopics: ["PUT /repos/{owner}/{repo}/topics"],
         requestPagesBuild: ["POST /repos/{owner}/{repo}/pages/builds"],
-        setAdminBranchProtection: [
-          "POST /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"
-        ],
-        setAppAccessRestrictions: [
-          "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
-          {},
-          { mapToData: "apps" }
-        ],
-        setStatusCheckContexts: [
-          "PUT /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
-          {},
-          { mapToData: "contexts" }
-        ],
-        setTeamAccessRestrictions: [
-          "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
-          {},
-          { mapToData: "teams" }
-        ],
-        setUserAccessRestrictions: [
-          "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
-          {},
-          { mapToData: "users" }
-        ],
+        setAdminBranchProtection: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        setAppAccessRestrictions: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps", {}, {
+          mapToData: "apps"
+        }],
+        setStatusCheckContexts: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts", {}, {
+          mapToData: "contexts"
+        }],
+        setTeamAccessRestrictions: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams", {}, {
+          mapToData: "teams"
+        }],
+        setUserAccessRestrictions: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users", {}, {
+          mapToData: "users"
+        }],
         testPushWebhook: ["POST /repos/{owner}/{repo}/hooks/{hook_id}/tests"],
         transfer: ["POST /repos/{owner}/{repo}/transfer"],
         update: ["PATCH /repos/{owner}/{repo}"],
-        updateBranchProtection: [
-          "PUT /repos/{owner}/{repo}/branches/{branch}/protection"
-        ],
+        updateBranchProtection: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection"],
         updateCommitComment: ["PATCH /repos/{owner}/{repo}/comments/{comment_id}"],
-        updateDeploymentBranchPolicy: [
-          "PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"
-        ],
+        updateDeploymentBranchPolicy: ["PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         updateInformationAboutPagesSite: ["PUT /repos/{owner}/{repo}/pages"],
-        updateInvitation: [
-          "PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"
-        ],
+        updateInvitation: ["PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"],
         updateOrgRuleset: ["PUT /orgs/{org}/rulesets/{ruleset_id}"],
-        updatePullRequestReviewProtection: [
-          "PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
-        ],
+        updatePullRequestReviewProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         updateRelease: ["PATCH /repos/{owner}/{repo}/releases/{release_id}"],
-        updateReleaseAsset: [
-          "PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}"
-        ],
+        updateReleaseAsset: ["PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         updateRepoRuleset: ["PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
-        updateStatusCheckPotection: [
-          "PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks",
-          {},
-          { renamed: ["repos", "updateStatusCheckProtection"] }
-        ],
-        updateStatusCheckProtection: [
-          "PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
-        ],
+        updateStatusCheckPotection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks", {}, {
+          renamed: ["repos", "updateStatusCheckProtection"]
+        }],
+        updateStatusCheckProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
         updateWebhook: ["PATCH /repos/{owner}/{repo}/hooks/{hook_id}"],
-        updateWebhookConfigForRepo: [
-          "PATCH /repos/{owner}/{repo}/hooks/{hook_id}/config"
-        ],
-        uploadReleaseAsset: [
-          "POST /repos/{owner}/{repo}/releases/{release_id}/assets{?name,label}",
-          { baseUrl: "https://uploads.github.com" }
-        ]
+        updateWebhookConfigForRepo: ["PATCH /repos/{owner}/{repo}/hooks/{hook_id}/config"],
+        uploadReleaseAsset: ["POST /repos/{owner}/{repo}/releases/{release_id}/assets{?name,label}", {
+          baseUrl: "https://uploads.github.com"
+        }]
       },
       search: {
         code: ["GET /search/code"],
@@ -27047,277 +26236,162 @@ var require_dist_node12 = __commonJS({
         users: ["GET /search/users"]
       },
       secretScanning: {
-        getAlert: [
-          "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"
-        ],
-        listAlertsForEnterprise: [
-          "GET /enterprises/{enterprise}/secret-scanning/alerts"
-        ],
+        getAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"],
+        listAlertsForEnterprise: ["GET /enterprises/{enterprise}/secret-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/secret-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/secret-scanning/alerts"],
-        listLocationsForAlert: [
-          "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"
-        ],
-        updateAlert: [
-          "PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"
-        ]
+        listLocationsForAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"],
+        updateAlert: ["PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"]
       },
       securityAdvisories: {
-        createPrivateVulnerabilityReport: [
-          "POST /repos/{owner}/{repo}/security-advisories/reports"
-        ],
-        createRepositoryAdvisory: [
-          "POST /repos/{owner}/{repo}/security-advisories"
-        ],
-        getRepositoryAdvisory: [
-          "GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}"
-        ],
+        createPrivateVulnerabilityReport: ["POST /repos/{owner}/{repo}/security-advisories/reports"],
+        createRepositoryAdvisory: ["POST /repos/{owner}/{repo}/security-advisories"],
+        getRepositoryAdvisory: ["GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}"],
         listRepositoryAdvisories: ["GET /repos/{owner}/{repo}/security-advisories"],
-        updateRepositoryAdvisory: [
-          "PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}"
-        ]
+        updateRepositoryAdvisory: ["PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}"]
       },
       teams: {
-        addOrUpdateMembershipForUserInOrg: [
-          "PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"
-        ],
-        addOrUpdateProjectPermissionsInOrg: [
-          "PUT /orgs/{org}/teams/{team_slug}/projects/{project_id}"
-        ],
-        addOrUpdateRepoPermissionsInOrg: [
-          "PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
-        ],
-        checkPermissionsForProjectInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/projects/{project_id}"
-        ],
-        checkPermissionsForRepoInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
-        ],
+        addOrUpdateMembershipForUserInOrg: ["PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"],
+        addOrUpdateProjectPermissionsInOrg: ["PUT /orgs/{org}/teams/{team_slug}/projects/{project_id}"],
+        addOrUpdateRepoPermissionsInOrg: ["PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"],
+        checkPermissionsForProjectInOrg: ["GET /orgs/{org}/teams/{team_slug}/projects/{project_id}"],
+        checkPermissionsForRepoInOrg: ["GET /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"],
         create: ["POST /orgs/{org}/teams"],
-        createDiscussionCommentInOrg: [
-          "POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments"
-        ],
+        createDiscussionCommentInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments"],
         createDiscussionInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions"],
-        deleteDiscussionCommentInOrg: [
-          "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"
-        ],
-        deleteDiscussionInOrg: [
-          "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"
-        ],
+        deleteDiscussionCommentInOrg: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"],
+        deleteDiscussionInOrg: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"],
         deleteInOrg: ["DELETE /orgs/{org}/teams/{team_slug}"],
         getByName: ["GET /orgs/{org}/teams/{team_slug}"],
-        getDiscussionCommentInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"
-        ],
-        getDiscussionInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"
-        ],
-        getMembershipForUserInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/memberships/{username}"
-        ],
+        getDiscussionCommentInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"],
+        getDiscussionInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"],
+        getMembershipForUserInOrg: ["GET /orgs/{org}/teams/{team_slug}/memberships/{username}"],
         list: ["GET /orgs/{org}/teams"],
         listChildInOrg: ["GET /orgs/{org}/teams/{team_slug}/teams"],
-        listDiscussionCommentsInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments"
-        ],
+        listDiscussionCommentsInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments"],
         listDiscussionsInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions"],
         listForAuthenticatedUser: ["GET /user/teams"],
         listMembersInOrg: ["GET /orgs/{org}/teams/{team_slug}/members"],
-        listPendingInvitationsInOrg: [
-          "GET /orgs/{org}/teams/{team_slug}/invitations"
-        ],
+        listPendingInvitationsInOrg: ["GET /orgs/{org}/teams/{team_slug}/invitations"],
         listProjectsInOrg: ["GET /orgs/{org}/teams/{team_slug}/projects"],
         listReposInOrg: ["GET /orgs/{org}/teams/{team_slug}/repos"],
-        removeMembershipForUserInOrg: [
-          "DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}"
-        ],
-        removeProjectInOrg: [
-          "DELETE /orgs/{org}/teams/{team_slug}/projects/{project_id}"
-        ],
-        removeRepoInOrg: [
-          "DELETE /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
-        ],
-        updateDiscussionCommentInOrg: [
-          "PATCH /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"
-        ],
-        updateDiscussionInOrg: [
-          "PATCH /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"
-        ],
+        removeMembershipForUserInOrg: ["DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}"],
+        removeProjectInOrg: ["DELETE /orgs/{org}/teams/{team_slug}/projects/{project_id}"],
+        removeRepoInOrg: ["DELETE /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"],
+        updateDiscussionCommentInOrg: ["PATCH /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}"],
+        updateDiscussionInOrg: ["PATCH /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}"],
         updateInOrg: ["PATCH /orgs/{org}/teams/{team_slug}"]
       },
       users: {
-        addEmailForAuthenticated: [
-          "POST /user/emails",
-          {},
-          { renamed: ["users", "addEmailForAuthenticatedUser"] }
-        ],
+        addEmailForAuthenticated: ["POST /user/emails", {}, {
+          renamed: ["users", "addEmailForAuthenticatedUser"]
+        }],
         addEmailForAuthenticatedUser: ["POST /user/emails"],
         addSocialAccountForAuthenticatedUser: ["POST /user/social_accounts"],
         block: ["PUT /user/blocks/{username}"],
         checkBlocked: ["GET /user/blocks/{username}"],
         checkFollowingForUser: ["GET /users/{username}/following/{target_user}"],
         checkPersonIsFollowedByAuthenticated: ["GET /user/following/{username}"],
-        createGpgKeyForAuthenticated: [
-          "POST /user/gpg_keys",
-          {},
-          { renamed: ["users", "createGpgKeyForAuthenticatedUser"] }
-        ],
+        createGpgKeyForAuthenticated: ["POST /user/gpg_keys", {}, {
+          renamed: ["users", "createGpgKeyForAuthenticatedUser"]
+        }],
         createGpgKeyForAuthenticatedUser: ["POST /user/gpg_keys"],
-        createPublicSshKeyForAuthenticated: [
-          "POST /user/keys",
-          {},
-          { renamed: ["users", "createPublicSshKeyForAuthenticatedUser"] }
-        ],
+        createPublicSshKeyForAuthenticated: ["POST /user/keys", {}, {
+          renamed: ["users", "createPublicSshKeyForAuthenticatedUser"]
+        }],
         createPublicSshKeyForAuthenticatedUser: ["POST /user/keys"],
         createSshSigningKeyForAuthenticatedUser: ["POST /user/ssh_signing_keys"],
-        deleteEmailForAuthenticated: [
-          "DELETE /user/emails",
-          {},
-          { renamed: ["users", "deleteEmailForAuthenticatedUser"] }
-        ],
+        deleteEmailForAuthenticated: ["DELETE /user/emails", {}, {
+          renamed: ["users", "deleteEmailForAuthenticatedUser"]
+        }],
         deleteEmailForAuthenticatedUser: ["DELETE /user/emails"],
-        deleteGpgKeyForAuthenticated: [
-          "DELETE /user/gpg_keys/{gpg_key_id}",
-          {},
-          { renamed: ["users", "deleteGpgKeyForAuthenticatedUser"] }
-        ],
+        deleteGpgKeyForAuthenticated: ["DELETE /user/gpg_keys/{gpg_key_id}", {}, {
+          renamed: ["users", "deleteGpgKeyForAuthenticatedUser"]
+        }],
         deleteGpgKeyForAuthenticatedUser: ["DELETE /user/gpg_keys/{gpg_key_id}"],
-        deletePublicSshKeyForAuthenticated: [
-          "DELETE /user/keys/{key_id}",
-          {},
-          { renamed: ["users", "deletePublicSshKeyForAuthenticatedUser"] }
-        ],
+        deletePublicSshKeyForAuthenticated: ["DELETE /user/keys/{key_id}", {}, {
+          renamed: ["users", "deletePublicSshKeyForAuthenticatedUser"]
+        }],
         deletePublicSshKeyForAuthenticatedUser: ["DELETE /user/keys/{key_id}"],
         deleteSocialAccountForAuthenticatedUser: ["DELETE /user/social_accounts"],
-        deleteSshSigningKeyForAuthenticatedUser: [
-          "DELETE /user/ssh_signing_keys/{ssh_signing_key_id}"
-        ],
+        deleteSshSigningKeyForAuthenticatedUser: ["DELETE /user/ssh_signing_keys/{ssh_signing_key_id}"],
         follow: ["PUT /user/following/{username}"],
         getAuthenticated: ["GET /user"],
         getByUsername: ["GET /users/{username}"],
         getContextForUser: ["GET /users/{username}/hovercard"],
-        getGpgKeyForAuthenticated: [
-          "GET /user/gpg_keys/{gpg_key_id}",
-          {},
-          { renamed: ["users", "getGpgKeyForAuthenticatedUser"] }
-        ],
+        getGpgKeyForAuthenticated: ["GET /user/gpg_keys/{gpg_key_id}", {}, {
+          renamed: ["users", "getGpgKeyForAuthenticatedUser"]
+        }],
         getGpgKeyForAuthenticatedUser: ["GET /user/gpg_keys/{gpg_key_id}"],
-        getPublicSshKeyForAuthenticated: [
-          "GET /user/keys/{key_id}",
-          {},
-          { renamed: ["users", "getPublicSshKeyForAuthenticatedUser"] }
-        ],
+        getPublicSshKeyForAuthenticated: ["GET /user/keys/{key_id}", {}, {
+          renamed: ["users", "getPublicSshKeyForAuthenticatedUser"]
+        }],
         getPublicSshKeyForAuthenticatedUser: ["GET /user/keys/{key_id}"],
-        getSshSigningKeyForAuthenticatedUser: [
-          "GET /user/ssh_signing_keys/{ssh_signing_key_id}"
-        ],
+        getSshSigningKeyForAuthenticatedUser: ["GET /user/ssh_signing_keys/{ssh_signing_key_id}"],
         list: ["GET /users"],
-        listBlockedByAuthenticated: [
-          "GET /user/blocks",
-          {},
-          { renamed: ["users", "listBlockedByAuthenticatedUser"] }
-        ],
+        listBlockedByAuthenticated: ["GET /user/blocks", {}, {
+          renamed: ["users", "listBlockedByAuthenticatedUser"]
+        }],
         listBlockedByAuthenticatedUser: ["GET /user/blocks"],
-        listEmailsForAuthenticated: [
-          "GET /user/emails",
-          {},
-          { renamed: ["users", "listEmailsForAuthenticatedUser"] }
-        ],
+        listEmailsForAuthenticated: ["GET /user/emails", {}, {
+          renamed: ["users", "listEmailsForAuthenticatedUser"]
+        }],
         listEmailsForAuthenticatedUser: ["GET /user/emails"],
-        listFollowedByAuthenticated: [
-          "GET /user/following",
-          {},
-          { renamed: ["users", "listFollowedByAuthenticatedUser"] }
-        ],
+        listFollowedByAuthenticated: ["GET /user/following", {}, {
+          renamed: ["users", "listFollowedByAuthenticatedUser"]
+        }],
         listFollowedByAuthenticatedUser: ["GET /user/following"],
         listFollowersForAuthenticatedUser: ["GET /user/followers"],
         listFollowersForUser: ["GET /users/{username}/followers"],
         listFollowingForUser: ["GET /users/{username}/following"],
-        listGpgKeysForAuthenticated: [
-          "GET /user/gpg_keys",
-          {},
-          { renamed: ["users", "listGpgKeysForAuthenticatedUser"] }
-        ],
+        listGpgKeysForAuthenticated: ["GET /user/gpg_keys", {}, {
+          renamed: ["users", "listGpgKeysForAuthenticatedUser"]
+        }],
         listGpgKeysForAuthenticatedUser: ["GET /user/gpg_keys"],
         listGpgKeysForUser: ["GET /users/{username}/gpg_keys"],
-        listPublicEmailsForAuthenticated: [
-          "GET /user/public_emails",
-          {},
-          { renamed: ["users", "listPublicEmailsForAuthenticatedUser"] }
-        ],
+        listPublicEmailsForAuthenticated: ["GET /user/public_emails", {}, {
+          renamed: ["users", "listPublicEmailsForAuthenticatedUser"]
+        }],
         listPublicEmailsForAuthenticatedUser: ["GET /user/public_emails"],
         listPublicKeysForUser: ["GET /users/{username}/keys"],
-        listPublicSshKeysForAuthenticated: [
-          "GET /user/keys",
-          {},
-          { renamed: ["users", "listPublicSshKeysForAuthenticatedUser"] }
-        ],
+        listPublicSshKeysForAuthenticated: ["GET /user/keys", {}, {
+          renamed: ["users", "listPublicSshKeysForAuthenticatedUser"]
+        }],
         listPublicSshKeysForAuthenticatedUser: ["GET /user/keys"],
         listSocialAccountsForAuthenticatedUser: ["GET /user/social_accounts"],
         listSocialAccountsForUser: ["GET /users/{username}/social_accounts"],
         listSshSigningKeysForAuthenticatedUser: ["GET /user/ssh_signing_keys"],
         listSshSigningKeysForUser: ["GET /users/{username}/ssh_signing_keys"],
-        setPrimaryEmailVisibilityForAuthenticated: [
-          "PATCH /user/email/visibility",
-          {},
-          { renamed: ["users", "setPrimaryEmailVisibilityForAuthenticatedUser"] }
-        ],
-        setPrimaryEmailVisibilityForAuthenticatedUser: [
-          "PATCH /user/email/visibility"
-        ],
+        setPrimaryEmailVisibilityForAuthenticated: ["PATCH /user/email/visibility", {}, {
+          renamed: ["users", "setPrimaryEmailVisibilityForAuthenticatedUser"]
+        }],
+        setPrimaryEmailVisibilityForAuthenticatedUser: ["PATCH /user/email/visibility"],
         unblock: ["DELETE /user/blocks/{username}"],
         unfollow: ["DELETE /user/following/{username}"],
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var endpoints_default = Endpoints;
-    var endpointMethodsMap = /* @__PURE__ */ new Map();
-    for (const [scope, endpoints] of Object.entries(endpoints_default)) {
-      for (const [methodName, endpoint] of Object.entries(endpoints)) {
-        const [route, defaults, decorations] = endpoint;
-        const [method, url] = route.split(/ /);
-        const endpointDefaults = Object.assign(
-          {
+    var VERSION = "7.1.2";
+    function endpointsToMethods(octokit, endpointsMap) {
+      const newMethods = {};
+      for (const [scope, endpoints] of Object.entries(endpointsMap)) {
+        for (const [methodName, endpoint] of Object.entries(endpoints)) {
+          const [route, defaults, decorations] = endpoint;
+          const [method, url] = route.split(/ /);
+          const endpointDefaults = Object.assign({
             method,
             url
-          },
-          defaults
-        );
-        if (!endpointMethodsMap.has(scope)) {
-          endpointMethodsMap.set(scope, /* @__PURE__ */ new Map());
+          }, defaults);
+          if (!newMethods[scope]) {
+            newMethods[scope] = {};
+          }
+          const scopeMethods = newMethods[scope];
+          if (decorations) {
+            scopeMethods[methodName] = decorate(octokit, scope, methodName, endpointDefaults, decorations);
+            continue;
+          }
+          scopeMethods[methodName] = octokit.request.defaults(endpointDefaults);
         }
-        endpointMethodsMap.get(scope).set(methodName, {
-          scope,
-          methodName,
-          endpointDefaults,
-          decorations
-        });
-      }
-    }
-    var handler = {
-      get({ octokit, scope, cache }, methodName) {
-        if (cache[methodName]) {
-          return cache[methodName];
-        }
-        const { decorations, endpointDefaults } = endpointMethodsMap.get(scope).get(methodName);
-        if (decorations) {
-          cache[methodName] = decorate(
-            octokit,
-            scope,
-            methodName,
-            endpointDefaults,
-            decorations
-          );
-        } else {
-          cache[methodName] = octokit.request.defaults(endpointDefaults);
-        }
-        return cache[methodName];
-      }
-    };
-    function endpointsToMethods(octokit) {
-      const newMethods = {};
-      for (const scope of endpointMethodsMap.keys()) {
-        newMethods[scope] = new Proxy({ octokit, scope, cache: {} }, handler);
       }
       return newMethods;
     }
@@ -27334,22 +26408,16 @@ var require_dist_node12 = __commonJS({
         }
         if (decorations.renamed) {
           const [newScope, newMethodName] = decorations.renamed;
-          octokit.log.warn(
-            `octokit.${scope}.${methodName}() has been renamed to octokit.${newScope}.${newMethodName}()`
-          );
+          octokit.log.warn(`octokit.${scope}.${methodName}() has been renamed to octokit.${newScope}.${newMethodName}()`);
         }
         if (decorations.deprecated) {
           octokit.log.warn(decorations.deprecated);
         }
         if (decorations.renamedParameters) {
           const options2 = requestWithDefaults.endpoint.merge(...args);
-          for (const [name, alias] of Object.entries(
-            decorations.renamedParameters
-          )) {
+          for (const [name, alias] of Object.entries(decorations.renamedParameters)) {
             if (name in options2) {
-              octokit.log.warn(
-                `"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`
-              );
+              octokit.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`);
               if (!(alias in options2)) {
                 options2[alias] = options2[name];
               }
@@ -27363,20 +26431,22 @@ var require_dist_node12 = __commonJS({
       return Object.assign(withDecorations, requestWithDefaults);
     }
     function restEndpointMethods(octokit) {
-      const api = endpointsToMethods(octokit);
+      const api = endpointsToMethods(octokit, Endpoints);
       return {
         rest: api
       };
     }
     restEndpointMethods.VERSION = VERSION;
     function legacyRestEndpointMethods(octokit) {
-      const api = endpointsToMethods(octokit);
+      const api = endpointsToMethods(octokit, Endpoints);
       return {
         ...api,
         rest: api
       };
     }
     legacyRestEndpointMethods.VERSION = VERSION;
+    exports.legacyRestEndpointMethods = legacyRestEndpointMethods;
+    exports.restEndpointMethods = restEndpointMethods;
   }
 });
 
@@ -28586,7 +27656,7 @@ var require_dist_node13 = __commonJS({
     var import_auth_action = require_dist_node10();
     var import_plugin_paginate_rest = require_dist_node11();
     var import_plugin_rest_endpoint_methods = require_dist_node12();
-    var VERSION = "6.0.4";
+    var VERSION = "6.0.3";
     var import_https_proxy_agent = require_dist2();
     var DEFAULTS = {
       authStrategy: import_auth_action.createActionAuth,
@@ -31266,14 +30336,14 @@ function splice(list3, start, remove, items) {
   if (items.length < 1e4) {
     parameters = Array.from(items);
     parameters.unshift(start, remove);
-    list3.splice(...parameters);
+    [].splice.apply(list3, parameters);
   } else {
     if (remove)
-      list3.splice(start, remove);
+      [].splice.apply(list3, [start, remove]);
     while (chunkStart < items.length) {
       parameters = items.slice(chunkStart, chunkStart + 1e4);
       parameters.unshift(start, 0);
-      list3.splice(...parameters);
+      [].splice.apply(list3, parameters);
       chunkStart += 1e4;
       start += 1e4;
     }
@@ -31304,17 +30374,15 @@ function syntaxExtension(all2, extension2) {
     const left = maybe || (all2[hook] = {});
     const right = extension2[hook];
     let code3;
-    if (right) {
-      for (code3 in right) {
-        if (!hasOwnProperty.call(left, code3))
-          left[code3] = [];
-        const value = right[code3];
-        constructs(
-          // @ts-expect-error Looks like a list.
-          left[code3],
-          Array.isArray(value) ? value : value ? [value] : []
-        );
-      }
+    for (code3 in right) {
+      if (!hasOwnProperty.call(left, code3))
+        left[code3] = [];
+      const value = right[code3];
+      constructs(
+        // @ts-expect-error Looks like a list.
+        left[code3],
+        Array.isArray(value) ? value : value ? [value] : []
+      );
     }
   }
 }
@@ -31329,11 +30397,14 @@ function constructs(existing, list3) {
 }
 
 // node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
+var unicodePunctuationRegex = /[!-/:-@[-`{-~\u00A1\u00A7\u00AB\u00B6\u00B7\u00BB\u00BF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
 
 // node_modules/micromark-util-character/index.js
 var asciiAlpha = regexCheck(/[A-Za-z]/);
+var asciiDigit = regexCheck(/\d/);
+var asciiHexDigit = regexCheck(/[\dA-Fa-f]/);
 var asciiAlphanumeric = regexCheck(/[\dA-Za-z]/);
+var asciiPunctuation = regexCheck(/[!-/:-@[-`{-~]/);
 var asciiAtext = regexCheck(/[#-'*+\--9=?A-Z^-~]/);
 function asciiControl(code3) {
   return (
@@ -31342,20 +30413,17 @@ function asciiControl(code3) {
     code3 !== null && (code3 < 32 || code3 === 127)
   );
 }
-var asciiDigit = regexCheck(/\d/);
-var asciiHexDigit = regexCheck(/[\dA-Fa-f]/);
-var asciiPunctuation = regexCheck(/[!-/:-@[-`{-~]/);
-function markdownLineEnding(code3) {
-  return code3 !== null && code3 < -2;
-}
 function markdownLineEndingOrSpace(code3) {
   return code3 !== null && (code3 < 0 || code3 === 32);
+}
+function markdownLineEnding(code3) {
+  return code3 !== null && code3 < -2;
 }
 function markdownSpace(code3) {
   return code3 === -2 || code3 === -1 || code3 === 32;
 }
-var unicodePunctuation = regexCheck(unicodePunctuationRegex);
 var unicodeWhitespace = regexCheck(/\s/);
+var unicodePunctuation = regexCheck(unicodePunctuationRegex);
 function regexCheck(regex) {
   return check;
   function check(code3) {
@@ -31784,14 +30852,14 @@ function tokenizeAttention(effects, ok2) {
   let marker;
   return start;
   function start(code3) {
-    marker = code3;
     effects.enter("attentionSequence");
-    return inside(code3);
+    marker = code3;
+    return sequence(code3);
   }
-  function inside(code3) {
+  function sequence(code3) {
     if (code3 === marker) {
       effects.consume(code3);
-      return inside;
+      return sequence;
     }
     const token = effects.exit("attentionSequence");
     const after = classifyCharacter(code3);
@@ -31814,7 +30882,7 @@ var autolink = {
   tokenize: tokenizeAutolink
 };
 function tokenizeAutolink(effects, ok2, nok) {
-  let size = 0;
+  let size = 1;
   return start;
   function start(code3) {
     effects.enter("autolink");
@@ -31829,36 +30897,26 @@ function tokenizeAutolink(effects, ok2, nok) {
       effects.consume(code3);
       return schemeOrEmailAtext;
     }
-    return emailAtext(code3);
+    return asciiAtext(code3) ? emailAtext(code3) : nok(code3);
   }
   function schemeOrEmailAtext(code3) {
-    if (code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3)) {
-      size = 1;
-      return schemeInsideOrEmailAtext(code3);
-    }
-    return emailAtext(code3);
+    return code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3) ? schemeInsideOrEmailAtext(code3) : emailAtext(code3);
   }
   function schemeInsideOrEmailAtext(code3) {
     if (code3 === 58) {
       effects.consume(code3);
-      size = 0;
       return urlInside;
     }
     if ((code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3)) && size++ < 32) {
       effects.consume(code3);
       return schemeInsideOrEmailAtext;
     }
-    size = 0;
     return emailAtext(code3);
   }
   function urlInside(code3) {
     if (code3 === 62) {
       effects.exit("autolinkProtocol");
-      effects.enter("autolinkMarker");
-      effects.consume(code3);
-      effects.exit("autolinkMarker");
-      effects.exit("autolink");
-      return ok2;
+      return end(code3);
     }
     if (code3 === null || code3 === 32 || code3 === 60 || asciiControl(code3)) {
       return nok(code3);
@@ -31869,6 +30927,7 @@ function tokenizeAutolink(effects, ok2, nok) {
   function emailAtext(code3) {
     if (code3 === 64) {
       effects.consume(code3);
+      size = 0;
       return emailAtSignOrDot;
     }
     if (asciiAtext(code3)) {
@@ -31888,21 +30947,23 @@ function tokenizeAutolink(effects, ok2, nok) {
     }
     if (code3 === 62) {
       effects.exit("autolinkProtocol").type = "autolinkEmail";
-      effects.enter("autolinkMarker");
-      effects.consume(code3);
-      effects.exit("autolinkMarker");
-      effects.exit("autolink");
-      return ok2;
+      return end(code3);
     }
     return emailValue(code3);
   }
   function emailValue(code3) {
     if ((code3 === 45 || asciiAlphanumeric(code3)) && size++ < 63) {
-      const next = code3 === 45 ? emailValue : emailLabel;
       effects.consume(code3);
-      return next;
+      return code3 === 45 ? emailValue : emailLabel;
     }
     return nok(code3);
+  }
+  function end(code3) {
+    effects.enter("autolinkMarker");
+    effects.consume(code3);
+    effects.exit("autolinkMarker");
+    effects.exit("autolink");
+    return ok2;
   }
 }
 
@@ -31912,11 +30973,8 @@ var blankLine = {
   partial: true
 };
 function tokenizeBlankLine(effects, ok2, nok) {
-  return start;
-  function start(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, after, "linePrefix")(code3) : after(code3);
-  }
-  function after(code3) {
+  return factorySpace(effects, afterWhitespace, "linePrefix");
+  function afterWhitespace(code3) {
     return code3 === null || markdownLineEnding(code3) ? ok2(code3) : nok(code3);
   }
 }
@@ -31963,22 +31021,12 @@ function tokenizeBlockQuoteStart(effects, ok2, nok) {
   }
 }
 function tokenizeBlockQuoteContinuation(effects, ok2, nok) {
-  const self2 = this;
-  return contStart;
-  function contStart(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(
-        effects,
-        contBefore,
-        "linePrefix",
-        self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
-      )(code3);
-    }
-    return contBefore(code3);
-  }
-  function contBefore(code3) {
-    return effects.attempt(blockQuote, ok2, nok)(code3);
-  }
+  return factorySpace(
+    effects,
+    effects.attempt(blockQuote, ok2, nok),
+    "linePrefix",
+    this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
+  );
 }
 function exit(effects) {
   effects.exit("blockQuote");
@@ -31996,9 +31044,9 @@ function tokenizeCharacterEscape(effects, ok2, nok) {
     effects.enter("escapeMarker");
     effects.consume(code3);
     effects.exit("escapeMarker");
-    return inside;
+    return open;
   }
-  function inside(code3) {
+  function open(code3) {
     if (asciiPunctuation(code3)) {
       effects.enter("characterEscapeValue");
       effects.consume(code3);
@@ -34191,8 +33239,9 @@ function tokenizeCharacterReference(effects, ok2, nok) {
     return value(code3);
   }
   function value(code3) {
+    let token;
     if (code3 === 59 && size) {
-      const token = effects.exit("characterReferenceValue");
+      token = effects.exit("characterReferenceValue");
       if (test === asciiAlphanumeric && !decodeNamedCharacterReference(self2.sliceSerialize(token))) {
         return nok(code3);
       }
@@ -34211,10 +33260,6 @@ function tokenizeCharacterReference(effects, ok2, nok) {
 }
 
 // node_modules/micromark-core-commonmark/lib/code-fenced.js
-var nonLazyContinuation = {
-  tokenize: tokenizeNonLazyContinuation,
-  partial: true
-};
 var codeFenced = {
   name: "codeFenced",
   tokenize: tokenizeCodeFenced,
@@ -34222,42 +33267,38 @@ var codeFenced = {
 };
 function tokenizeCodeFenced(effects, ok2, nok) {
   const self2 = this;
-  const closeStart = {
-    tokenize: tokenizeCloseStart,
+  const closingFenceConstruct = {
+    tokenize: tokenizeClosingFence,
     partial: true
   };
-  let initialPrefix = 0;
+  const nonLazyLine = {
+    tokenize: tokenizeNonLazyLine,
+    partial: true
+  };
+  const tail = this.events[this.events.length - 1];
+  const initialPrefix = tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
   let sizeOpen = 0;
   let marker;
   return start;
   function start(code3) {
-    return beforeSequenceOpen(code3);
-  }
-  function beforeSequenceOpen(code3) {
-    const tail = self2.events[self2.events.length - 1];
-    initialPrefix = tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
-    marker = code3;
     effects.enter("codeFenced");
     effects.enter("codeFencedFence");
     effects.enter("codeFencedFenceSequence");
+    marker = code3;
     return sequenceOpen(code3);
   }
   function sequenceOpen(code3) {
     if (code3 === marker) {
-      sizeOpen++;
       effects.consume(code3);
+      sizeOpen++;
       return sequenceOpen;
     }
-    if (sizeOpen < 3) {
-      return nok(code3);
-    }
     effects.exit("codeFencedFenceSequence");
-    return markdownSpace(code3) ? factorySpace(effects, infoBefore, "whitespace")(code3) : infoBefore(code3);
+    return sizeOpen < 3 ? nok(code3) : factorySpace(effects, infoOpen, "whitespace")(code3);
   }
-  function infoBefore(code3) {
+  function infoOpen(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
-      effects.exit("codeFencedFence");
-      return self2.interrupt ? ok2(code3) : effects.check(nonLazyContinuation, atNonLazyBreak, after)(code3);
+      return openAfter(code3);
     }
     effects.enter("codeFencedFenceInfo");
     effects.enter("chunkString", {
@@ -34266,25 +33307,19 @@ function tokenizeCodeFenced(effects, ok2, nok) {
     return info2(code3);
   }
   function info2(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code3 === null || markdownLineEndingOrSpace(code3)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceInfo");
-      return infoBefore(code3);
+      return factorySpace(effects, infoAfter, "whitespace")(code3);
     }
-    if (markdownSpace(code3)) {
-      effects.exit("chunkString");
-      effects.exit("codeFencedFenceInfo");
-      return factorySpace(effects, metaBefore, "whitespace")(code3);
-    }
-    if (code3 === 96 && code3 === marker) {
+    if (code3 === 96 && code3 === marker)
       return nok(code3);
-    }
     effects.consume(code3);
     return info2;
   }
-  function metaBefore(code3) {
+  function infoAfter(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
-      return infoBefore(code3);
+      return openAfter(code3);
     }
     effects.enter("codeFencedFenceMeta");
     effects.enter("chunkString", {
@@ -34296,88 +33331,90 @@ function tokenizeCodeFenced(effects, ok2, nok) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceMeta");
-      return infoBefore(code3);
+      return openAfter(code3);
     }
-    if (code3 === 96 && code3 === marker) {
+    if (code3 === 96 && code3 === marker)
       return nok(code3);
-    }
     effects.consume(code3);
     return meta;
   }
-  function atNonLazyBreak(code3) {
-    return effects.attempt(closeStart, after, contentBefore)(code3);
-  }
-  function contentBefore(code3) {
-    effects.enter("lineEnding");
-    effects.consume(code3);
-    effects.exit("lineEnding");
-    return contentStart;
+  function openAfter(code3) {
+    effects.exit("codeFencedFence");
+    return self2.interrupt ? ok2(code3) : contentStart(code3);
   }
   function contentStart(code3) {
-    return initialPrefix > 0 && markdownSpace(code3) ? factorySpace(
-      effects,
-      beforeContentChunk,
-      "linePrefix",
-      initialPrefix + 1
-    )(code3) : beforeContentChunk(code3);
-  }
-  function beforeContentChunk(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return effects.check(nonLazyContinuation, atNonLazyBreak, after)(code3);
+    if (code3 === null) {
+      return after(code3);
+    }
+    if (markdownLineEnding(code3)) {
+      return effects.attempt(
+        nonLazyLine,
+        effects.attempt(
+          closingFenceConstruct,
+          after,
+          initialPrefix ? factorySpace(
+            effects,
+            contentStart,
+            "linePrefix",
+            initialPrefix + 1
+          ) : contentStart
+        ),
+        after
+      )(code3);
     }
     effects.enter("codeFlowValue");
-    return contentChunk(code3);
+    return contentContinue(code3);
   }
-  function contentChunk(code3) {
+  function contentContinue(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("codeFlowValue");
-      return beforeContentChunk(code3);
+      return contentStart(code3);
     }
     effects.consume(code3);
-    return contentChunk;
+    return contentContinue;
   }
   function after(code3) {
     effects.exit("codeFenced");
     return ok2(code3);
   }
-  function tokenizeCloseStart(effects2, ok3, nok2) {
-    let size = 0;
-    return startBefore;
-    function startBefore(code3) {
+  function tokenizeNonLazyLine(effects2, ok3, nok2) {
+    const self3 = this;
+    return start2;
+    function start2(code3) {
       effects2.enter("lineEnding");
       effects2.consume(code3);
       effects2.exit("lineEnding");
-      return start2;
+      return lineStart;
     }
-    function start2(code3) {
+    function lineStart(code3) {
+      return self3.parser.lazy[self3.now().line] ? nok2(code3) : ok3(code3);
+    }
+  }
+  function tokenizeClosingFence(effects2, ok3, nok2) {
+    let size = 0;
+    return factorySpace(
+      effects2,
+      closingSequenceStart,
+      "linePrefix",
+      this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
+    );
+    function closingSequenceStart(code3) {
       effects2.enter("codeFencedFence");
-      return markdownSpace(code3) ? factorySpace(
-        effects2,
-        beforeSequenceClose,
-        "linePrefix",
-        self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
-      )(code3) : beforeSequenceClose(code3);
+      effects2.enter("codeFencedFenceSequence");
+      return closingSequence(code3);
     }
-    function beforeSequenceClose(code3) {
+    function closingSequence(code3) {
       if (code3 === marker) {
-        effects2.enter("codeFencedFenceSequence");
-        return sequenceClose(code3);
-      }
-      return nok2(code3);
-    }
-    function sequenceClose(code3) {
-      if (code3 === marker) {
-        size++;
         effects2.consume(code3);
-        return sequenceClose;
+        size++;
+        return closingSequence;
       }
-      if (size >= sizeOpen) {
-        effects2.exit("codeFencedFenceSequence");
-        return markdownSpace(code3) ? factorySpace(effects2, sequenceCloseAfter, "whitespace")(code3) : sequenceCloseAfter(code3);
-      }
-      return nok2(code3);
+      if (size < sizeOpen)
+        return nok2(code3);
+      effects2.exit("codeFencedFenceSequence");
+      return factorySpace(effects2, closingSequenceEnd, "whitespace")(code3);
     }
-    function sequenceCloseAfter(code3) {
+    function closingSequenceEnd(code3) {
       if (code3 === null || markdownLineEnding(code3)) {
         effects2.exit("codeFencedFence");
         return ok3(code3);
@@ -34386,30 +33423,14 @@ function tokenizeCodeFenced(effects, ok2, nok) {
     }
   }
 }
-function tokenizeNonLazyContinuation(effects, ok2, nok) {
-  const self2 = this;
-  return start;
-  function start(code3) {
-    if (code3 === null) {
-      return nok(code3);
-    }
-    effects.enter("lineEnding");
-    effects.consume(code3);
-    effects.exit("lineEnding");
-    return lineStart;
-  }
-  function lineStart(code3) {
-    return self2.parser.lazy[self2.now().line] ? nok(code3) : ok2(code3);
-  }
-}
 
 // node_modules/micromark-core-commonmark/lib/code-indented.js
 var codeIndented = {
   name: "codeIndented",
   tokenize: tokenizeCodeIndented
 };
-var furtherStart = {
-  tokenize: tokenizeFurtherStart,
+var indentedContent = {
+  tokenize: tokenizeIndentedContent,
   partial: true
 };
 function tokenizeCodeIndented(effects, ok2, nok) {
@@ -34417,39 +33438,39 @@ function tokenizeCodeIndented(effects, ok2, nok) {
   return start;
   function start(code3) {
     effects.enter("codeIndented");
-    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code3);
+    return factorySpace(effects, afterStartPrefix, "linePrefix", 4 + 1)(code3);
+  }
+  function afterStartPrefix(code3) {
+    const tail = self2.events[self2.events.length - 1];
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? afterPrefix(code3) : nok(code3);
   }
   function afterPrefix(code3) {
-    const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? atBreak(code3) : nok(code3);
-  }
-  function atBreak(code3) {
     if (code3 === null) {
       return after(code3);
     }
     if (markdownLineEnding(code3)) {
-      return effects.attempt(furtherStart, atBreak, after)(code3);
+      return effects.attempt(indentedContent, afterPrefix, after)(code3);
     }
     effects.enter("codeFlowValue");
-    return inside(code3);
+    return content3(code3);
   }
-  function inside(code3) {
+  function content3(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("codeFlowValue");
-      return atBreak(code3);
+      return afterPrefix(code3);
     }
     effects.consume(code3);
-    return inside;
+    return content3;
   }
   function after(code3) {
     effects.exit("codeIndented");
     return ok2(code3);
   }
 }
-function tokenizeFurtherStart(effects, ok2, nok) {
+function tokenizeIndentedContent(effects, ok2, nok) {
   const self2 = this;
-  return furtherStart2;
-  function furtherStart2(code3) {
+  return start;
+  function start(code3) {
     if (self2.parser.lazy[self2.now().line]) {
       return nok(code3);
     }
@@ -34457,13 +33478,13 @@ function tokenizeFurtherStart(effects, ok2, nok) {
       effects.enter("lineEnding");
       effects.consume(code3);
       effects.exit("lineEnding");
-      return furtherStart2;
+      return start;
     }
     return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code3);
   }
   function afterPrefix(code3) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok2(code3) : markdownLineEnding(code3) ? furtherStart2(code3) : nok(code3);
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok2(code3) : markdownLineEnding(code3) ? start(code3) : nok(code3);
   }
 }
 
@@ -34523,37 +33544,37 @@ function tokenizeCodeText(effects, ok2, nok) {
   function start(code3) {
     effects.enter("codeText");
     effects.enter("codeTextSequence");
-    return sequenceOpen(code3);
+    return openingSequence(code3);
   }
-  function sequenceOpen(code3) {
+  function openingSequence(code3) {
     if (code3 === 96) {
       effects.consume(code3);
       sizeOpen++;
-      return sequenceOpen;
+      return openingSequence;
     }
     effects.exit("codeTextSequence");
-    return between2(code3);
+    return gap(code3);
   }
-  function between2(code3) {
+  function gap(code3) {
     if (code3 === null) {
       return nok(code3);
+    }
+    if (code3 === 96) {
+      token = effects.enter("codeTextSequence");
+      size = 0;
+      return closingSequence(code3);
     }
     if (code3 === 32) {
       effects.enter("space");
       effects.consume(code3);
       effects.exit("space");
-      return between2;
-    }
-    if (code3 === 96) {
-      token = effects.enter("codeTextSequence");
-      size = 0;
-      return sequenceClose(code3);
+      return gap;
     }
     if (markdownLineEnding(code3)) {
       effects.enter("lineEnding");
       effects.consume(code3);
       effects.exit("lineEnding");
-      return between2;
+      return gap;
     }
     effects.enter("codeTextData");
     return data(code3);
@@ -34561,16 +33582,16 @@ function tokenizeCodeText(effects, ok2, nok) {
   function data(code3) {
     if (code3 === null || code3 === 32 || code3 === 96 || markdownLineEnding(code3)) {
       effects.exit("codeTextData");
-      return between2(code3);
+      return gap(code3);
     }
     effects.consume(code3);
     return data;
   }
-  function sequenceClose(code3) {
+  function closingSequence(code3) {
     if (code3 === 96) {
       effects.consume(code3);
       size++;
-      return sequenceClose;
+      return closingSequence;
     }
     if (size === sizeOpen) {
       effects.exit("codeTextSequence");
@@ -34738,15 +33759,15 @@ function resolveContent(events) {
 }
 function tokenizeContent(effects, ok2) {
   let previous3;
-  return chunkStart;
-  function chunkStart(code3) {
+  return start;
+  function start(code3) {
     effects.enter("content");
     previous3 = effects.enter("chunkContent", {
       contentType: "content"
     });
-    return chunkInside(code3);
+    return data(code3);
   }
-  function chunkInside(code3) {
+  function data(code3) {
     if (code3 === null) {
       return contentEnd(code3);
     }
@@ -34758,7 +33779,7 @@ function tokenizeContent(effects, ok2) {
       )(code3);
     }
     effects.consume(code3);
-    return chunkInside;
+    return data;
   }
   function contentEnd(code3) {
     effects.exit("chunkContent");
@@ -34773,7 +33794,7 @@ function tokenizeContent(effects, ok2) {
       previous: previous3
     });
     previous3 = previous3.next;
-    return chunkInside;
+    return data;
   }
 }
 function tokenizeContinuation(effects, ok2, nok) {
@@ -34810,9 +33831,9 @@ function factoryDestination(effects, ok2, nok, type2, literalType, literalMarker
       effects.enter(literalMarkerType);
       effects.consume(code3);
       effects.exit(literalMarkerType);
-      return enclosedBefore;
+      return destinationEnclosedBefore;
     }
-    if (code3 === null || code3 === 32 || code3 === 41 || asciiControl(code3)) {
+    if (code3 === null || code3 === 41 || asciiControl(code3)) {
       return nok(code3);
     }
     effects.enter(type2);
@@ -34821,9 +33842,9 @@ function factoryDestination(effects, ok2, nok, type2, literalType, literalMarker
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return raw(code3);
+    return destinationRaw(code3);
   }
-  function enclosedBefore(code3) {
+  function destinationEnclosedBefore(code3) {
     if (code3 === 62) {
       effects.enter(literalMarkerType);
       effects.consume(code3);
@@ -34836,57 +33857,65 @@ function factoryDestination(effects, ok2, nok, type2, literalType, literalMarker
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return enclosed(code3);
+    return destinationEnclosed(code3);
   }
-  function enclosed(code3) {
+  function destinationEnclosed(code3) {
     if (code3 === 62) {
       effects.exit("chunkString");
       effects.exit(stringType);
-      return enclosedBefore(code3);
+      return destinationEnclosedBefore(code3);
     }
     if (code3 === null || code3 === 60 || markdownLineEnding(code3)) {
       return nok(code3);
     }
     effects.consume(code3);
-    return code3 === 92 ? enclosedEscape : enclosed;
+    return code3 === 92 ? destinationEnclosedEscape : destinationEnclosed;
   }
-  function enclosedEscape(code3) {
+  function destinationEnclosedEscape(code3) {
     if (code3 === 60 || code3 === 62 || code3 === 92) {
       effects.consume(code3);
-      return enclosed;
+      return destinationEnclosed;
     }
-    return enclosed(code3);
+    return destinationEnclosed(code3);
   }
-  function raw(code3) {
-    if (!balance && (code3 === null || code3 === 41 || markdownLineEndingOrSpace(code3))) {
+  function destinationRaw(code3) {
+    if (code3 === 40) {
+      if (++balance > limit)
+        return nok(code3);
+      effects.consume(code3);
+      return destinationRaw;
+    }
+    if (code3 === 41) {
+      if (!balance--) {
+        effects.exit("chunkString");
+        effects.exit(stringType);
+        effects.exit(rawType);
+        effects.exit(type2);
+        return ok2(code3);
+      }
+      effects.consume(code3);
+      return destinationRaw;
+    }
+    if (code3 === null || markdownLineEndingOrSpace(code3)) {
+      if (balance)
+        return nok(code3);
       effects.exit("chunkString");
       effects.exit(stringType);
       effects.exit(rawType);
       effects.exit(type2);
       return ok2(code3);
     }
-    if (balance < limit && code3 === 40) {
-      effects.consume(code3);
-      balance++;
-      return raw;
-    }
-    if (code3 === 41) {
-      effects.consume(code3);
-      balance--;
-      return raw;
-    }
-    if (code3 === null || code3 === 32 || code3 === 40 || asciiControl(code3)) {
+    if (asciiControl(code3))
       return nok(code3);
-    }
     effects.consume(code3);
-    return code3 === 92 ? rawEscape : raw;
+    return code3 === 92 ? destinationRawEscape : destinationRaw;
   }
-  function rawEscape(code3) {
+  function destinationRawEscape(code3) {
     if (code3 === 40 || code3 === 41 || code3 === 92) {
       effects.consume(code3);
-      return raw;
+      return destinationRaw;
     }
-    return raw(code3);
+    return destinationRaw(code3);
   }
 }
 
@@ -34894,7 +33923,7 @@ function factoryDestination(effects, ok2, nok, type2, literalType, literalMarker
 function factoryLabel(effects, ok2, nok, type2, markerType, stringType) {
   const self2 = this;
   let size = 0;
-  let seen;
+  let data;
   return start;
   function start(code3) {
     effects.enter(type2);
@@ -34905,12 +33934,12 @@ function factoryLabel(effects, ok2, nok, type2, markerType, stringType) {
     return atBreak;
   }
   function atBreak(code3) {
-    if (size > 999 || code3 === null || code3 === 91 || code3 === 93 && !seen || // To do: remove in the future once we’ve switched from
-    // `micromark-extension-footnote` to `micromark-extension-gfm-footnote`,
-    // which doesn’t need this.
-    // Hidden footnotes hook.
+    if (code3 === null || code3 === 91 || code3 === 93 && !data || /* To do: remove in the future once we’ve switched from
+     * `micromark-extension-footnote` to `micromark-extension-gfm-footnote`,
+     * which doesn’t need this */
+    /* Hidden footnotes hook */
     /* c8 ignore next 3 */
-    code3 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs) {
+    code3 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs || size > 999) {
       return nok(code3);
     }
     if (code3 === 93) {
@@ -34930,25 +33959,24 @@ function factoryLabel(effects, ok2, nok, type2, markerType, stringType) {
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return labelInside(code3);
+    return label(code3);
   }
-  function labelInside(code3) {
+  function label(code3) {
     if (code3 === null || code3 === 91 || code3 === 93 || markdownLineEnding(code3) || size++ > 999) {
       effects.exit("chunkString");
       return atBreak(code3);
     }
     effects.consume(code3);
-    if (!seen)
-      seen = !markdownSpace(code3);
-    return code3 === 92 ? labelEscape : labelInside;
+    data = data || !markdownSpace(code3);
+    return code3 === 92 ? labelEscape : label;
   }
   function labelEscape(code3) {
     if (code3 === 91 || code3 === 92 || code3 === 93) {
       effects.consume(code3);
       size++;
-      return labelInside;
+      return label;
     }
-    return labelInside(code3);
+    return label(code3);
   }
 }
 
@@ -34957,17 +33985,14 @@ function factoryTitle(effects, ok2, nok, type2, markerType, stringType) {
   let marker;
   return start;
   function start(code3) {
-    if (code3 === 34 || code3 === 39 || code3 === 40) {
-      effects.enter(type2);
-      effects.enter(markerType);
-      effects.consume(code3);
-      effects.exit(markerType);
-      marker = code3 === 40 ? 41 : code3;
-      return begin;
-    }
-    return nok(code3);
+    effects.enter(type2);
+    effects.enter(markerType);
+    effects.consume(code3);
+    effects.exit(markerType);
+    marker = code3 === 40 ? 41 : code3;
+    return atFirstTitleBreak;
   }
-  function begin(code3) {
+  function atFirstTitleBreak(code3) {
     if (code3 === marker) {
       effects.enter(markerType);
       effects.consume(code3);
@@ -34976,12 +34001,12 @@ function factoryTitle(effects, ok2, nok, type2, markerType, stringType) {
       return ok2;
     }
     effects.enter(stringType);
-    return atBreak(code3);
+    return atTitleBreak(code3);
   }
-  function atBreak(code3) {
+  function atTitleBreak(code3) {
     if (code3 === marker) {
       effects.exit(stringType);
-      return begin(marker);
+      return atFirstTitleBreak(marker);
     }
     if (code3 === null) {
       return nok(code3);
@@ -34990,27 +34015,27 @@ function factoryTitle(effects, ok2, nok, type2, markerType, stringType) {
       effects.enter("lineEnding");
       effects.consume(code3);
       effects.exit("lineEnding");
-      return factorySpace(effects, atBreak, "linePrefix");
+      return factorySpace(effects, atTitleBreak, "linePrefix");
     }
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return inside(code3);
+    return title(code3);
   }
-  function inside(code3) {
+  function title(code3) {
     if (code3 === marker || code3 === null || markdownLineEnding(code3)) {
       effects.exit("chunkString");
-      return atBreak(code3);
+      return atTitleBreak(code3);
     }
     effects.consume(code3);
-    return code3 === 92 ? escape : inside;
+    return code3 === 92 ? titleEscape : title;
   }
-  function escape(code3) {
+  function titleEscape(code3) {
     if (code3 === marker || code3 === 92) {
       effects.consume(code3);
-      return inside;
+      return title;
     }
-    return inside(code3);
+    return title(code3);
   }
 }
 
@@ -35047,8 +34072,8 @@ var definition = {
   name: "definition",
   tokenize: tokenizeDefinition
 };
-var titleBefore = {
-  tokenize: tokenizeTitleBefore,
+var titleConstruct = {
+  tokenize: tokenizeTitle,
   partial: true
 };
 function tokenizeDefinition(effects, ok2, nok) {
@@ -35057,14 +34082,10 @@ function tokenizeDefinition(effects, ok2, nok) {
   return start;
   function start(code3) {
     effects.enter("definition");
-    return before(code3);
-  }
-  function before(code3) {
     return factoryLabel.call(
       self2,
       effects,
       labelAfter,
-      // Note: we don’t need to reset the way `markdown-rs` does.
       nok,
       "definitionLabel",
       "definitionLabelMarker",
@@ -35079,60 +34100,56 @@ function tokenizeDefinition(effects, ok2, nok) {
       effects.enter("definitionMarker");
       effects.consume(code3);
       effects.exit("definitionMarker");
-      return markerAfter;
+      return factoryWhitespace(
+        effects,
+        factoryDestination(
+          effects,
+          effects.attempt(
+            titleConstruct,
+            factorySpace(effects, after, "whitespace"),
+            factorySpace(effects, after, "whitespace")
+          ),
+          nok,
+          "definitionDestination",
+          "definitionDestinationLiteral",
+          "definitionDestinationLiteralMarker",
+          "definitionDestinationRaw",
+          "definitionDestinationString"
+        )
+      );
     }
     return nok(code3);
   }
-  function markerAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, destinationBefore)(code3) : destinationBefore(code3);
-  }
-  function destinationBefore(code3) {
-    return factoryDestination(
-      effects,
-      destinationAfter,
-      // Note: we don’t need to reset the way `markdown-rs` does.
-      nok,
-      "definitionDestination",
-      "definitionDestinationLiteral",
-      "definitionDestinationLiteralMarker",
-      "definitionDestinationRaw",
-      "definitionDestinationString"
-    )(code3);
-  }
-  function destinationAfter(code3) {
-    return effects.attempt(titleBefore, after, after)(code3);
-  }
   function after(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, afterWhitespace, "whitespace")(code3) : afterWhitespace(code3);
-  }
-  function afterWhitespace(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("definition");
-      self2.parser.defined.push(identifier);
+      if (!self2.parser.defined.includes(identifier)) {
+        self2.parser.defined.push(identifier);
+      }
       return ok2(code3);
     }
     return nok(code3);
   }
 }
-function tokenizeTitleBefore(effects, ok2, nok) {
-  return titleBefore2;
-  function titleBefore2(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, beforeMarker)(code3) : nok(code3);
+function tokenizeTitle(effects, ok2, nok) {
+  return start;
+  function start(code3) {
+    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, before)(code3) : nok(code3);
   }
-  function beforeMarker(code3) {
-    return factoryTitle(
-      effects,
-      titleAfter,
-      nok,
-      "definitionTitle",
-      "definitionTitleMarker",
-      "definitionTitleString"
-    )(code3);
+  function before(code3) {
+    if (code3 === 34 || code3 === 39 || code3 === 40) {
+      return factoryTitle(
+        effects,
+        factorySpace(effects, after, "whitespace"),
+        nok,
+        "definitionTitle",
+        "definitionTitleMarker",
+        "definitionTitleString"
+      )(code3);
+    }
+    return nok(code3);
   }
-  function titleAfter(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, titleAfterOptionalWhitespace, "whitespace")(code3) : titleAfterOptionalWhitespace(code3);
-  }
-  function titleAfterOptionalWhitespace(code3) {
+  function after(code3) {
     return code3 === null || markdownLineEnding(code3) ? ok2(code3) : nok(code3);
   }
 }
@@ -35146,11 +34163,13 @@ function tokenizeHardBreakEscape(effects, ok2, nok) {
   return start;
   function start(code3) {
     effects.enter("hardBreakEscape");
+    effects.enter("escapeMarker");
     effects.consume(code3);
-    return after;
+    return open;
   }
-  function after(code3) {
+  function open(code3) {
     if (markdownLineEnding(code3)) {
+      effects.exit("escapeMarker");
       effects.exit("hardBreakEscape");
       return ok2(code3);
     }
@@ -35188,6 +34207,7 @@ function resolveHeadingAtx(events, context) {
       type: "chunkText",
       start: events[contentStart][1].start,
       end: events[contentEnd][1].end,
+      // @ts-expect-error Constants are fine to assign.
       contentType: "text"
     };
     splice(events, contentStart, contentEnd - contentStart + 1, [
@@ -35200,54 +34220,52 @@ function resolveHeadingAtx(events, context) {
   return events;
 }
 function tokenizeHeadingAtx(effects, ok2, nok) {
+  const self2 = this;
   let size = 0;
   return start;
   function start(code3) {
     effects.enter("atxHeading");
-    return before(code3);
-  }
-  function before(code3) {
     effects.enter("atxHeadingSequence");
-    return sequenceOpen(code3);
+    return fenceOpenInside(code3);
   }
-  function sequenceOpen(code3) {
+  function fenceOpenInside(code3) {
     if (code3 === 35 && size++ < 6) {
       effects.consume(code3);
-      return sequenceOpen;
+      return fenceOpenInside;
     }
     if (code3 === null || markdownLineEndingOrSpace(code3)) {
       effects.exit("atxHeadingSequence");
-      return atBreak(code3);
+      return self2.interrupt ? ok2(code3) : headingBreak(code3);
     }
     return nok(code3);
   }
-  function atBreak(code3) {
+  function headingBreak(code3) {
     if (code3 === 35) {
       effects.enter("atxHeadingSequence");
-      return sequenceFurther(code3);
+      return sequence(code3);
     }
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("atxHeading");
       return ok2(code3);
     }
     if (markdownSpace(code3)) {
-      return factorySpace(effects, atBreak, "whitespace")(code3);
+      return factorySpace(effects, headingBreak, "whitespace")(code3);
     }
     effects.enter("atxHeadingText");
     return data(code3);
   }
-  function sequenceFurther(code3) {
+  function sequence(code3) {
     if (code3 === 35) {
       effects.consume(code3);
-      return sequenceFurther;
+      return sequence;
     }
     effects.exit("atxHeadingSequence");
-    return atBreak(code3);
+    return headingBreak(code3);
   }
   function data(code3) {
     if (code3 === null || code3 === 35 || markdownLineEndingOrSpace(code3)) {
       effects.exit("atxHeadingText");
-      return atBreak(code3);
+      return headingBreak(code3);
     }
     effects.consume(code3);
     return data;
@@ -35305,7 +34323,6 @@ var htmlBlockNames = [
   "option",
   "p",
   "param",
-  "search",
   "section",
   "summary",
   "table",
@@ -35328,12 +34345,8 @@ var htmlFlow = {
   resolveTo: resolveToHtmlFlow,
   concrete: true
 };
-var blankLineBefore = {
-  tokenize: tokenizeBlankLineBefore,
-  partial: true
-};
-var nonLazyContinuationStart = {
-  tokenize: tokenizeNonLazyContinuationStart,
+var nextBlankConstruct = {
+  tokenize: tokenizeNextBlank,
   partial: true
 };
 function resolveToHtmlFlow(events) {
@@ -35352,16 +34365,13 @@ function resolveToHtmlFlow(events) {
 }
 function tokenizeHtmlFlow(effects, ok2, nok) {
   const self2 = this;
-  let marker;
-  let closingTag;
+  let kind;
+  let startTag;
   let buffer2;
   let index2;
-  let markerB;
+  let marker;
   return start;
   function start(code3) {
-    return before(code3);
-  }
-  function before(code3) {
     effects.enter("htmlFlow");
     effects.enter("htmlFlowData");
     effects.consume(code3);
@@ -35370,40 +34380,41 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
   function open(code3) {
     if (code3 === 33) {
       effects.consume(code3);
-      return declarationOpen;
+      return declarationStart;
     }
     if (code3 === 47) {
       effects.consume(code3);
-      closingTag = true;
       return tagCloseStart;
     }
     if (code3 === 63) {
       effects.consume(code3);
-      marker = 3;
+      kind = 3;
       return self2.interrupt ? ok2 : continuationDeclarationInside;
     }
     if (asciiAlpha(code3)) {
       effects.consume(code3);
       buffer2 = String.fromCharCode(code3);
+      startTag = true;
       return tagName;
     }
     return nok(code3);
   }
-  function declarationOpen(code3) {
+  function declarationStart(code3) {
     if (code3 === 45) {
       effects.consume(code3);
-      marker = 2;
+      kind = 2;
       return commentOpenInside;
     }
     if (code3 === 91) {
       effects.consume(code3);
-      marker = 5;
+      kind = 5;
+      buffer2 = "CDATA[";
       index2 = 0;
       return cdataOpenInside;
     }
     if (asciiAlpha(code3)) {
       effects.consume(code3);
-      marker = 4;
+      kind = 4;
       return self2.interrupt ? ok2 : continuationDeclarationInside;
     }
     return nok(code3);
@@ -35416,13 +34427,9 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
     return nok(code3);
   }
   function cdataOpenInside(code3) {
-    const value = "CDATA[";
-    if (code3 === value.charCodeAt(index2++)) {
+    if (code3 === buffer2.charCodeAt(index2++)) {
       effects.consume(code3);
-      if (index2 === value.length) {
-        return self2.interrupt ? ok2 : continuation;
-      }
-      return cdataOpenInside;
+      return index2 === buffer2.length ? self2.interrupt ? ok2 : continuation : cdataOpenInside;
     }
     return nok(code3);
   }
@@ -35436,22 +34443,20 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
   }
   function tagName(code3) {
     if (code3 === null || code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      const slash = code3 === 47;
-      const name = buffer2.toLowerCase();
-      if (!slash && !closingTag && htmlRawNames.includes(name)) {
-        marker = 1;
+      if (code3 !== 47 && startTag && htmlRawNames.includes(buffer2.toLowerCase())) {
+        kind = 1;
         return self2.interrupt ? ok2(code3) : continuation(code3);
       }
       if (htmlBlockNames.includes(buffer2.toLowerCase())) {
-        marker = 6;
-        if (slash) {
+        kind = 6;
+        if (code3 === 47) {
           effects.consume(code3);
           return basicSelfClosing;
         }
         return self2.interrupt ? ok2(code3) : continuation(code3);
       }
-      marker = 7;
-      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code3) : closingTag ? completeClosingTagAfter(code3) : completeAttributeNameBefore(code3);
+      kind = 7;
+      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code3) : startTag ? completeAttributeNameBefore(code3) : completeClosingTagAfter(code3);
     }
     if (code3 === 45 || asciiAlphanumeric(code3)) {
       effects.consume(code3);
@@ -35513,29 +34518,29 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
     }
     if (code3 === 34 || code3 === 39) {
       effects.consume(code3);
-      markerB = code3;
+      marker = code3;
       return completeAttributeValueQuoted;
     }
     if (markdownSpace(code3)) {
       effects.consume(code3);
       return completeAttributeValueBefore;
     }
+    marker = null;
     return completeAttributeValueUnquoted(code3);
   }
   function completeAttributeValueQuoted(code3) {
-    if (code3 === markerB) {
-      effects.consume(code3);
-      markerB = null;
-      return completeAttributeValueQuotedAfter;
-    }
     if (code3 === null || markdownLineEnding(code3)) {
       return nok(code3);
+    }
+    if (code3 === marker) {
+      effects.consume(code3);
+      return completeAttributeValueQuotedAfter;
     }
     effects.consume(code3);
     return completeAttributeValueQuoted;
   }
   function completeAttributeValueUnquoted(code3) {
-    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 47 || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96 || markdownLineEndingOrSpace(code3)) {
+    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96 || markdownLineEndingOrSpace(code3)) {
       return completeAttributeNameAfter(code3);
     }
     effects.consume(code3);
@@ -35555,70 +34560,78 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
     return nok(code3);
   }
   function completeAfter(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return continuation(code3);
-    }
     if (markdownSpace(code3)) {
       effects.consume(code3);
       return completeAfter;
     }
-    return nok(code3);
+    return code3 === null || markdownLineEnding(code3) ? continuation(code3) : nok(code3);
   }
   function continuation(code3) {
-    if (code3 === 45 && marker === 2) {
+    if (code3 === 45 && kind === 2) {
       effects.consume(code3);
       return continuationCommentInside;
     }
-    if (code3 === 60 && marker === 1) {
+    if (code3 === 60 && kind === 1) {
       effects.consume(code3);
       return continuationRawTagOpen;
     }
-    if (code3 === 62 && marker === 4) {
+    if (code3 === 62 && kind === 4) {
       effects.consume(code3);
       return continuationClose;
     }
-    if (code3 === 63 && marker === 3) {
+    if (code3 === 63 && kind === 3) {
       effects.consume(code3);
       return continuationDeclarationInside;
     }
-    if (code3 === 93 && marker === 5) {
+    if (code3 === 93 && kind === 5) {
       effects.consume(code3);
-      return continuationCdataInside;
+      return continuationCharacterDataInside;
     }
-    if (markdownLineEnding(code3) && (marker === 6 || marker === 7)) {
-      effects.exit("htmlFlowData");
+    if (markdownLineEnding(code3) && (kind === 6 || kind === 7)) {
       return effects.check(
-        blankLineBefore,
-        continuationAfter,
-        continuationStart
+        nextBlankConstruct,
+        continuationClose,
+        continuationAtLineEnding
       )(code3);
     }
     if (code3 === null || markdownLineEnding(code3)) {
-      effects.exit("htmlFlowData");
-      return continuationStart(code3);
+      return continuationAtLineEnding(code3);
     }
     effects.consume(code3);
     return continuation;
   }
-  function continuationStart(code3) {
-    return effects.check(
-      nonLazyContinuationStart,
-      continuationStartNonLazy,
-      continuationAfter
-    )(code3);
+  function continuationAtLineEnding(code3) {
+    effects.exit("htmlFlowData");
+    return htmlContinueStart(code3);
   }
-  function continuationStartNonLazy(code3) {
-    effects.enter("lineEnding");
-    effects.consume(code3);
-    effects.exit("lineEnding");
-    return continuationBefore;
-  }
-  function continuationBefore(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return continuationStart(code3);
+  function htmlContinueStart(code3) {
+    if (code3 === null) {
+      return done(code3);
+    }
+    if (markdownLineEnding(code3)) {
+      return effects.attempt(
+        {
+          tokenize: htmlLineEnd,
+          partial: true
+        },
+        htmlContinueStart,
+        done
+      )(code3);
     }
     effects.enter("htmlFlowData");
     return continuation(code3);
+  }
+  function htmlLineEnd(effects2, ok3, nok2) {
+    return start2;
+    function start2(code3) {
+      effects2.enter("lineEnding");
+      effects2.consume(code3);
+      effects2.exit("lineEnding");
+      return lineStart;
+    }
+    function lineStart(code3) {
+      return self2.parser.lazy[self2.now().line] ? nok2(code3) : ok3(code3);
+    }
   }
   function continuationCommentInside(code3) {
     if (code3 === 45) {
@@ -35636,13 +34649,9 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
     return continuation(code3);
   }
   function continuationRawEndTag(code3) {
-    if (code3 === 62) {
-      const name = buffer2.toLowerCase();
-      if (htmlRawNames.includes(name)) {
-        effects.consume(code3);
-        return continuationClose;
-      }
-      return continuation(code3);
+    if (code3 === 62 && htmlRawNames.includes(buffer2.toLowerCase())) {
+      effects.consume(code3);
+      return continuationClose;
     }
     if (asciiAlpha(code3) && buffer2.length < 8) {
       effects.consume(code3);
@@ -35651,7 +34660,7 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
     }
     return continuation(code3);
   }
-  function continuationCdataInside(code3) {
+  function continuationCharacterDataInside(code3) {
     if (code3 === 93) {
       effects.consume(code3);
       return continuationDeclarationInside;
@@ -35663,7 +34672,7 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
       effects.consume(code3);
       return continuationClose;
     }
-    if (code3 === 45 && marker === 2) {
+    if (code3 === 45 && kind === 2) {
       effects.consume(code3);
       return continuationDeclarationInside;
     }
@@ -35672,38 +34681,23 @@ function tokenizeHtmlFlow(effects, ok2, nok) {
   function continuationClose(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("htmlFlowData");
-      return continuationAfter(code3);
+      return done(code3);
     }
     effects.consume(code3);
     return continuationClose;
   }
-  function continuationAfter(code3) {
+  function done(code3) {
     effects.exit("htmlFlow");
     return ok2(code3);
   }
 }
-function tokenizeNonLazyContinuationStart(effects, ok2, nok) {
-  const self2 = this;
+function tokenizeNextBlank(effects, ok2, nok) {
   return start;
   function start(code3) {
-    if (markdownLineEnding(code3)) {
-      effects.enter("lineEnding");
-      effects.consume(code3);
-      effects.exit("lineEnding");
-      return after;
-    }
-    return nok(code3);
-  }
-  function after(code3) {
-    return self2.parser.lazy[self2.now().line] ? nok(code3) : ok2(code3);
-  }
-}
-function tokenizeBlankLineBefore(effects, ok2, nok) {
-  return start;
-  function start(code3) {
-    effects.enter("lineEnding");
+    effects.exit("htmlFlowData");
+    effects.enter("lineEndingBlank");
     effects.consume(code3);
-    effects.exit("lineEnding");
+    effects.exit("lineEndingBlank");
     return effects.attempt(blankLine, ok2, nok);
   }
 }
@@ -35716,6 +34710,7 @@ var htmlText = {
 function tokenizeHtmlText(effects, ok2, nok) {
   const self2 = this;
   let marker;
+  let buffer2;
   let index2;
   let returnState;
   return start;
@@ -35747,12 +34742,13 @@ function tokenizeHtmlText(effects, ok2, nok) {
   function declarationOpen(code3) {
     if (code3 === 45) {
       effects.consume(code3);
-      return commentOpenInside;
+      return commentOpen;
     }
     if (code3 === 91) {
       effects.consume(code3);
+      buffer2 = "CDATA[";
       index2 = 0;
-      return cdataOpenInside;
+      return cdataOpen;
     }
     if (asciiAlpha(code3)) {
       effects.consume(code3);
@@ -35760,12 +34756,28 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     return nok(code3);
   }
-  function commentOpenInside(code3) {
+  function commentOpen(code3) {
     if (code3 === 45) {
       effects.consume(code3);
-      return commentEnd;
+      return commentStart;
     }
     return nok(code3);
+  }
+  function commentStart(code3) {
+    if (code3 === null || code3 === 62) {
+      return nok(code3);
+    }
+    if (code3 === 45) {
+      effects.consume(code3);
+      return commentStartDash;
+    }
+    return comment(code3);
+  }
+  function commentStartDash(code3) {
+    if (code3 === null || code3 === 62) {
+      return nok(code3);
+    }
+    return comment(code3);
   }
   function comment(code3) {
     if (code3 === null) {
@@ -35777,7 +34789,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = comment;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     effects.consume(code3);
     return comment;
@@ -35785,18 +34797,14 @@ function tokenizeHtmlText(effects, ok2, nok) {
   function commentClose(code3) {
     if (code3 === 45) {
       effects.consume(code3);
-      return commentEnd;
+      return end;
     }
     return comment(code3);
   }
-  function commentEnd(code3) {
-    return code3 === 62 ? end(code3) : code3 === 45 ? commentClose(code3) : comment(code3);
-  }
-  function cdataOpenInside(code3) {
-    const value = "CDATA[";
-    if (code3 === value.charCodeAt(index2++)) {
+  function cdataOpen(code3) {
+    if (code3 === buffer2.charCodeAt(index2++)) {
       effects.consume(code3);
-      return index2 === value.length ? cdata : cdataOpenInside;
+      return index2 === buffer2.length ? cdata : cdataOpen;
     }
     return nok(code3);
   }
@@ -35810,7 +34818,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = cdata;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     effects.consume(code3);
     return cdata;
@@ -35838,7 +34846,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = declaration;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     effects.consume(code3);
     return declaration;
@@ -35853,7 +34861,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = instruction;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     effects.consume(code3);
     return instruction;
@@ -35878,7 +34886,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
   function tagCloseBetween(code3) {
     if (markdownLineEnding(code3)) {
       returnState = tagCloseBetween;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     if (markdownSpace(code3)) {
       effects.consume(code3);
@@ -35907,7 +34915,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = tagOpenBetween;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     if (markdownSpace(code3)) {
       effects.consume(code3);
@@ -35929,7 +34937,7 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = tagOpenAttributeNameAfter;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     if (markdownSpace(code3)) {
       effects.consume(code3);
@@ -35948,19 +34956,19 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = tagOpenAttributeValueBefore;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     if (markdownSpace(code3)) {
       effects.consume(code3);
       return tagOpenAttributeValueBefore;
     }
     effects.consume(code3);
+    marker = void 0;
     return tagOpenAttributeValueUnquoted;
   }
   function tagOpenAttributeValueQuoted(code3) {
     if (code3 === marker) {
       effects.consume(code3);
-      marker = void 0;
       return tagOpenAttributeValueQuotedAfter;
     }
     if (code3 === null) {
@@ -35968,26 +34976,42 @@ function tokenizeHtmlText(effects, ok2, nok) {
     }
     if (markdownLineEnding(code3)) {
       returnState = tagOpenAttributeValueQuoted;
-      return lineEndingBefore(code3);
+      return atLineEnding(code3);
     }
     effects.consume(code3);
     return tagOpenAttributeValueQuoted;
+  }
+  function tagOpenAttributeValueQuotedAfter(code3) {
+    if (code3 === 62 || code3 === 47 || markdownLineEndingOrSpace(code3)) {
+      return tagOpenBetween(code3);
+    }
+    return nok(code3);
   }
   function tagOpenAttributeValueUnquoted(code3) {
     if (code3 === null || code3 === 34 || code3 === 39 || code3 === 60 || code3 === 61 || code3 === 96) {
       return nok(code3);
     }
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
+    if (code3 === 62 || markdownLineEndingOrSpace(code3)) {
       return tagOpenBetween(code3);
     }
     effects.consume(code3);
     return tagOpenAttributeValueUnquoted;
   }
-  function tagOpenAttributeValueQuotedAfter(code3) {
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
-    }
-    return nok(code3);
+  function atLineEnding(code3) {
+    effects.exit("htmlTextData");
+    effects.enter("lineEnding");
+    effects.consume(code3);
+    effects.exit("lineEnding");
+    return factorySpace(
+      effects,
+      afterPrefix,
+      "linePrefix",
+      self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
+    );
+  }
+  function afterPrefix(code3) {
+    effects.enter("htmlTextData");
+    return returnState(code3);
   }
   function end(code3) {
     if (code3 === 62) {
@@ -35997,25 +35021,6 @@ function tokenizeHtmlText(effects, ok2, nok) {
       return ok2;
     }
     return nok(code3);
-  }
-  function lineEndingBefore(code3) {
-    effects.exit("htmlTextData");
-    effects.enter("lineEnding");
-    effects.consume(code3);
-    effects.exit("lineEnding");
-    return lineEndingAfter;
-  }
-  function lineEndingAfter(code3) {
-    return markdownSpace(code3) ? factorySpace(
-      effects,
-      lineEndingAfterPrefix,
-      "linePrefix",
-      self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
-    )(code3) : lineEndingAfterPrefix(code3);
-  }
-  function lineEndingAfterPrefix(code3) {
-    effects.enter("htmlTextData");
-    return returnState(code3);
   }
 }
 
@@ -36029,16 +35034,17 @@ var labelEnd = {
 var resourceConstruct = {
   tokenize: tokenizeResource
 };
-var referenceFullConstruct = {
-  tokenize: tokenizeReferenceFull
+var fullReferenceConstruct = {
+  tokenize: tokenizeFullReference
 };
-var referenceCollapsedConstruct = {
-  tokenize: tokenizeReferenceCollapsed
+var collapsedReferenceConstruct = {
+  tokenize: tokenizeCollapsedReference
 };
 function resolveAllLabelEnd(events) {
   let index2 = -1;
+  let token;
   while (++index2 < events.length) {
-    const token = events[index2][1];
+    token = events[index2][1];
     if (token.type === "labelImage" || token.type === "labelLink" || token.type === "labelEnd") {
       events.splice(index2 + 1, token.type === "labelImage" ? 4 : 2);
       token.type = "data";
@@ -36131,9 +35137,8 @@ function tokenizeLabelEnd(effects, ok2, nok) {
     if (!labelStart) {
       return nok(code3);
     }
-    if (labelStart._inactive) {
-      return labelEndNok(code3);
-    }
+    if (labelStart._inactive)
+      return balanced(code3);
     defined = self2.parser.defined.includes(
       normalizeIdentifier(
         self2.sliceSerialize({
@@ -36147,60 +35152,47 @@ function tokenizeLabelEnd(effects, ok2, nok) {
     effects.consume(code3);
     effects.exit("labelMarker");
     effects.exit("labelEnd");
-    return after;
+    return afterLabelEnd;
   }
-  function after(code3) {
+  function afterLabelEnd(code3) {
     if (code3 === 40) {
       return effects.attempt(
         resourceConstruct,
-        labelEndOk,
-        defined ? labelEndOk : labelEndNok
+        ok2,
+        defined ? ok2 : balanced
       )(code3);
     }
     if (code3 === 91) {
       return effects.attempt(
-        referenceFullConstruct,
-        labelEndOk,
-        defined ? referenceNotFull : labelEndNok
+        fullReferenceConstruct,
+        ok2,
+        defined ? effects.attempt(collapsedReferenceConstruct, ok2, balanced) : balanced
       )(code3);
     }
-    return defined ? labelEndOk(code3) : labelEndNok(code3);
+    return defined ? ok2(code3) : balanced(code3);
   }
-  function referenceNotFull(code3) {
-    return effects.attempt(
-      referenceCollapsedConstruct,
-      labelEndOk,
-      labelEndNok
-    )(code3);
-  }
-  function labelEndOk(code3) {
-    return ok2(code3);
-  }
-  function labelEndNok(code3) {
+  function balanced(code3) {
     labelStart._balanced = true;
     return nok(code3);
   }
 }
 function tokenizeResource(effects, ok2, nok) {
-  return resourceStart;
-  function resourceStart(code3) {
+  return start;
+  function start(code3) {
     effects.enter("resource");
     effects.enter("resourceMarker");
     effects.consume(code3);
     effects.exit("resourceMarker");
-    return resourceBefore;
+    return factoryWhitespace(effects, open);
   }
-  function resourceBefore(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceOpen)(code3) : resourceOpen(code3);
-  }
-  function resourceOpen(code3) {
+  function open(code3) {
     if (code3 === 41) {
-      return resourceEnd(code3);
+      return end(code3);
     }
     return factoryDestination(
       effects,
-      resourceDestinationAfter,
-      resourceDestinationMissing,
+      destinationAfter,
+      nok,
       "resourceDestination",
       "resourceDestinationLiteral",
       "resourceDestinationLiteralMarker",
@@ -36209,29 +35201,23 @@ function tokenizeResource(effects, ok2, nok) {
       32
     )(code3);
   }
-  function resourceDestinationAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceBetween)(code3) : resourceEnd(code3);
+  function destinationAfter(code3) {
+    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, between2)(code3) : end(code3);
   }
-  function resourceDestinationMissing(code3) {
-    return nok(code3);
-  }
-  function resourceBetween(code3) {
+  function between2(code3) {
     if (code3 === 34 || code3 === 39 || code3 === 40) {
       return factoryTitle(
         effects,
-        resourceTitleAfter,
+        factoryWhitespace(effects, end),
         nok,
         "resourceTitle",
         "resourceTitleMarker",
         "resourceTitleString"
       )(code3);
     }
-    return resourceEnd(code3);
+    return end(code3);
   }
-  function resourceTitleAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceEnd)(code3) : resourceEnd(code3);
-  }
-  function resourceEnd(code3) {
+  function end(code3) {
     if (code3 === 41) {
       effects.enter("resourceMarker");
       effects.consume(code3);
@@ -36242,41 +35228,38 @@ function tokenizeResource(effects, ok2, nok) {
     return nok(code3);
   }
 }
-function tokenizeReferenceFull(effects, ok2, nok) {
+function tokenizeFullReference(effects, ok2, nok) {
   const self2 = this;
-  return referenceFull;
-  function referenceFull(code3) {
+  return start;
+  function start(code3) {
     return factoryLabel.call(
       self2,
       effects,
-      referenceFullAfter,
-      referenceFullMissing,
+      afterLabel,
+      nok,
       "reference",
       "referenceMarker",
       "referenceString"
     )(code3);
   }
-  function referenceFullAfter(code3) {
+  function afterLabel(code3) {
     return self2.parser.defined.includes(
       normalizeIdentifier(
         self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1)
       )
     ) ? ok2(code3) : nok(code3);
   }
-  function referenceFullMissing(code3) {
-    return nok(code3);
-  }
 }
-function tokenizeReferenceCollapsed(effects, ok2, nok) {
-  return referenceCollapsedStart;
-  function referenceCollapsedStart(code3) {
+function tokenizeCollapsedReference(effects, ok2, nok) {
+  return start;
+  function start(code3) {
     effects.enter("reference");
     effects.enter("referenceMarker");
     effects.consume(code3);
     effects.exit("referenceMarker");
-    return referenceCollapsedOpen;
+    return open;
   }
-  function referenceCollapsedOpen(code3) {
+  function open(code3) {
     if (code3 === 93) {
       effects.enter("referenceMarker");
       effects.consume(code3);
@@ -36367,9 +35350,6 @@ function tokenizeThematicBreak(effects, ok2, nok) {
   return start;
   function start(code3) {
     effects.enter("thematicBreak");
-    return before(code3);
-  }
-  function before(code3) {
     marker = code3;
     return atBreak(code3);
   }
@@ -36378,11 +35358,14 @@ function tokenizeThematicBreak(effects, ok2, nok) {
       effects.enter("thematicBreakSequence");
       return sequence(code3);
     }
-    if (size >= 3 && (code3 === null || markdownLineEnding(code3))) {
-      effects.exit("thematicBreak");
-      return ok2(code3);
+    if (markdownSpace(code3)) {
+      return factorySpace(effects, atBreak, "whitespace")(code3);
     }
-    return nok(code3);
+    if (size < 3 || code3 !== null && !markdownLineEnding(code3)) {
+      return nok(code3);
+    }
+    effects.exit("thematicBreak");
+    return ok2(code3);
   }
   function sequence(code3) {
     if (code3 === marker) {
@@ -36391,7 +35374,7 @@ function tokenizeThematicBreak(effects, ok2, nok) {
       return sequence;
     }
     effects.exit("thematicBreakSequence");
-    return markdownSpace(code3) ? factorySpace(effects, atBreak, "whitespace")(code3) : atBreak(code3);
+    return atBreak(code3);
   }
 }
 
@@ -36596,37 +35579,34 @@ function resolveToSetextUnderline(events, context) {
 }
 function tokenizeSetextUnderline(effects, ok2, nok) {
   const self2 = this;
+  let index2 = self2.events.length;
   let marker;
+  let paragraph2;
+  while (index2--) {
+    if (self2.events[index2][1].type !== "lineEnding" && self2.events[index2][1].type !== "linePrefix" && self2.events[index2][1].type !== "content") {
+      paragraph2 = self2.events[index2][1].type === "paragraph";
+      break;
+    }
+  }
   return start;
   function start(code3) {
-    let index2 = self2.events.length;
-    let paragraph2;
-    while (index2--) {
-      if (self2.events[index2][1].type !== "lineEnding" && self2.events[index2][1].type !== "linePrefix" && self2.events[index2][1].type !== "content") {
-        paragraph2 = self2.events[index2][1].type === "paragraph";
-        break;
-      }
-    }
     if (!self2.parser.lazy[self2.now().line] && (self2.interrupt || paragraph2)) {
       effects.enter("setextHeadingLine");
+      effects.enter("setextHeadingLineSequence");
       marker = code3;
-      return before(code3);
+      return closingSequence(code3);
     }
     return nok(code3);
   }
-  function before(code3) {
-    effects.enter("setextHeadingLineSequence");
-    return inside(code3);
-  }
-  function inside(code3) {
+  function closingSequence(code3) {
     if (code3 === marker) {
       effects.consume(code3);
-      return inside;
+      return closingSequence;
     }
     effects.exit("setextHeadingLineSequence");
-    return markdownSpace(code3) ? factorySpace(effects, after, "lineSuffix")(code3) : after(code3);
+    return factorySpace(effects, closingSequenceEnd, "lineSuffix")(code3);
   }
-  function after(code3) {
+  function closingSequenceEnd(code3) {
     if (code3 === null || markdownLineEnding(code3)) {
       effects.exit("setextHeadingLine");
       return ok2(code3);
@@ -36888,14 +35868,7 @@ function createTokenizer(parser, initialize, from) {
     return sliceChunks(chunks, token);
   }
   function now() {
-    const { line, column, offset, _index, _bufferIndex } = point3;
-    return {
-      line,
-      column,
-      offset,
-      _index,
-      _bufferIndex
-    };
+    return Object.assign({}, point3);
   }
   function defineSkip(value) {
     columnStart[value.line] = value.column;
@@ -36972,10 +35945,10 @@ function createTokenizer(parser, initialize, from) {
       let constructIndex;
       let currentConstruct;
       let info2;
-      return Array.isArray(constructs2) ? handleListOfConstructs(constructs2) : "tokenize" in constructs2 ? (
-        // @ts-expect-error Looks like a construct.
-        handleListOfConstructs([constructs2])
-      ) : handleMapOfConstructs(constructs2);
+      return Array.isArray(constructs2) ? (
+        /* c8 ignore next 1 */
+        handleListOfConstructs(constructs2)
+      ) : "tokenize" in constructs2 ? handleListOfConstructs([constructs2]) : handleMapOfConstructs(constructs2);
       function handleMapOfConstructs(map5) {
         return start;
         function start(code3) {
@@ -37088,12 +36061,7 @@ function sliceChunks(chunks, token) {
   } else {
     view = chunks.slice(startIndex, endIndex);
     if (startBufferIndex > -1) {
-      const head = view[0];
-      if (typeof head === "string") {
-        view[0] = head.slice(startBufferIndex);
-      } else {
-        view.shift();
-      }
+      view[0] = view[0].slice(startBufferIndex);
     }
     if (endBufferIndex > 0) {
       view.push(chunks[endIndex].slice(0, endBufferIndex));
@@ -37220,11 +36188,10 @@ var disable = {
 };
 
 // node_modules/micromark/lib/parse.js
-function parse2(options) {
-  const settings = options || {};
-  const constructs2 = (
-    /** @type {FullNormalizedExtension} */
-    combineExtensions([constructs_exports, ...settings.extensions || []])
+function parse2(options = {}) {
+  const constructs2 = combineExtensions(
+    // @ts-expect-error Same as above.
+    [constructs_exports].concat(options.extensions || [])
   );
   const parser = {
     defined: [],
@@ -37338,8 +36305,8 @@ function postprocess(events) {
 function decodeNumericCharacterReference(value, base2) {
   const code3 = Number.parseInt(value, base2);
   if (
-    // C0 except for HT, LF, FF, CR, space.
-    code3 < 9 || code3 === 11 || code3 > 13 && code3 < 32 || // Control character (DEL) of C0, and C1 controls.
+    // C0 except for HT, LF, FF, CR, space
+    code3 < 9 || code3 === 11 || code3 > 13 && code3 < 32 || // Control character (DEL) of the basic block and C1 controls.
     code3 > 126 && code3 < 160 || // Lone high surrogates and low surrogates.
     code3 > 55295 && code3 < 57344 || // Noncharacters.
     code3 > 64975 && code3 < 65008 || (code3 & 65535) === 65535 || (code3 & 65535) === 65534 || // Out of range
@@ -37390,6 +36357,7 @@ var fromMarkdown = (
     }
     return compiler(options)(
       postprocess(
+        // @ts-expect-error: micromark types need to accept `null`.
         parse2(options).document().write(preprocess()(value, encoding, true))
       )
     );
@@ -37628,10 +36596,9 @@ function compiler(options) {
         if (event[1].type === "listItemPrefix") {
           listItem3 = {
             type: "listItem",
+            // @ts-expect-error Patched
             _spread: false,
-            start: Object.assign({}, event[1].start),
-            // @ts-expect-error: we’ll add `end` in a second.
-            end: void 0
+            start: Object.assign({}, event[1].start)
           };
           events.splice(index2, 0, ["enter", listItem3, event[2]]);
           index2++;
@@ -38002,6 +36969,7 @@ function compiler(options) {
       type: "list",
       ordered: token.type === "listOrdered",
       start: null,
+      // @ts-expect-error Patched.
       spread: token._spread,
       children: []
     };
@@ -38009,6 +36977,7 @@ function compiler(options) {
   function listItem2(token) {
     return {
       type: "listItem",
+      // @ts-expect-error Patched.
       spread: token._spread,
       checked: null,
       children: []
@@ -40382,6 +39351,7 @@ function gfmStrikethrough(options) {
                 nextEvents,
                 nextEvents.length,
                 0,
+                // @ts-expect-error: to do: update `mdast-util-types` to allow explicit `undefined`s.
                 resolveAll(insideSpan2, events.slice(open + 1, index2), context)
               );
             }
