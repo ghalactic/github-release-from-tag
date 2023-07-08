@@ -39,8 +39,6 @@ describe("End-to-end tests", () => {
         tagName
       );
       release = await getReleaseByTag(tagName);
-
-      if (release?.html_url != null) await page.goto(release?.html_url);
     }, SETUP_TIMEOUT);
 
     it("should produce a workflow run that concludes in success", () => {
