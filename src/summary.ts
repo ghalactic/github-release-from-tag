@@ -5,6 +5,7 @@ import {
   Table,
   TableCell,
   TableRow,
+  RootContent,
 } from "mdast";
 import { gfmToMarkdown } from "mdast-util-gfm";
 import { toMarkdown } from "mdast-util-to-markdown";
@@ -38,7 +39,7 @@ export function renderSummary({
         ...detailsAST(),
         ...bodyAST(),
         ...definitionsAST(),
-      ],
+      ] as Content[],
     },
     {
       extensions: [gfmToMarkdown()],
@@ -47,7 +48,7 @@ export function renderSummary({
 
   return rendered.replace(BODY_TOKEN, body);
 
-  function titleAST(): Content[] {
+  function titleAST(): RootContent[] {
     const action = (() => {
       if (draft) return wasCreated ? "Drafted release " : "Re-drafted release ";
       return wasCreated ? "Released " : "Re-released ";
@@ -79,7 +80,7 @@ export function renderSummary({
     ];
   }
 
-  function taggerAST(): Content[] {
+  function taggerAST(): RootContent[] {
     if (!hasTagger) return [];
 
     const { avatarUrl, login } = tagger;
@@ -110,7 +111,7 @@ export function renderSummary({
     ];
   }
 
-  function detailsAST(): Content[] {
+  function detailsAST(): RootContent[] {
     const headings: PhrasingContent[][] = [
       [
         {
@@ -177,7 +178,7 @@ export function renderSummary({
     return [createTableAST(align, headings, [cells])];
   }
 
-  function bodyAST(): Content[] {
+  function bodyAST(): RootContent[] {
     if (!body.trim()) return [];
 
     return createDetailsAST("<strong>Release body</strong>", [
@@ -188,8 +189,8 @@ export function renderSummary({
     ]);
   }
 
-  function definitionsAST(): Content[] {
-    const definitions: Content[] = [];
+  function definitionsAST(): RootContent[] {
+    const definitions: RootContent[] = [];
 
     if (discussion_url) {
       definitions.push({
@@ -223,8 +224,8 @@ export function renderSummary({
 
   function createDetailsAST(
     summaryHTML: string,
-    children: Content[],
-  ): Content[] {
+    children: RootContent[],
+  ): RootContent[] {
     return [
       {
         type: "html",
