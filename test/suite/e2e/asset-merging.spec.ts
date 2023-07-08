@@ -31,7 +31,7 @@ describe("End-to-end tests", () => {
           id: "listAssets",
           run: `echo "assets=$(cat assets.json)" >> $GITHUB_OUTPUT`,
         },
-      ]
+      ],
     );
 
     const tagAnnotation = "1.0.0";
@@ -77,14 +77,14 @@ describe("End-to-end tests", () => {
         workflow,
         {
           files,
-        }
+        },
       );
 
       await createTag(headSha, tagName, tagAnnotation);
 
       workflowRun = await waitForCompletedTagWorkflowRun(
         workflowFileName,
-        tagName
+        tagName,
       );
       release = await getReleaseByTag(tagName);
     }, SETUP_TIMEOUT);
@@ -107,7 +107,7 @@ describe("End-to-end tests", () => {
           content_type: contentType,
           label,
         });
-      }
+      },
     );
   });
 });

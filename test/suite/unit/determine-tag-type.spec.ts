@@ -34,7 +34,7 @@ describe("determineTagType()", () => {
         "init",
         "--quiet",
         "--initial-branch=main",
-        mainPath
+        mainPath,
       );
       await execGit("-C", mainPath, "config", "user.email", "user@example.org");
       await execGit("-C", mainPath, "config", "user.name", "User");
@@ -44,7 +44,7 @@ describe("determineTagType()", () => {
         "commit",
         "--quiet",
         "--allow-empty",
-        "--message=commit-message-a"
+        "--message=commit-message-a",
       );
       await execGit(
         "-C",
@@ -52,7 +52,7 @@ describe("determineTagType()", () => {
         "tag",
         "--annotate",
         "--message=tag-message-a",
-        "tag-a"
+        "tag-a",
       );
       await execGit("-C", mainPath, "tag", "--no-sign", "tag-b"); // signing would create annotated tags
 

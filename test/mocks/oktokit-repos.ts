@@ -50,7 +50,7 @@ export function createRepos({
 }: CreateReposParameters = {}): ReposApi {
   return {
     async createRelease(
-      parameters: CreateReleaseParameters
+      parameters: CreateReleaseParameters,
     ): Promise<CreateReleaseResponse> {
       if (createReleaseError) throw createReleaseError;
 
@@ -67,7 +67,7 @@ export function createRepos({
           body: JSON.stringify(
             { releaseNotesBody: true, owner, repo, tag_name },
             null,
-            2
+            2,
           ),
         },
       } as unknown as GenerateReleaseNotesResponse;
@@ -86,7 +86,7 @@ export function createRepos({
     },
 
     async updateRelease(
-      data: UpdateReleaseParameters
+      data: UpdateReleaseParameters,
     ): Promise<UpdateReleaseResponse> {
       if (updateReleaseError) throw updateReleaseError;
 

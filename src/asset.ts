@@ -51,7 +51,7 @@ export async function modifyReleaseAssets({
     const [uploadResults, updateResults] = await Promise.all([
       Promise.allSettled(toUpload.map((desired) => uploadAsset(desired))),
       Promise.allSettled(
-        toUpdate.map(([existing, desired]) => updateAsset(existing, desired))
+        toUpdate.map(([existing, desired]) => updateAsset(existing, desired)),
       ),
     ]);
 
@@ -62,18 +62,18 @@ export async function modifyReleaseAssets({
       info,
       error,
       uploadResult,
-      "{successCount} uploaded, {failureCount} failed to upload"
+      "{successCount} uploaded, {failureCount} failed to upload",
     );
     logResults(
       info,
       error,
       updateResult,
-      "{successCount} updated, {failureCount} failed to update"
+      "{successCount} updated, {failureCount} failed to update",
     );
 
     const isSuccess = uploadResult.isSuccess && updateResult.isSuccess;
     const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(
-      compareAsset
+      compareAsset,
     );
 
     return [isSuccess, sortedAssets];
@@ -83,7 +83,7 @@ export async function modifyReleaseAssets({
     info(
       `Deleting existing release asset ${JSON.stringify(existing.name)} (${
         existing.id
-      })`
+      })`,
     );
 
     await repos.deleteReleaseAsset({
@@ -95,7 +95,7 @@ export async function modifyReleaseAssets({
 
   async function updateAsset(
     existing: AssetData,
-    desired: AssetConfig
+    desired: AssetConfig,
   ): Promise<NormalizedAsset> {
     await deleteAsset(existing);
 
@@ -109,7 +109,9 @@ export async function modifyReleaseAssets({
     const data = await readFile(path);
 
     info(
-      `Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`
+      `Uploading release asset ${JSON.stringify(
+        desired.name,
+      )} (${contentType})`,
     );
 
     const { data: assetData } = (await request({
@@ -128,8 +130,8 @@ export async function modifyReleaseAssets({
       `Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(
         normalized,
         null,
-        2
-      )}`
+        2,
+      )}`,
     );
 
     return normalized;
@@ -139,7 +141,7 @@ export async function modifyReleaseAssets({
 export async function findAssets(
   info: InfoFn,
   warning: WarningFn,
-  assets: AssetConfig[]
+  assets: AssetConfig[],
 ): Promise<AssetConfig[]> {
   const found = [];
   for (const asset of assets) found.push(...(await findAsset(info, asset)));
@@ -157,7 +159,7 @@ export async function findAssets(
 
     const quotedName = JSON.stringify(name);
     warning(
-      `Release asset ${quotedName} found multiple times. Only the first instance will be used.`
+      `Release asset ${quotedName} found multiple times. Only the first instance will be used.`,
     );
 
     return false;
@@ -166,7 +168,7 @@ export async function findAssets(
 
 async function findAsset(
   info: InfoFn,
-  asset: AssetConfig
+  asset: AssetConfig,
 ): Promise<AssetConfig[]> {
   const { path: pattern, optional: isOptional } = asset;
   const globber = await createGlob(pattern);
@@ -183,14 +185,14 @@ async function findAsset(
 
     if (isOptional) {
       info(
-        `No release assets found for optional asset with path glob pattern ${quotedPattern}`
+        `No release assets found for optional asset with path glob pattern ${quotedPattern}`,
       );
 
       return [];
     }
 
     throw new Error(
-      `No release assets found for mandatory asset with path glob pattern ${quotedPattern}`
+      `No release assets found for mandatory asset with path glob pattern ${quotedPattern}`,
     );
   }
 
@@ -224,14 +226,14 @@ function normalizeAssetConfig({
 
 function diffAssets(
   existingAssets: AssetData[],
-  desiredAssets: AssetConfig[]
+  desiredAssets: AssetConfig[],
 ): { toUpdate: [AssetData, AssetConfig][]; toUpload: AssetConfig[] } {
   const toUpdate: [AssetData, AssetConfig][] = [];
   const toUpload: AssetConfig[] = [];
 
   for (const desired of desiredAssets) {
     const existing = existingAssets.find(
-      (existing) => existing.name === desired.name
+      (existing) => existing.name === desired.name,
     );
 
     if (existing == null) {
@@ -256,7 +258,7 @@ type ResultAnalysis = {
 };
 
 function analyzeResults(
-  results: PromiseSettledResult<NormalizedAsset>[]
+  results: PromiseSettledResult<NormalizedAsset>[],
 ): ResultAnalysis {
   let isSuccess = true;
   let successCount = 0;
@@ -288,7 +290,7 @@ async function logResults(
   info: InfoFn,
   error: ErrorFn,
   resultAnalysis: ResultAnalysis,
-  messageTemplate: string
+  messageTemplate: string,
 ): Promise<void> {
   const { successCount, failureCount, failureReasons } = resultAnalysis;
   const message = messageTemplate

@@ -75,7 +75,7 @@ async function readConfigFile(): Promise<string | undefined> {
 
 function getConfigOverrides(
   getInput: GetInputFn,
-  base: Config
+  base: Config,
 ): ConfigOverrides | undefined {
   const discussionOverrides: DiscussionOverrides = {};
 
@@ -134,7 +134,7 @@ function parseConfig(yaml: string | undefined): Config {
     const original = JSON.stringify(yaml);
 
     throw new Error(
-      `Parsing of release configuration failed with ${message}. Provided value: ${original}`
+      `Parsing of release configuration failed with ${message}. Provided value: ${original}`,
     );
   }
 
@@ -157,7 +157,7 @@ function parseAssets(getInput: GetInputFn): AssetConfig[] {
     const original = JSON.stringify(yaml);
 
     throw new Error(
-      `Parsing of assets action input failed with ${message}. Provided value: ${original}`
+      `Parsing of assets action input failed with ${message}. Provided value: ${original}`,
     );
   }
 
@@ -171,7 +171,7 @@ function parseAssets(getInput: GetInputFn): AssetConfig[] {
 }
 
 function parseInputDiscussionReactions(
-  reactionList: string
+  reactionList: string,
 ): DiscussionReaction[] {
   const reactions: DiscussionReaction[] = [];
 
@@ -180,7 +180,7 @@ function parseInputDiscussionReactions(
       const quotedReaction = JSON.stringify(reaction);
 
       throw new Error(
-        `Validation of discussionReactions action input failed. Invalid reaction ${quotedReaction}.`
+        `Validation of discussionReactions action input failed. Invalid reaction ${quotedReaction}.`,
       );
     }
 
@@ -198,7 +198,7 @@ function parseReleaseReactions(reactionList: string): ReleaseReaction[] {
       const quotedReaction = JSON.stringify(reaction);
 
       throw new Error(
-        `Validation of reactions action input failed. Invalid reaction ${quotedReaction}.`
+        `Validation of reactions action input failed. Invalid reaction ${quotedReaction}.`,
       );
     }
 
@@ -209,7 +209,7 @@ function parseReleaseReactions(reactionList: string): ReleaseReaction[] {
 }
 
 function isDiscussionReaction(
-  reaction: string
+  reaction: string,
 ): reaction is DiscussionReaction {
   return DISCUSSION_REACTIONS.includes(reaction as DiscussionReaction);
 }

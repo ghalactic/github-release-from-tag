@@ -30166,7 +30166,9 @@ async function modifyReleaseAssets({
     const contentType = (0, import_mime_types.lookup)(path2) || "application/octet-stream";
     const data = await readFile(path2);
     info2(
-      `Uploading release asset ${JSON.stringify(desired.name)} (${contentType})`
+      `Uploading release asset ${JSON.stringify(
+        desired.name
+      )} (${contentType})`
     );
     const { data: assetData } = await request({
       method: "POST",

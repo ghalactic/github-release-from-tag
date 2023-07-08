@@ -98,7 +98,7 @@ paragraph
       {
         // makes a filename like "file-c.2572064453.txt"
         path: `assets/text/file-c.${Math.floor(
-          Math.random() * 10000000000
+          Math.random() * 10000000000,
         )}.txt`,
         content: "file-c\n",
       },
@@ -128,21 +128,21 @@ paragraph
         {
           commit: parentCommit,
           files,
-        }
+        },
       );
 
       await createTag(headSha, tagName, tagAnnotation);
 
       workflowRun = await waitForCompletedTagWorkflowRun(
         workflowFileName,
-        tagName
+        tagName,
       );
       annotations = await listAnnotationsByWorkflowRun(workflowRun);
       release = await getReleaseByTag(tagName);
       discussionReactionGroups = await getDiscussionReactionGroupsByRelease(
         owner,
         repo,
-        release
+        release,
       );
 
       if (release?.html_url != null) await page.goto(release?.html_url);
@@ -155,7 +155,7 @@ paragraph
 
         try {
           outputs[title.substring(outputsPrefix.length)] = JSON.parse(
-            message ?? "null"
+            message ?? "null",
           );
         } catch (error) {
           const message = isError(error) ? error.message : "unknown cause";
@@ -191,7 +191,7 @@ paragraph
       "should produce the expected release body elements ($description)",
       async ({ expression }) => {
         expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty();
-      }
+      },
     );
 
     it.each`
@@ -211,14 +211,14 @@ paragraph
           content_type: contentType,
           label,
         });
-      }
+      },
     );
 
     it("should produce the expected release discussion", () => {
       expect(release.discussion_url).toMatch(
         new RegExp(
-          `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`
-        )
+          `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`,
+        ),
       );
     });
 
@@ -235,7 +235,7 @@ paragraph
         const { reactions: { [reaction]: actual = 0 } = {} } = release;
 
         expect(actual).toBeGreaterThan(0);
-      }
+      },
     );
 
     it.each([
@@ -251,33 +251,33 @@ paragraph
       "should produce the expected release discussion reactions (%s)",
       (reaction) => {
         const group = discussionReactionGroups.find(
-          (group) => group.content === REACTION_NAMES[reaction]
+          (group) => group.content === REACTION_NAMES[reaction],
         );
 
         expect(group?.reactors?.totalCount ?? 0).toBeGreaterThan(0);
-      }
+      },
     );
 
     describe("Outputs", () => {
       it("should produce the correct assets output", () => {
         const downloadUrlPrefix = `https://github.com/${owner}/${repo}/releases/download/${encodeURIComponent(
-          tagName
+          tagName,
         )}`;
         const commonFields = {
           apiUrl: expect.stringMatching(
             new RegExp(
-              `^https://api.github.com/repos/${regExpOwner}/${regExpRepo}/releases/assets/\\d+$`
-            )
+              `^https://api.github.com/repos/${regExpOwner}/${regExpRepo}/releases/assets/\\d+$`,
+            ),
           ),
           id: expect.any(Number),
           nodeId: expect.any(String),
           state: "uploaded",
           downloadCount: expect.any(Number),
           createdAt: expect.stringMatching(
-            /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/
+            /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/,
           ),
           updatedAt: expect.stringMatching(
-            /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/
+            /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/,
           ),
         };
 
@@ -337,7 +337,7 @@ paragraph
 
       it("should produce the correct discussionNumber output", () => {
         expect(outputs.discussionNumber).toBe(
-          String(getDiscussionNumberByUrl(release.discussion_url ?? ""))
+          String(getDiscussionNumberByUrl(release.discussion_url ?? "")),
         );
       });
 
@@ -371,7 +371,7 @@ paragraph
 
       it("should produce the correct taggerAvatarUrl output", () => {
         expect(outputs.taggerAvatarUrl).toContain(
-          "https://avatars.githubusercontent.com/"
+          "https://avatars.githubusercontent.com/",
         );
       });
 
@@ -385,7 +385,7 @@ paragraph
 
       it("should produce the correct tagBodyRendered output", () => {
         expect(outputs.tagBodyRendered).toContain(
-          "this should form one paragraph"
+          "this should form one paragraph",
         );
       });
 
@@ -403,7 +403,7 @@ paragraph
 
       it("should produce the correct tagSubject output", () => {
         expect(outputs.tagSubject).toBe(
-          "1.0.0 this should form the release name"
+          "1.0.0 this should form the release name",
         );
       });
     });

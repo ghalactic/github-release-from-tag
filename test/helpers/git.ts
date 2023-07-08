@@ -7,7 +7,7 @@ export async function readEmptyTreeHash(): Promise<string> {
     const { stdout } = await getExecOutput(
       "git",
       ["hash-object", "-t", "tree", "/dev/null"],
-      { silent: true }
+      { silent: true },
     );
     emptyTreeHash = stdout.trim();
   }

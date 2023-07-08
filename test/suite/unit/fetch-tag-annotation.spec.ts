@@ -50,14 +50,14 @@ describe("fetchTagAnnotation()", () => {
         "init",
         "--quiet",
         "--initial-branch=main",
-        paths.origin
+        paths.origin,
       );
       await execGit(
         "-C",
         paths.origin,
         "config",
         "user.email",
-        "user@example.org"
+        "user@example.org",
       );
       await execGit("-C", paths.origin, "config", "user.name", "User");
       await execGit(
@@ -66,7 +66,7 @@ describe("fetchTagAnnotation()", () => {
         "commit",
         "--quiet",
         "--allow-empty",
-        "--message=commit-message-a"
+        "--message=commit-message-a",
       );
       await execGit(
         "-C",
@@ -75,7 +75,7 @@ describe("fetchTagAnnotation()", () => {
         "--no-sign",
         "--annotate",
         "--message=tag-message-a",
-        "tag-a"
+        "tag-a",
       );
       await execGit(
         "-C",
@@ -84,7 +84,7 @@ describe("fetchTagAnnotation()", () => {
         "--no-sign",
         "--annotate",
         "--message=tag-message-b",
-        "tag-b"
+        "tag-b",
       );
 
       // create a shallow clone repo with a single lightweight tag, and switch to it
@@ -96,14 +96,14 @@ describe("fetchTagAnnotation()", () => {
         "--depth=1",
         "--no-tags",
         fileUrl(paths.origin),
-        paths.clone
+        paths.clone,
       );
       await execGit(
         "-C",
         paths.clone,
         "config",
         "user.email",
-        "user@example.org"
+        "user@example.org",
       );
       await execGit("-C", paths.clone, "config", "user.name", "User");
       await execGit("-C", paths.clone, "tag", "--no-sign", "tag-a"); // signing would create annotated tags
@@ -113,7 +113,7 @@ describe("fetchTagAnnotation()", () => {
         "switch",
         "--quiet",
         "--detach",
-        "tag-a"
+        "tag-a",
       );
 
       chdir(paths.clone);
@@ -125,7 +125,7 @@ describe("fetchTagAnnotation()", () => {
 
       // fetch should succeed
       expect(await fetchTagAnnotation({ group, tag: "tag-a", silent })).toBe(
-        true
+        true,
       );
 
       // the tag should now be annotated
@@ -136,13 +136,13 @@ describe("fetchTagAnnotation()", () => {
           "-n1",
           "--format",
           "%(contents:subject)",
-          "tag-a"
-        )
+          "tag-a",
+        ),
       ).toBe("tag-message-a");
 
       // other tags should not have been fetched
       await expect(async () =>
-        execGit("cat-file", "-t", "tag-b")
+        execGit("cat-file", "-t", "tag-b"),
       ).rejects.toThrow();
     });
   });
@@ -156,14 +156,14 @@ describe("fetchTagAnnotation()", () => {
         "init",
         "--quiet",
         "--initial-branch=main",
-        paths.origin
+        paths.origin,
       );
       await execGit(
         "-C",
         paths.origin,
         "config",
         "user.email",
-        "user@example.org"
+        "user@example.org",
       );
       await execGit("-C", paths.origin, "config", "user.name", "User");
       await execGit(
@@ -172,7 +172,7 @@ describe("fetchTagAnnotation()", () => {
         "commit",
         "--quiet",
         "--allow-empty",
-        "--message=commit-message-a"
+        "--message=commit-message-a",
       );
 
       // create a shallow clone repo with a single lightweight tag, and switch to it
@@ -184,14 +184,14 @@ describe("fetchTagAnnotation()", () => {
         "--depth=1",
         "--no-tags",
         fileUrl(paths.origin),
-        paths.clone
+        paths.clone,
       );
       await execGit(
         "-C",
         paths.clone,
         "config",
         "user.email",
-        "user@example.org"
+        "user@example.org",
       );
       await execGit("-C", paths.clone, "config", "user.name", "User");
       await execGit("-C", paths.clone, "tag", "--no-sign", "tag-a"); // signing would create annotated tags
@@ -201,7 +201,7 @@ describe("fetchTagAnnotation()", () => {
         "switch",
         "--quiet",
         "--detach",
-        "tag-a"
+        "tag-a",
       );
 
       chdir(paths.clone);
@@ -209,7 +209,7 @@ describe("fetchTagAnnotation()", () => {
 
     it("should fail to fetch the annotated tag from origin", async () => {
       expect(await fetchTagAnnotation({ group, tag: "tag-a", silent })).toBe(
-        false
+        false,
       );
     });
   });

@@ -16,7 +16,7 @@ export function buildBranchName(runId: string, label: string): string {
 export function buildTagName(
   version: string,
   runId: string,
-  label: string
+  label: string,
 ): string {
   return `${version}+ci-${runId}-${label}`;
 }
@@ -24,7 +24,7 @@ export function buildTagName(
 export function buildWorkflow(
   branchName: string,
   publishOptions: unknown = {},
-  preSteps: unknown[] = []
+  preSteps: unknown[] = [],
 ): string {
   const exposeSteps = [];
 

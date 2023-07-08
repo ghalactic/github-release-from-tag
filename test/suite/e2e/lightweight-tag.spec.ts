@@ -28,13 +28,13 @@ describe("End-to-end tests", () => {
     beforeAll(async () => {
       const { headSha = "", workflowFileName } = await createBranchForCi(
         branchName,
-        workflow
+        workflow,
       );
       await createTag(headSha, tagName);
 
       workflowRun = await waitForCompletedTagWorkflowRun(
         workflowFileName,
-        tagName
+        tagName,
       );
       annotations = await listAnnotationsByWorkflowRun(workflowRun);
     }, SETUP_TIMEOUT);

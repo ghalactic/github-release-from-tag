@@ -14,12 +14,12 @@ const ajv = new Ajv({
 
 export const validateConfig = createValidate<Config>(
   CONFIG,
-  "release configuration"
+  "release configuration",
 );
 
 export const validateAssets = createValidate<AssetConfig[]>(
   ASSETS,
-  "release assets configuration"
+  "release assets configuration",
 );
 
 class ValidateError extends Error {
@@ -34,7 +34,7 @@ class ValidateError extends Error {
 
 function createValidate<T>(
   schemaId: string,
-  label: string
+  label: string,
 ): (value: unknown) => T {
   return function validate(value) {
     const validator = ajv.getSchema(schemaId);
@@ -46,7 +46,7 @@ function createValidate<T>(
 
     const error = new ValidateError(
       `Invalid ${label}:\n${renderErrors(errors)}`,
-      errors
+      errors,
     );
 
     throw error;

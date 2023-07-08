@@ -21,7 +21,7 @@ describe("readConfig()", () => {
     chdir(join(fixturesPath, "additional-properties"));
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Invalid release configuration"
+      "Invalid release configuration",
     );
   });
 
@@ -115,7 +115,7 @@ describe("readConfig()", () => {
     chdir(join(fixturesPath, "invalid-yaml"));
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Parsing of release configuration failed"
+      "Parsing of release configuration failed",
     );
   });
 
@@ -251,7 +251,7 @@ describe("readConfig()", () => {
     const getInput = (name: string) => (name === "assets" ? "{" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Parsing of assets action input failed"
+      "Parsing of assets action input failed",
     );
   });
 
@@ -260,7 +260,7 @@ describe("readConfig()", () => {
     const getInput = (name: string) => (name === "assets" ? "{}" : "");
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      "Validation of assets action input failed"
+      "Validation of assets action input failed",
     );
   });
 
@@ -270,7 +270,7 @@ describe("readConfig()", () => {
       name === "reactions" ? "hooray,not-a-reaction,heart" : "";
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      'Validation of reactions action input failed. Invalid reaction "not-a-reaction".'
+      'Validation of reactions action input failed. Invalid reaction "not-a-reaction".',
     );
   });
 
@@ -280,7 +280,7 @@ describe("readConfig()", () => {
       name === "discussionReactions" ? "confused,not-a-reaction,-1" : "";
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
-      'Validation of discussionReactions action input failed. Invalid reaction "not-a-reaction".'
+      'Validation of discussionReactions action input failed. Invalid reaction "not-a-reaction".',
     );
   });
 });

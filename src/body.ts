@@ -41,7 +41,7 @@ export async function renderReleaseBody({
         info(processed);
 
         return processed;
-      }
+      },
     );
 
     setOutput(TAG_BODY_RENDERED, renderedTagBody);
@@ -58,7 +58,7 @@ export async function renderReleaseBody({
         info(body);
 
         return body;
-      }
+      },
     );
 
     setOutput(GENERATED_RELEASE_NOTES, releaseNotes);

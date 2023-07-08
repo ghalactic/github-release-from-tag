@@ -20,16 +20,16 @@ describe("renderSummary()", () => {
   `("should $label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
     const args = load(
-      (await readFile(join(fixturePath, "args.yml"))).toString()
+      (await readFile(join(fixturePath, "args.yml"))).toString(),
     ) as Parameters<typeof renderSummary>[0];
     const release = load(
-      (await readFile(join(fixturePath, "release.yml"))).toString()
+      (await readFile(join(fixturePath, "release.yml"))).toString(),
     ) as ReleaseData;
     const tagger = load(
-      (await readFile(join(fixturePath, "tagger.yml"))).toString()
+      (await readFile(join(fixturePath, "tagger.yml"))).toString(),
     ) as TaggerData;
     const expected = String(
-      (await readFile(join(fixturePath, "expected.md"))).toString()
+      (await readFile(join(fixturePath, "expected.md"))).toString(),
     );
 
     expect(renderSummary({ ...args, release, tagger })).toBe(expected);

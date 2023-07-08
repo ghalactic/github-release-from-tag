@@ -133,62 +133,62 @@ describe("parseRef()", () => {
     "should be able to detect stable shorthand tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isStable: true });
-    }
+    },
   );
 
   it.each(shorthandFixtures.validUnstable)(
     "should be able to detect unstable shorthand tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isStable: false });
-    }
+    },
   );
 
   it.each(semVerFixtures.valid)(
     "should be able to detect SemVer tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isSemVer: true });
-    }
+    },
   );
 
   it.each(semVerFixtures.valid)(
     'should be able to detect SemVer tag refs with a "v" prefix (v%s)',
     (tag) => {
       expect(parseRef(`refs/tags/v${tag}`)).toMatchObject({ isSemVer: true });
-    }
+    },
   );
 
   it.each(semVerFixtures.invalid)(
     "should be able to detect non-SemVer tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isSemVer: false });
-    }
+    },
   );
 
   it.each(semVerFixtures.invalid)(
     'should be able to detect non-SemVer tag refs with a "v" prefix (v%s)',
     (tag) => {
       expect(parseRef(`refs/tags/v${tag}`)).toMatchObject({ isSemVer: false });
-    }
+    },
   );
 
   it.each(semVerFixtures.validStable)(
     "should be able to detect stable SemVer tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isStable: true });
-    }
+    },
   );
 
   it.each(semVerFixtures.validStable)(
     'should be able to detect stable SemVer tag refs with a "v" prefix (v%s)',
     (tag) => {
       expect(parseRef(`refs/tags/v${tag}`)).toMatchObject({ isStable: true });
-    }
+    },
   );
 
   it.each(semVerFixtures.validUnstable)(
     "should be able to detect unstable SemVer tag refs (%s)",
     (tag) => {
       expect(parseRef(`refs/tags/${tag}`)).toMatchObject({ isStable: false });
-    }
+    },
   );
 });

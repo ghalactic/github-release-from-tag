@@ -83,20 +83,20 @@ summary:
         workflow,
         {
           files,
-        }
+        },
       );
 
       await createTag(headSha, tagName, tagAnnotation);
 
       workflowRun = await waitForCompletedTagWorkflowRun(
         workflowFileName,
-        tagName
+        tagName,
       );
       release = await getReleaseByTag(tagName);
       discussionReactionGroups = await getDiscussionReactionGroupsByRelease(
         owner,
         repo,
-        release
+        release,
       );
 
       if (release?.html_url != null) await page.goto(release?.html_url);
@@ -115,8 +115,8 @@ summary:
     it("should produce the expected release discussion", () => {
       expect(release.discussion_url).toMatch(
         new RegExp(
-          `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`
-        )
+          `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`,
+        ),
       );
     });
 
@@ -133,7 +133,7 @@ summary:
         const { reactions: { [reaction]: actual = 0 } = {} } = release;
 
         expect(actual).toBeGreaterThan(0);
-      }
+      },
     );
 
     it.each([
@@ -149,11 +149,11 @@ summary:
       "should produce the expected release discussion reactions (%s)",
       (reaction) => {
         const group = discussionReactionGroups.find(
-          (group) => group.content === REACTION_NAMES[reaction]
+          (group) => group.content === REACTION_NAMES[reaction],
         );
 
         expect(group?.reactors?.totalCount ?? 0).toBeGreaterThan(0);
-      }
+      },
     );
   });
 });

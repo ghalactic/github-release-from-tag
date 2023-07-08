@@ -24,7 +24,7 @@ export async function configureGit({
     const exitCode = await exec(
       "git",
       ["config", "--global", "--add", "safe.directory", GITHUB_WORKSPACE],
-      { silent }
+      { silent },
     );
 
     return exitCode === 0;
@@ -44,7 +44,7 @@ export async function determineRef({
     const { stdout } = await getExecOutput(
       "git",
       ["describe", "--exact-match", "--all"],
-      { silent }
+      { silent },
     );
     const ref = `refs/${stdout.trim()}`;
     info(ref);
@@ -67,7 +67,7 @@ export async function determineTagType({
       "Determining the tag type",
       async () => {
         return getExecOutput("git", ["cat-file", "-t", tag], { silent });
-      }
+      },
     );
 
     return [true, type.trim()];
@@ -100,8 +100,8 @@ export async function fetchTagAnnotation({
           "--force",
           `refs/tags/${tag}:refs/tags/${tag}`,
         ],
-        { silent }
-      )
+        { silent },
+      ),
     );
 
     return exitCode === 0;
@@ -126,9 +126,9 @@ export async function readTagAnnotation({
         return getExecOutput(
           "git",
           ["tag", "-n1", "--format", "%(contents:subject)", tag],
-          { silent }
+          { silent },
         );
-      }
+      },
     );
     const { stdout: tagBody } = await group(
       "Reading the tag annotation body",
@@ -136,9 +136,9 @@ export async function readTagAnnotation({
         return getExecOutput(
           "git",
           ["tag", "-n1", "--format", "%(contents:body)", tag],
-          { silent }
+          { silent },
         );
-      }
+      },
     );
 
     return [true, tagSubject.trim(), tagBody.trim()];

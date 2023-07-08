@@ -107,12 +107,12 @@ async function main(): Promise<void> {
     info(
       `Release has been explicitly configured to be a ${
         config.prerelease ? "pre-release" : "stable release"
-      }`
+      }`,
     );
 
     if (isStable === config.prerelease) {
       info(
-        `Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`
+        `Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`,
       );
     }
   } else {

@@ -60,7 +60,7 @@ describe("validateConfig()", () => {
 
     expect(actual).toMatch(`  - must NOT have additional properties`);
     expect(actual).toMatch(
-      `  - must have required property 'path' (/assets/0)`
+      `  - must have required property 'path' (/assets/0)`,
     );
   });
 
@@ -70,7 +70,7 @@ describe("validateConfig()", () => {
       expect(() => {
         validateConfig(config);
       }).toThrow(`must be object`);
-    }
+    },
   );
 
   it("should throw for configs with additional properties", () => {
@@ -93,7 +93,7 @@ describe("validateConfig()", () => {
       expect(() => {
         validateConfig(config);
       }).toThrow(`must be array (/assets)`);
-    }
+    },
   );
 
   it.each(nonObjectData)("should throw for non-object assets (%j)", (asset) => {

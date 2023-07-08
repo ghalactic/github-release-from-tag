@@ -53,7 +53,7 @@ export async function createOrUpdateRelease({
         const errors = error.response.data.errors ?? [];
         const isExisting = errors.some(
           ({ resource, code }) =>
-            resource === "Release" && code === "already_exists"
+            resource === "Release" && code === "already_exists",
         );
 
         if (!isExisting) throw error;
@@ -62,7 +62,7 @@ export async function createOrUpdateRelease({
       }
 
       return undefined;
-    }
+    },
   );
 
   if (createdRelease) return [createdRelease, true];
@@ -77,7 +77,7 @@ export async function createOrUpdateRelease({
       info(JSON.stringify(data, null, 2));
 
       return data;
-    }
+    },
   );
 
   // update the existing release
@@ -91,7 +91,7 @@ export async function createOrUpdateRelease({
       info(JSON.stringify(data, null, 2));
 
       return data;
-    }
+    },
   );
 
   return [updatedRelease, false];

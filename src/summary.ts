@@ -42,7 +42,7 @@ export function renderSummary({
     },
     {
       extensions: [gfmToMarkdown()],
-    }
+    },
   );
 
   return rendered.replace(BODY_TOKEN, body);
@@ -105,7 +105,7 @@ export function renderSummary({
             },
           ],
         ],
-        []
+        [],
       ),
     ];
   }
@@ -215,7 +215,7 @@ export function renderSummary({
         label: "tag-url",
         url: tagHtmlUrl,
         title: null,
-      }
+      },
     );
 
     return definitions;
@@ -223,7 +223,7 @@ export function renderSummary({
 
   function createDetailsAST(
     summaryHTML: string,
-    children: Content[]
+    children: Content[],
   ): Content[] {
     return [
       {
@@ -241,7 +241,7 @@ export function renderSummary({
   function createTableAST(
     align: AlignType[] | undefined,
     headings: PhrasingContent[][],
-    rows: PhrasingContent[][][]
+    rows: PhrasingContent[][][],
   ): Table {
     return {
       type: "table",
@@ -261,9 +261,9 @@ export function renderSummary({
               (children): TableCell => ({
                 type: "tableCell",
                 children,
-              })
+              }),
             ),
-          })
+          }),
         ),
       ],
     };

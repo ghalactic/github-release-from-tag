@@ -173,10 +173,10 @@ describe("findAssets()", () => {
     ]);
 
     expect(actual).toContain(
-      'Release asset "file-a.1468898034.txt" found multiple times. Only the first instance will be used.'
+      'Release asset "file-a.1468898034.txt" found multiple times. Only the first instance will be used.',
     );
     expect(actual).toContain(
-      'Release asset "file-a.4228738524.txt" found multiple times. Only the first instance will be used.'
+      'Release asset "file-a.4228738524.txt" found multiple times. Only the first instance will be used.',
     );
   });
 
@@ -203,7 +203,7 @@ describe("findAssets()", () => {
     ]);
 
     expect(actual).toContain(
-      'Release asset "FILE-A.txt" found multiple times. Only the first instance will be used.'
+      'Release asset "FILE-A.txt" found multiple times. Only the first instance will be used.',
     );
   });
 
@@ -222,7 +222,7 @@ describe("findAssets()", () => {
     }
 
     await expect(actual).rejects.toThrow(
-      'No release assets found for mandatory asset with path glob pattern "path/to/nonexistent.*"'
+      'No release assets found for mandatory asset with path glob pattern "path/to/nonexistent.*"',
     );
   });
 });

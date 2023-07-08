@@ -19,7 +19,7 @@ export function createOctokit(): Octokit {
 export async function createFile(
   branch: string,
   path: string,
-  content: string
+  content: string,
 ): Promise<FileContentsData> {
   const octokit = createOctokit();
 
@@ -44,7 +44,7 @@ export async function createBranchForCi(
       path: string;
       content: string;
     }[];
-  } = {}
+  } = {},
 ): Promise<{
   headSha: string | undefined;
   ref: RefData;
@@ -70,7 +70,7 @@ export async function createBranchForCi(
   const workflowFile = await createFile(
     branch,
     `.github/workflows/publish-release.${branch}.yml`,
-    workflow
+    workflow,
   );
 
   const headSha = workflowFile.commit.sha;
@@ -80,7 +80,7 @@ export async function createBranchForCi(
 }
 
 export async function createOrphanBranch(
-  branch: string
+  branch: string,
 ): Promise<{ commit: CommitData; ref: RefData }> {
   const octokit = createOctokit();
 
@@ -103,7 +103,7 @@ export async function createOrphanBranch(
 
 export async function createBranch(
   branch: string,
-  commit: string
+  commit: string,
 ): Promise<RefData> {
   const octokit = createOctokit();
 
@@ -120,7 +120,7 @@ export async function createBranch(
 export async function createTag(
   sha: string,
   tag: string,
-  annotation?: string
+  annotation?: string,
 ): Promise<{ object: TagData | undefined; ref: RefData }> {
   const octokit = createOctokit();
 
@@ -154,7 +154,7 @@ export async function createTag(
 export async function getDiscussionReactionGroupsByRelease(
   owner: string,
   repo: string,
-  release: ReleaseData
+  release: ReleaseData,
 ): Promise<ReactionGroupData[]> {
   const { graphql } = createOctokit();
 
@@ -216,7 +216,7 @@ export async function getReleaseByTag(tag: string): Promise<ReleaseData> {
 }
 
 export async function listAnnotationsByWorkflowRun(
-  workflowRun: WorkflowRunData
+  workflowRun: WorkflowRunData,
 ): Promise<AnnotationData[]> {
   const octokit = createOctokit();
 
@@ -237,7 +237,7 @@ export async function listAnnotationsByWorkflowRun(
 
   if (checkRuns.length < 1)
     throw new Error(
-      `Unable to locate check runs for check suite ${checkSuiteId}`
+      `Unable to locate check runs for check suite ${checkSuiteId}`,
     );
 
   return octokit.paginate(octokit.rest.checks.listAnnotations, {
@@ -261,7 +261,7 @@ export async function listAnnotationsByWorkflowRun(
  */
 export async function waitForCompletedTagWorkflowRun(
   fileName: string,
-  tag: string
+  tag: string,
 ): Promise<WorkflowRunData> {
   const octokit = createOctokit();
 

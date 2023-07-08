@@ -34,7 +34,7 @@ describe("readTagAnnotation()", () => {
         "init",
         "--quiet",
         "--initial-branch=main",
-        mainPath
+        mainPath,
       );
       await execGit("-C", mainPath, "config", "user.email", "user@example.org");
       await execGit("-C", mainPath, "config", "user.name", "User");
@@ -44,7 +44,7 @@ describe("readTagAnnotation()", () => {
         "commit",
         "--quiet",
         "--allow-empty",
-        "--message=commit-message-a"
+        "--message=commit-message-a",
       );
       await execGit(
         "-C",
@@ -52,7 +52,7 @@ describe("readTagAnnotation()", () => {
         "tag",
         "--annotate",
         "--message=subject-a\nsubject-b\n\nbody-a\nbody-b",
-        "tag-a"
+        "tag-a",
       );
 
       chdir(mainPath);

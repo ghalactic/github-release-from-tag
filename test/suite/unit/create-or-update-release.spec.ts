@@ -98,7 +98,7 @@ describe("createOrUpdateRelease()", () => {
       });
 
       await expect(() =>
-        createOrUpdateRelease({ ...staticParams, repos })
+        createOrUpdateRelease({ ...staticParams, repos }),
       ).rejects.toThrow(error);
     });
 
@@ -110,7 +110,7 @@ describe("createOrUpdateRelease()", () => {
       });
 
       await expect(() =>
-        createOrUpdateRelease({ ...staticParams, repos })
+        createOrUpdateRelease({ ...staticParams, repos }),
       ).rejects.toThrow(error);
     });
 
@@ -122,7 +122,7 @@ describe("createOrUpdateRelease()", () => {
       });
 
       await expect(() =>
-        createOrUpdateRelease({ ...staticParams, repos })
+        createOrUpdateRelease({ ...staticParams, repos }),
       ).rejects.toThrow(error);
     });
   });
