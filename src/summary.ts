@@ -1,6 +1,5 @@
 import {
   AlignType,
-  Content,
   PhrasingContent,
   Table,
   TableCell,
@@ -39,7 +38,7 @@ export function renderSummary({
         ...detailsAST(),
         ...bodyAST(),
         ...definitionsAST(),
-      ] as Content[],
+      ],
     },
     {
       extensions: [gfmToMarkdown()],

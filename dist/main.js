@@ -23,9 +23,9 @@ var __esm = (fn, res) => function __init() {
 var __commonJS = (cb, mod) => function __require2() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var __export = (target, all2) => {
-  for (var name in all2)
-    __defProp(target, name, { get: all2[name], enumerable: true });
+var __export = (target, all3) => {
+  for (var name in all3)
+    __defProp(target, name, { get: all3[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -226,12 +226,12 @@ function v1(options, buf, offset) {
   let i = buf && offset || 0;
   const b = buf || new Array(16);
   options = options || {};
-  let node2 = options.node || _nodeId;
+  let node3 = options.node || _nodeId;
   let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
-  if (node2 == null || clockseq == null) {
+  if (node3 == null || clockseq == null) {
     const seedBytes = options.random || (options.rng || rng)();
-    if (node2 == null) {
-      node2 = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+    if (node3 == null) {
+      node3 = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
     }
     if (clockseq == null) {
       clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
@@ -266,7 +266,7 @@ function v1(options, buf, offset) {
   b[i++] = clockseq >>> 8 | 128;
   b[i++] = clockseq & 255;
   for (let n = 0; n < 6; ++n) {
-    b[i + n] = node2[n];
+    b[i + n] = node3[n];
   }
   return buf || stringify_default(b);
 }
@@ -1787,8 +1787,8 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addRaw(text5, addEOL = false) {
-        this._buffer += text5;
+      addRaw(text6, addEOL = false) {
+        this._buffer += text6;
         return addEOL ? this.addEOL() : this;
       }
       /**
@@ -1807,9 +1807,9 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addCodeBlock(code3, lang) {
+      addCodeBlock(code4, lang) {
         const attrs = Object.assign({}, lang && { lang });
-        const element = this.wrap("pre", this.wrap("code", code3), attrs);
+        const element = this.wrap("pre", this.wrap("code", code4), attrs);
         return this.addRaw(element).addEOL();
       }
       /**
@@ -1884,10 +1884,10 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addHeading(text5, level) {
+      addHeading(text6, level) {
         const tag = `h${level}`;
         const allowedTag = ["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag) ? tag : "h1";
-        const element = this.wrap(allowedTag, text5);
+        const element = this.wrap(allowedTag, text6);
         return this.addRaw(element).addEOL();
       }
       /**
@@ -1916,9 +1916,9 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addQuote(text5, cite) {
+      addQuote(text6, cite) {
         const attrs = Object.assign({}, cite && { cite });
-        const element = this.wrap("blockquote", text5, attrs);
+        const element = this.wrap("blockquote", text6, attrs);
         return this.addRaw(element).addEOL();
       }
       /**
@@ -1929,8 +1929,8 @@ var require_summary = __commonJS({
        *
        * @returns {Summary} summary instance
        */
-      addLink(text5, href) {
-        const element = this.wrap("a", text5, { href });
+      addLink(text6, href) {
+        const element = this.wrap("a", text6, { href });
         return this.addRaw(element).addEOL();
       }
     };
@@ -2337,8 +2337,8 @@ var require_internal_path_helper = __commonJS({
       return result;
     }
     exports.dirname = dirname;
-    function ensureAbsoluteRoot(root2, itemPath) {
-      assert_1.default(root2, `ensureAbsoluteRoot parameter 'root' must not be empty`);
+    function ensureAbsoluteRoot(root3, itemPath) {
+      assert_1.default(root3, `ensureAbsoluteRoot parameter 'root' must not be empty`);
       assert_1.default(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
       if (hasAbsoluteRoot(itemPath)) {
         return itemPath;
@@ -2365,12 +2365,12 @@ var require_internal_path_helper = __commonJS({
           return `${cwd[0]}:\\${itemPath.substr(1)}`;
         }
       }
-      assert_1.default(hasAbsoluteRoot(root2), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
-      if (root2.endsWith("/") || IS_WINDOWS && root2.endsWith("\\")) {
+      assert_1.default(hasAbsoluteRoot(root3), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
+      if (root3.endsWith("/") || IS_WINDOWS && root3.endsWith("\\")) {
       } else {
-        root2 += path2.sep;
+        root3 += path2.sep;
       }
-      return root2 + itemPath;
+      return root3 + itemPath;
     }
     exports.ensureAbsoluteRoot = ensureAbsoluteRoot;
     function hasAbsoluteRoot(itemPath) {
@@ -2788,7 +2788,7 @@ var require_minimatch = __commonJS({
     minimatch.filter = filter;
     function filter(pattern, options) {
       options = options || {};
-      return function(p, i, list3) {
+      return function(p, i, list5) {
         return minimatch(p, pattern, options);
       };
     }
@@ -2829,8 +2829,8 @@ var require_minimatch = __commonJS({
       m.braceExpand = function braceExpand2(pattern, options) {
         return orig.braceExpand(pattern, ext(def, options));
       };
-      m.match = function(list3, pattern, options) {
-        return orig.match(list3, pattern, ext(def, options));
+      m.match = function(list5, pattern, options) {
+        return orig.match(list5, pattern, ext(def, options));
       };
       return m;
     };
@@ -3210,16 +3210,16 @@ var require_minimatch = __commonJS({
       }
       return this.regexp;
     }
-    minimatch.match = function(list3, pattern, options) {
+    minimatch.match = function(list5, pattern, options) {
       options = options || {};
       var mm = new Minimatch(pattern, options);
-      list3 = list3.filter(function(f) {
+      list5 = list5.filter(function(f) {
         return mm.match(f);
       });
-      if (mm.options.nonull && !list3.length) {
-        list3.push(pattern);
+      if (mm.options.nonull && !list5.length) {
+        list5.push(pattern);
       }
-      return list3;
+      return list5;
     };
     Minimatch.prototype.match = function match(f, partial) {
       if (typeof partial === "undefined")
@@ -3496,8 +3496,8 @@ var require_internal_pattern = __commonJS({
         } else {
           segments = segments || [];
           assert_1.default(segments.length, `Parameter 'segments' must not empty`);
-          const root2 = _Pattern.getLiteral(segments[0]);
-          assert_1.default(root2 && pathHelper.hasAbsoluteRoot(root2), `Parameter 'segments' first element must be a root path`);
+          const root3 = _Pattern.getLiteral(segments[0]);
+          assert_1.default(root3 && pathHelper.hasAbsoluteRoot(root3), `Parameter 'segments' first element must be a root path`);
           pattern = new internal_path_1.Path(segments).toString().trim();
           if (patternOrNegate) {
             pattern = `!${pattern}`;
@@ -3577,17 +3577,17 @@ var require_internal_pattern = __commonJS({
           assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
           pattern = _Pattern.globEscape(homedir) + pattern.substr(1);
         } else if (IS_WINDOWS && (pattern.match(/^[A-Z]:$/i) || pattern.match(/^[A-Z]:[^\\]/i))) {
-          let root2 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", pattern.substr(0, 2));
-          if (pattern.length > 2 && !root2.endsWith("\\")) {
-            root2 += "\\";
+          let root3 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", pattern.substr(0, 2));
+          if (pattern.length > 2 && !root3.endsWith("\\")) {
+            root3 += "\\";
           }
-          pattern = _Pattern.globEscape(root2) + pattern.substr(2);
+          pattern = _Pattern.globEscape(root3) + pattern.substr(2);
         } else if (IS_WINDOWS && (pattern === "\\" || pattern.match(/^\\[^\\]/))) {
-          let root2 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", "\\");
-          if (!root2.endsWith("\\")) {
-            root2 += "\\";
+          let root3 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", "\\");
+          if (!root3.endsWith("\\")) {
+            root3 += "\\";
           }
-          pattern = _Pattern.globEscape(root2) + pattern.substr(1);
+          pattern = _Pattern.globEscape(root3) + pattern.substr(1);
         } else {
           pattern = pathHelper.ensureAbsoluteRoot(_Pattern.globEscape(process.cwd()), pattern);
         }
@@ -12887,9 +12887,9 @@ var require_code = __commonJS({
     };
     exports.Name = Name;
     var _Code = class extends _CodeOrName {
-      constructor(code3) {
+      constructor(code4) {
         super();
-        this._items = typeof code3 === "string" ? [code3] : code3;
+        this._items = typeof code4 === "string" ? [code4] : code4;
       }
       toString() {
         return this.str;
@@ -12916,13 +12916,13 @@ var require_code = __commonJS({
     exports._Code = _Code;
     exports.nil = new _Code("");
     function _(strs, ...args) {
-      const code3 = [strs[0]];
+      const code4 = [strs[0]];
       let i = 0;
       while (i < args.length) {
-        addCodeArg(code3, args[i]);
-        code3.push(strs[++i]);
+        addCodeArg(code4, args[i]);
+        code4.push(strs[++i]);
       }
-      return new _Code(code3);
+      return new _Code(code4);
     }
     exports._ = _;
     var plus = new _Code("+");
@@ -12938,13 +12938,13 @@ var require_code = __commonJS({
       return new _Code(expr);
     }
     exports.str = str2;
-    function addCodeArg(code3, arg) {
+    function addCodeArg(code4, arg) {
       if (arg instanceof _Code)
-        code3.push(...arg._items);
+        code4.push(...arg._items);
       else if (arg instanceof Name)
-        code3.push(arg);
+        code4.push(arg);
       else
-        code3.push(interpolate(arg));
+        code4.push(interpolate(arg));
     }
     exports.addCodeArg = addCodeArg;
     function optimize(expr) {
@@ -13128,7 +13128,7 @@ var require_scope = __commonJS({
         }, usedValues, getCode);
       }
       _reduceValues(values, valueCode, usedValues = {}, getCode) {
-        let code3 = code_1.nil;
+        let code4 = code_1.nil;
         for (const prefix in values) {
           const vs = values[prefix];
           if (!vs)
@@ -13141,16 +13141,16 @@ var require_scope = __commonJS({
             let c = valueCode(name);
             if (c) {
               const def = this.opts.es5 ? exports.varKinds.var : exports.varKinds.const;
-              code3 = (0, code_1._)`${code3}${def} ${name} = ${c};${this.opts._n}`;
+              code4 = (0, code_1._)`${code4}${def} ${name} = ${c};${this.opts._n}`;
             } else if (c = getCode === null || getCode === void 0 ? void 0 : getCode(name)) {
-              code3 = (0, code_1._)`${code3}${c}${this.opts._n}`;
+              code4 = (0, code_1._)`${code4}${c}${this.opts._n}`;
             } else {
               throw new ValueError(name);
             }
             nameSet.set(name, UsedValueState.Completed);
           });
         }
-        return code3;
+        return code4;
       }
     };
     exports.ValueScope = ValueScope;
@@ -13310,9 +13310,9 @@ var require_codegen = __commonJS({
       }
     };
     var AnyCode = class extends Node {
-      constructor(code3) {
+      constructor(code4) {
         super();
-        this.code = code3;
+        this.code = code4;
       }
       render({ _n }) {
         return `${this.code};` + _n;
@@ -13334,7 +13334,7 @@ var require_codegen = __commonJS({
         this.nodes = nodes;
       }
       render(opts) {
-        return this.nodes.reduce((code3, n) => code3 + n.render(opts), "");
+        return this.nodes.reduce((code4, n) => code4 + n.render(opts), "");
       }
       optimizeNodes() {
         const { nodes } = this;
@@ -13382,10 +13382,10 @@ var require_codegen = __commonJS({
         this.condition = condition;
       }
       render(opts) {
-        let code3 = `if(${this.condition})` + super.render(opts);
+        let code4 = `if(${this.condition})` + super.render(opts);
         if (this.else)
-          code3 += "else " + this.else.render(opts);
-        return code3;
+          code4 += "else " + this.else.render(opts);
+        return code4;
       }
       optimizeNodes() {
         super.optimizeNodes();
@@ -13506,12 +13506,12 @@ var require_codegen = __commonJS({
     Return.kind = "return";
     var Try = class extends BlockNode {
       render(opts) {
-        let code3 = "try" + super.render(opts);
+        let code4 = "try" + super.render(opts);
         if (this.catch)
-          code3 += this.catch.render(opts);
+          code4 += this.catch.render(opts);
         if (this.finally)
-          code3 += this.finally.render(opts);
-        return code3;
+          code4 += this.finally.render(opts);
+        return code4;
       }
       optimizeNodes() {
         var _a, _b;
@@ -13628,18 +13628,18 @@ var require_codegen = __commonJS({
       }
       // returns code for object literal for the passed argument list of key-value pairs
       object(...keyValues) {
-        const code3 = ["{"];
+        const code4 = ["{"];
         for (const [key, value] of keyValues) {
-          if (code3.length > 1)
-            code3.push(",");
-          code3.push(key);
+          if (code4.length > 1)
+            code4.push(",");
+          code4.push(key);
           if (key !== value || this.opts.es5) {
-            code3.push(":");
-            (0, code_1.addCodeArg)(code3, value);
+            code4.push(":");
+            (0, code_1.addCodeArg)(code4, value);
           }
         }
-        code3.push("}");
-        return new code_1._Code(code3);
+        code4.push("}");
+        return new code_1._Code(code4);
       }
       // `if` clause (or statement if `thenBody` and, optionally, `elseBody` are passed)
       if(condition, thenBody, elseBody) {
@@ -13665,8 +13665,8 @@ var require_codegen = __commonJS({
       endIf() {
         return this._endBlockNode(If, Else);
       }
-      _for(node2, forBody) {
-        this._blockNode(node2);
+      _for(node3, forBody) {
+        this._blockNode(node3);
         if (forBody)
           this.code(forBody).endFor();
         return this;
@@ -13715,10 +13715,10 @@ var require_codegen = __commonJS({
       }
       // `return` statement
       return(value) {
-        const node2 = new Return();
-        this._blockNode(node2);
+        const node3 = new Return();
+        this._blockNode(node3);
         this.code(value);
-        if (node2.nodes.length !== 1)
+        if (node3.nodes.length !== 1)
           throw new Error('CodeGen: "return" should have one node');
         return this._endBlockNode(Return);
       }
@@ -13726,16 +13726,16 @@ var require_codegen = __commonJS({
       try(tryBody, catchCode, finallyCode) {
         if (!catchCode && !finallyCode)
           throw new Error('CodeGen: "try" without "catch" and "finally"');
-        const node2 = new Try();
-        this._blockNode(node2);
+        const node3 = new Try();
+        this._blockNode(node3);
         this.code(tryBody);
         if (catchCode) {
           const error2 = this.name("e");
-          this._currNode = node2.catch = new Catch(error2);
+          this._currNode = node3.catch = new Catch(error2);
           catchCode(error2);
         }
         if (finallyCode) {
-          this._currNode = node2.finally = new Finally();
+          this._currNode = node3.finally = new Finally();
           this.code(finallyCode);
         }
         return this._endBlockNode(Catch, Finally);
@@ -13780,13 +13780,13 @@ var require_codegen = __commonJS({
           this._root.optimizeNames(this._root.names, this._constants);
         }
       }
-      _leafNode(node2) {
-        this._currNode.nodes.push(node2);
+      _leafNode(node3) {
+        this._currNode.nodes.push(node3);
         return this;
       }
-      _blockNode(node2) {
-        this._currNode.nodes.push(node2);
-        this._nodes.push(node2);
+      _blockNode(node3) {
+        this._currNode.nodes.push(node3);
+        this._nodes.push(node3);
       }
       _endBlockNode(N1, N2) {
         const n = this._currNode;
@@ -13796,12 +13796,12 @@ var require_codegen = __commonJS({
         }
         throw new Error(`CodeGen: not in block "${N2 ? `${N1.kind}/${N2.kind}` : N1.kind}"`);
       }
-      _elseNode(node2) {
+      _elseNode(node3) {
         const n = this._currNode;
         if (!(n instanceof If)) {
           throw new Error('CodeGen: "else" without "if"');
         }
-        this._currNode = n.else = node2;
+        this._currNode = n.else = node3;
         return this;
       }
       get _root() {
@@ -13811,9 +13811,9 @@ var require_codegen = __commonJS({
         const ns = this._nodes;
         return ns[ns.length - 1];
       }
-      set _currNode(node2) {
+      set _currNode(node3) {
         const ns = this._nodes;
-        ns[ns.length - 1] = node2;
+        ns[ns.length - 1] = node3;
       }
     };
     exports.CodeGen = CodeGen;
@@ -15805,22 +15805,22 @@ var require_compile = __commonJS({
       }
     }
     exports.compileSchema = compileSchema;
-    function resolveRef(root2, baseId, ref) {
+    function resolveRef(root3, baseId, ref) {
       var _a;
       ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, ref);
-      const schOrFunc = root2.refs[ref];
+      const schOrFunc = root3.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve.call(this, root2, ref);
+      let _sch = resolve.call(this, root3, ref);
       if (_sch === void 0) {
-        const schema2 = (_a = root2.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
+        const schema2 = (_a = root3.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
         if (schema2)
-          _sch = new SchemaEnv({ schema: schema2, schemaId, root: root2, baseId });
+          _sch = new SchemaEnv({ schema: schema2, schemaId, root: root3, baseId });
       }
       if (_sch === void 0)
         return;
-      return root2.refs[ref] = inlineOrCompile.call(this, _sch);
+      return root3.refs[ref] = inlineOrCompile.call(this, _sch);
     }
     exports.resolveRef = resolveRef;
     function inlineOrCompile(sch) {
@@ -15838,23 +15838,23 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve(root2, ref) {
+    function resolve(root3, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
-      return sch || this.schemas[ref] || resolveSchema.call(this, root2, ref);
+      return sch || this.schemas[ref] || resolveSchema.call(this, root3, ref);
     }
-    function resolveSchema(root2, ref) {
+    function resolveSchema(root3, ref) {
       const p = this.opts.uriResolver.parse(ref);
       const refPath = (0, resolve_1._getFullPath)(this.opts.uriResolver, p);
-      let baseId = (0, resolve_1.getFullPath)(this.opts.uriResolver, root2.baseId, void 0);
-      if (Object.keys(root2.schema).length > 0 && refPath === baseId) {
-        return getJsonPointer.call(this, p, root2);
+      let baseId = (0, resolve_1.getFullPath)(this.opts.uriResolver, root3.baseId, void 0);
+      if (Object.keys(root3.schema).length > 0 && refPath === baseId) {
+        return getJsonPointer.call(this, p, root3);
       }
       const id = (0, resolve_1.normalizeId)(refPath);
       const schOrRef = this.refs[id] || this.schemas[id];
       if (typeof schOrRef == "string") {
-        const sch = resolveSchema.call(this, root2, schOrRef);
+        const sch = resolveSchema.call(this, root3, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
           return;
         return getJsonPointer.call(this, p, sch);
@@ -15869,7 +15869,7 @@ var require_compile = __commonJS({
         const schId = schema2[schemaId];
         if (schId)
           baseId = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schId);
-        return new SchemaEnv({ schema: schema2, schemaId, root: root2, baseId });
+        return new SchemaEnv({ schema: schema2, schemaId, root: root3, baseId });
       }
       return getJsonPointer.call(this, p, schOrRef);
     }
@@ -15881,7 +15881,7 @@ var require_compile = __commonJS({
       "dependencies",
       "definitions"
     ]);
-    function getJsonPointer(parsedRef, { baseId, schema: schema2, root: root2 }) {
+    function getJsonPointer(parsedRef, { baseId, schema: schema2, root: root3 }) {
       var _a;
       if (((_a = parsedRef.fragment) === null || _a === void 0 ? void 0 : _a[0]) !== "/")
         return;
@@ -15900,10 +15900,10 @@ var require_compile = __commonJS({
       let env;
       if (typeof schema2 != "boolean" && schema2.$ref && !(0, util_1.schemaHasRulesButRef)(schema2, this.RULES)) {
         const $ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schema2.$ref);
-        env = resolveSchema.call(this, root2, $ref);
+        env = resolveSchema.call(this, root3, $ref);
       }
       const { schemaId } = this.opts;
-      env = env || new SchemaEnv({ schema: schema2, schemaId, root: root2, baseId });
+      env = env || new SchemaEnv({ schema: schema2, schemaId, root: root3, baseId });
       if (env.schema !== env.root.schema)
         return env;
       return void 0;
@@ -16063,7 +16063,7 @@ var require_uri_all = __commonJS({
       function error$1(type2) {
         throw new RangeError(errors[type2]);
       }
-      function map5(array, fn) {
+      function map9(array, fn) {
         var result = [];
         var length = array.length;
         while (length--) {
@@ -16080,7 +16080,7 @@ var require_uri_all = __commonJS({
         }
         string3 = string3.replace(regexSeparators, ".");
         var labels = string3.split(".");
-        var encoded = map5(labels, fn).join(".");
+        var encoded = map9(labels, fn).join(".");
         return result + encoded;
       }
       function ucs2decode(string3) {
@@ -16135,7 +16135,7 @@ var require_uri_all = __commonJS({
         }
         return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
       };
-      var decode2 = function decode3(input) {
+      var decode3 = function decode4(input) {
         var output = [];
         var inputLength = input.length;
         var i = 0;
@@ -16309,7 +16309,7 @@ var require_uri_all = __commonJS({
       };
       var toUnicode = function toUnicode2(input) {
         return mapDomain(input, function(string3) {
-          return regexPunycode.test(string3) ? decode2(string3.slice(4).toLowerCase()) : string3;
+          return regexPunycode.test(string3) ? decode3(string3.slice(4).toLowerCase()) : string3;
         });
       };
       var toASCII = function toASCII2(input) {
@@ -16335,7 +16335,7 @@ var require_uri_all = __commonJS({
           "decode": ucs2decode,
           "encode": ucs2encode
         },
-        "decode": decode2,
+        "decode": decode3,
         "encode": encode,
         "toASCII": toASCII,
         "toUnicode": toUnicode
@@ -17259,8 +17259,8 @@ var require_core2 = __commonJS({
           keyRef = sch;
         if (sch === void 0) {
           const { schemaId } = this.opts;
-          const root2 = new compile_1.SchemaEnv({ schema: {}, schemaId });
-          sch = compile_1.resolveSchema.call(this, root2, keyRef);
+          const root3 = new compile_1.SchemaEnv({ schema: {}, schemaId });
+          sch = compile_1.resolveSchema.call(this, root3, keyRef);
           if (!sch)
             return;
           this.refs[keyRef] = sch;
@@ -17335,12 +17335,12 @@ var require_core2 = __commonJS({
           return this;
         }
         keywordMetaschema.call(this, def);
-        const definition3 = {
+        const definition4 = {
           ...def,
           type: (0, dataType_1.getJSONTypes)(def.type),
           schemaType: (0, dataType_1.getJSONTypes)(def.schemaType)
         };
-        (0, util_1.eachItem)(keyword, definition3.type.length === 0 ? (k) => addRule.call(this, k, definition3) : (k) => definition3.type.forEach((t) => addRule.call(this, k, definition3, t)));
+        (0, util_1.eachItem)(keyword, definition4.type.length === 0 ? (k) => addRule.call(this, k, definition4) : (k) => definition4.type.forEach((t) => addRule.call(this, k, definition4, t)));
         return this;
       }
       getKeyword(keyword) {
@@ -17369,7 +17369,7 @@ var require_core2 = __commonJS({
       errorsText(errors = this.errors, { separator = ", ", dataVar = "data" } = {}) {
         if (!errors || errors.length === 0)
           return "No errors";
-        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text5, msg) => text5 + separator + msg);
+        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text6, msg) => text6 + separator + msg);
       }
       $dataMetaSchema(metaSchema, keywordsJsonPointers) {
         const rules = this.RULES.all;
@@ -17533,9 +17533,9 @@ var require_core2 = __commonJS({
         throw new Error('$data keyword must have "code" or "validate" function');
       }
     }
-    function addRule(keyword, definition3, dataType) {
+    function addRule(keyword, definition4, dataType) {
       var _a;
-      const post = definition3 === null || definition3 === void 0 ? void 0 : definition3.post;
+      const post = definition4 === null || definition4 === void 0 ? void 0 : definition4.post;
       if (dataType && post)
         throw new Error('keyword with "post" flag cannot have "type"');
       const { RULES } = this;
@@ -17545,22 +17545,22 @@ var require_core2 = __commonJS({
         RULES.rules.push(ruleGroup);
       }
       RULES.keywords[keyword] = true;
-      if (!definition3)
+      if (!definition4)
         return;
       const rule = {
         keyword,
         definition: {
-          ...definition3,
-          type: (0, dataType_1.getJSONTypes)(definition3.type),
-          schemaType: (0, dataType_1.getJSONTypes)(definition3.schemaType)
+          ...definition4,
+          type: (0, dataType_1.getJSONTypes)(definition4.type),
+          schemaType: (0, dataType_1.getJSONTypes)(definition4.schemaType)
         }
       };
-      if (definition3.before)
-        addBeforeRule.call(this, ruleGroup, rule, definition3.before);
+      if (definition4.before)
+        addBeforeRule.call(this, ruleGroup, rule, definition4.before);
       else
         ruleGroup.rules.push(rule);
       RULES.all[keyword] = rule;
-      (_a = definition3.implements) === null || _a === void 0 ? void 0 : _a.forEach((kwd) => this.addKeyword(kwd));
+      (_a = definition4.implements) === null || _a === void 0 ? void 0 : _a.forEach((kwd) => this.addKeyword(kwd));
     }
     function addBeforeRule(ruleGroup, rule, before) {
       const i = ruleGroup.rules.findIndex((_rule) => _rule.keyword === before);
@@ -17621,20 +17621,20 @@ var require_ref = __commonJS({
       code(cxt) {
         const { gen, schema: $ref, it } = cxt;
         const { baseId, schemaEnv: env, validateName, opts, self: self2 } = it;
-        const { root: root2 } = env;
-        if (($ref === "#" || $ref === "#/") && baseId === root2.baseId)
+        const { root: root3 } = env;
+        if (($ref === "#" || $ref === "#/") && baseId === root3.baseId)
           return callRootRef();
-        const schOrEnv = compile_1.resolveRef.call(self2, root2, baseId, $ref);
+        const schOrEnv = compile_1.resolveRef.call(self2, root3, baseId, $ref);
         if (schOrEnv === void 0)
           throw new ref_error_1.default(it.opts.uriResolver, baseId, $ref);
         if (schOrEnv instanceof compile_1.SchemaEnv)
           return callValidate(schOrEnv);
         return inlineRefSchema(schOrEnv);
         function callRootRef() {
-          if (env === root2)
+          if (env === root3)
             return callRef(cxt, validateName, env, env.$async);
-          const rootName = gen.scopeValue("root", { ref: root2 });
-          return callRef(cxt, (0, codegen_1._)`${rootName}.validate`, root2, root2.$async);
+          const rootName = gen.scopeValue("root", { ref: root3 });
+          return callRef(cxt, (0, codegen_1._)`${rootName}.validate`, root3, root3.$async);
         }
         function callValidate(sch) {
           const v = getValidate(cxt, sch);
@@ -17798,8 +17798,8 @@ var require_multipleOf = __commonJS({
         const { gen, data, schemaCode, it } = cxt;
         const prec = it.opts.multipleOfPrecision;
         const res = gen.let("res");
-        const invalid2 = prec ? (0, codegen_1._)`Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}` : (0, codegen_1._)`${res} !== parseInt(${res})`;
-        cxt.fail$data((0, codegen_1._)`(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid2}))`);
+        const invalid3 = prec ? (0, codegen_1._)`Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}` : (0, codegen_1._)`${res} !== parseInt(${res})`;
+        cxt.fail$data((0, codegen_1._)`(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid3}))`);
       }
     };
     exports.default = def;
@@ -19193,8 +19193,8 @@ var require_format = __commonJS({
             }
           }
           function getFormat(fmtDef) {
-            const code3 = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema2)}` : void 0;
-            const fmt = gen.scopeValue("formats", { key: schema2, ref: fmtDef, code: code3 });
+            const code4 = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema2)}` : void 0;
+            const fmt = gen.scopeValue("formats", { key: schema2, ref: fmtDef, code: code4 });
             if (typeof fmtDef == "object" && !(fmtDef instanceof RegExp)) {
               return [fmtDef.type || "string", fmtDef.validate, (0, codegen_1._)`${fmt}.validate`];
             }
@@ -20383,14 +20383,14 @@ var require_toolrunner = __commonJS({
               state.processClosed = true;
               state.CheckComplete();
             });
-            cp.on("exit", (code3) => {
-              state.processExitCode = code3;
+            cp.on("exit", (code4) => {
+              state.processExitCode = code4;
               state.processExited = true;
-              this._debug(`Exit code ${code3} received from tool '${this.toolPath}'`);
+              this._debug(`Exit code ${code4} received from tool '${this.toolPath}'`);
               state.CheckComplete();
             });
-            cp.on("close", (code3) => {
-              state.processExitCode = code3;
+            cp.on("close", (code4) => {
+              state.processExitCode = code4;
               state.processExited = true;
               state.processClosed = true;
               this._debug(`STDIO streams have closed for tool '${this.toolPath}'`);
@@ -23029,9 +23029,9 @@ var require_lib3 = __commonJS({
     FetchError.prototype = Object.create(Error.prototype);
     FetchError.prototype.constructor = FetchError;
     FetchError.prototype.name = "FetchError";
-    var convert3;
+    var convert4;
     try {
-      convert3 = __require("encoding").convert;
+      convert4 = __require("encoding").convert;
     } catch (e) {
     }
     var INTERNALS = Symbol("Body internals");
@@ -23238,7 +23238,7 @@ var require_lib3 = __commonJS({
       });
     }
     function convertBody(buffer2, headers) {
-      if (typeof convert3 !== "function") {
+      if (typeof convert4 !== "function") {
         throw new Error("The package `encoding` must be installed to use the textConverted() function");
       }
       const ct = headers.get("content-type");
@@ -23272,7 +23272,7 @@ var require_lib3 = __commonJS({
           charset = "gb18030";
         }
       }
-      return convert3(buffer2, "UTF-8", charset).toString();
+      return convert4(buffer2, "UTF-8", charset).toString();
     }
     function isURLSearchParams(obj) {
       if (typeof obj !== "object" || typeof obj.append !== "function" || typeof obj.delete !== "function" || typeof obj.get !== "function" || typeof obj.getAll !== "function" || typeof obj.has !== "function" || typeof obj.set !== "function") {
@@ -23368,9 +23368,9 @@ var require_lib3 = __commonJS({
         throw new TypeError(`${value} is not a legal HTTP header value`);
       }
     }
-    function find(map5, name) {
+    function find(map9, name) {
       name = name.toLowerCase();
-      for (const key in map5) {
+      for (const key in map9) {
         if (key.toLowerCase() === name) {
           return key;
         }
@@ -24138,8 +24138,8 @@ var require_lib3 = __commonJS({
         stream.end();
       }
     }
-    fetch.isRedirect = function(code3) {
-      return code3 === 301 || code3 === 302 || code3 === 303 || code3 === 307 || code3 === 308;
+    fetch.isRedirect = function(code4) {
+      return code4 === 301 || code4 === 302 || code4 === 303 || code4 === 307 || code4 === 308;
     };
     fetch.Promise = global.Promise;
     module.exports = exports = fetch;
@@ -24310,9 +24310,9 @@ var require_dist_node5 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -24503,9 +24503,9 @@ var require_dist_node6 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -24683,9 +24683,9 @@ var require_dist_node8 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -24836,9 +24836,9 @@ var require_dist_node9 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -24907,9 +24907,9 @@ var require_dist_node10 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -24961,9 +24961,9 @@ var require_dist_node11 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -25331,9 +25331,9 @@ var require_dist_node12 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -28511,9 +28511,9 @@ var require_dist_node13 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -28613,21 +28613,21 @@ var require_light = __commonJS({
           this.length = 0;
         }
         push(value) {
-          var node2;
+          var node3;
           this.length++;
           if (typeof this.incr === "function") {
             this.incr();
           }
-          node2 = {
+          node3 = {
             value,
             prev: this._last,
             next: null
           };
           if (this._last != null) {
-            this._last.next = node2;
-            this._last = node2;
+            this._last.next = node3;
+            this._last = node3;
           } else {
-            this._first = this._last = node2;
+            this._first = this._last = node3;
           }
           return void 0;
         }
@@ -28655,28 +28655,28 @@ var require_light = __commonJS({
           }
         }
         getArray() {
-          var node2, ref, results;
-          node2 = this._first;
+          var node3, ref, results;
+          node3 = this._first;
           results = [];
-          while (node2 != null) {
-            results.push((ref = node2, node2 = node2.next, ref.value));
+          while (node3 != null) {
+            results.push((ref = node3, node3 = node3.next, ref.value));
           }
           return results;
         }
         forEachShift(cb) {
-          var node2;
-          node2 = this.shift();
-          while (node2 != null) {
-            cb(node2), node2 = this.shift();
+          var node3;
+          node3 = this.shift();
+          while (node3 != null) {
+            cb(node3), node3 = this.shift();
           }
           return void 0;
         }
         debug() {
-          var node2, ref, ref1, ref2, results;
-          node2 = this._first;
+          var node3, ref, ref1, ref2, results;
+          node3 = this._first;
           results = [];
-          while (node2 != null) {
-            results.push((ref = node2, node2 = node2.next, {
+          while (node3 != null) {
+            results.push((ref = node3, node3 = node3.next, {
               value: ref.value,
               prev: (ref1 = ref.prev) != null ? ref1.value : void 0,
               next: (ref2 = ref.next) != null ? ref2.value : void 0
@@ -28813,16 +28813,16 @@ var require_light = __commonJS({
           }
         }
         shiftAll(fn) {
-          return this._lists.forEach(function(list3) {
-            return list3.forEachShift(fn);
+          return this._lists.forEach(function(list5) {
+            return list5.forEachShift(fn);
           });
         }
         getFirst(arr = this._lists) {
-          var j, len, list3;
+          var j, len, list5;
           for (j = 0, len = arr.length; j < len; j++) {
-            list3 = arr[j];
-            if (list3.length > 0) {
-              return list3;
+            list5 = arr[j];
+            if (list5.length > 0) {
+              return list5;
             }
           }
           return [];
@@ -29476,10 +29476,10 @@ var require_light = __commonJS({
       Sync$1 = Sync_1;
       Bottleneck = function() {
         class Bottleneck2 {
-          constructor(options = {}, ...invalid2) {
+          constructor(options = {}, ...invalid3) {
             var storeInstanceOptions, storeOptions;
             this._addToQueue = this._addToQueue.bind(this);
-            this._validateOptions(options, invalid2);
+            this._validateOptions(options, invalid3);
             parser$5.load(options, this.instanceDefaults, this);
             this._queues = new Queues$1(NUM_PRIORITIES$1);
             this._scheduled = {};
@@ -29509,8 +29509,8 @@ var require_light = __commonJS({
               return (ref = this._store.heartbeat) != null ? typeof ref.unref === "function" ? ref.unref() : void 0 : void 0;
             });
           }
-          _validateOptions(options, invalid2) {
-            if (!(options != null && typeof options === "object" && invalid2.length === 0)) {
+          _validateOptions(options, invalid3) {
+            if (!(options != null && typeof options === "object" && invalid3.length === 0)) {
               throw new Bottleneck2.prototype.BottleneckError("Bottleneck v2 takes a single object argument. Refer to https://github.com/SGrondin/bottleneck#upgrading-to-v2 if you're upgrading from Bottleneck v1.");
             }
           }
@@ -29899,9 +29899,9 @@ var require_dist_node14 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -29991,9 +29991,9 @@ var require_dist_node15 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export2 = (target, all2) => {
-      for (var name in all2)
-        __defProp2(target, name, { get: all2[name], enumerable: true });
+    var __export2 = (target, all3) => {
+      for (var name in all3)
+        __defProp2(target, name, { get: all3[name], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -31007,19 +31007,19 @@ function base() {
     }
     return Parser(String(file), file);
   }
-  function stringify2(node2, doc) {
+  function stringify2(node3, doc) {
     processor.freeze();
     const file = vfile(doc);
     const Compiler = processor.Compiler;
     assertCompiler("stringify", Compiler);
-    assertNode(node2);
+    assertNode(node3);
     if (newable(Compiler, "compile")) {
-      return new Compiler(node2, file).compile();
+      return new Compiler(node3, file).compile();
     }
-    return Compiler(node2, file);
+    return Compiler(node3, file);
   }
-  function run(node2, doc, callback) {
-    assertNode(node2);
+  function run(node3, doc, callback) {
+    assertNode(node3);
     processor.freeze();
     if (!callback && typeof doc === "function") {
       callback = doc;
@@ -31030,9 +31030,9 @@ function base() {
     }
     executor(null, callback);
     function executor(resolve, reject) {
-      transformers.run(node2, vfile(doc), done);
+      transformers.run(node3, vfile(doc), done);
       function done(error2, tree, file) {
-        tree = tree || node2;
+        tree = tree || node3;
         if (error2) {
           reject(error2);
         } else if (resolve) {
@@ -31043,10 +31043,10 @@ function base() {
       }
     }
   }
-  function runSync(node2, file) {
+  function runSync(node3, file) {
     let result;
     let complete;
-    processor.run(node2, file, done);
+    processor.run(node3, file, done);
     assertDone("runSync", "run", complete);
     return result;
     function done(error2, tree) {
@@ -31140,9 +31140,9 @@ function assertUnfrozen(name, frozen) {
     );
   }
 }
-function assertNode(node2) {
-  if (!isPlainObject(node2) || typeof node2.type !== "string") {
-    throw new TypeError("Expected node, got `" + node2 + "`");
+function assertNode(node3) {
+  if (!isPlainObject(node3) || typeof node3.type !== "string") {
+    throw new TypeError("Expected node, got `" + node3 + "`");
   }
 }
 function assertDone(name, asyncName, complete) {
@@ -31202,8 +31202,8 @@ function node(value) {
 }
 
 // node_modules/micromark-util-chunked/index.js
-function splice(list3, start, remove, items) {
-  const end = list3.length;
+function splice(list5, start, remove, items) {
+  const end = list5.length;
   let chunkStart = 0;
   let parameters;
   if (start < 0) {
@@ -31215,23 +31215,23 @@ function splice(list3, start, remove, items) {
   if (items.length < 1e4) {
     parameters = Array.from(items);
     parameters.unshift(start, remove);
-    [].splice.apply(list3, parameters);
+    [].splice.apply(list5, parameters);
   } else {
     if (remove)
-      [].splice.apply(list3, [start, remove]);
+      [].splice.apply(list5, [start, remove]);
     while (chunkStart < items.length) {
       parameters = items.slice(chunkStart, chunkStart + 1e4);
       parameters.unshift(start, 0);
-      [].splice.apply(list3, parameters);
+      [].splice.apply(list5, parameters);
       chunkStart += 1e4;
       start += 1e4;
     }
   }
 }
-function push(list3, items) {
-  if (list3.length > 0) {
-    splice(list3, list3.length, 0, items);
-    return list3;
+function push(list5, items) {
+  if (list5.length > 0) {
+    splice(list5, list5.length, 0, items);
+    return list5;
   }
   return items;
 }
@@ -31239,38 +31239,38 @@ function push(list3, items) {
 // node_modules/micromark-util-combine-extensions/index.js
 var hasOwnProperty = {}.hasOwnProperty;
 function combineExtensions(extensions) {
-  const all2 = {};
+  const all3 = {};
   let index2 = -1;
   while (++index2 < extensions.length) {
-    syntaxExtension(all2, extensions[index2]);
+    syntaxExtension(all3, extensions[index2]);
   }
-  return all2;
+  return all3;
 }
-function syntaxExtension(all2, extension2) {
+function syntaxExtension(all3, extension2) {
   let hook;
   for (hook in extension2) {
-    const maybe = hasOwnProperty.call(all2, hook) ? all2[hook] : void 0;
-    const left = maybe || (all2[hook] = {});
+    const maybe = hasOwnProperty.call(all3, hook) ? all3[hook] : void 0;
+    const left = maybe || (all3[hook] = {});
     const right = extension2[hook];
-    let code3;
-    for (code3 in right) {
-      if (!hasOwnProperty.call(left, code3))
-        left[code3] = [];
-      const value = right[code3];
+    let code4;
+    for (code4 in right) {
+      if (!hasOwnProperty.call(left, code4))
+        left[code4] = [];
+      const value = right[code4];
       constructs(
         // @ts-expect-error Looks like a list.
-        left[code3],
+        left[code4],
         Array.isArray(value) ? value : value ? [value] : []
       );
     }
   }
 }
-function constructs(existing, list3) {
+function constructs(existing, list5) {
   let index2 = -1;
   const before = [];
-  while (++index2 < list3.length) {
+  while (++index2 < list5.length) {
     ;
-    (list3[index2].add === "after" ? existing : before).push(list3[index2]);
+    (list5[index2].add === "after" ? existing : before).push(list5[index2]);
   }
   splice(existing, 0, 0, before);
 }
@@ -31285,50 +31285,50 @@ var asciiHexDigit = regexCheck(/[\dA-Fa-f]/);
 var asciiAlphanumeric = regexCheck(/[\dA-Za-z]/);
 var asciiPunctuation = regexCheck(/[!-/:-@[-`{-~]/);
 var asciiAtext = regexCheck(/[#-'*+\--9=?A-Z^-~]/);
-function asciiControl(code3) {
+function asciiControl(code4) {
   return (
     // Special whitespace codes (which have negative values), C0 and Control
     // character DEL
-    code3 !== null && (code3 < 32 || code3 === 127)
+    code4 !== null && (code4 < 32 || code4 === 127)
   );
 }
-function markdownLineEndingOrSpace(code3) {
-  return code3 !== null && (code3 < 0 || code3 === 32);
+function markdownLineEndingOrSpace(code4) {
+  return code4 !== null && (code4 < 0 || code4 === 32);
 }
-function markdownLineEnding(code3) {
-  return code3 !== null && code3 < -2;
+function markdownLineEnding(code4) {
+  return code4 !== null && code4 < -2;
 }
-function markdownSpace(code3) {
-  return code3 === -2 || code3 === -1 || code3 === 32;
+function markdownSpace(code4) {
+  return code4 === -2 || code4 === -1 || code4 === 32;
 }
 var unicodeWhitespace = regexCheck(/\s/);
 var unicodePunctuation = regexCheck(unicodePunctuationRegex);
 function regexCheck(regex) {
   return check;
-  function check(code3) {
-    return code3 !== null && regex.test(String.fromCharCode(code3));
+  function check(code4) {
+    return code4 !== null && regex.test(String.fromCharCode(code4));
   }
 }
 
 // node_modules/micromark-factory-space/index.js
-function factorySpace(effects, ok3, type2, max) {
+function factorySpace(effects, ok4, type2, max) {
   const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
   let size = 0;
   return start;
-  function start(code3) {
-    if (markdownSpace(code3)) {
+  function start(code4) {
+    if (markdownSpace(code4)) {
       effects.enter(type2);
-      return prefix(code3);
+      return prefix(code4);
     }
-    return ok3(code3);
+    return ok4(code4);
   }
-  function prefix(code3) {
-    if (markdownSpace(code3) && size++ < limit) {
-      effects.consume(code3);
+  function prefix(code4) {
+    if (markdownSpace(code4) && size++ < limit) {
+      effects.consume(code4);
       return prefix;
     }
     effects.exit(type2);
-    return ok3(code3);
+    return ok4(code4);
   }
 }
 
@@ -31344,21 +31344,21 @@ function initializeContent(effects) {
   );
   let previous3;
   return contentStart;
-  function afterContentStartConstruct(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function afterContentStartConstruct(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(effects, contentStart, "linePrefix");
   }
-  function paragraphInitial(code3) {
+  function paragraphInitial(code4) {
     effects.enter("paragraph");
-    return lineStart(code3);
+    return lineStart(code4);
   }
-  function lineStart(code3) {
+  function lineStart(code4) {
     const token = effects.enter("chunkText", {
       contentType: "text",
       previous: previous3
@@ -31367,21 +31367,21 @@ function initializeContent(effects) {
       previous3.next = token;
     }
     previous3 = token;
-    return data(code3);
+    return data(code4);
   }
-  function data(code3) {
-    if (code3 === null) {
+  function data(code4) {
+    if (code4 === null) {
       effects.exit("chunkText");
       effects.exit("paragraph");
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
-    if (markdownLineEnding(code3)) {
-      effects.consume(code3);
+    if (markdownLineEnding(code4)) {
+      effects.consume(code4);
       effects.exit("chunkText");
       return lineStart;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
 }
@@ -31401,7 +31401,7 @@ function initializeDocument(effects) {
   let childToken;
   let lineStartOffset;
   return start;
-  function start(code3) {
+  function start(code4) {
     if (continued < stack.length) {
       const item = stack[continued];
       self2.containerState = item[1];
@@ -31409,11 +31409,11 @@ function initializeDocument(effects) {
         item[0].continuation,
         documentContinue,
         checkNewContainers
-      )(code3);
+      )(code4);
     }
-    return checkNewContainers(code3);
+    return checkNewContainers(code4);
   }
-  function documentContinue(code3) {
+  function documentContinue(code4) {
     continued++;
     if (self2.containerState._closeFlow) {
       self2.containerState._closeFlow = void 0;
@@ -31442,17 +31442,17 @@ function initializeDocument(effects) {
         self2.events.slice(indexBeforeExits)
       );
       self2.events.length = index2;
-      return checkNewContainers(code3);
+      return checkNewContainers(code4);
     }
-    return start(code3);
+    return start(code4);
   }
-  function checkNewContainers(code3) {
+  function checkNewContainers(code4) {
     if (continued === stack.length) {
       if (!childFlow) {
-        return documentContinued(code3);
+        return documentContinued(code4);
       }
       if (childFlow.currentConstruct && childFlow.currentConstruct.concrete) {
-        return flowStart(code3);
+        return flowStart(code4);
       }
       self2.interrupt = Boolean(
         childFlow.currentConstruct && !childFlow._gfmTableDynamicInterruptHack
@@ -31463,38 +31463,38 @@ function initializeDocument(effects) {
       containerConstruct,
       thereIsANewContainer,
       thereIsNoNewContainer
-    )(code3);
+    )(code4);
   }
-  function thereIsANewContainer(code3) {
+  function thereIsANewContainer(code4) {
     if (childFlow)
       closeFlow();
     exitContainers(continued);
-    return documentContinued(code3);
+    return documentContinued(code4);
   }
-  function thereIsNoNewContainer(code3) {
+  function thereIsNoNewContainer(code4) {
     self2.parser.lazy[self2.now().line] = continued !== stack.length;
     lineStartOffset = self2.now().offset;
-    return flowStart(code3);
+    return flowStart(code4);
   }
-  function documentContinued(code3) {
+  function documentContinued(code4) {
     self2.containerState = {};
     return effects.attempt(
       containerConstruct,
       containerContinue,
       flowStart
-    )(code3);
+    )(code4);
   }
-  function containerContinue(code3) {
+  function containerContinue(code4) {
     continued++;
     stack.push([self2.currentConstruct, self2.containerState]);
-    return documentContinued(code3);
+    return documentContinued(code4);
   }
-  function flowStart(code3) {
-    if (code3 === null) {
+  function flowStart(code4) {
+    if (code4 === null) {
       if (childFlow)
         closeFlow();
       exitContainers(0);
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
     childFlow = childFlow || self2.parser.flow(self2.now());
@@ -31503,23 +31503,23 @@ function initializeDocument(effects) {
       previous: childToken,
       _tokenizer: childFlow
     });
-    return flowContinue(code3);
+    return flowContinue(code4);
   }
-  function flowContinue(code3) {
-    if (code3 === null) {
+  function flowContinue(code4) {
+    if (code4 === null) {
       writeToChild(effects.exit("chunkFlow"), true);
       exitContainers(0);
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
-    if (markdownLineEnding(code3)) {
-      effects.consume(code3);
+    if (markdownLineEnding(code4)) {
+      effects.consume(code4);
       writeToChild(effects.exit("chunkFlow"));
       continued = 0;
       self2.interrupt = void 0;
       return start;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return flowContinue;
   }
   function writeToChild(token, eof) {
@@ -31588,21 +31588,21 @@ function initializeDocument(effects) {
     self2.containerState._closeFlow = void 0;
   }
 }
-function tokenizeContainer(effects, ok3, nok) {
+function tokenizeContainer(effects, ok4, nok) {
   return factorySpace(
     effects,
-    effects.attempt(this.parser.constructs.document, ok3, nok),
+    effects.attempt(this.parser.constructs.document, ok4, nok),
     "linePrefix",
     this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
   );
 }
 
 // node_modules/micromark-util-classify-character/index.js
-function classifyCharacter(code3) {
-  if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
+function classifyCharacter(code4) {
+  if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
     return 1;
   }
-  if (unicodePunctuation(code3)) {
+  if (unicodePunctuation(code4)) {
     return 2;
   }
 }
@@ -31631,7 +31631,7 @@ function resolveAllAttention(events, context) {
   let index2 = -1;
   let open;
   let group2;
-  let text5;
+  let text6;
   let openingSequence;
   let closingSequence;
   let use;
@@ -31661,7 +31661,7 @@ function resolveAllAttention(events, context) {
             start: Object.assign({}, events[index2][1].start),
             end
           };
-          text5 = {
+          text6 = {
             type: use > 1 ? "strongText" : "emphasisText",
             start: Object.assign({}, events[open][1].end),
             end: Object.assign({}, events[index2][1].start)
@@ -31684,7 +31684,7 @@ function resolveAllAttention(events, context) {
             ["enter", group2, context],
             ["enter", openingSequence, context],
             ["exit", openingSequence, context],
-            ["enter", text5, context]
+            ["enter", text6, context]
           ]);
           nextEvents = push(
             nextEvents,
@@ -31695,7 +31695,7 @@ function resolveAllAttention(events, context) {
             )
           );
           nextEvents = push(nextEvents, [
-            ["exit", text5, context],
+            ["exit", text6, context],
             ["enter", closingSequence, context],
             ["exit", closingSequence, context],
             ["exit", group2, context]
@@ -31724,29 +31724,29 @@ function resolveAllAttention(events, context) {
   }
   return events;
 }
-function tokenizeAttention(effects, ok3) {
+function tokenizeAttention(effects, ok4) {
   const attentionMarkers2 = this.parser.constructs.attentionMarkers.null;
   const previous3 = this.previous;
   const before = classifyCharacter(previous3);
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("attentionSequence");
-    marker = code3;
-    return sequence(code3);
+    marker = code4;
+    return sequence(code4);
   }
-  function sequence(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function sequence(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       return sequence;
     }
     const token = effects.exit("attentionSequence");
-    const after = classifyCharacter(code3);
-    const open = !after || after === 2 && before || attentionMarkers2.includes(code3);
+    const after = classifyCharacter(code4);
+    const open = !after || after === 2 && before || attentionMarkers2.includes(code4);
     const close = !before || before === 2 && after || attentionMarkers2.includes(previous3);
     token._open = Boolean(marker === 42 ? open : open && (before || !close));
     token._close = Boolean(marker === 42 ? close : close && (after || !open));
-    return ok3(code3);
+    return ok4(code4);
   }
 }
 function movePoint(point3, offset) {
@@ -31760,89 +31760,89 @@ var autolink = {
   name: "autolink",
   tokenize: tokenizeAutolink
 };
-function tokenizeAutolink(effects, ok3, nok) {
+function tokenizeAutolink(effects, ok4, nok) {
   let size = 1;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("autolink");
     effects.enter("autolinkMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("autolinkMarker");
     effects.enter("autolinkProtocol");
     return open;
   }
-  function open(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+  function open(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return schemeOrEmailAtext;
     }
-    return asciiAtext(code3) ? emailAtext(code3) : nok(code3);
+    return asciiAtext(code4) ? emailAtext(code4) : nok(code4);
   }
-  function schemeOrEmailAtext(code3) {
-    return code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3) ? schemeInsideOrEmailAtext(code3) : emailAtext(code3);
+  function schemeOrEmailAtext(code4) {
+    return code4 === 43 || code4 === 45 || code4 === 46 || asciiAlphanumeric(code4) ? schemeInsideOrEmailAtext(code4) : emailAtext(code4);
   }
-  function schemeInsideOrEmailAtext(code3) {
-    if (code3 === 58) {
-      effects.consume(code3);
+  function schemeInsideOrEmailAtext(code4) {
+    if (code4 === 58) {
+      effects.consume(code4);
       return urlInside;
     }
-    if ((code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3)) && size++ < 32) {
-      effects.consume(code3);
+    if ((code4 === 43 || code4 === 45 || code4 === 46 || asciiAlphanumeric(code4)) && size++ < 32) {
+      effects.consume(code4);
       return schemeInsideOrEmailAtext;
     }
-    return emailAtext(code3);
+    return emailAtext(code4);
   }
-  function urlInside(code3) {
-    if (code3 === 62) {
+  function urlInside(code4) {
+    if (code4 === 62) {
       effects.exit("autolinkProtocol");
-      return end(code3);
+      return end(code4);
     }
-    if (code3 === null || code3 === 32 || code3 === 60 || asciiControl(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 32 || code4 === 60 || asciiControl(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return urlInside;
   }
-  function emailAtext(code3) {
-    if (code3 === 64) {
-      effects.consume(code3);
+  function emailAtext(code4) {
+    if (code4 === 64) {
+      effects.consume(code4);
       size = 0;
       return emailAtSignOrDot;
     }
-    if (asciiAtext(code3)) {
-      effects.consume(code3);
+    if (asciiAtext(code4)) {
+      effects.consume(code4);
       return emailAtext;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function emailAtSignOrDot(code3) {
-    return asciiAlphanumeric(code3) ? emailLabel(code3) : nok(code3);
+  function emailAtSignOrDot(code4) {
+    return asciiAlphanumeric(code4) ? emailLabel(code4) : nok(code4);
   }
-  function emailLabel(code3) {
-    if (code3 === 46) {
-      effects.consume(code3);
+  function emailLabel(code4) {
+    if (code4 === 46) {
+      effects.consume(code4);
       size = 0;
       return emailAtSignOrDot;
     }
-    if (code3 === 62) {
+    if (code4 === 62) {
       effects.exit("autolinkProtocol").type = "autolinkEmail";
-      return end(code3);
+      return end(code4);
     }
-    return emailValue(code3);
+    return emailValue(code4);
   }
-  function emailValue(code3) {
-    if ((code3 === 45 || asciiAlphanumeric(code3)) && size++ < 63) {
-      effects.consume(code3);
-      return code3 === 45 ? emailValue : emailLabel;
+  function emailValue(code4) {
+    if ((code4 === 45 || asciiAlphanumeric(code4)) && size++ < 63) {
+      effects.consume(code4);
+      return code4 === 45 ? emailValue : emailLabel;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function end(code3) {
+  function end(code4) {
     effects.enter("autolinkMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("autolinkMarker");
     effects.exit("autolink");
-    return ok3;
+    return ok4;
   }
 }
 
@@ -31851,10 +31851,10 @@ var blankLine = {
   tokenize: tokenizeBlankLine,
   partial: true
 };
-function tokenizeBlankLine(effects, ok3, nok) {
+function tokenizeBlankLine(effects, ok4, nok) {
   return factorySpace(effects, afterWhitespace, "linePrefix");
-  function afterWhitespace(code3) {
-    return code3 === null || markdownLineEnding(code3) ? ok3(code3) : nok(code3);
+  function afterWhitespace(code4) {
+    return code4 === null || markdownLineEnding(code4) ? ok4(code4) : nok(code4);
   }
 }
 
@@ -31867,11 +31867,11 @@ var blockQuote = {
   },
   exit
 };
-function tokenizeBlockQuoteStart(effects, ok3, nok) {
+function tokenizeBlockQuoteStart(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
-    if (code3 === 62) {
+  function start(code4) {
+    if (code4 === 62) {
       const state = self2.containerState;
       if (!state.open) {
         effects.enter("blockQuote", {
@@ -31881,28 +31881,28 @@ function tokenizeBlockQuoteStart(effects, ok3, nok) {
       }
       effects.enter("blockQuotePrefix");
       effects.enter("blockQuoteMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("blockQuoteMarker");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    if (markdownSpace(code3)) {
+  function after(code4) {
+    if (markdownSpace(code4)) {
       effects.enter("blockQuotePrefixWhitespace");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("blockQuotePrefixWhitespace");
       effects.exit("blockQuotePrefix");
-      return ok3;
+      return ok4;
     }
     effects.exit("blockQuotePrefix");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeBlockQuoteContinuation(effects, ok3, nok) {
+function tokenizeBlockQuoteContinuation(effects, ok4, nok) {
   return factorySpace(
     effects,
-    effects.attempt(blockQuote, ok3, nok),
+    effects.attempt(blockQuote, ok4, nok),
     "linePrefix",
     this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
   );
@@ -31916,24 +31916,24 @@ var characterEscape = {
   name: "characterEscape",
   tokenize: tokenizeCharacterEscape
 };
-function tokenizeCharacterEscape(effects, ok3, nok) {
+function tokenizeCharacterEscape(effects, ok4, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("characterEscape");
     effects.enter("escapeMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("escapeMarker");
     return open;
   }
-  function open(code3) {
-    if (asciiPunctuation(code3)) {
+  function open(code4) {
+    if (asciiPunctuation(code4)) {
       effects.enter("characterEscapeValue");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterEscapeValue");
       effects.exit("characterEscape");
-      return ok3;
+      return ok4;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -34077,35 +34077,35 @@ var characterReference = {
   name: "characterReference",
   tokenize: tokenizeCharacterReference
 };
-function tokenizeCharacterReference(effects, ok3, nok) {
+function tokenizeCharacterReference(effects, ok4, nok) {
   const self2 = this;
   let size = 0;
   let max;
   let test;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("characterReference");
     effects.enter("characterReferenceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("characterReferenceMarker");
     return open;
   }
-  function open(code3) {
-    if (code3 === 35) {
+  function open(code4) {
+    if (code4 === 35) {
       effects.enter("characterReferenceMarkerNumeric");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarkerNumeric");
       return numeric;
     }
     effects.enter("characterReferenceValue");
     max = 31;
     test = asciiAlphanumeric;
-    return value(code3);
+    return value(code4);
   }
-  function numeric(code3) {
-    if (code3 === 88 || code3 === 120) {
+  function numeric(code4) {
+    if (code4 === 88 || code4 === 120) {
       effects.enter("characterReferenceMarkerHexadecimal");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarkerHexadecimal");
       effects.enter("characterReferenceValue");
       max = 6;
@@ -34115,26 +34115,26 @@ function tokenizeCharacterReference(effects, ok3, nok) {
     effects.enter("characterReferenceValue");
     max = 7;
     test = asciiDigit;
-    return value(code3);
+    return value(code4);
   }
-  function value(code3) {
+  function value(code4) {
     let token;
-    if (code3 === 59 && size) {
+    if (code4 === 59 && size) {
       token = effects.exit("characterReferenceValue");
       if (test === asciiAlphanumeric && !decodeNamedCharacterReference(self2.sliceSerialize(token))) {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("characterReferenceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarker");
       effects.exit("characterReference");
-      return ok3;
+      return ok4;
     }
-    if (test(code3) && size++ < max) {
-      effects.consume(code3);
+    if (test(code4) && size++ < max) {
+      effects.consume(code4);
       return value;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -34144,7 +34144,7 @@ var codeFenced = {
   tokenize: tokenizeCodeFenced,
   concrete: true
 };
-function tokenizeCodeFenced(effects, ok3, nok) {
+function tokenizeCodeFenced(effects, ok4, nok) {
   const self2 = this;
   const closingFenceConstruct = {
     tokenize: tokenizeClosingFence,
@@ -34159,73 +34159,73 @@ function tokenizeCodeFenced(effects, ok3, nok) {
   let sizeOpen = 0;
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("codeFenced");
     effects.enter("codeFencedFence");
     effects.enter("codeFencedFenceSequence");
-    marker = code3;
-    return sequenceOpen(code3);
+    marker = code4;
+    return sequenceOpen(code4);
   }
-  function sequenceOpen(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function sequenceOpen(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       sizeOpen++;
       return sequenceOpen;
     }
     effects.exit("codeFencedFenceSequence");
-    return sizeOpen < 3 ? nok(code3) : factorySpace(effects, infoOpen, "whitespace")(code3);
+    return sizeOpen < 3 ? nok(code4) : factorySpace(effects, infoOpen, "whitespace")(code4);
   }
-  function infoOpen(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return openAfter(code3);
+  function infoOpen(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return openAfter(code4);
     }
     effects.enter("codeFencedFenceInfo");
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return info2(code3);
+    return info2(code4);
   }
-  function info2(code3) {
-    if (code3 === null || markdownLineEndingOrSpace(code3)) {
+  function info2(code4) {
+    if (code4 === null || markdownLineEndingOrSpace(code4)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceInfo");
-      return factorySpace(effects, infoAfter, "whitespace")(code3);
+      return factorySpace(effects, infoAfter, "whitespace")(code4);
     }
-    if (code3 === 96 && code3 === marker)
-      return nok(code3);
-    effects.consume(code3);
+    if (code4 === 96 && code4 === marker)
+      return nok(code4);
+    effects.consume(code4);
     return info2;
   }
-  function infoAfter(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return openAfter(code3);
+  function infoAfter(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return openAfter(code4);
     }
     effects.enter("codeFencedFenceMeta");
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return meta(code3);
+    return meta(code4);
   }
-  function meta(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function meta(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceMeta");
-      return openAfter(code3);
+      return openAfter(code4);
     }
-    if (code3 === 96 && code3 === marker)
-      return nok(code3);
-    effects.consume(code3);
+    if (code4 === 96 && code4 === marker)
+      return nok(code4);
+    effects.consume(code4);
     return meta;
   }
-  function openAfter(code3) {
+  function openAfter(code4) {
     effects.exit("codeFencedFence");
-    return self2.interrupt ? ok3(code3) : contentStart(code3);
+    return self2.interrupt ? ok4(code4) : contentStart(code4);
   }
-  function contentStart(code3) {
-    if (code3 === null) {
-      return after(code3);
+  function contentStart(code4) {
+    if (code4 === null) {
+      return after(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       return effects.attempt(
         nonLazyLine,
         effects.attempt(
@@ -34239,37 +34239,37 @@ function tokenizeCodeFenced(effects, ok3, nok) {
           ) : contentStart
         ),
         after
-      )(code3);
+      )(code4);
     }
     effects.enter("codeFlowValue");
-    return contentContinue(code3);
+    return contentContinue(code4);
   }
-  function contentContinue(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function contentContinue(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("codeFlowValue");
-      return contentStart(code3);
+      return contentStart(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return contentContinue;
   }
-  function after(code3) {
+  function after(code4) {
     effects.exit("codeFenced");
-    return ok3(code3);
+    return ok4(code4);
   }
-  function tokenizeNonLazyLine(effects2, ok4, nok2) {
+  function tokenizeNonLazyLine(effects2, ok5, nok2) {
     const self3 = this;
     return start2;
-    function start2(code3) {
+    function start2(code4) {
       effects2.enter("lineEnding");
-      effects2.consume(code3);
+      effects2.consume(code4);
       effects2.exit("lineEnding");
       return lineStart;
     }
-    function lineStart(code3) {
-      return self3.parser.lazy[self3.now().line] ? nok2(code3) : ok4(code3);
+    function lineStart(code4) {
+      return self3.parser.lazy[self3.now().line] ? nok2(code4) : ok5(code4);
     }
   }
-  function tokenizeClosingFence(effects2, ok4, nok2) {
+  function tokenizeClosingFence(effects2, ok5, nok2) {
     let size = 0;
     return factorySpace(
       effects2,
@@ -34277,28 +34277,28 @@ function tokenizeCodeFenced(effects, ok3, nok) {
       "linePrefix",
       this.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
     );
-    function closingSequenceStart(code3) {
+    function closingSequenceStart(code4) {
       effects2.enter("codeFencedFence");
       effects2.enter("codeFencedFenceSequence");
-      return closingSequence(code3);
+      return closingSequence(code4);
     }
-    function closingSequence(code3) {
-      if (code3 === marker) {
-        effects2.consume(code3);
+    function closingSequence(code4) {
+      if (code4 === marker) {
+        effects2.consume(code4);
         size++;
         return closingSequence;
       }
       if (size < sizeOpen)
-        return nok2(code3);
+        return nok2(code4);
       effects2.exit("codeFencedFenceSequence");
-      return factorySpace(effects2, closingSequenceEnd, "whitespace")(code3);
+      return factorySpace(effects2, closingSequenceEnd, "whitespace")(code4);
     }
-    function closingSequenceEnd(code3) {
-      if (code3 === null || markdownLineEnding(code3)) {
+    function closingSequenceEnd(code4) {
+      if (code4 === null || markdownLineEnding(code4)) {
         effects2.exit("codeFencedFence");
-        return ok4(code3);
+        return ok5(code4);
       }
-      return nok2(code3);
+      return nok2(code4);
     }
   }
 }
@@ -34312,58 +34312,58 @@ var indentedContent = {
   tokenize: tokenizeIndentedContent,
   partial: true
 };
-function tokenizeCodeIndented(effects, ok3, nok) {
+function tokenizeCodeIndented(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("codeIndented");
-    return factorySpace(effects, afterStartPrefix, "linePrefix", 4 + 1)(code3);
+    return factorySpace(effects, afterStartPrefix, "linePrefix", 4 + 1)(code4);
   }
-  function afterStartPrefix(code3) {
+  function afterStartPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? afterPrefix(code3) : nok(code3);
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? afterPrefix(code4) : nok(code4);
   }
-  function afterPrefix(code3) {
-    if (code3 === null) {
-      return after(code3);
+  function afterPrefix(code4) {
+    if (code4 === null) {
+      return after(code4);
     }
-    if (markdownLineEnding(code3)) {
-      return effects.attempt(indentedContent, afterPrefix, after)(code3);
+    if (markdownLineEnding(code4)) {
+      return effects.attempt(indentedContent, afterPrefix, after)(code4);
     }
     effects.enter("codeFlowValue");
-    return content3(code3);
+    return content3(code4);
   }
-  function content3(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function content3(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("codeFlowValue");
-      return afterPrefix(code3);
+      return afterPrefix(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return content3;
   }
-  function after(code3) {
+  function after(code4) {
     effects.exit("codeIndented");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeIndentedContent(effects, ok3, nok) {
+function tokenizeIndentedContent(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     if (self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return start;
     }
-    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code3);
+    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code4);
   }
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok3(code3) : markdownLineEnding(code3) ? start(code3) : nok(code3);
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok4(code4) : markdownLineEnding(code4) ? start(code4) : nok(code4);
   }
 }
 
@@ -34411,74 +34411,74 @@ function resolveCodeText(events) {
   }
   return events;
 }
-function previous(code3) {
-  return code3 !== 96 || this.events[this.events.length - 1][1].type === "characterEscape";
+function previous(code4) {
+  return code4 !== 96 || this.events[this.events.length - 1][1].type === "characterEscape";
 }
-function tokenizeCodeText(effects, ok3, nok) {
+function tokenizeCodeText(effects, ok4, nok) {
   const self2 = this;
   let sizeOpen = 0;
   let size;
   let token;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("codeText");
     effects.enter("codeTextSequence");
-    return openingSequence(code3);
+    return openingSequence(code4);
   }
-  function openingSequence(code3) {
-    if (code3 === 96) {
-      effects.consume(code3);
+  function openingSequence(code4) {
+    if (code4 === 96) {
+      effects.consume(code4);
       sizeOpen++;
       return openingSequence;
     }
     effects.exit("codeTextSequence");
-    return gap(code3);
+    return gap(code4);
   }
-  function gap(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function gap(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 96) {
+    if (code4 === 96) {
       token = effects.enter("codeTextSequence");
       size = 0;
-      return closingSequence(code3);
+      return closingSequence(code4);
     }
-    if (code3 === 32) {
+    if (code4 === 32) {
       effects.enter("space");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("space");
       return gap;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return gap;
     }
     effects.enter("codeTextData");
-    return data(code3);
+    return data(code4);
   }
-  function data(code3) {
-    if (code3 === null || code3 === 32 || code3 === 96 || markdownLineEnding(code3)) {
+  function data(code4) {
+    if (code4 === null || code4 === 32 || code4 === 96 || markdownLineEnding(code4)) {
       effects.exit("codeTextData");
-      return gap(code3);
+      return gap(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
-  function closingSequence(code3) {
-    if (code3 === 96) {
-      effects.consume(code3);
+  function closingSequence(code4) {
+    if (code4 === 96) {
+      effects.consume(code4);
       size++;
       return closingSequence;
     }
     if (size === sizeOpen) {
       effects.exit("codeTextSequence");
       effects.exit("codeText");
-      return ok3(code3);
+      return ok4(code4);
     }
     token.type = "codeTextData";
-    return data(code3);
+    return data(code4);
   }
 }
 
@@ -34636,37 +34636,37 @@ function resolveContent(events) {
   subtokenize(events);
   return events;
 }
-function tokenizeContent(effects, ok3) {
+function tokenizeContent(effects, ok4) {
   let previous3;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("content");
     previous3 = effects.enter("chunkContent", {
       contentType: "content"
     });
-    return data(code3);
+    return data(code4);
   }
-  function data(code3) {
-    if (code3 === null) {
-      return contentEnd(code3);
+  function data(code4) {
+    if (code4 === null) {
+      return contentEnd(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       return effects.check(
         continuationConstruct,
         contentContinue,
         contentEnd
-      )(code3);
+      )(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
-  function contentEnd(code3) {
+  function contentEnd(code4) {
     effects.exit("chunkContent");
     effects.exit("content");
-    return ok3(code3);
+    return ok4(code4);
   }
-  function contentContinue(code3) {
-    effects.consume(code3);
+  function contentContinue(code4) {
+    effects.consume(code4);
     effects.exit("chunkContent");
     previous3.next = effects.enter("chunkContent", {
       contentType: "content",
@@ -34676,44 +34676,44 @@ function tokenizeContent(effects, ok3) {
     return data;
   }
 }
-function tokenizeContinuation(effects, ok3, nok) {
+function tokenizeContinuation(effects, ok4, nok) {
   const self2 = this;
   return startLookahead;
-  function startLookahead(code3) {
+  function startLookahead(code4) {
     effects.exit("chunkContent");
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(effects, prefixed, "linePrefix");
   }
-  function prefixed(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return nok(code3);
+  function prefixed(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return nok(code4);
     }
     const tail = self2.events[self2.events.length - 1];
     if (!self2.parser.constructs.disable.null.includes("codeIndented") && tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4) {
-      return ok3(code3);
+      return ok4(code4);
     }
-    return effects.interrupt(self2.parser.constructs.flow, nok, ok3)(code3);
+    return effects.interrupt(self2.parser.constructs.flow, nok, ok4)(code4);
   }
 }
 
 // node_modules/micromark-factory-destination/index.js
-function factoryDestination(effects, ok3, nok, type2, literalType, literalMarkerType, rawType, stringType, max) {
+function factoryDestination(effects, ok4, nok, type2, literalType, literalMarkerType, rawType, stringType, max) {
   const limit = max || Number.POSITIVE_INFINITY;
   let balance = 0;
   return start;
-  function start(code3) {
-    if (code3 === 60) {
+  function start(code4) {
+    if (code4 === 60) {
       effects.enter(type2);
       effects.enter(literalType);
       effects.enter(literalMarkerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(literalMarkerType);
       return destinationEnclosedBefore;
     }
-    if (code3 === null || code3 === 41 || asciiControl(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 41 || asciiControl(code4)) {
+      return nok(code4);
     }
     effects.enter(type2);
     effects.enter(rawType);
@@ -34721,223 +34721,223 @@ function factoryDestination(effects, ok3, nok, type2, literalType, literalMarker
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return destinationRaw(code3);
+    return destinationRaw(code4);
   }
-  function destinationEnclosedBefore(code3) {
-    if (code3 === 62) {
+  function destinationEnclosedBefore(code4) {
+    if (code4 === 62) {
       effects.enter(literalMarkerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(literalMarkerType);
       effects.exit(literalType);
       effects.exit(type2);
-      return ok3;
+      return ok4;
     }
     effects.enter(stringType);
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return destinationEnclosed(code3);
+    return destinationEnclosed(code4);
   }
-  function destinationEnclosed(code3) {
-    if (code3 === 62) {
+  function destinationEnclosed(code4) {
+    if (code4 === 62) {
       effects.exit("chunkString");
       effects.exit(stringType);
-      return destinationEnclosedBefore(code3);
+      return destinationEnclosedBefore(code4);
     }
-    if (code3 === null || code3 === 60 || markdownLineEnding(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 60 || markdownLineEnding(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? destinationEnclosedEscape : destinationEnclosed;
+    effects.consume(code4);
+    return code4 === 92 ? destinationEnclosedEscape : destinationEnclosed;
   }
-  function destinationEnclosedEscape(code3) {
-    if (code3 === 60 || code3 === 62 || code3 === 92) {
-      effects.consume(code3);
+  function destinationEnclosedEscape(code4) {
+    if (code4 === 60 || code4 === 62 || code4 === 92) {
+      effects.consume(code4);
       return destinationEnclosed;
     }
-    return destinationEnclosed(code3);
+    return destinationEnclosed(code4);
   }
-  function destinationRaw(code3) {
-    if (code3 === 40) {
+  function destinationRaw(code4) {
+    if (code4 === 40) {
       if (++balance > limit)
-        return nok(code3);
-      effects.consume(code3);
+        return nok(code4);
+      effects.consume(code4);
       return destinationRaw;
     }
-    if (code3 === 41) {
+    if (code4 === 41) {
       if (!balance--) {
         effects.exit("chunkString");
         effects.exit(stringType);
         effects.exit(rawType);
         effects.exit(type2);
-        return ok3(code3);
+        return ok4(code4);
       }
-      effects.consume(code3);
+      effects.consume(code4);
       return destinationRaw;
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3)) {
+    if (code4 === null || markdownLineEndingOrSpace(code4)) {
       if (balance)
-        return nok(code3);
+        return nok(code4);
       effects.exit("chunkString");
       effects.exit(stringType);
       effects.exit(rawType);
       effects.exit(type2);
-      return ok3(code3);
+      return ok4(code4);
     }
-    if (asciiControl(code3))
-      return nok(code3);
-    effects.consume(code3);
-    return code3 === 92 ? destinationRawEscape : destinationRaw;
+    if (asciiControl(code4))
+      return nok(code4);
+    effects.consume(code4);
+    return code4 === 92 ? destinationRawEscape : destinationRaw;
   }
-  function destinationRawEscape(code3) {
-    if (code3 === 40 || code3 === 41 || code3 === 92) {
-      effects.consume(code3);
+  function destinationRawEscape(code4) {
+    if (code4 === 40 || code4 === 41 || code4 === 92) {
+      effects.consume(code4);
       return destinationRaw;
     }
-    return destinationRaw(code3);
+    return destinationRaw(code4);
   }
 }
 
 // node_modules/micromark-factory-label/index.js
-function factoryLabel(effects, ok3, nok, type2, markerType, stringType) {
+function factoryLabel(effects, ok4, nok, type2, markerType, stringType) {
   const self2 = this;
   let size = 0;
   let data;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter(type2);
     effects.enter(markerType);
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit(markerType);
     effects.enter(stringType);
     return atBreak;
   }
-  function atBreak(code3) {
-    if (code3 === null || code3 === 91 || code3 === 93 && !data || /* To do: remove in the future once we’ve switched from
+  function atBreak(code4) {
+    if (code4 === null || code4 === 91 || code4 === 93 && !data || /* To do: remove in the future once we’ve switched from
      * `micromark-extension-footnote` to `micromark-extension-gfm-footnote`,
      * which doesn’t need this */
     /* Hidden footnotes hook */
     /* c8 ignore next 3 */
-    code3 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs || size > 999) {
-      return nok(code3);
+    code4 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs || size > 999) {
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit(stringType);
       effects.enter(markerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(markerType);
       effects.exit(type2);
-      return ok3;
+      return ok4;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return atBreak;
     }
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return label(code3);
+    return label(code4);
   }
-  function label(code3) {
-    if (code3 === null || code3 === 91 || code3 === 93 || markdownLineEnding(code3) || size++ > 999) {
+  function label(code4) {
+    if (code4 === null || code4 === 91 || code4 === 93 || markdownLineEnding(code4) || size++ > 999) {
       effects.exit("chunkString");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    effects.consume(code3);
-    data = data || !markdownSpace(code3);
-    return code3 === 92 ? labelEscape : label;
+    effects.consume(code4);
+    data = data || !markdownSpace(code4);
+    return code4 === 92 ? labelEscape : label;
   }
-  function labelEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function labelEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return label;
     }
-    return label(code3);
+    return label(code4);
   }
 }
 
 // node_modules/micromark-factory-title/index.js
-function factoryTitle(effects, ok3, nok, type2, markerType, stringType) {
+function factoryTitle(effects, ok4, nok, type2, markerType, stringType) {
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter(type2);
     effects.enter(markerType);
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit(markerType);
-    marker = code3 === 40 ? 41 : code3;
+    marker = code4 === 40 ? 41 : code4;
     return atFirstTitleBreak;
   }
-  function atFirstTitleBreak(code3) {
-    if (code3 === marker) {
+  function atFirstTitleBreak(code4) {
+    if (code4 === marker) {
       effects.enter(markerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(markerType);
       effects.exit(type2);
-      return ok3;
+      return ok4;
     }
     effects.enter(stringType);
-    return atTitleBreak(code3);
+    return atTitleBreak(code4);
   }
-  function atTitleBreak(code3) {
-    if (code3 === marker) {
+  function atTitleBreak(code4) {
+    if (code4 === marker) {
       effects.exit(stringType);
       return atFirstTitleBreak(marker);
     }
-    if (code3 === null) {
-      return nok(code3);
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return factorySpace(effects, atTitleBreak, "linePrefix");
     }
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return title(code3);
+    return title(code4);
   }
-  function title(code3) {
-    if (code3 === marker || code3 === null || markdownLineEnding(code3)) {
+  function title(code4) {
+    if (code4 === marker || code4 === null || markdownLineEnding(code4)) {
       effects.exit("chunkString");
-      return atTitleBreak(code3);
+      return atTitleBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? titleEscape : title;
+    effects.consume(code4);
+    return code4 === 92 ? titleEscape : title;
   }
-  function titleEscape(code3) {
-    if (code3 === marker || code3 === 92) {
-      effects.consume(code3);
+  function titleEscape(code4) {
+    if (code4 === marker || code4 === 92) {
+      effects.consume(code4);
       return title;
     }
-    return title(code3);
+    return title(code4);
   }
 }
 
 // node_modules/micromark-factory-whitespace/index.js
-function factoryWhitespace(effects, ok3) {
+function factoryWhitespace(effects, ok4) {
   let seen;
   return start;
-  function start(code3) {
-    if (markdownLineEnding(code3)) {
+  function start(code4) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       seen = true;
       return start;
     }
-    if (markdownSpace(code3)) {
+    if (markdownSpace(code4)) {
       return factorySpace(
         effects,
         start,
         seen ? "linePrefix" : "lineSuffix"
-      )(code3);
+      )(code4);
     }
-    return ok3(code3);
+    return ok4(code4);
   }
 }
 
@@ -34955,11 +34955,11 @@ var titleConstruct = {
   tokenize: tokenizeTitle,
   partial: true
 };
-function tokenizeDefinition(effects, ok3, nok) {
+function tokenizeDefinition(effects, ok4, nok) {
   const self2 = this;
   let identifier;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("definition");
     return factoryLabel.call(
       self2,
@@ -34969,15 +34969,15 @@ function tokenizeDefinition(effects, ok3, nok) {
       "definitionLabel",
       "definitionLabelMarker",
       "definitionLabelString"
-    )(code3);
+    )(code4);
   }
-  function labelAfter(code3) {
+  function labelAfter(code4) {
     identifier = normalizeIdentifier(
       self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1)
     );
-    if (code3 === 58) {
+    if (code4 === 58) {
       effects.enter("definitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("definitionMarker");
       return factoryWhitespace(
         effects,
@@ -34997,26 +34997,26 @@ function tokenizeDefinition(effects, ok3, nok) {
         )
       );
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function after(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("definition");
       if (!self2.parser.defined.includes(identifier)) {
         self2.parser.defined.push(identifier);
       }
-      return ok3(code3);
+      return ok4(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
-function tokenizeTitle(effects, ok3, nok) {
+function tokenizeTitle(effects, ok4, nok) {
   return start;
-  function start(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, before)(code3) : nok(code3);
+  function start(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, before)(code4) : nok(code4);
   }
-  function before(code3) {
-    if (code3 === 34 || code3 === 39 || code3 === 40) {
+  function before(code4) {
+    if (code4 === 34 || code4 === 39 || code4 === 40) {
       return factoryTitle(
         effects,
         factorySpace(effects, after, "whitespace"),
@@ -35024,12 +35024,12 @@ function tokenizeTitle(effects, ok3, nok) {
         "definitionTitle",
         "definitionTitleMarker",
         "definitionTitleString"
-      )(code3);
+      )(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    return code3 === null || markdownLineEnding(code3) ? ok3(code3) : nok(code3);
+  function after(code4) {
+    return code4 === null || markdownLineEnding(code4) ? ok4(code4) : nok(code4);
   }
 }
 
@@ -35038,21 +35038,21 @@ var hardBreakEscape = {
   name: "hardBreakEscape",
   tokenize: tokenizeHardBreakEscape
 };
-function tokenizeHardBreakEscape(effects, ok3, nok) {
+function tokenizeHardBreakEscape(effects, ok4, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("hardBreakEscape");
     effects.enter("escapeMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     return open;
   }
-  function open(code3) {
-    if (markdownLineEnding(code3)) {
+  function open(code4) {
+    if (markdownLineEnding(code4)) {
       effects.exit("escapeMarker");
       effects.exit("hardBreakEscape");
-      return ok3(code3);
+      return ok4(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -35066,7 +35066,7 @@ function resolveHeadingAtx(events, context) {
   let contentEnd = events.length - 2;
   let contentStart = 3;
   let content3;
-  let text5;
+  let text6;
   if (events[contentStart][1].type === "whitespace") {
     contentStart += 2;
   }
@@ -35082,7 +35082,7 @@ function resolveHeadingAtx(events, context) {
       start: events[contentStart][1].start,
       end: events[contentEnd][1].end
     };
-    text5 = {
+    text6 = {
       type: "chunkText",
       start: events[contentStart][1].start,
       end: events[contentEnd][1].end,
@@ -35091,62 +35091,62 @@ function resolveHeadingAtx(events, context) {
     };
     splice(events, contentStart, contentEnd - contentStart + 1, [
       ["enter", content3, context],
-      ["enter", text5, context],
-      ["exit", text5, context],
+      ["enter", text6, context],
+      ["exit", text6, context],
       ["exit", content3, context]
     ]);
   }
   return events;
 }
-function tokenizeHeadingAtx(effects, ok3, nok) {
+function tokenizeHeadingAtx(effects, ok4, nok) {
   const self2 = this;
   let size = 0;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("atxHeading");
     effects.enter("atxHeadingSequence");
-    return fenceOpenInside(code3);
+    return fenceOpenInside(code4);
   }
-  function fenceOpenInside(code3) {
-    if (code3 === 35 && size++ < 6) {
-      effects.consume(code3);
+  function fenceOpenInside(code4) {
+    if (code4 === 35 && size++ < 6) {
+      effects.consume(code4);
       return fenceOpenInside;
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3)) {
+    if (code4 === null || markdownLineEndingOrSpace(code4)) {
       effects.exit("atxHeadingSequence");
-      return self2.interrupt ? ok3(code3) : headingBreak(code3);
+      return self2.interrupt ? ok4(code4) : headingBreak(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function headingBreak(code3) {
-    if (code3 === 35) {
+  function headingBreak(code4) {
+    if (code4 === 35) {
       effects.enter("atxHeadingSequence");
-      return sequence(code3);
+      return sequence(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("atxHeading");
-      return ok3(code3);
+      return ok4(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headingBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headingBreak, "whitespace")(code4);
     }
     effects.enter("atxHeadingText");
-    return data(code3);
+    return data(code4);
   }
-  function sequence(code3) {
-    if (code3 === 35) {
-      effects.consume(code3);
+  function sequence(code4) {
+    if (code4 === 35) {
+      effects.consume(code4);
       return sequence;
     }
     effects.exit("atxHeadingSequence");
-    return headingBreak(code3);
+    return headingBreak(code4);
   }
-  function data(code3) {
-    if (code3 === null || code3 === 35 || markdownLineEndingOrSpace(code3)) {
+  function data(code4) {
+    if (code4 === null || code4 === 35 || markdownLineEndingOrSpace(code4)) {
       effects.exit("atxHeadingText");
-      return headingBreak(code3);
+      return headingBreak(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
 }
@@ -35242,7 +35242,7 @@ function resolveToHtmlFlow(events) {
   }
   return events;
 }
-function tokenizeHtmlFlow(effects, ok3, nok) {
+function tokenizeHtmlFlow(effects, ok4, nok) {
   const self2 = this;
   let kind;
   let startTag;
@@ -35250,244 +35250,244 @@ function tokenizeHtmlFlow(effects, ok3, nok) {
   let index2;
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("htmlFlow");
     effects.enter("htmlFlowData");
-    effects.consume(code3);
+    effects.consume(code4);
     return open;
   }
-  function open(code3) {
-    if (code3 === 33) {
-      effects.consume(code3);
+  function open(code4) {
+    if (code4 === 33) {
+      effects.consume(code4);
       return declarationStart;
     }
-    if (code3 === 47) {
-      effects.consume(code3);
+    if (code4 === 47) {
+      effects.consume(code4);
       return tagCloseStart;
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       kind = 3;
-      return self2.interrupt ? ok3 : continuationDeclarationInside;
+      return self2.interrupt ? ok4 : continuationDeclarationInside;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
-      buffer2 = String.fromCharCode(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
+      buffer2 = String.fromCharCode(code4);
       startTag = true;
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function declarationStart(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function declarationStart(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       kind = 2;
       return commentOpenInside;
     }
-    if (code3 === 91) {
-      effects.consume(code3);
+    if (code4 === 91) {
+      effects.consume(code4);
       kind = 5;
       buffer2 = "CDATA[";
       index2 = 0;
       return cdataOpenInside;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       kind = 4;
-      return self2.interrupt ? ok3 : continuationDeclarationInside;
+      return self2.interrupt ? ok4 : continuationDeclarationInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function commentOpenInside(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
-      return self2.interrupt ? ok3 : continuationDeclarationInside;
+  function commentOpenInside(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
+      return self2.interrupt ? ok4 : continuationDeclarationInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function cdataOpenInside(code3) {
-    if (code3 === buffer2.charCodeAt(index2++)) {
-      effects.consume(code3);
-      return index2 === buffer2.length ? self2.interrupt ? ok3 : continuation : cdataOpenInside;
+  function cdataOpenInside(code4) {
+    if (code4 === buffer2.charCodeAt(index2++)) {
+      effects.consume(code4);
+      return index2 === buffer2.length ? self2.interrupt ? ok4 : continuation : cdataOpenInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagCloseStart(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
-      buffer2 = String.fromCharCode(code3);
+  function tagCloseStart(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
+      buffer2 = String.fromCharCode(code4);
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagName(code3) {
-    if (code3 === null || code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      if (code3 !== 47 && startTag && htmlRawNames.includes(buffer2.toLowerCase())) {
+  function tagName(code4) {
+    if (code4 === null || code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      if (code4 !== 47 && startTag && htmlRawNames.includes(buffer2.toLowerCase())) {
         kind = 1;
-        return self2.interrupt ? ok3(code3) : continuation(code3);
+        return self2.interrupt ? ok4(code4) : continuation(code4);
       }
       if (htmlBlockNames.includes(buffer2.toLowerCase())) {
         kind = 6;
-        if (code3 === 47) {
-          effects.consume(code3);
+        if (code4 === 47) {
+          effects.consume(code4);
           return basicSelfClosing;
         }
-        return self2.interrupt ? ok3(code3) : continuation(code3);
+        return self2.interrupt ? ok4(code4) : continuation(code4);
       }
       kind = 7;
-      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code3) : startTag ? completeAttributeNameBefore(code3) : completeClosingTagAfter(code3);
+      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code4) : startTag ? completeAttributeNameBefore(code4) : completeClosingTagAfter(code4);
     }
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
-      buffer2 += String.fromCharCode(code3);
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
+      buffer2 += String.fromCharCode(code4);
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function basicSelfClosing(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
-      return self2.interrupt ? ok3 : continuation;
+  function basicSelfClosing(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
+      return self2.interrupt ? ok4 : continuation;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeClosingTagAfter(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+  function completeClosingTagAfter(code4) {
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeClosingTagAfter;
     }
-    return completeEnd(code3);
+    return completeEnd(code4);
   }
-  function completeAttributeNameBefore(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function completeAttributeNameBefore(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       return completeEnd;
     }
-    if (code3 === 58 || code3 === 95 || asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (code4 === 58 || code4 === 95 || asciiAlpha(code4)) {
+      effects.consume(code4);
       return completeAttributeName;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeNameBefore;
     }
-    return completeEnd(code3);
+    return completeEnd(code4);
   }
-  function completeAttributeName(code3) {
-    if (code3 === 45 || code3 === 46 || code3 === 58 || code3 === 95 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function completeAttributeName(code4) {
+    if (code4 === 45 || code4 === 46 || code4 === 58 || code4 === 95 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return completeAttributeName;
     }
-    return completeAttributeNameAfter(code3);
+    return completeAttributeNameAfter(code4);
   }
-  function completeAttributeNameAfter(code3) {
-    if (code3 === 61) {
-      effects.consume(code3);
+  function completeAttributeNameAfter(code4) {
+    if (code4 === 61) {
+      effects.consume(code4);
       return completeAttributeValueBefore;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeNameAfter;
     }
-    return completeAttributeNameBefore(code3);
+    return completeAttributeNameBefore(code4);
   }
-  function completeAttributeValueBefore(code3) {
-    if (code3 === null || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96) {
-      return nok(code3);
+  function completeAttributeValueBefore(code4) {
+    if (code4 === null || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 34 || code3 === 39) {
-      effects.consume(code3);
-      marker = code3;
+    if (code4 === 34 || code4 === 39) {
+      effects.consume(code4);
+      marker = code4;
       return completeAttributeValueQuoted;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeValueBefore;
     }
     marker = null;
-    return completeAttributeValueUnquoted(code3);
+    return completeAttributeValueUnquoted(code4);
   }
-  function completeAttributeValueQuoted(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return nok(code3);
+  function completeAttributeValueQuoted(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return nok(code4);
     }
-    if (code3 === marker) {
-      effects.consume(code3);
+    if (code4 === marker) {
+      effects.consume(code4);
       return completeAttributeValueQuotedAfter;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return completeAttributeValueQuoted;
   }
-  function completeAttributeValueUnquoted(code3) {
-    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96 || markdownLineEndingOrSpace(code3)) {
-      return completeAttributeNameAfter(code3);
+  function completeAttributeValueUnquoted(code4) {
+    if (code4 === null || code4 === 34 || code4 === 39 || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96 || markdownLineEndingOrSpace(code4)) {
+      return completeAttributeNameAfter(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return completeAttributeValueUnquoted;
   }
-  function completeAttributeValueQuotedAfter(code3) {
-    if (code3 === 47 || code3 === 62 || markdownSpace(code3)) {
-      return completeAttributeNameBefore(code3);
+  function completeAttributeValueQuotedAfter(code4) {
+    if (code4 === 47 || code4 === 62 || markdownSpace(code4)) {
+      return completeAttributeNameBefore(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeEnd(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function completeEnd(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       return completeAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeAfter(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+  function completeAfter(code4) {
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAfter;
     }
-    return code3 === null || markdownLineEnding(code3) ? continuation(code3) : nok(code3);
+    return code4 === null || markdownLineEnding(code4) ? continuation(code4) : nok(code4);
   }
-  function continuation(code3) {
-    if (code3 === 45 && kind === 2) {
-      effects.consume(code3);
+  function continuation(code4) {
+    if (code4 === 45 && kind === 2) {
+      effects.consume(code4);
       return continuationCommentInside;
     }
-    if (code3 === 60 && kind === 1) {
-      effects.consume(code3);
+    if (code4 === 60 && kind === 1) {
+      effects.consume(code4);
       return continuationRawTagOpen;
     }
-    if (code3 === 62 && kind === 4) {
-      effects.consume(code3);
+    if (code4 === 62 && kind === 4) {
+      effects.consume(code4);
       return continuationClose;
     }
-    if (code3 === 63 && kind === 3) {
-      effects.consume(code3);
+    if (code4 === 63 && kind === 3) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    if (code3 === 93 && kind === 5) {
-      effects.consume(code3);
+    if (code4 === 93 && kind === 5) {
+      effects.consume(code4);
       return continuationCharacterDataInside;
     }
-    if (markdownLineEnding(code3) && (kind === 6 || kind === 7)) {
+    if (markdownLineEnding(code4) && (kind === 6 || kind === 7)) {
       return effects.check(
         nextBlankConstruct,
         continuationClose,
         continuationAtLineEnding
-      )(code3);
+      )(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
-      return continuationAtLineEnding(code3);
+    if (code4 === null || markdownLineEnding(code4)) {
+      return continuationAtLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return continuation;
   }
-  function continuationAtLineEnding(code3) {
+  function continuationAtLineEnding(code4) {
     effects.exit("htmlFlowData");
-    return htmlContinueStart(code3);
+    return htmlContinueStart(code4);
   }
-  function htmlContinueStart(code3) {
-    if (code3 === null) {
-      return done(code3);
+  function htmlContinueStart(code4) {
+    if (code4 === null) {
+      return done(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       return effects.attempt(
         {
           tokenize: htmlLineEnd,
@@ -35495,89 +35495,89 @@ function tokenizeHtmlFlow(effects, ok3, nok) {
         },
         htmlContinueStart,
         done
-      )(code3);
+      )(code4);
     }
     effects.enter("htmlFlowData");
-    return continuation(code3);
+    return continuation(code4);
   }
-  function htmlLineEnd(effects2, ok4, nok2) {
+  function htmlLineEnd(effects2, ok5, nok2) {
     return start2;
-    function start2(code3) {
+    function start2(code4) {
       effects2.enter("lineEnding");
-      effects2.consume(code3);
+      effects2.consume(code4);
       effects2.exit("lineEnding");
       return lineStart;
     }
-    function lineStart(code3) {
-      return self2.parser.lazy[self2.now().line] ? nok2(code3) : ok4(code3);
+    function lineStart(code4) {
+      return self2.parser.lazy[self2.now().line] ? nok2(code4) : ok5(code4);
     }
   }
-  function continuationCommentInside(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function continuationCommentInside(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationRawTagOpen(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function continuationRawTagOpen(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       buffer2 = "";
       return continuationRawEndTag;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationRawEndTag(code3) {
-    if (code3 === 62 && htmlRawNames.includes(buffer2.toLowerCase())) {
-      effects.consume(code3);
+  function continuationRawEndTag(code4) {
+    if (code4 === 62 && htmlRawNames.includes(buffer2.toLowerCase())) {
+      effects.consume(code4);
       return continuationClose;
     }
-    if (asciiAlpha(code3) && buffer2.length < 8) {
-      effects.consume(code3);
-      buffer2 += String.fromCharCode(code3);
+    if (asciiAlpha(code4) && buffer2.length < 8) {
+      effects.consume(code4);
+      buffer2 += String.fromCharCode(code4);
       return continuationRawEndTag;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationCharacterDataInside(code3) {
-    if (code3 === 93) {
-      effects.consume(code3);
+  function continuationCharacterDataInside(code4) {
+    if (code4 === 93) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationDeclarationInside(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function continuationDeclarationInside(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       return continuationClose;
     }
-    if (code3 === 45 && kind === 2) {
-      effects.consume(code3);
+    if (code4 === 45 && kind === 2) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationClose(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function continuationClose(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("htmlFlowData");
-      return done(code3);
+      return done(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return continuationClose;
   }
-  function done(code3) {
+  function done(code4) {
     effects.exit("htmlFlow");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeNextBlank(effects, ok3, nok) {
+function tokenizeNextBlank(effects, ok4, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.exit("htmlFlowData");
     effects.enter("lineEndingBlank");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEndingBlank");
-    return effects.attempt(blankLine, ok3, nok);
+    return effects.attempt(blankLine, ok4, nok);
   }
 }
 
@@ -35586,300 +35586,300 @@ var htmlText = {
   name: "htmlText",
   tokenize: tokenizeHtmlText
 };
-function tokenizeHtmlText(effects, ok3, nok) {
+function tokenizeHtmlText(effects, ok4, nok) {
   const self2 = this;
   let marker;
   let buffer2;
   let index2;
   let returnState;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("htmlText");
     effects.enter("htmlTextData");
-    effects.consume(code3);
+    effects.consume(code4);
     return open;
   }
-  function open(code3) {
-    if (code3 === 33) {
-      effects.consume(code3);
+  function open(code4) {
+    if (code4 === 33) {
+      effects.consume(code4);
       return declarationOpen;
     }
-    if (code3 === 47) {
-      effects.consume(code3);
+    if (code4 === 47) {
+      effects.consume(code4);
       return tagCloseStart;
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       return instruction;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagOpen;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function declarationOpen(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function declarationOpen(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentOpen;
     }
-    if (code3 === 91) {
-      effects.consume(code3);
+    if (code4 === 91) {
+      effects.consume(code4);
       buffer2 = "CDATA[";
       index2 = 0;
       return cdataOpen;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return declaration;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function commentOpen(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function commentOpen(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentStart;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function commentStart(code3) {
-    if (code3 === null || code3 === 62) {
-      return nok(code3);
+  function commentStart(code4) {
+    if (code4 === null || code4 === 62) {
+      return nok(code4);
     }
-    if (code3 === 45) {
-      effects.consume(code3);
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentStartDash;
     }
-    return comment(code3);
+    return comment(code4);
   }
-  function commentStartDash(code3) {
-    if (code3 === null || code3 === 62) {
-      return nok(code3);
+  function commentStartDash(code4) {
+    if (code4 === null || code4 === 62) {
+      return nok(code4);
     }
-    return comment(code3);
+    return comment(code4);
   }
-  function comment(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function comment(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 45) {
-      effects.consume(code3);
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = comment;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return comment;
   }
-  function commentClose(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function commentClose(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return end;
     }
-    return comment(code3);
+    return comment(code4);
   }
-  function cdataOpen(code3) {
-    if (code3 === buffer2.charCodeAt(index2++)) {
-      effects.consume(code3);
+  function cdataOpen(code4) {
+    if (code4 === buffer2.charCodeAt(index2++)) {
+      effects.consume(code4);
       return index2 === buffer2.length ? cdata : cdataOpen;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function cdata(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function cdata(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = cdata;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return cdata;
   }
-  function cdataClose(code3) {
-    if (code3 === 93) {
-      effects.consume(code3);
+  function cdataClose(code4) {
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataEnd;
     }
-    return cdata(code3);
+    return cdata(code4);
   }
-  function cdataEnd(code3) {
-    if (code3 === 62) {
-      return end(code3);
+  function cdataEnd(code4) {
+    if (code4 === 62) {
+      return end(code4);
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataEnd;
     }
-    return cdata(code3);
+    return cdata(code4);
   }
-  function declaration(code3) {
-    if (code3 === null || code3 === 62) {
-      return end(code3);
+  function declaration(code4) {
+    if (code4 === null || code4 === 62) {
+      return end(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = declaration;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return declaration;
   }
-  function instruction(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function instruction(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       return instructionClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = instruction;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return instruction;
   }
-  function instructionClose(code3) {
-    return code3 === 62 ? end(code3) : instruction(code3);
+  function instructionClose(code4) {
+    return code4 === 62 ? end(code4) : instruction(code4);
   }
-  function tagCloseStart(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+  function tagCloseStart(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagClose;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagClose(code3) {
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagClose(code4) {
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagClose;
     }
-    return tagCloseBetween(code3);
+    return tagCloseBetween(code4);
   }
-  function tagCloseBetween(code3) {
-    if (markdownLineEnding(code3)) {
+  function tagCloseBetween(code4) {
+    if (markdownLineEnding(code4)) {
       returnState = tagCloseBetween;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagCloseBetween;
     }
-    return end(code3);
+    return end(code4);
   }
-  function tagOpen(code3) {
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagOpen(code4) {
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagOpen;
     }
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+    if (code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagOpenBetween(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function tagOpenBetween(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       return end;
     }
-    if (code3 === 58 || code3 === 95 || asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (code4 === 58 || code4 === 95 || asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeName;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenBetween;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenBetween;
     }
-    return end(code3);
+    return end(code4);
   }
-  function tagOpenAttributeName(code3) {
-    if (code3 === 45 || code3 === 46 || code3 === 58 || code3 === 95 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagOpenAttributeName(code4) {
+    if (code4 === 45 || code4 === 46 || code4 === 58 || code4 === 95 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeName;
     }
-    return tagOpenAttributeNameAfter(code3);
+    return tagOpenAttributeNameAfter(code4);
   }
-  function tagOpenAttributeNameAfter(code3) {
-    if (code3 === 61) {
-      effects.consume(code3);
+  function tagOpenAttributeNameAfter(code4) {
+    if (code4 === 61) {
+      effects.consume(code4);
       return tagOpenAttributeValueBefore;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeNameAfter;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeNameAfter;
     }
-    return tagOpenBetween(code3);
+    return tagOpenBetween(code4);
   }
-  function tagOpenAttributeValueBefore(code3) {
-    if (code3 === null || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96) {
-      return nok(code3);
+  function tagOpenAttributeValueBefore(code4) {
+    if (code4 === null || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 34 || code3 === 39) {
-      effects.consume(code3);
-      marker = code3;
+    if (code4 === 34 || code4 === 39) {
+      effects.consume(code4);
+      marker = code4;
       return tagOpenAttributeValueQuoted;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeValueBefore;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeValueBefore;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     marker = void 0;
     return tagOpenAttributeValueUnquoted;
   }
-  function tagOpenAttributeValueQuoted(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function tagOpenAttributeValueQuoted(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       return tagOpenAttributeValueQuotedAfter;
     }
-    if (code3 === null) {
-      return nok(code3);
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeValueQuoted;
-      return atLineEnding(code3);
+      return atLineEnding(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return tagOpenAttributeValueQuoted;
   }
-  function tagOpenAttributeValueQuotedAfter(code3) {
-    if (code3 === 62 || code3 === 47 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+  function tagOpenAttributeValueQuotedAfter(code4) {
+    if (code4 === 62 || code4 === 47 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagOpenAttributeValueUnquoted(code3) {
-    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 60 || code3 === 61 || code3 === 96) {
-      return nok(code3);
+  function tagOpenAttributeValueUnquoted(code4) {
+    if (code4 === null || code4 === 34 || code4 === 39 || code4 === 60 || code4 === 61 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+    if (code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return tagOpenAttributeValueUnquoted;
   }
-  function atLineEnding(code3) {
+  function atLineEnding(code4) {
     effects.exit("htmlTextData");
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(
       effects,
@@ -35888,18 +35888,18 @@ function tokenizeHtmlText(effects, ok3, nok) {
       self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
     );
   }
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     effects.enter("htmlTextData");
-    return returnState(code3);
+    return returnState(code4);
   }
-  function end(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function end(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       effects.exit("htmlTextData");
       effects.exit("htmlText");
-      return ok3;
+      return ok4;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -35970,7 +35970,7 @@ function resolveToLabelEnd(events, context) {
     start: Object.assign({}, events[open][1].start),
     end: Object.assign({}, events[close][1].end)
   };
-  const text5 = {
+  const text6 = {
     type: "labelText",
     start: Object.assign({}, events[open + offset + 2][1].end),
     end: Object.assign({}, events[close - 2][1].start)
@@ -35980,7 +35980,7 @@ function resolveToLabelEnd(events, context) {
     ["enter", label, context]
   ];
   media = push(media, events.slice(open + 1, open + offset + 3));
-  media = push(media, [["enter", text5, context]]);
+  media = push(media, [["enter", text6, context]]);
   media = push(
     media,
     resolveAll(
@@ -35990,7 +35990,7 @@ function resolveToLabelEnd(events, context) {
     )
   );
   media = push(media, [
-    ["exit", text5, context],
+    ["exit", text6, context],
     events[close - 2],
     events[close - 1],
     ["exit", label, context]
@@ -36000,7 +36000,7 @@ function resolveToLabelEnd(events, context) {
   splice(events, open, events.length, media);
   return events;
 }
-function tokenizeLabelEnd(effects, ok3, nok) {
+function tokenizeLabelEnd(effects, ok4, nok) {
   const self2 = this;
   let index2 = self2.events.length;
   let labelStart;
@@ -36012,12 +36012,12 @@ function tokenizeLabelEnd(effects, ok3, nok) {
     }
   }
   return start;
-  function start(code3) {
+  function start(code4) {
     if (!labelStart) {
-      return nok(code3);
+      return nok(code4);
     }
     if (labelStart._inactive)
-      return balanced(code3);
+      return balanced(code4);
     defined = self2.parser.defined.includes(
       normalizeIdentifier(
         self2.sliceSerialize({
@@ -36028,45 +36028,45 @@ function tokenizeLabelEnd(effects, ok3, nok) {
     );
     effects.enter("labelEnd");
     effects.enter("labelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelMarker");
     effects.exit("labelEnd");
     return afterLabelEnd;
   }
-  function afterLabelEnd(code3) {
-    if (code3 === 40) {
+  function afterLabelEnd(code4) {
+    if (code4 === 40) {
       return effects.attempt(
         resourceConstruct,
-        ok3,
-        defined ? ok3 : balanced
-      )(code3);
+        ok4,
+        defined ? ok4 : balanced
+      )(code4);
     }
-    if (code3 === 91) {
+    if (code4 === 91) {
       return effects.attempt(
         fullReferenceConstruct,
-        ok3,
-        defined ? effects.attempt(collapsedReferenceConstruct, ok3, balanced) : balanced
-      )(code3);
+        ok4,
+        defined ? effects.attempt(collapsedReferenceConstruct, ok4, balanced) : balanced
+      )(code4);
     }
-    return defined ? ok3(code3) : balanced(code3);
+    return defined ? ok4(code4) : balanced(code4);
   }
-  function balanced(code3) {
+  function balanced(code4) {
     labelStart._balanced = true;
-    return nok(code3);
+    return nok(code4);
   }
 }
-function tokenizeResource(effects, ok3, nok) {
+function tokenizeResource(effects, ok4, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("resource");
     effects.enter("resourceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("resourceMarker");
     return factoryWhitespace(effects, open);
   }
-  function open(code3) {
-    if (code3 === 41) {
-      return end(code3);
+  function open(code4) {
+    if (code4 === 41) {
+      return end(code4);
     }
     return factoryDestination(
       effects,
@@ -36078,13 +36078,13 @@ function tokenizeResource(effects, ok3, nok) {
       "resourceDestinationRaw",
       "resourceDestinationString",
       32
-    )(code3);
+    )(code4);
   }
-  function destinationAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, between2)(code3) : end(code3);
+  function destinationAfter(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, between4)(code4) : end(code4);
   }
-  function between2(code3) {
-    if (code3 === 34 || code3 === 39 || code3 === 40) {
+  function between4(code4) {
+    if (code4 === 34 || code4 === 39 || code4 === 40) {
       return factoryTitle(
         effects,
         factoryWhitespace(effects, end),
@@ -36092,25 +36092,25 @@ function tokenizeResource(effects, ok3, nok) {
         "resourceTitle",
         "resourceTitleMarker",
         "resourceTitleString"
-      )(code3);
+      )(code4);
     }
-    return end(code3);
+    return end(code4);
   }
-  function end(code3) {
-    if (code3 === 41) {
+  function end(code4) {
+    if (code4 === 41) {
       effects.enter("resourceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("resourceMarker");
       effects.exit("resource");
-      return ok3;
+      return ok4;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
-function tokenizeFullReference(effects, ok3, nok) {
+function tokenizeFullReference(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     return factoryLabel.call(
       self2,
       effects,
@@ -36119,34 +36119,34 @@ function tokenizeFullReference(effects, ok3, nok) {
       "reference",
       "referenceMarker",
       "referenceString"
-    )(code3);
+    )(code4);
   }
-  function afterLabel(code3) {
+  function afterLabel(code4) {
     return self2.parser.defined.includes(
       normalizeIdentifier(
         self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1)
       )
-    ) ? ok3(code3) : nok(code3);
+    ) ? ok4(code4) : nok(code4);
   }
 }
-function tokenizeCollapsedReference(effects, ok3, nok) {
+function tokenizeCollapsedReference(effects, ok4, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("reference");
     effects.enter("referenceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("referenceMarker");
     return open;
   }
-  function open(code3) {
-    if (code3 === 93) {
+  function open(code4) {
+    if (code4 === 93) {
       effects.enter("referenceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("referenceMarker");
       effects.exit("reference");
-      return ok3;
+      return ok4;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -36156,28 +36156,28 @@ var labelStartImage = {
   tokenize: tokenizeLabelStartImage,
   resolveAll: labelEnd.resolveAll
 };
-function tokenizeLabelStartImage(effects, ok3, nok) {
+function tokenizeLabelStartImage(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("labelImage");
     effects.enter("labelImageMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelImageMarker");
     return open;
   }
-  function open(code3) {
-    if (code3 === 91) {
+  function open(code4) {
+    if (code4 === 91) {
       effects.enter("labelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("labelMarker");
       effects.exit("labelImage");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    return code3 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code4) : ok4(code4);
   }
 }
 
@@ -36187,19 +36187,19 @@ var labelStartLink = {
   tokenize: tokenizeLabelStartLink,
   resolveAll: labelEnd.resolveAll
 };
-function tokenizeLabelStartLink(effects, ok3, nok) {
+function tokenizeLabelStartLink(effects, ok4, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("labelLink");
     effects.enter("labelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelMarker");
     effects.exit("labelLink");
     return after;
   }
-  function after(code3) {
-    return code3 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code4) : ok4(code4);
   }
 }
 
@@ -36208,13 +36208,13 @@ var lineEnding = {
   name: "lineEnding",
   tokenize: tokenizeLineEnding
 };
-function tokenizeLineEnding(effects, ok3) {
+function tokenizeLineEnding(effects, ok4) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
-    return factorySpace(effects, ok3, "linePrefix");
+    return factorySpace(effects, ok4, "linePrefix");
   }
 }
 
@@ -36223,37 +36223,37 @@ var thematicBreak = {
   name: "thematicBreak",
   tokenize: tokenizeThematicBreak
 };
-function tokenizeThematicBreak(effects, ok3, nok) {
+function tokenizeThematicBreak(effects, ok4, nok) {
   let size = 0;
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("thematicBreak");
-    marker = code3;
-    return atBreak(code3);
+    marker = code4;
+    return atBreak(code4);
   }
-  function atBreak(code3) {
-    if (code3 === marker) {
+  function atBreak(code4) {
+    if (code4 === marker) {
       effects.enter("thematicBreakSequence");
-      return sequence(code3);
+      return sequence(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, atBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, atBreak, "whitespace")(code4);
     }
-    if (size < 3 || code3 !== null && !markdownLineEnding(code3)) {
-      return nok(code3);
+    if (size < 3 || code4 !== null && !markdownLineEnding(code4)) {
+      return nok(code4);
     }
     effects.exit("thematicBreak");
-    return ok3(code3);
+    return ok4(code4);
   }
-  function sequence(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function sequence(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       size++;
       return sequence;
     }
     effects.exit("thematicBreakSequence");
-    return atBreak(code3);
+    return atBreak(code4);
   }
 }
 
@@ -36274,15 +36274,15 @@ var indentConstruct = {
   tokenize: tokenizeIndent,
   partial: true
 };
-function tokenizeListStart(effects, ok3, nok) {
+function tokenizeListStart(effects, ok4, nok) {
   const self2 = this;
   const tail = self2.events[self2.events.length - 1];
   let initialSize = tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
   let size = 0;
   return start;
-  function start(code3) {
-    const kind = self2.containerState.type || (code3 === 42 || code3 === 43 || code3 === 45 ? "listUnordered" : "listOrdered");
-    if (kind === "listUnordered" ? !self2.containerState.marker || code3 === self2.containerState.marker : asciiDigit(code3)) {
+  function start(code4) {
+    const kind = self2.containerState.type || (code4 === 42 || code4 === 43 || code4 === 45 ? "listUnordered" : "listOrdered");
+    if (kind === "listUnordered" ? !self2.containerState.marker || code4 === self2.containerState.marker : asciiDigit(code4)) {
       if (!self2.containerState.type) {
         self2.containerState.type = kind;
         effects.enter(kind, {
@@ -36291,32 +36291,32 @@ function tokenizeListStart(effects, ok3, nok) {
       }
       if (kind === "listUnordered") {
         effects.enter("listItemPrefix");
-        return code3 === 42 || code3 === 45 ? effects.check(thematicBreak, nok, atMarker)(code3) : atMarker(code3);
+        return code4 === 42 || code4 === 45 ? effects.check(thematicBreak, nok, atMarker)(code4) : atMarker(code4);
       }
-      if (!self2.interrupt || code3 === 49) {
+      if (!self2.interrupt || code4 === 49) {
         effects.enter("listItemPrefix");
         effects.enter("listItemValue");
-        return inside(code3);
+        return inside(code4);
       }
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function inside(code3) {
-    if (asciiDigit(code3) && ++size < 10) {
-      effects.consume(code3);
+  function inside(code4) {
+    if (asciiDigit(code4) && ++size < 10) {
+      effects.consume(code4);
       return inside;
     }
-    if ((!self2.interrupt || size < 2) && (self2.containerState.marker ? code3 === self2.containerState.marker : code3 === 41 || code3 === 46)) {
+    if ((!self2.interrupt || size < 2) && (self2.containerState.marker ? code4 === self2.containerState.marker : code4 === 41 || code4 === 46)) {
       effects.exit("listItemValue");
-      return atMarker(code3);
+      return atMarker(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function atMarker(code3) {
+  function atMarker(code4) {
     effects.enter("listItemMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("listItemMarker");
-    self2.containerState.marker = self2.containerState.marker || code3;
+    self2.containerState.marker = self2.containerState.marker || code4;
     return effects.check(
       blankLine,
       // Can’t be empty when interrupting.
@@ -36328,60 +36328,60 @@ function tokenizeListStart(effects, ok3, nok) {
       )
     );
   }
-  function onBlank(code3) {
+  function onBlank(code4) {
     self2.containerState.initialBlankLine = true;
     initialSize++;
-    return endOfPrefix(code3);
+    return endOfPrefix(code4);
   }
-  function otherPrefix(code3) {
-    if (markdownSpace(code3)) {
+  function otherPrefix(code4) {
+    if (markdownSpace(code4)) {
       effects.enter("listItemPrefixWhitespace");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("listItemPrefixWhitespace");
       return endOfPrefix;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function endOfPrefix(code3) {
+  function endOfPrefix(code4) {
     self2.containerState.size = initialSize + self2.sliceSerialize(effects.exit("listItemPrefix"), true).length;
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeListContinuation(effects, ok3, nok) {
+function tokenizeListContinuation(effects, ok4, nok) {
   const self2 = this;
   self2.containerState._closeFlow = void 0;
   return effects.check(blankLine, onBlank, notBlank);
-  function onBlank(code3) {
+  function onBlank(code4) {
     self2.containerState.furtherBlankLines = self2.containerState.furtherBlankLines || self2.containerState.initialBlankLine;
     return factorySpace(
       effects,
-      ok3,
+      ok4,
       "listItemIndent",
       self2.containerState.size + 1
-    )(code3);
+    )(code4);
   }
-  function notBlank(code3) {
-    if (self2.containerState.furtherBlankLines || !markdownSpace(code3)) {
+  function notBlank(code4) {
+    if (self2.containerState.furtherBlankLines || !markdownSpace(code4)) {
       self2.containerState.furtherBlankLines = void 0;
       self2.containerState.initialBlankLine = void 0;
-      return notInCurrentItem(code3);
+      return notInCurrentItem(code4);
     }
     self2.containerState.furtherBlankLines = void 0;
     self2.containerState.initialBlankLine = void 0;
-    return effects.attempt(indentConstruct, ok3, notInCurrentItem)(code3);
+    return effects.attempt(indentConstruct, ok4, notInCurrentItem)(code4);
   }
-  function notInCurrentItem(code3) {
+  function notInCurrentItem(code4) {
     self2.containerState._closeFlow = true;
     self2.interrupt = void 0;
     return factorySpace(
       effects,
-      effects.attempt(list, ok3, nok),
+      effects.attempt(list, ok4, nok),
       "linePrefix",
       self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
-    )(code3);
+    )(code4);
   }
 }
-function tokenizeIndent(effects, ok3, nok) {
+function tokenizeIndent(effects, ok4, nok) {
   const self2 = this;
   return factorySpace(
     effects,
@@ -36389,15 +36389,15 @@ function tokenizeIndent(effects, ok3, nok) {
     "listItemIndent",
     self2.containerState.size + 1
   );
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "listItemIndent" && tail[2].sliceSerialize(tail[1], true).length === self2.containerState.size ? ok3(code3) : nok(code3);
+    return tail && tail[1].type === "listItemIndent" && tail[2].sliceSerialize(tail[1], true).length === self2.containerState.size ? ok4(code4) : nok(code4);
   }
 }
 function tokenizeListEnd(effects) {
   effects.exit(this.containerState.type);
 }
-function tokenizeListItemPrefixWhitespace(effects, ok3, nok) {
+function tokenizeListItemPrefixWhitespace(effects, ok4, nok) {
   const self2 = this;
   return factorySpace(
     effects,
@@ -36405,9 +36405,9 @@ function tokenizeListItemPrefixWhitespace(effects, ok3, nok) {
     "listItemPrefixWhitespace",
     self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4 + 1
   );
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return !markdownSpace(code3) && tail && tail[1].type === "listItemPrefixWhitespace" ? ok3(code3) : nok(code3);
+    return !markdownSpace(code4) && tail && tail[1].type === "listItemPrefixWhitespace" ? ok4(code4) : nok(code4);
   }
 }
 
@@ -36420,8 +36420,8 @@ var setextUnderline = {
 function resolveToSetextUnderline(events, context) {
   let index2 = events.length;
   let content3;
-  let text5;
-  let definition3;
+  let text6;
+  let definition4;
   while (index2--) {
     if (events[index2][0] === "enter") {
       if (events[index2][1].type === "content") {
@@ -36429,68 +36429,68 @@ function resolveToSetextUnderline(events, context) {
         break;
       }
       if (events[index2][1].type === "paragraph") {
-        text5 = index2;
+        text6 = index2;
       }
     } else {
       if (events[index2][1].type === "content") {
         events.splice(index2, 1);
       }
-      if (!definition3 && events[index2][1].type === "definition") {
-        definition3 = index2;
+      if (!definition4 && events[index2][1].type === "definition") {
+        definition4 = index2;
       }
     }
   }
-  const heading2 = {
+  const heading3 = {
     type: "setextHeading",
-    start: Object.assign({}, events[text5][1].start),
+    start: Object.assign({}, events[text6][1].start),
     end: Object.assign({}, events[events.length - 1][1].end)
   };
-  events[text5][1].type = "setextHeadingText";
-  if (definition3) {
-    events.splice(text5, 0, ["enter", heading2, context]);
-    events.splice(definition3 + 1, 0, ["exit", events[content3][1], context]);
-    events[content3][1].end = Object.assign({}, events[definition3][1].end);
+  events[text6][1].type = "setextHeadingText";
+  if (definition4) {
+    events.splice(text6, 0, ["enter", heading3, context]);
+    events.splice(definition4 + 1, 0, ["exit", events[content3][1], context]);
+    events[content3][1].end = Object.assign({}, events[definition4][1].end);
   } else {
-    events[content3][1] = heading2;
+    events[content3][1] = heading3;
   }
-  events.push(["exit", heading2, context]);
+  events.push(["exit", heading3, context]);
   return events;
 }
-function tokenizeSetextUnderline(effects, ok3, nok) {
+function tokenizeSetextUnderline(effects, ok4, nok) {
   const self2 = this;
   let index2 = self2.events.length;
   let marker;
-  let paragraph2;
+  let paragraph3;
   while (index2--) {
     if (self2.events[index2][1].type !== "lineEnding" && self2.events[index2][1].type !== "linePrefix" && self2.events[index2][1].type !== "content") {
-      paragraph2 = self2.events[index2][1].type === "paragraph";
+      paragraph3 = self2.events[index2][1].type === "paragraph";
       break;
     }
   }
   return start;
-  function start(code3) {
-    if (!self2.parser.lazy[self2.now().line] && (self2.interrupt || paragraph2)) {
+  function start(code4) {
+    if (!self2.parser.lazy[self2.now().line] && (self2.interrupt || paragraph3)) {
       effects.enter("setextHeadingLine");
       effects.enter("setextHeadingLineSequence");
-      marker = code3;
-      return closingSequence(code3);
+      marker = code4;
+      return closingSequence(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function closingSequence(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function closingSequence(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       return closingSequence;
     }
     effects.exit("setextHeadingLineSequence");
-    return factorySpace(effects, closingSequenceEnd, "lineSuffix")(code3);
+    return factorySpace(effects, closingSequenceEnd, "lineSuffix")(code4);
   }
-  function closingSequenceEnd(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function closingSequenceEnd(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("setextHeadingLine");
-      return ok3(code3);
+      return ok4(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -36520,24 +36520,24 @@ function initializeFlow(effects) {
     )
   );
   return initial;
-  function atBlankEnding(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function atBlankEnding(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEndingBlank");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEndingBlank");
     self2.currentConstruct = void 0;
     return initial;
   }
-  function afterConstruct(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function afterConstruct(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     self2.currentConstruct = void 0;
     return initial;
@@ -36560,37 +36560,37 @@ function initializeFactory(field) {
   function initializeText(effects) {
     const self2 = this;
     const constructs2 = this.parser.constructs[field];
-    const text5 = effects.attempt(constructs2, start, notText);
+    const text6 = effects.attempt(constructs2, start, notText);
     return start;
-    function start(code3) {
-      return atBreak(code3) ? text5(code3) : notText(code3);
+    function start(code4) {
+      return atBreak(code4) ? text6(code4) : notText(code4);
     }
-    function notText(code3) {
-      if (code3 === null) {
-        effects.consume(code3);
+    function notText(code4) {
+      if (code4 === null) {
+        effects.consume(code4);
         return;
       }
       effects.enter("data");
-      effects.consume(code3);
+      effects.consume(code4);
       return data;
     }
-    function data(code3) {
-      if (atBreak(code3)) {
+    function data(code4) {
+      if (atBreak(code4)) {
         effects.exit("data");
-        return text5(code3);
+        return text6(code4);
       }
-      effects.consume(code3);
+      effects.consume(code4);
       return data;
     }
-    function atBreak(code3) {
-      if (code3 === null) {
+    function atBreak(code4) {
+      if (code4 === null) {
         return true;
       }
-      const list3 = constructs2[code3];
+      const list5 = constructs2[code4];
       let index2 = -1;
-      if (list3) {
-        while (++index2 < list3.length) {
-          const item = list3[index2];
+      if (list5) {
+        while (++index2 < list5.length) {
+          const item = list5[index2];
           if (!item.previous || item.previous.call(self2, self2.previous)) {
             return true;
           }
@@ -36770,18 +36770,18 @@ function createTokenizer(parser, initialize, from) {
       }
     }
   }
-  function go(code3) {
+  function go(code4) {
     consumed = void 0;
-    expectedCode = code3;
-    state = state(code3);
+    expectedCode = code4;
+    state = state(code4);
   }
-  function consume(code3) {
-    if (markdownLineEnding(code3)) {
+  function consume(code4) {
+    if (markdownLineEnding(code4)) {
       point3.line++;
       point3.column = 1;
-      point3.offset += code3 === -3 ? 2 : 1;
+      point3.offset += code4 === -3 ? 2 : 1;
       accountForPotentialSkip();
-    } else if (code3 !== -1) {
+    } else if (code4 !== -1) {
       point3.column++;
       point3.offset++;
     }
@@ -36794,7 +36794,7 @@ function createTokenizer(parser, initialize, from) {
         point3._index++;
       }
     }
-    context.previous = code3;
+    context.previous = code4;
     consumed = true;
   }
   function enter(type2, fields) {
@@ -36828,38 +36828,38 @@ function createTokenizer(parser, initialize, from) {
         /* c8 ignore next 1 */
         handleListOfConstructs(constructs2)
       ) : "tokenize" in constructs2 ? handleListOfConstructs([constructs2]) : handleMapOfConstructs(constructs2);
-      function handleMapOfConstructs(map5) {
+      function handleMapOfConstructs(map9) {
         return start;
-        function start(code3) {
-          const def = code3 !== null && map5[code3];
-          const all2 = code3 !== null && map5.null;
-          const list3 = [
+        function start(code4) {
+          const def = code4 !== null && map9[code4];
+          const all3 = code4 !== null && map9.null;
+          const list5 = [
             // To do: add more extension tests.
             /* c8 ignore next 2 */
             ...Array.isArray(def) ? def : def ? [def] : [],
-            ...Array.isArray(all2) ? all2 : all2 ? [all2] : []
+            ...Array.isArray(all3) ? all3 : all3 ? [all3] : []
           ];
-          return handleListOfConstructs(list3)(code3);
+          return handleListOfConstructs(list5)(code4);
         }
       }
-      function handleListOfConstructs(list3) {
-        listOfConstructs = list3;
+      function handleListOfConstructs(list5) {
+        listOfConstructs = list5;
         constructIndex = 0;
-        if (list3.length === 0) {
+        if (list5.length === 0) {
           return bogusState;
         }
-        return handleConstruct(list3[constructIndex]);
+        return handleConstruct(list5[constructIndex]);
       }
       function handleConstruct(construct) {
         return start;
-        function start(code3) {
+        function start(code4) {
           info2 = store();
           currentConstruct = construct;
           if (!construct.partial) {
             context.currentConstruct = construct;
           }
           if (construct.name && context.parser.constructs.disable.null.includes(construct.name)) {
-            return nok(code3);
+            return nok(code4);
           }
           return construct.tokenize.call(
             // If we do have fields, create an object w/ `context` as its
@@ -36867,17 +36867,17 @@ function createTokenizer(parser, initialize, from) {
             // This allows a “live binding”, which is needed for `interrupt`.
             fields ? Object.assign(Object.create(context), fields) : context,
             effects,
-            ok3,
+            ok4,
             nok
-          )(code3);
+          )(code4);
         }
       }
-      function ok3(code3) {
+      function ok4(code4) {
         consumed = true;
         onreturn(currentConstruct, info2);
         return returnState;
       }
-      function nok(code3) {
+      function nok(code4) {
         consumed = true;
         info2.restore();
         if (++constructIndex < listOfConstructs.length) {
@@ -37105,7 +37105,7 @@ function preprocess() {
     let next;
     let startPosition;
     let endPosition;
-    let code3;
+    let code4;
     value = buffer2 + value.toString(encoding);
     startPosition = 0;
     buffer2 = "";
@@ -37119,12 +37119,12 @@ function preprocess() {
       search.lastIndex = startPosition;
       match = search.exec(value);
       endPosition = match && match.index !== void 0 ? match.index : value.length;
-      code3 = value.charCodeAt(endPosition);
+      code4 = value.charCodeAt(endPosition);
       if (!match) {
         buffer2 = value.slice(startPosition);
         break;
       }
-      if (code3 === 10 && startPosition === endPosition && atCarriageReturn) {
+      if (code4 === 10 && startPosition === endPosition && atCarriageReturn) {
         chunks.push(-3);
         atCarriageReturn = void 0;
       } else {
@@ -37136,7 +37136,7 @@ function preprocess() {
           chunks.push(value.slice(startPosition, endPosition));
           column += endPosition - startPosition;
         }
-        switch (code3) {
+        switch (code4) {
           case 0: {
             chunks.push(65533);
             column++;
@@ -37182,18 +37182,18 @@ function postprocess(events) {
 
 // node_modules/micromark-util-decode-numeric-character-reference/index.js
 function decodeNumericCharacterReference(value, base2) {
-  const code3 = Number.parseInt(value, base2);
+  const code4 = Number.parseInt(value, base2);
   if (
     // C0 except for HT, LF, FF, CR, space
-    code3 < 9 || code3 === 11 || code3 > 13 && code3 < 32 || // Control character (DEL) of the basic block and C1 controls.
-    code3 > 126 && code3 < 160 || // Lone high surrogates and low surrogates.
-    code3 > 55295 && code3 < 57344 || // Noncharacters.
-    code3 > 64975 && code3 < 65008 || (code3 & 65535) === 65535 || (code3 & 65535) === 65534 || // Out of range
-    code3 > 1114111
+    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of the basic block and C1 controls.
+    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
+    code4 > 55295 && code4 < 57344 || // Noncharacters.
+    code4 > 64975 && code4 < 65008 || (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || // Out of range
+    code4 > 1114111
   ) {
     return "\uFFFD";
   }
-  return String.fromCharCode(code3);
+  return String.fromCharCode(code4);
 }
 
 // node_modules/micromark-util-decode-string/index.js
@@ -37247,10 +37247,10 @@ function compiler(options) {
     transforms: [],
     canContainEols: ["emphasis", "fragment", "heading", "paragraph", "strong"],
     enter: {
-      autolink: opener(link2),
+      autolink: opener(link3),
       autolinkProtocol: onenterdata,
       autolinkEmail: onenterdata,
-      atxHeading: opener(heading2),
+      atxHeading: opener(heading3),
       blockQuote: opener(blockQuote2),
       characterEscape: onenterdata,
       characterReference: onenterdata,
@@ -37262,32 +37262,32 @@ function compiler(options) {
       codeTextData: onenterdata,
       data: onenterdata,
       codeFlowValue: onenterdata,
-      definition: opener(definition3),
+      definition: opener(definition4),
       definitionDestinationString: buffer2,
       definitionLabelString: buffer2,
       definitionTitleString: buffer2,
-      emphasis: opener(emphasis2),
-      hardBreakEscape: opener(hardBreak2),
-      hardBreakTrailing: opener(hardBreak2),
-      htmlFlow: opener(html2, buffer2),
+      emphasis: opener(emphasis3),
+      hardBreakEscape: opener(hardBreak3),
+      hardBreakTrailing: opener(hardBreak3),
+      htmlFlow: opener(html3, buffer2),
       htmlFlowData: onenterdata,
-      htmlText: opener(html2, buffer2),
+      htmlText: opener(html3, buffer2),
       htmlTextData: onenterdata,
-      image: opener(image2),
+      image: opener(image3),
       label: buffer2,
-      link: opener(link2),
-      listItem: opener(listItem2),
+      link: opener(link3),
+      listItem: opener(listItem4),
       listItemValue: onenterlistitemvalue,
-      listOrdered: opener(list3, onenterlistordered),
-      listUnordered: opener(list3),
-      paragraph: opener(paragraph2),
+      listOrdered: opener(list5, onenterlistordered),
+      listUnordered: opener(list5),
+      paragraph: opener(paragraph3),
       reference: onenterreference,
       referenceString: buffer2,
       resourceDestinationString: buffer2,
       resourceTitleString: buffer2,
-      setextHeading: opener(heading2),
-      strong: opener(strong2),
-      thematicBreak: opener(thematicBreak3)
+      setextHeading: opener(heading3),
+      strong: opener(strong3),
+      thematicBreak: opener(thematicBreak4)
     },
     exit: {
       atxHeading: closer(),
@@ -37417,7 +37417,7 @@ function compiler(options) {
     let index2 = start - 1;
     let containerBalance = -1;
     let listSpread = false;
-    let listItem3;
+    let listItem5;
     let lineIndex;
     let firstBlankLineIndex;
     let atMarker;
@@ -37432,7 +37432,7 @@ function compiler(options) {
         atMarker = void 0;
       } else if (event[1].type === "lineEndingBlank") {
         if (event[0] === "enter") {
-          if (listItem3 && !atMarker && !containerBalance && !firstBlankLineIndex) {
+          if (listItem5 && !atMarker && !containerBalance && !firstBlankLineIndex) {
             firstBlankLineIndex = index2;
           }
           atMarker = void 0;
@@ -37442,7 +37442,7 @@ function compiler(options) {
         atMarker = void 0;
       }
       if (!containerBalance && event[0] === "enter" && event[1].type === "listItemPrefix" || containerBalance === -1 && event[0] === "exit" && (event[1].type === "listUnordered" || event[1].type === "listOrdered")) {
-        if (listItem3) {
+        if (listItem5) {
           let tailIndex = index2;
           lineIndex = void 0;
           while (tailIndex--) {
@@ -37462,24 +37462,24 @@ function compiler(options) {
             }
           }
           if (firstBlankLineIndex && (!lineIndex || firstBlankLineIndex < lineIndex)) {
-            listItem3._spread = true;
+            listItem5._spread = true;
           }
-          listItem3.end = Object.assign(
+          listItem5.end = Object.assign(
             {},
             lineIndex ? events[lineIndex][1].start : event[1].end
           );
-          events.splice(lineIndex || index2, 0, ["exit", listItem3, event[2]]);
+          events.splice(lineIndex || index2, 0, ["exit", listItem5, event[2]]);
           index2++;
           length++;
         }
         if (event[1].type === "listItemPrefix") {
-          listItem3 = {
+          listItem5 = {
             type: "listItem",
             // @ts-expect-error Patched
             _spread: false,
             start: Object.assign({}, event[1].start)
           };
-          events.splice(index2, 0, ["enter", listItem3, event[2]]);
+          events.splice(index2, 0, ["enter", listItem5, event[2]]);
           index2++;
           length++;
           firstBlankLineIndex = void 0;
@@ -37510,15 +37510,15 @@ function compiler(options) {
       children: []
     });
   }
-  function enter(node2, token, errorHandler) {
+  function enter(node3, token, errorHandler) {
     const parent = this.stack[this.stack.length - 1];
-    parent.children.push(node2);
-    this.stack.push(node2);
+    parent.children.push(node3);
+    this.stack.push(node3);
     this.tokenStack.push([token, errorHandler]);
-    node2.position = {
+    node3.position = {
       start: point2(token.start)
     };
-    return node2;
+    return node3;
   }
   function closer(and) {
     return close;
@@ -37529,7 +37529,7 @@ function compiler(options) {
     }
   }
   function exit3(token, onExitError) {
-    const node2 = this.stack.pop();
+    const node3 = this.stack.pop();
     const open = this.tokenStack.pop();
     if (!open) {
       throw new Error(
@@ -37546,8 +37546,8 @@ function compiler(options) {
         handler.call(this, token, open[0]);
       }
     }
-    node2.position.end = point2(token.end);
-    return node2;
+    node3.position.end = point2(token.end);
+    return node3;
   }
   function resume() {
     return toString(this.stack.pop());
@@ -37564,13 +37564,13 @@ function compiler(options) {
   }
   function onexitcodefencedfenceinfo() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.lang = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.lang = data2;
   }
   function onexitcodefencedfencemeta() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.meta = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.meta = data2;
   }
   function onexitcodefencedfence() {
     if (getData("flowCodeInside"))
@@ -37580,59 +37580,59 @@ function compiler(options) {
   }
   function onexitcodefenced() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.value = data2.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, "");
+    const node3 = this.stack[this.stack.length - 1];
+    node3.value = data2.replace(/^(\r?\n|\r)|(\r?\n|\r)$/g, "");
     setData("flowCodeInside");
   }
   function onexitcodeindented() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.value = data2.replace(/(\r?\n|\r)$/g, "");
+    const node3 = this.stack[this.stack.length - 1];
+    node3.value = data2.replace(/(\r?\n|\r)$/g, "");
   }
   function onexitdefinitionlabelstring(token) {
     const label = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.label = label;
-    node2.identifier = normalizeIdentifier(
+    const node3 = this.stack[this.stack.length - 1];
+    node3.label = label;
+    node3.identifier = normalizeIdentifier(
       this.sliceSerialize(token)
     ).toLowerCase();
   }
   function onexitdefinitiontitlestring() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.title = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.title = data2;
   }
   function onexitdefinitiondestinationstring() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.url = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.url = data2;
   }
   function onexitatxheadingsequence(token) {
-    const node2 = this.stack[this.stack.length - 1];
-    if (!node2.depth) {
+    const node3 = this.stack[this.stack.length - 1];
+    if (!node3.depth) {
       const depth = this.sliceSerialize(token).length;
-      node2.depth = depth;
+      node3.depth = depth;
     }
   }
   function onexitsetextheadingtext() {
     setData("setextHeadingSlurpLineEnding", true);
   }
   function onexitsetextheadinglinesequence(token) {
-    const node2 = this.stack[this.stack.length - 1];
-    node2.depth = this.sliceSerialize(token).charCodeAt(0) === 61 ? 1 : 2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.depth = this.sliceSerialize(token).charCodeAt(0) === 61 ? 1 : 2;
   }
   function onexitsetextheading() {
     setData("setextHeadingSlurpLineEnding");
   }
   function onenterdata(token) {
-    const node2 = this.stack[this.stack.length - 1];
-    let tail = node2.children[node2.children.length - 1];
+    const node3 = this.stack[this.stack.length - 1];
+    let tail = node3.children[node3.children.length - 1];
     if (!tail || tail.type !== "text") {
-      tail = text5();
+      tail = text6();
       tail.position = {
         start: point2(token.start)
       };
-      node2.children.push(tail);
+      node3.children.push(tail);
     }
     this.stack.push(tail);
   }
@@ -37659,44 +37659,44 @@ function compiler(options) {
   }
   function onexithtmlflow() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.value = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.value = data2;
   }
   function onexithtmltext() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.value = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.value = data2;
   }
   function onexitcodetext() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.value = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.value = data2;
   }
   function onexitlink() {
-    const node2 = this.stack[this.stack.length - 1];
+    const node3 = this.stack[this.stack.length - 1];
     if (getData("inReference")) {
       const referenceType = getData("referenceType") || "shortcut";
-      node2.type += "Reference";
-      node2.referenceType = referenceType;
-      delete node2.url;
-      delete node2.title;
+      node3.type += "Reference";
+      node3.referenceType = referenceType;
+      delete node3.url;
+      delete node3.title;
     } else {
-      delete node2.identifier;
-      delete node2.label;
+      delete node3.identifier;
+      delete node3.label;
     }
     setData("referenceType");
   }
   function onexitimage() {
-    const node2 = this.stack[this.stack.length - 1];
+    const node3 = this.stack[this.stack.length - 1];
     if (getData("inReference")) {
       const referenceType = getData("referenceType") || "shortcut";
-      node2.type += "Reference";
-      node2.referenceType = referenceType;
-      delete node2.url;
-      delete node2.title;
+      node3.type += "Reference";
+      node3.referenceType = referenceType;
+      delete node3.url;
+      delete node3.title;
     } else {
-      delete node2.identifier;
-      delete node2.label;
+      delete node3.identifier;
+      delete node3.label;
     }
     setData("referenceType");
   }
@@ -37709,24 +37709,24 @@ function compiler(options) {
   function onexitlabel() {
     const fragment = this.stack[this.stack.length - 1];
     const value = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
+    const node3 = this.stack[this.stack.length - 1];
     setData("inReference", true);
-    if (node2.type === "link") {
+    if (node3.type === "link") {
       const children = fragment.children;
-      node2.children = children;
+      node3.children = children;
     } else {
-      node2.alt = value;
+      node3.alt = value;
     }
   }
   function onexitresourcedestinationstring() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.url = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.url = data2;
   }
   function onexitresourcetitlestring() {
     const data2 = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.title = data2;
+    const node3 = this.stack[this.stack.length - 1];
+    node3.title = data2;
   }
   function onexitresource() {
     setData("inReference");
@@ -37736,9 +37736,9 @@ function compiler(options) {
   }
   function onexitreferencestring(token) {
     const label = this.resume();
-    const node2 = this.stack[this.stack.length - 1];
-    node2.label = label;
-    node2.identifier = normalizeIdentifier(
+    const node3 = this.stack[this.stack.length - 1];
+    node3.label = label;
+    node3.identifier = normalizeIdentifier(
       this.sliceSerialize(token)
     ).toLowerCase();
     setData("referenceType", "full");
@@ -37766,13 +37766,13 @@ function compiler(options) {
   }
   function onexitautolinkprotocol(token) {
     onexitdata.call(this, token);
-    const node2 = this.stack[this.stack.length - 1];
-    node2.url = this.sliceSerialize(token);
+    const node3 = this.stack[this.stack.length - 1];
+    node3.url = this.sliceSerialize(token);
   }
   function onexitautolinkemail(token) {
     onexitdata.call(this, token);
-    const node2 = this.stack[this.stack.length - 1];
-    node2.url = "mailto:" + this.sliceSerialize(token);
+    const node3 = this.stack[this.stack.length - 1];
+    node3.url = "mailto:" + this.sliceSerialize(token);
   }
   function blockQuote2() {
     return {
@@ -37794,7 +37794,7 @@ function compiler(options) {
       value: ""
     };
   }
-  function definition3() {
+  function definition4() {
     return {
       type: "definition",
       identifier: "",
@@ -37803,31 +37803,31 @@ function compiler(options) {
       url: ""
     };
   }
-  function emphasis2() {
+  function emphasis3() {
     return {
       type: "emphasis",
       children: []
     };
   }
-  function heading2() {
+  function heading3() {
     return {
       type: "heading",
       depth: void 0,
       children: []
     };
   }
-  function hardBreak2() {
+  function hardBreak3() {
     return {
       type: "break"
     };
   }
-  function html2() {
+  function html3() {
     return {
       type: "html",
       value: ""
     };
   }
-  function image2() {
+  function image3() {
     return {
       type: "image",
       title: null,
@@ -37835,7 +37835,7 @@ function compiler(options) {
       alt: null
     };
   }
-  function link2() {
+  function link3() {
     return {
       type: "link",
       title: null,
@@ -37843,7 +37843,7 @@ function compiler(options) {
       children: []
     };
   }
-  function list3(token) {
+  function list5(token) {
     return {
       type: "list",
       ordered: token.type === "listOrdered",
@@ -37853,7 +37853,7 @@ function compiler(options) {
       children: []
     };
   }
-  function listItem2(token) {
+  function listItem4(token) {
     return {
       type: "listItem",
       // @ts-expect-error Patched.
@@ -37862,25 +37862,25 @@ function compiler(options) {
       children: []
     };
   }
-  function paragraph2() {
+  function paragraph3() {
     return {
       type: "paragraph",
       children: []
     };
   }
-  function strong2() {
+  function strong3() {
     return {
       type: "strong",
       children: []
     };
   }
-  function text5() {
+  function text6() {
     return {
       type: "text",
       value: ""
     };
   }
-  function thematicBreak3() {
+  function thematicBreak4() {
     return {
       type: "thematicBreak"
     };
@@ -37973,24 +37973,24 @@ function remarkParse(options) {
 var own4 = {}.hasOwnProperty;
 function zwitch(key, options) {
   const settings = options || {};
-  function one2(value, ...parameters) {
-    let fn = one2.invalid;
-    const handlers = one2.handlers;
+  function one3(value, ...parameters) {
+    let fn = one3.invalid;
+    const handlers = one3.handlers;
     if (value && own4.call(value, key)) {
       const id = String(value[key]);
-      fn = own4.call(handlers, id) ? handlers[id] : one2.unknown;
+      fn = own4.call(handlers, id) ? handlers[id] : one3.unknown;
     }
     if (fn) {
       return fn.call(this, value, ...parameters);
     }
   }
-  one2.handlers = settings.handlers || {};
-  one2.invalid = settings.invalid;
-  one2.unknown = settings.unknown;
-  return one2;
+  one3.handlers = settings.handlers || {};
+  one3.invalid = settings.invalid;
+  one3.unknown = settings.unknown;
+  return one3;
 }
 
-// node_modules/mdast-util-to-markdown/lib/configure.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/configure.js
 function configure2(base2, extension2) {
   let index2 = -1;
   let key;
@@ -38012,14 +38012,14 @@ function configure2(base2, extension2) {
   return base2;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
-function blockquote(node2, _, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
+function blockquote(node3, _, state, info2) {
   const exit3 = state.enter("blockquote");
   const tracker = state.createTracker(info2);
   tracker.move("> ");
   tracker.shift(2);
   const value = state.indentLines(
-    state.containerFlow(node2, tracker.current()),
+    state.containerFlow(node3, tracker.current()),
     map
   );
   exit3();
@@ -38029,27 +38029,27 @@ function map(line, _, blank) {
   return ">" + (blank ? "" : " ") + line;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
 function patternInScope(stack, pattern) {
   return listInScope(stack, pattern.inConstruct, true) && !listInScope(stack, pattern.notInConstruct, false);
 }
-function listInScope(stack, list3, none) {
-  if (typeof list3 === "string") {
-    list3 = [list3];
+function listInScope(stack, list5, none) {
+  if (typeof list5 === "string") {
+    list5 = [list5];
   }
-  if (!list3 || list3.length === 0) {
+  if (!list5 || list5.length === 0) {
     return none;
   }
   let index2 = -1;
-  while (++index2 < list3.length) {
-    if (stack.includes(list3[index2])) {
+  while (++index2 < list5.length) {
+    if (stack.includes(list5[index2])) {
       return true;
     }
   }
   return false;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/break.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/break.js
 function hardBreak(_, _1, state, info2) {
   let index2 = -1;
   while (++index2 < state.unsafe.length) {
@@ -38084,17 +38084,17 @@ function longestStreak(value, substring) {
   return max;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
-function formatCodeAsIndented(node2, state) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
+function formatCodeAsIndented(node3, state) {
   return Boolean(
-    !state.options.fences && node2.value && // If there’s no info…
-    !node2.lang && // And there’s a non-whitespace character…
-    /[^ \r\n]/.test(node2.value) && // And the value doesn’t start or end in a blank…
-    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node2.value)
+    !state.options.fences && node3.value && // If there’s no info…
+    !node3.lang && // And there’s a non-whitespace character…
+    /[^ \r\n]/.test(node3.value) && // And the value doesn’t start or end in a blank…
+    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node3.value)
   );
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-fence.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-fence.js
 function checkFence(state) {
   const marker = state.options.fence || "`";
   if (marker !== "`" && marker !== "~") {
@@ -38105,12 +38105,12 @@ function checkFence(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/code.js
-function code(node2, _, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/code.js
+function code(node3, _, state, info2) {
   const marker = checkFence(state);
-  const raw = node2.value || "";
+  const raw = node3.value || "";
   const suffix = marker === "`" ? "GraveAccent" : "Tilde";
-  if (formatCodeAsIndented(node2, state)) {
+  if (formatCodeAsIndented(node3, state)) {
     const exit4 = state.enter("codeIndented");
     const value2 = state.indentLines(raw, map2);
     exit4();
@@ -38120,10 +38120,10 @@ function code(node2, _, state, info2) {
   const sequence = marker.repeat(Math.max(longestStreak(raw, marker) + 1, 3));
   const exit3 = state.enter("codeFenced");
   let value = tracker.move(sequence);
-  if (node2.lang) {
+  if (node3.lang) {
     const subexit = state.enter(`codeFencedLang${suffix}`);
     value += tracker.move(
-      state.safe(node2.lang, {
+      state.safe(node3.lang, {
         before: value,
         after: " ",
         encode: ["`"],
@@ -38132,11 +38132,11 @@ function code(node2, _, state, info2) {
     );
     subexit();
   }
-  if (node2.lang && node2.meta) {
+  if (node3.lang && node3.meta) {
     const subexit = state.enter(`codeFencedMeta${suffix}`);
     value += tracker.move(" ");
     value += tracker.move(
-      state.safe(node2.meta, {
+      state.safe(node3.meta, {
         before: value,
         after: "\n",
         encode: ["`"],
@@ -38157,7 +38157,7 @@ function map2(line, _, blank) {
   return (blank ? "" : "    ") + line;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-quote.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-quote.js
 function checkQuote(state) {
   const marker = state.options.quote || '"';
   if (marker !== '"' && marker !== "'") {
@@ -38168,8 +38168,8 @@ function checkQuote(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/definition.js
-function definition2(node2, _, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/definition.js
+function definition2(node3, _, state, info2) {
   const quote = checkQuote(state);
   const suffix = quote === '"' ? "Quote" : "Apostrophe";
   const exit3 = state.enter("definition");
@@ -38177,7 +38177,7 @@ function definition2(node2, _, state, info2) {
   const tracker = state.createTracker(info2);
   let value = tracker.move("[");
   value += tracker.move(
-    state.safe(state.associationId(node2), {
+    state.safe(state.associationId(node3), {
       before: value,
       after: "]",
       ...tracker.current()
@@ -38187,31 +38187,31 @@ function definition2(node2, _, state, info2) {
   subexit();
   if (
     // If there’s no url, or…
-    !node2.url || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node3.url || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
     value += tracker.move(
-      state.safe(node2.url, { before: value, after: ">", ...tracker.current() })
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
     );
     value += tracker.move(">");
   } else {
     subexit = state.enter("destinationRaw");
     value += tracker.move(
-      state.safe(node2.url, {
+      state.safe(node3.url, {
         before: value,
-        after: node2.title ? " " : "\n",
+        after: node3.title ? " " : "\n",
         ...tracker.current()
       })
     );
   }
   subexit();
-  if (node2.title) {
+  if (node3.title) {
     subexit = state.enter(`title${suffix}`);
     value += tracker.move(" " + quote);
     value += tracker.move(
-      state.safe(node2.title, {
+      state.safe(node3.title, {
         before: value,
         after: quote,
         ...tracker.current()
@@ -38224,7 +38224,7 @@ function definition2(node2, _, state, info2) {
   return value;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
 function checkEmphasis(state) {
   const marker = state.options.emphasis || "*";
   if (marker !== "*" && marker !== "_") {
@@ -38235,15 +38235,15 @@ function checkEmphasis(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
 emphasis.peek = emphasisPeek;
-function emphasis(node2, _, state, info2) {
+function emphasis(node3, _, state, info2) {
   const marker = checkEmphasis(state);
   const exit3 = state.enter("emphasis");
   const tracker = state.createTracker(info2);
   let value = tracker.move(marker);
   value += tracker.move(
-    state.containerPhrasing(node2, {
+    state.containerPhrasing(node3, {
       before: value,
       after: marker,
       ...tracker.current()
@@ -38257,7 +38257,7 @@ function emphasisPeek(_, _1, state) {
   return state.options.emphasis || "*";
 }
 
-// node_modules/unist-util-is/lib/index.js
+// node_modules/remark-stringify/node_modules/unist-util-is/lib/index.js
 var convert = (
   /**
    * @type {(
@@ -38302,11 +38302,11 @@ function anyFactory(tests) {
   }
 }
 function propsFactory(check) {
-  return castFactory(all2);
-  function all2(node2) {
+  return castFactory(all3);
+  function all3(node3) {
     let key;
     for (key in check) {
-      if (node2[key] !== check[key])
+      if (node3[key] !== check[key])
         return false;
     }
     return true;
@@ -38314,16 +38314,16 @@ function propsFactory(check) {
 }
 function typeFactory(check) {
   return castFactory(type2);
-  function type2(node2) {
-    return node2 && node2.type === check;
+  function type2(node3) {
+    return node3 && node3.type === check;
   }
 }
 function castFactory(check) {
   return assertion;
-  function assertion(node2, ...parameters) {
+  function assertion(node3, ...parameters) {
     return Boolean(
-      node2 && typeof node2 === "object" && "type" in node2 && // @ts-expect-error: fine.
-      Boolean(check.call(this, node2, ...parameters))
+      node3 && typeof node3 === "object" && "type" in node3 && // @ts-expect-error: fine.
+      Boolean(check.call(this, node3, ...parameters))
     );
   }
 }
@@ -38331,12 +38331,12 @@ function ok() {
   return true;
 }
 
-// node_modules/unist-util-visit-parents/lib/color.js
+// node_modules/remark-stringify/node_modules/unist-util-visit-parents/lib/color.js
 function color(d) {
   return "\x1B[33m" + d + "\x1B[39m";
 }
 
-// node_modules/unist-util-visit-parents/lib/index.js
+// node_modules/remark-stringify/node_modules/unist-util-visit-parents/lib/index.js
 var CONTINUE = true;
 var EXIT = false;
 var SKIP = "skip";
@@ -38360,11 +38360,11 @@ var visitParents = (
       visitor = test;
       test = null;
     }
-    const is3 = convert(test);
+    const is4 = convert(test);
     const step = reverse ? -1 : 1;
     factory(tree, void 0, [])();
-    function factory(node2, index2, parents) {
-      const value = node2 && typeof node2 === "object" ? node2 : {};
+    function factory(node3, index2, parents) {
+      const value = node3 && typeof node3 === "object" ? node3 : {};
       if (typeof value.type === "string") {
         const name = (
           // `hast`
@@ -38374,7 +38374,7 @@ var visitParents = (
           )
         );
         Object.defineProperty(visit3, "name", {
-          value: "node (" + color(node2.type + (name ? "<" + name + ">" : "")) + ")"
+          value: "node (" + color(node3.type + (name ? "<" + name + ">" : "")) + ")"
         });
       }
       return visit3;
@@ -38383,17 +38383,17 @@ var visitParents = (
         let subresult;
         let offset;
         let grandparents;
-        if (!test || is3(node2, index2, parents[parents.length - 1] || null)) {
-          result = toResult(visitor(node2, parents));
+        if (!test || is4(node3, index2, parents[parents.length - 1] || null)) {
+          result = toResult(visitor(node3, parents));
           if (result[0] === EXIT) {
             return result;
           }
         }
-        if (node2.children && result[0] !== SKIP) {
-          offset = (reverse ? node2.children.length : -1) + step;
-          grandparents = parents.concat(node2);
-          while (offset > -1 && offset < node2.children.length) {
-            subresult = factory(node2.children[offset], offset, grandparents)();
+        if (node3.children && result[0] !== SKIP) {
+          offset = (reverse ? node3.children.length : -1) + step;
+          grandparents = parents.concat(node3);
+          while (offset > -1 && offset < node3.children.length) {
+            subresult = factory(node3.children[offset], offset, grandparents)();
             if (subresult[0] === EXIT) {
               return subresult;
             }
@@ -38415,7 +38415,7 @@ function toResult(value) {
   return [value];
 }
 
-// node_modules/mdast-util-to-markdown/node_modules/unist-util-visit/lib/index.js
+// node_modules/remark-stringify/node_modules/unist-util-visit/lib/index.js
 var visit = (
   /**
    * @type {(
@@ -38437,39 +38437,39 @@ var visit = (
       test = null;
     }
     visitParents(tree, test, overload, reverse);
-    function overload(node2, parents) {
+    function overload(node3, parents) {
       const parent = parents[parents.length - 1];
       return visitor(
-        node2,
-        parent ? parent.children.indexOf(node2) : null,
+        node3,
+        parent ? parent.children.indexOf(node3) : null,
         parent
       );
     }
   }
 );
 
-// node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
-function formatHeadingAsSetext(node2, state) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
+function formatHeadingAsSetext(node3, state) {
   let literalWithBreak = false;
-  visit(node2, (node3) => {
-    if ("value" in node3 && /\r?\n|\r/.test(node3.value) || node3.type === "break") {
+  visit(node3, (node4) => {
+    if ("value" in node4 && /\r?\n|\r/.test(node4.value) || node4.type === "break") {
       literalWithBreak = true;
       return EXIT;
     }
   });
   return Boolean(
-    (!node2.depth || node2.depth < 3) && toString(node2) && (state.options.setext || literalWithBreak)
+    (!node3.depth || node3.depth < 3) && toString(node3) && (state.options.setext || literalWithBreak)
   );
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/heading.js
-function heading(node2, _, state, info2) {
-  const rank = Math.max(Math.min(6, node2.depth || 1), 1);
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/heading.js
+function heading(node3, _, state, info2) {
+  const rank = Math.max(Math.min(6, node3.depth || 1), 1);
   const tracker = state.createTracker(info2);
-  if (formatHeadingAsSetext(node2, state)) {
+  if (formatHeadingAsSetext(node3, state)) {
     const exit4 = state.enter("headingSetext");
     const subexit2 = state.enter("phrasing");
-    const value2 = state.containerPhrasing(node2, {
+    const value2 = state.containerPhrasing(node3, {
       ...tracker.current(),
       before: "\n",
       after: "\n"
@@ -38487,7 +38487,7 @@ function heading(node2, _, state, info2) {
   const exit3 = state.enter("headingAtx");
   const subexit = state.enter("phrasing");
   tracker.move(sequence + " ");
-  let value = state.containerPhrasing(node2, {
+  let value = state.containerPhrasing(node3, {
     before: "# ",
     after: "\n",
     ...tracker.current()
@@ -38504,18 +38504,18 @@ function heading(node2, _, state, info2) {
   return value;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/html.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/html.js
 html.peek = htmlPeek;
-function html(node2) {
-  return node2.value || "";
+function html(node3) {
+  return node3.value || "";
 }
 function htmlPeek() {
   return "<";
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/image.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/image.js
 image.peek = imagePeek;
-function image(node2, _, state, info2) {
+function image(node3, _, state, info2) {
   const quote = checkQuote(state);
   const suffix = quote === '"' ? "Quote" : "Apostrophe";
   const exit3 = state.enter("image");
@@ -38523,37 +38523,37 @@ function image(node2, _, state, info2) {
   const tracker = state.createTracker(info2);
   let value = tracker.move("![");
   value += tracker.move(
-    state.safe(node2.alt, { before: value, after: "]", ...tracker.current() })
+    state.safe(node3.alt, { before: value, after: "]", ...tracker.current() })
   );
   value += tracker.move("](");
   subexit();
   if (
     // If there’s no url but there is a title…
-    !node2.url && node2.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node3.url && node3.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
     value += tracker.move(
-      state.safe(node2.url, { before: value, after: ">", ...tracker.current() })
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
     );
     value += tracker.move(">");
   } else {
     subexit = state.enter("destinationRaw");
     value += tracker.move(
-      state.safe(node2.url, {
+      state.safe(node3.url, {
         before: value,
-        after: node2.title ? " " : ")",
+        after: node3.title ? " " : ")",
         ...tracker.current()
       })
     );
   }
   subexit();
-  if (node2.title) {
+  if (node3.title) {
     subexit = state.enter(`title${suffix}`);
     value += tracker.move(" " + quote);
     value += tracker.move(
-      state.safe(node2.title, {
+      state.safe(node3.title, {
         before: value,
         after: quote,
         ...tracker.current()
@@ -38570,15 +38570,15 @@ function imagePeek() {
   return "!";
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
 imageReference.peek = imageReferencePeek;
-function imageReference(node2, _, state, info2) {
-  const type2 = node2.referenceType;
+function imageReference(node3, _, state, info2) {
+  const type2 = node3.referenceType;
   const exit3 = state.enter("imageReference");
   let subexit = state.enter("label");
   const tracker = state.createTracker(info2);
   let value = tracker.move("![");
-  const alt = state.safe(node2.alt, {
+  const alt = state.safe(node3.alt, {
     before: value,
     after: "]",
     ...tracker.current()
@@ -38588,7 +38588,7 @@ function imageReference(node2, _, state, info2) {
   const stack = state.stack;
   state.stack = [];
   subexit = state.enter("reference");
-  const reference = state.safe(state.associationId(node2), {
+  const reference = state.safe(state.associationId(node3), {
     before: value,
     after: "]",
     ...tracker.current()
@@ -38609,7 +38609,7 @@ function imageReferencePeek() {
   return "!";
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/pattern-compile.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/pattern-compile.js
 function patternCompile(pattern) {
   if (!pattern._compiled) {
     const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
@@ -38621,10 +38621,10 @@ function patternCompile(pattern) {
   return pattern._compiled;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
 inlineCode.peek = inlineCodePeek;
-function inlineCode(node2, _, state) {
-  let value = node2.value || "";
+function inlineCode(node3, _, state) {
+  let value = node3.value || "";
   let sequence = "`";
   let index2 = -1;
   while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
@@ -38653,36 +38653,36 @@ function inlineCodePeek() {
   return "`";
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
-function formatLinkAsAutolink(node2, state) {
-  const raw = toString(node2);
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
+function formatLinkAsAutolink(node3, state) {
+  const raw = toString(node3);
   return Boolean(
     !state.options.resourceLink && // If there’s a url…
-    node2.url && // And there’s a no title…
-    !node2.title && // And the content of `node` is a single text node…
-    node2.children && node2.children.length === 1 && node2.children[0].type === "text" && // And if the url is the same as the content…
-    (raw === node2.url || "mailto:" + raw === node2.url) && // And that starts w/ a protocol…
-    /^[a-z][a-z+.-]+:/i.test(node2.url) && // And that doesn’t contain ASCII control codes (character escapes and
+    node3.url && // And there’s a no title…
+    !node3.title && // And the content of `node` is a single text node…
+    node3.children && node3.children.length === 1 && node3.children[0].type === "text" && // And if the url is the same as the content…
+    (raw === node3.url || "mailto:" + raw === node3.url) && // And that starts w/ a protocol…
+    /^[a-z][a-z+.-]+:/i.test(node3.url) && // And that doesn’t contain ASCII control codes (character escapes and
     // references don’t work), space, or angle brackets…
-    !/[\0- <>\u007F]/.test(node2.url)
+    !/[\0- <>\u007F]/.test(node3.url)
   );
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/link.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/link.js
 link.peek = linkPeek;
-function link(node2, _, state, info2) {
+function link(node3, _, state, info2) {
   const quote = checkQuote(state);
   const suffix = quote === '"' ? "Quote" : "Apostrophe";
   const tracker = state.createTracker(info2);
   let exit3;
   let subexit;
-  if (formatLinkAsAutolink(node2, state)) {
+  if (formatLinkAsAutolink(node3, state)) {
     const stack = state.stack;
     state.stack = [];
     exit3 = state.enter("autolink");
     let value2 = tracker.move("<");
     value2 += tracker.move(
-      state.containerPhrasing(node2, {
+      state.containerPhrasing(node3, {
         before: value2,
         after: ">",
         ...tracker.current()
@@ -38697,7 +38697,7 @@ function link(node2, _, state, info2) {
   subexit = state.enter("label");
   let value = tracker.move("[");
   value += tracker.move(
-    state.containerPhrasing(node2, {
+    state.containerPhrasing(node3, {
       before: value,
       after: "](",
       ...tracker.current()
@@ -38707,31 +38707,31 @@ function link(node2, _, state, info2) {
   subexit();
   if (
     // If there’s no url but there is a title…
-    !node2.url && node2.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node3.url && node3.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
     value += tracker.move(
-      state.safe(node2.url, { before: value, after: ">", ...tracker.current() })
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
     );
     value += tracker.move(">");
   } else {
     subexit = state.enter("destinationRaw");
     value += tracker.move(
-      state.safe(node2.url, {
+      state.safe(node3.url, {
         before: value,
-        after: node2.title ? " " : ")",
+        after: node3.title ? " " : ")",
         ...tracker.current()
       })
     );
   }
   subexit();
-  if (node2.title) {
+  if (node3.title) {
     subexit = state.enter(`title${suffix}`);
     value += tracker.move(" " + quote);
     value += tracker.move(
-      state.safe(node2.title, {
+      state.safe(node3.title, {
         before: value,
         after: quote,
         ...tracker.current()
@@ -38744,29 +38744,29 @@ function link(node2, _, state, info2) {
   exit3();
   return value;
 }
-function linkPeek(node2, _, state) {
-  return formatLinkAsAutolink(node2, state) ? "<" : "[";
+function linkPeek(node3, _, state) {
+  return formatLinkAsAutolink(node3, state) ? "<" : "[";
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
 linkReference.peek = linkReferencePeek;
-function linkReference(node2, _, state, info2) {
-  const type2 = node2.referenceType;
+function linkReference(node3, _, state, info2) {
+  const type2 = node3.referenceType;
   const exit3 = state.enter("linkReference");
   let subexit = state.enter("label");
   const tracker = state.createTracker(info2);
   let value = tracker.move("[");
-  const text5 = state.containerPhrasing(node2, {
+  const text6 = state.containerPhrasing(node3, {
     before: value,
     after: "]",
     ...tracker.current()
   });
-  value += tracker.move(text5 + "][");
+  value += tracker.move(text6 + "][");
   subexit();
   const stack = state.stack;
   state.stack = [];
   subexit = state.enter("reference");
-  const reference = state.safe(state.associationId(node2), {
+  const reference = state.safe(state.associationId(node3), {
     before: value,
     after: "]",
     ...tracker.current()
@@ -38774,7 +38774,7 @@ function linkReference(node2, _, state, info2) {
   subexit();
   state.stack = stack;
   exit3();
-  if (type2 === "full" || !text5 || text5 !== reference) {
+  if (type2 === "full" || !text6 || text6 !== reference) {
     value += tracker.move(reference + "]");
   } else if (type2 === "shortcut") {
     value = value.slice(0, -1);
@@ -38787,7 +38787,7 @@ function linkReferencePeek() {
   return "[";
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
 function checkBullet(state) {
   const marker = state.options.bullet || "*";
   if (marker !== "*" && marker !== "+" && marker !== "-") {
@@ -38798,7 +38798,7 @@ function checkBullet(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
 function checkBulletOther(state) {
   const bullet = checkBullet(state);
   const bulletOther = state.options.bulletOther;
@@ -38818,7 +38818,7 @@ function checkBulletOther(state) {
   return bulletOther;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
 function checkBulletOrdered(state) {
   const marker = state.options.bulletOrdered || ".";
   if (marker !== "." && marker !== ")") {
@@ -38829,7 +38829,7 @@ function checkBulletOrdered(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered-other.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered-other.js
 function checkBulletOrderedOther(state) {
   const bulletOrdered = checkBulletOrdered(state);
   const bulletOrderedOther = state.options.bulletOrderedOther;
@@ -38849,7 +38849,7 @@ function checkBulletOrderedOther(state) {
   return bulletOrderedOther;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-rule.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-rule.js
 function checkRule(state) {
   const marker = state.options.rule || "*";
   if (marker !== "*" && marker !== "-" && marker !== "_") {
@@ -38860,20 +38860,20 @@ function checkRule(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/list.js
-function list2(node2, parent, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/list.js
+function list2(node3, parent, state, info2) {
   const exit3 = state.enter("list");
   const bulletCurrent = state.bulletCurrent;
-  let bullet = node2.ordered ? checkBulletOrdered(state) : checkBullet(state);
-  const bulletOther = node2.ordered ? checkBulletOrderedOther(state) : checkBulletOther(state);
+  let bullet = node3.ordered ? checkBulletOrdered(state) : checkBullet(state);
+  const bulletOther = node3.ordered ? checkBulletOrderedOther(state) : checkBulletOther(state);
   const bulletLastUsed = state.bulletLastUsed;
   let useDifferentMarker = false;
   if (parent && // Explicit `other` set.
-  (node2.ordered ? state.options.bulletOrderedOther : state.options.bulletOther) && bulletLastUsed && bullet === bulletLastUsed) {
+  (node3.ordered ? state.options.bulletOrderedOther : state.options.bulletOther) && bulletLastUsed && bullet === bulletLastUsed) {
     useDifferentMarker = true;
   }
-  if (!node2.ordered) {
-    const firstListItem = node2.children ? node2.children[0] : void 0;
+  if (!node3.ordered) {
+    const firstListItem = node3.children ? node3.children[0] : void 0;
     if (
       // Bullet could be used as a thematic break marker:
       (bullet === "*" || bullet === "-") && // Empty first list item:
@@ -38885,8 +38885,8 @@ function list2(node2, parent, state, info2) {
     }
     if (checkRule(state) === bullet && firstListItem) {
       let index2 = -1;
-      while (++index2 < node2.children.length) {
-        const item = node2.children[index2];
+      while (++index2 < node3.children.length) {
+        const item = node3.children[index2];
         if (item && item.type === "listItem" && item.children && item.children[0] && item.children[0].type === "thematicBreak") {
           useDifferentMarker = true;
           break;
@@ -38898,14 +38898,14 @@ function list2(node2, parent, state, info2) {
     bullet = bulletOther;
   }
   state.bulletCurrent = bullet;
-  const value = state.containerFlow(node2, info2);
+  const value = state.containerFlow(node3, info2);
   state.bulletLastUsed = bullet;
   state.bulletCurrent = bulletCurrent;
   exit3();
   return value;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
 function checkListItemIndent(state) {
   const style = state.options.listItemIndent || "tab";
   if (style === 1 || style === "1") {
@@ -38919,15 +38919,15 @@ function checkListItemIndent(state) {
   return style;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/list-item.js
-function listItem(node2, parent, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/list-item.js
+function listItem(node3, parent, state, info2) {
   const listItemIndent = checkListItemIndent(state);
   let bullet = state.bulletCurrent || checkBullet(state);
   if (parent && parent.type === "list" && parent.ordered) {
-    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node2)) + bullet;
+    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node3)) + bullet;
   }
   let size = bullet.length + 1;
-  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node2.spread)) {
+  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node3.spread)) {
     size = Math.ceil(size / 4) * 4;
   }
   const tracker = state.createTracker(info2);
@@ -38935,12 +38935,12 @@ function listItem(node2, parent, state, info2) {
   tracker.shift(size);
   const exit3 = state.enter("listItem");
   const value = state.indentLines(
-    state.containerFlow(node2, tracker.current()),
-    map5
+    state.containerFlow(node3, tracker.current()),
+    map9
   );
   exit3();
   return value;
-  function map5(line, index2, blank) {
+  function map9(line, index2, blank) {
     if (index2) {
       return (blank ? "" : " ".repeat(size)) + line;
     }
@@ -38948,17 +38948,17 @@ function listItem(node2, parent, state, info2) {
   }
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
-function paragraph(node2, _, state, info2) {
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
+function paragraph(node3, _, state, info2) {
   const exit3 = state.enter("paragraph");
   const subexit = state.enter("phrasing");
-  const value = state.containerPhrasing(node2, info2);
+  const value = state.containerPhrasing(node3, info2);
   subexit();
   exit3();
   return value;
 }
 
-// node_modules/mdast-util-phrasing/lib/index.js
+// node_modules/remark-stringify/node_modules/mdast-util-phrasing/lib/index.js
 var phrasing = (
   /** @type {AssertPredicatePhrasing} */
   convert([
@@ -38977,14 +38977,14 @@ var phrasing = (
   ])
 );
 
-// node_modules/mdast-util-to-markdown/lib/handle/root.js
-function root(node2, _, state, info2) {
-  const hasPhrasing = node2.children.some((d) => phrasing(d));
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/root.js
+function root(node3, _, state, info2) {
+  const hasPhrasing = node3.children.some((d) => phrasing(d));
   const fn = hasPhrasing ? state.containerPhrasing : state.containerFlow;
-  return fn.call(state, node2, info2);
+  return fn.call(state, node3, info2);
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-strong.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-strong.js
 function checkStrong(state) {
   const marker = state.options.strong || "*";
   if (marker !== "*" && marker !== "_") {
@@ -38995,15 +38995,15 @@ function checkStrong(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/strong.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/strong.js
 strong.peek = strongPeek;
-function strong(node2, _, state, info2) {
+function strong(node3, _, state, info2) {
   const marker = checkStrong(state);
   const exit3 = state.enter("strong");
   const tracker = state.createTracker(info2);
   let value = tracker.move(marker + marker);
   value += tracker.move(
-    state.containerPhrasing(node2, {
+    state.containerPhrasing(node3, {
       before: value,
       after: marker,
       ...tracker.current()
@@ -39017,12 +39017,12 @@ function strongPeek(_, _1, state) {
   return state.options.strong || "*";
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/text.js
-function text3(node2, _, state, info2) {
-  return state.safe(node2.value, info2);
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/text.js
+function text3(node3, _, state, info2) {
+  return state.safe(node3.value, info2);
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
 function checkRuleRepetition(state) {
   const repetition = state.options.ruleRepetition || 3;
   if (repetition < 3) {
@@ -39033,13 +39033,13 @@ function checkRuleRepetition(state) {
   return repetition;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
 function thematicBreak2(_, _1, state) {
   const value = (checkRule(state) + (state.options.ruleSpaces ? " " : "")).repeat(checkRuleRepetition(state));
   return state.options.ruleSpaces ? value.slice(0, -1) : value;
 }
 
-// node_modules/mdast-util-to-markdown/lib/handle/index.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/handle/index.js
 var handle = {
   blockquote,
   break: hardBreak,
@@ -39063,7 +39063,7 @@ var handle = {
   thematicBreak: thematicBreak2
 };
 
-// node_modules/mdast-util-to-markdown/lib/join.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/join.js
 var join = [joinDefaults];
 function joinDefaults(left, right, parent, state) {
   if (right.type === "code" && formatCodeAsIndented(right, state) && (left.type === "list" || left.type === right.type && formatCodeAsIndented(left, state))) {
@@ -39082,7 +39082,7 @@ function joinDefaults(left, right, parent, state) {
   }
 }
 
-// node_modules/mdast-util-to-markdown/lib/unsafe.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/unsafe.js
 var fullPhrasingSpans = [
   "autolink",
   "destinationLiteral",
@@ -39216,15 +39216,15 @@ var unsafe = [
   { atBreak: true, character: "~" }
 ];
 
-// node_modules/mdast-util-to-markdown/lib/util/association.js
-function association(node2) {
-  if (node2.label || !node2.identifier) {
-    return node2.label || "";
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/association.js
+function association(node3) {
+  if (node3.label || !node3.identifier) {
+    return node3.label || "";
   }
-  return decodeString(node2.identifier);
+  return decodeString(node3.identifier);
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
 function containerPhrasing(parent, state, info2) {
   const indexStack = state.indexStack;
   const children = parent.children || [];
@@ -39238,10 +39238,10 @@ function containerPhrasing(parent, state, info2) {
     let after;
     indexStack[indexStack.length - 1] = index2;
     if (index2 + 1 < children.length) {
-      let handle2 = state.handle.handlers[children[index2 + 1].type];
-      if (handle2 && handle2.peek)
-        handle2 = handle2.peek;
-      after = handle2 ? handle2(children[index2 + 1], parent, state, {
+      let handle3 = state.handle.handlers[children[index2 + 1].type];
+      if (handle3 && handle3.peek)
+        handle3 = handle3.peek;
+      after = handle3 ? handle3(children[index2 + 1], parent, state, {
         before: "",
         after: "",
         ...tracker.current()
@@ -39273,7 +39273,7 @@ function containerPhrasing(parent, state, info2) {
   return results.join("");
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/container-flow.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/container-flow.js
 function containerFlow(parent, state, info2) {
   const indexStack = state.indexStack;
   const children = parent.children || [];
@@ -39322,27 +39322,27 @@ function between(left, right, parent, state) {
   return "\n\n";
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
 var eol = /\r?\n|\r/g;
-function indentLines(value, map5) {
+function indentLines(value, map9) {
   const result = [];
   let start = 0;
   let line = 0;
   let match;
   while (match = eol.exec(value)) {
-    one2(value.slice(start, match.index));
+    one3(value.slice(start, match.index));
     result.push(match[0]);
     start = match.index + match[0].length;
     line++;
   }
-  one2(value.slice(start));
+  one3(value.slice(start));
   return result.join("");
-  function one2(value2) {
-    result.push(map5(value2, line, !value2));
+  function one3(value2) {
+    result.push(map9(value2, line, !value2));
   }
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/safe.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/safe.js
 function safe(state, input, config2) {
   const value = (config2.before || "") + (input || "") + (config2.after || "");
   const positions = [];
@@ -39426,7 +39426,7 @@ function escapeBackslashes(value, after) {
   return results.join("");
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/track.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/track.js
 function track(config2) {
   const options = config2 || {};
   const now = options.now || {};
@@ -39450,7 +39450,7 @@ function track(config2) {
   }
 }
 
-// node_modules/mdast-util-to-markdown/lib/index.js
+// node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/index.js
 function toMarkdown(tree, options = {}) {
   const state = {
     enter,
@@ -39501,8 +39501,8 @@ function toMarkdown(tree, options = {}) {
 function invalid(value) {
   throw new Error("Cannot handle value `" + value + "`, expected node");
 }
-function unknown(node2) {
-  throw new Error("Cannot handle unknown node `" + node2.type + "`");
+function unknown(node3) {
+  throw new Error("Cannot handle unknown node `" + node3.type + "`");
 }
 function joinDefinition(left, right) {
   if (left.type === "definition" && left.type === right.type) {
@@ -39599,65 +39599,65 @@ text4[72] = [emailAutolink, protocolAutolink];
 text4[104] = [emailAutolink, protocolAutolink];
 text4[87] = [emailAutolink, wwwAutolink];
 text4[119] = [emailAutolink, wwwAutolink];
-function tokenizeEmailAutolink(effects, ok3, nok) {
+function tokenizeEmailAutolink(effects, ok4, nok) {
   const self2 = this;
   let dot;
   let data;
   return start;
-  function start(code3) {
-    if (!gfmAtext(code3) || !previousEmail.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
-      return nok(code3);
+  function start(code4) {
+    if (!gfmAtext(code4) || !previousEmail.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
+      return nok(code4);
     }
     effects.enter("literalAutolink");
     effects.enter("literalAutolinkEmail");
-    return atext(code3);
+    return atext(code4);
   }
-  function atext(code3) {
-    if (gfmAtext(code3)) {
-      effects.consume(code3);
+  function atext(code4) {
+    if (gfmAtext(code4)) {
+      effects.consume(code4);
       return atext;
     }
-    if (code3 === 64) {
-      effects.consume(code3);
+    if (code4 === 64) {
+      effects.consume(code4);
       return emailDomain;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function emailDomain(code3) {
-    if (code3 === 46) {
+  function emailDomain(code4) {
+    if (code4 === 46) {
       return effects.check(
         emailDomainDotTrail,
         emailDomainAfter,
         emailDomainDot
-      )(code3);
+      )(code4);
     }
-    if (code3 === 45 || code3 === 95 || asciiAlphanumeric(code3)) {
+    if (code4 === 45 || code4 === 95 || asciiAlphanumeric(code4)) {
       data = true;
-      effects.consume(code3);
+      effects.consume(code4);
       return emailDomain;
     }
-    return emailDomainAfter(code3);
+    return emailDomainAfter(code4);
   }
-  function emailDomainDot(code3) {
-    effects.consume(code3);
+  function emailDomainDot(code4) {
+    effects.consume(code4);
     dot = true;
     return emailDomain;
   }
-  function emailDomainAfter(code3) {
+  function emailDomainAfter(code4) {
     if (data && dot && asciiAlpha(self2.previous)) {
       effects.exit("literalAutolinkEmail");
       effects.exit("literalAutolink");
-      return ok3(code3);
+      return ok4(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
-function tokenizeWwwAutolink(effects, ok3, nok) {
+function tokenizeWwwAutolink(effects, ok4, nok) {
   const self2 = this;
   return wwwStart;
-  function wwwStart(code3) {
-    if (code3 !== 87 && code3 !== 119 || !previousWww.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
-      return nok(code3);
+  function wwwStart(code4) {
+    if (code4 !== 87 && code4 !== 119 || !previousWww.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
+      return nok(code4);
     }
     effects.enter("literalAutolink");
     effects.enter("literalAutolinkWww");
@@ -39665,212 +39665,212 @@ function tokenizeWwwAutolink(effects, ok3, nok) {
       wwwPrefix,
       effects.attempt(domain, effects.attempt(path, wwwAfter), nok),
       nok
-    )(code3);
+    )(code4);
   }
-  function wwwAfter(code3) {
+  function wwwAfter(code4) {
     effects.exit("literalAutolinkWww");
     effects.exit("literalAutolink");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeProtocolAutolink(effects, ok3, nok) {
+function tokenizeProtocolAutolink(effects, ok4, nok) {
   const self2 = this;
   let buffer2 = "";
   let seen = false;
   return protocolStart;
-  function protocolStart(code3) {
-    if ((code3 === 72 || code3 === 104) && previousProtocol.call(self2, self2.previous) && !previousUnbalanced(self2.events)) {
+  function protocolStart(code4) {
+    if ((code4 === 72 || code4 === 104) && previousProtocol.call(self2, self2.previous) && !previousUnbalanced(self2.events)) {
       effects.enter("literalAutolink");
       effects.enter("literalAutolinkHttp");
-      buffer2 += String.fromCodePoint(code3);
-      effects.consume(code3);
+      buffer2 += String.fromCodePoint(code4);
+      effects.consume(code4);
       return protocolPrefixInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function protocolPrefixInside(code3) {
-    if (asciiAlpha(code3) && buffer2.length < 5) {
-      buffer2 += String.fromCodePoint(code3);
-      effects.consume(code3);
+  function protocolPrefixInside(code4) {
+    if (asciiAlpha(code4) && buffer2.length < 5) {
+      buffer2 += String.fromCodePoint(code4);
+      effects.consume(code4);
       return protocolPrefixInside;
     }
-    if (code3 === 58) {
+    if (code4 === 58) {
       const protocol = buffer2.toLowerCase();
       if (protocol === "http" || protocol === "https") {
-        effects.consume(code3);
+        effects.consume(code4);
         return protocolSlashesInside;
       }
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function protocolSlashesInside(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function protocolSlashesInside(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       if (seen) {
         return afterProtocol;
       }
       seen = true;
       return protocolSlashesInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function afterProtocol(code3) {
-    return code3 === null || asciiControl(code3) || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || unicodePunctuation(code3) ? nok(code3) : effects.attempt(domain, effects.attempt(path, protocolAfter), nok)(code3);
+  function afterProtocol(code4) {
+    return code4 === null || asciiControl(code4) || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4) || unicodePunctuation(code4) ? nok(code4) : effects.attempt(domain, effects.attempt(path, protocolAfter), nok)(code4);
   }
-  function protocolAfter(code3) {
+  function protocolAfter(code4) {
     effects.exit("literalAutolinkHttp");
     effects.exit("literalAutolink");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizeWwwPrefix(effects, ok3, nok) {
+function tokenizeWwwPrefix(effects, ok4, nok) {
   let size = 0;
   return wwwPrefixInside;
-  function wwwPrefixInside(code3) {
-    if ((code3 === 87 || code3 === 119) && size < 3) {
+  function wwwPrefixInside(code4) {
+    if ((code4 === 87 || code4 === 119) && size < 3) {
       size++;
-      effects.consume(code3);
+      effects.consume(code4);
       return wwwPrefixInside;
     }
-    if (code3 === 46 && size === 3) {
-      effects.consume(code3);
+    if (code4 === 46 && size === 3) {
+      effects.consume(code4);
       return wwwPrefixAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function wwwPrefixAfter(code3) {
-    return code3 === null ? nok(code3) : ok3(code3);
+  function wwwPrefixAfter(code4) {
+    return code4 === null ? nok(code4) : ok4(code4);
   }
 }
-function tokenizeDomain(effects, ok3, nok) {
+function tokenizeDomain(effects, ok4, nok) {
   let underscoreInLastSegment;
   let underscoreInLastLastSegment;
   let seen;
   return domainInside;
-  function domainInside(code3) {
-    if (code3 === 46 || code3 === 95) {
-      return effects.check(trail, domainAfter, domainAtPunctuation)(code3);
+  function domainInside(code4) {
+    if (code4 === 46 || code4 === 95) {
+      return effects.check(trail, domainAfter, domainAtPunctuation)(code4);
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || code3 !== 45 && unicodePunctuation(code3)) {
-      return domainAfter(code3);
+    if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4) || code4 !== 45 && unicodePunctuation(code4)) {
+      return domainAfter(code4);
     }
     seen = true;
-    effects.consume(code3);
+    effects.consume(code4);
     return domainInside;
   }
-  function domainAtPunctuation(code3) {
-    if (code3 === 95) {
+  function domainAtPunctuation(code4) {
+    if (code4 === 95) {
       underscoreInLastSegment = true;
     } else {
       underscoreInLastLastSegment = underscoreInLastSegment;
       underscoreInLastSegment = void 0;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return domainInside;
   }
-  function domainAfter(code3) {
+  function domainAfter(code4) {
     if (underscoreInLastLastSegment || underscoreInLastSegment || !seen) {
-      return nok(code3);
+      return nok(code4);
     }
-    return ok3(code3);
+    return ok4(code4);
   }
 }
-function tokenizePath(effects, ok3) {
+function tokenizePath(effects, ok4) {
   let sizeOpen = 0;
   let sizeClose = 0;
   return pathInside;
-  function pathInside(code3) {
-    if (code3 === 40) {
+  function pathInside(code4) {
+    if (code4 === 40) {
       sizeOpen++;
-      effects.consume(code3);
+      effects.consume(code4);
       return pathInside;
     }
-    if (code3 === 41 && sizeClose < sizeOpen) {
-      return pathAtPunctuation(code3);
+    if (code4 === 41 && sizeClose < sizeOpen) {
+      return pathAtPunctuation(code4);
     }
-    if (code3 === 33 || code3 === 34 || code3 === 38 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 60 || code3 === 63 || code3 === 93 || code3 === 95 || code3 === 126) {
-      return effects.check(trail, ok3, pathAtPunctuation)(code3);
+    if (code4 === 33 || code4 === 34 || code4 === 38 || code4 === 39 || code4 === 41 || code4 === 42 || code4 === 44 || code4 === 46 || code4 === 58 || code4 === 59 || code4 === 60 || code4 === 63 || code4 === 93 || code4 === 95 || code4 === 126) {
+      return effects.check(trail, ok4, pathAtPunctuation)(code4);
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
-      return ok3(code3);
+    if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
+      return ok4(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return pathInside;
   }
-  function pathAtPunctuation(code3) {
-    if (code3 === 41) {
+  function pathAtPunctuation(code4) {
+    if (code4 === 41) {
       sizeClose++;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return pathInside;
   }
 }
-function tokenizeTrail(effects, ok3, nok) {
+function tokenizeTrail(effects, ok4, nok) {
   return trail2;
-  function trail2(code3) {
-    if (code3 === 33 || code3 === 34 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 63 || code3 === 95 || code3 === 126) {
-      effects.consume(code3);
+  function trail2(code4) {
+    if (code4 === 33 || code4 === 34 || code4 === 39 || code4 === 41 || code4 === 42 || code4 === 44 || code4 === 46 || code4 === 58 || code4 === 59 || code4 === 63 || code4 === 95 || code4 === 126) {
+      effects.consume(code4);
       return trail2;
     }
-    if (code3 === 38) {
-      effects.consume(code3);
+    if (code4 === 38) {
+      effects.consume(code4);
       return trailCharRefStart;
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return trailBracketAfter;
     }
     if (
       // `<` is an end.
-      code3 === 60 || // So is whitespace.
-      code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)
+      code4 === 60 || // So is whitespace.
+      code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)
     ) {
-      return ok3(code3);
+      return ok4(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function trailBracketAfter(code3) {
-    if (code3 === null || code3 === 40 || code3 === 91 || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
-      return ok3(code3);
+  function trailBracketAfter(code4) {
+    if (code4 === null || code4 === 40 || code4 === 91 || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
+      return ok4(code4);
     }
-    return trail2(code3);
+    return trail2(code4);
   }
-  function trailCharRefStart(code3) {
-    return asciiAlpha(code3) ? trailCharRefInside(code3) : nok(code3);
+  function trailCharRefStart(code4) {
+    return asciiAlpha(code4) ? trailCharRefInside(code4) : nok(code4);
   }
-  function trailCharRefInside(code3) {
-    if (code3 === 59) {
-      effects.consume(code3);
+  function trailCharRefInside(code4) {
+    if (code4 === 59) {
+      effects.consume(code4);
       return trail2;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return trailCharRefInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
-function tokenizeEmailDomainDotTrail(effects, ok3, nok) {
+function tokenizeEmailDomainDotTrail(effects, ok4, nok) {
   return start;
-  function start(code3) {
-    effects.consume(code3);
+  function start(code4) {
+    effects.consume(code4);
     return after;
   }
-  function after(code3) {
-    return asciiAlphanumeric(code3) ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return asciiAlphanumeric(code4) ? nok(code4) : ok4(code4);
   }
 }
-function previousWww(code3) {
-  return code3 === null || code3 === 40 || code3 === 42 || code3 === 95 || code3 === 91 || code3 === 93 || code3 === 126 || markdownLineEndingOrSpace(code3);
+function previousWww(code4) {
+  return code4 === null || code4 === 40 || code4 === 42 || code4 === 95 || code4 === 91 || code4 === 93 || code4 === 126 || markdownLineEndingOrSpace(code4);
 }
-function previousProtocol(code3) {
-  return !asciiAlpha(code3);
+function previousProtocol(code4) {
+  return !asciiAlpha(code4);
 }
-function previousEmail(code3) {
-  return !(code3 === 47 || gfmAtext(code3));
+function previousEmail(code4) {
+  return !(code4 === 47 || gfmAtext(code4));
 }
-function gfmAtext(code3) {
-  return code3 === 43 || code3 === 45 || code3 === 46 || code3 === 95 || asciiAlphanumeric(code3);
+function gfmAtext(code4) {
+  return code4 === 43 || code4 === 45 || code4 === 46 || code4 === 95 || asciiAlphanumeric(code4);
 }
 function previousUnbalanced(events) {
   let index2 = events.length;
@@ -39920,7 +39920,7 @@ function gfmFootnote() {
     }
   };
 }
-function tokenizePotentialGfmFootnoteCall(effects, ok3, nok) {
+function tokenizePotentialGfmFootnoteCall(effects, ok4, nok) {
   const self2 = this;
   let index2 = self2.events.length;
   const defined = self2.parser.gfmFootnotes || (self2.parser.gfmFootnotes = []);
@@ -39936,9 +39936,9 @@ function tokenizePotentialGfmFootnoteCall(effects, ok3, nok) {
     }
   }
   return start;
-  function start(code3) {
+  function start(code4) {
     if (!labelStart || !labelStart._balanced) {
-      return nok(code3);
+      return nok(code4);
     }
     const id = normalizeIdentifier(
       self2.sliceSerialize({
@@ -39947,12 +39947,12 @@ function tokenizePotentialGfmFootnoteCall(effects, ok3, nok) {
       })
     );
     if (id.codePointAt(0) !== 94 || !defined.includes(id.slice(1))) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("gfmFootnoteCallLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallLabelMarker");
-    return ok3(code3);
+    return ok4(code4);
   }
 }
 function resolveToPotentialGfmFootnoteCall(events, context) {
@@ -40014,132 +40014,132 @@ function resolveToPotentialGfmFootnoteCall(events, context) {
   events.splice(index2, events.length - index2 + 1, ...replacement);
   return events;
 }
-function tokenizeGfmFootnoteCall(effects, ok3, nok) {
+function tokenizeGfmFootnoteCall(effects, ok4, nok) {
   const self2 = this;
   const defined = self2.parser.gfmFootnotes || (self2.parser.gfmFootnotes = []);
   let size = 0;
   let data;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("gfmFootnoteCall");
     effects.enter("gfmFootnoteCallLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallLabelMarker");
     return callStart;
   }
-  function callStart(code3) {
-    if (code3 !== 94)
-      return nok(code3);
+  function callStart(code4) {
+    if (code4 !== 94)
+      return nok(code4);
     effects.enter("gfmFootnoteCallMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallMarker");
     effects.enter("gfmFootnoteCallString");
     effects.enter("chunkString").contentType = "string";
     return callData;
   }
-  function callData(code3) {
+  function callData(code4) {
     if (
       // Too long.
       size > 999 || // Closing brace with nothing.
-      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace(code4)
     ) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit("chunkString");
       const token = effects.exit("gfmFootnoteCallString");
       if (!defined.includes(normalizeIdentifier(self2.sliceSerialize(token)))) {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("gfmFootnoteCallLabelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteCallLabelMarker");
       effects.exit("gfmFootnoteCall");
-      return ok3;
+      return ok4;
     }
-    if (!markdownLineEndingOrSpace(code3)) {
+    if (!markdownLineEndingOrSpace(code4)) {
       data = true;
     }
     size++;
-    effects.consume(code3);
-    return code3 === 92 ? callEscape : callData;
+    effects.consume(code4);
+    return code4 === 92 ? callEscape : callData;
   }
-  function callEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function callEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return callData;
     }
-    return callData(code3);
+    return callData(code4);
   }
 }
-function tokenizeDefinitionStart(effects, ok3, nok) {
+function tokenizeDefinitionStart(effects, ok4, nok) {
   const self2 = this;
   const defined = self2.parser.gfmFootnotes || (self2.parser.gfmFootnotes = []);
   let identifier;
   let size = 0;
   let data;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("gfmFootnoteDefinition")._container = true;
     effects.enter("gfmFootnoteDefinitionLabel");
     effects.enter("gfmFootnoteDefinitionLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteDefinitionLabelMarker");
     return labelAtMarker;
   }
-  function labelAtMarker(code3) {
-    if (code3 === 94) {
+  function labelAtMarker(code4) {
+    if (code4 === 94) {
       effects.enter("gfmFootnoteDefinitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteDefinitionMarker");
       effects.enter("gfmFootnoteDefinitionLabelString");
       effects.enter("chunkString").contentType = "string";
       return labelInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function labelInside(code3) {
+  function labelInside(code4) {
     if (
       // Too long.
       size > 999 || // Closing brace with nothing.
-      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace(code4)
     ) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit("chunkString");
       const token = effects.exit("gfmFootnoteDefinitionLabelString");
       identifier = normalizeIdentifier(self2.sliceSerialize(token));
       effects.enter("gfmFootnoteDefinitionLabelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteDefinitionLabelMarker");
       effects.exit("gfmFootnoteDefinitionLabel");
       return labelAfter;
     }
-    if (!markdownLineEndingOrSpace(code3)) {
+    if (!markdownLineEndingOrSpace(code4)) {
       data = true;
     }
     size++;
-    effects.consume(code3);
-    return code3 === 92 ? labelEscape : labelInside;
+    effects.consume(code4);
+    return code4 === 92 ? labelEscape : labelInside;
   }
-  function labelEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function labelEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return labelInside;
     }
-    return labelInside(code3);
+    return labelInside(code4);
   }
-  function labelAfter(code3) {
-    if (code3 === 58) {
+  function labelAfter(code4) {
+    if (code4 === 58) {
       effects.enter("definitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("definitionMarker");
       if (!defined.includes(identifier)) {
         defined.push(identifier);
@@ -40150,19 +40150,19 @@ function tokenizeDefinitionStart(effects, ok3, nok) {
         "gfmFootnoteDefinitionWhitespace"
       );
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function whitespaceAfter(code3) {
-    return ok3(code3);
+  function whitespaceAfter(code4) {
+    return ok4(code4);
   }
 }
-function tokenizeDefinitionContinuation(effects, ok3, nok) {
-  return effects.check(blankLine, ok3, effects.attempt(indent, ok3, nok));
+function tokenizeDefinitionContinuation(effects, ok4, nok) {
+  return effects.check(blankLine, ok4, effects.attempt(indent, ok4, nok));
 }
 function gfmFootnoteDefinitionEnd(effects) {
   effects.exit("gfmFootnoteDefinition");
 }
-function tokenizeIndent2(effects, ok3, nok) {
+function tokenizeIndent2(effects, ok4, nok) {
   const self2 = this;
   return factorySpace(
     effects,
@@ -40170,9 +40170,9 @@ function tokenizeIndent2(effects, ok3, nok) {
     "gfmFootnoteDefinitionIndent",
     4 + 1
   );
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "gfmFootnoteDefinitionIndent" && tail[2].sliceSerialize(tail[1], true).length === 4 ? ok3(code3) : nok(code3);
+    return tail && tail[1].type === "gfmFootnoteDefinitionIndent" && tail[2].sliceSerialize(tail[1], true).length === 4 ? ok4(code4) : nok(code4);
   }
 }
 
@@ -40213,7 +40213,7 @@ function gfmStrikethrough(options) {
               start: Object.assign({}, events[open][1].start),
               end: Object.assign({}, events[index2][1].end)
             };
-            const text5 = {
+            const text6 = {
               type: "strikethroughText",
               start: Object.assign({}, events[open][1].end),
               end: Object.assign({}, events[index2][1].start)
@@ -40222,7 +40222,7 @@ function gfmStrikethrough(options) {
               ["enter", strikethrough, context],
               ["enter", events[open][1], context],
               ["exit", events[open][1], context],
-              ["enter", text5, context]
+              ["enter", text6, context]
             ];
             const insideSpan2 = context.parser.constructs.insideSpan.null;
             if (insideSpan2) {
@@ -40235,7 +40235,7 @@ function gfmStrikethrough(options) {
               );
             }
             splice(nextEvents, nextEvents.length, 0, [
-              ["exit", text5, context],
+              ["exit", text6, context],
               ["enter", events[index2][1], context],
               ["exit", events[index2][1], context],
               ["exit", strikethrough, context]
@@ -40255,34 +40255,34 @@ function gfmStrikethrough(options) {
     }
     return events;
   }
-  function tokenizeStrikethrough(effects, ok3, nok) {
+  function tokenizeStrikethrough(effects, ok4, nok) {
     const previous3 = this.previous;
     const events = this.events;
     let size = 0;
     return start;
-    function start(code3) {
+    function start(code4) {
       if (previous3 === 126 && events[events.length - 1][1].type !== "characterEscape") {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("strikethroughSequenceTemporary");
-      return more(code3);
+      return more(code4);
     }
-    function more(code3) {
+    function more(code4) {
       const before = classifyCharacter(previous3);
-      if (code3 === 126) {
+      if (code4 === 126) {
         if (size > 1)
-          return nok(code3);
-        effects.consume(code3);
+          return nok(code4);
+        effects.consume(code4);
         size++;
         return more;
       }
       if (size < 2 && !single)
-        return nok(code3);
+        return nok(code4);
       const token = effects.exit("strikethroughSequenceTemporary");
-      const after = classifyCharacter(code3);
+      const after = classifyCharacter(code4);
       token._open = !after || after === 2 && Boolean(before);
       token._close = !before || before === 2 && Boolean(after);
-      return ok3(code3);
+      return ok4(code4);
     }
   }
 }
@@ -40401,13 +40401,13 @@ var gfmTable = {
     }
   }
 };
-function tokenizeTable(effects, ok3, nok) {
+function tokenizeTable(effects, ok4, nok) {
   const self2 = this;
   let size = 0;
   let sizeB = 0;
   let seen;
   return start;
-  function start(code3) {
+  function start(code4) {
     let index2 = self2.events.length - 1;
     while (index2 > -1) {
       const type2 = self2.events[index2][1].type;
@@ -40420,207 +40420,207 @@ function tokenizeTable(effects, ok3, nok) {
     const tail = index2 > -1 ? self2.events[index2][1].type : null;
     const next = tail === "tableHead" || tail === "tableRow" ? bodyRowStart : headRowBefore;
     if (next === bodyRowStart && self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
-    return next(code3);
+    return next(code4);
   }
-  function headRowBefore(code3) {
+  function headRowBefore(code4) {
     effects.enter("tableHead");
     effects.enter("tableRow");
-    return headRowStart(code3);
+    return headRowStart(code4);
   }
-  function headRowStart(code3) {
-    if (code3 === 124) {
-      return headRowBreak(code3);
+  function headRowStart(code4) {
+    if (code4 === 124) {
+      return headRowBreak(code4);
     }
     seen = true;
     sizeB += 1;
-    return headRowBreak(code3);
+    return headRowBreak(code4);
   }
-  function headRowBreak(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function headRowBreak(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       if (sizeB > 1) {
         sizeB = 0;
         self2.interrupt = true;
         effects.exit("tableRow");
         effects.enter("lineEnding");
-        effects.consume(code3);
+        effects.consume(code4);
         effects.exit("lineEnding");
         return headDelimiterStart;
       }
-      return nok(code3);
+      return nok(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headRowBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headRowBreak, "whitespace")(code4);
     }
     sizeB += 1;
     if (seen) {
       seen = false;
       size += 1;
     }
-    if (code3 === 124) {
+    if (code4 === 124) {
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       seen = true;
       return headRowBreak;
     }
     effects.enter("data");
-    return headRowData(code3);
+    return headRowData(code4);
   }
-  function headRowData(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+  function headRowData(code4) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace(code4)) {
       effects.exit("data");
-      return headRowBreak(code3);
+      return headRowBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? headRowEscape : headRowData;
+    effects.consume(code4);
+    return code4 === 92 ? headRowEscape : headRowData;
   }
-  function headRowEscape(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
+  function headRowEscape(code4) {
+    if (code4 === 92 || code4 === 124) {
+      effects.consume(code4);
       return headRowData;
     }
-    return headRowData(code3);
+    return headRowData(code4);
   }
-  function headDelimiterStart(code3) {
+  function headDelimiterStart(code4) {
     self2.interrupt = false;
     if (self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("tableDelimiterRow");
     seen = false;
-    if (markdownSpace(code3)) {
+    if (markdownSpace(code4)) {
       return factorySpace(
         effects,
         headDelimiterBefore,
         "linePrefix",
         self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4
-      )(code3);
+      )(code4);
     }
-    return headDelimiterBefore(code3);
+    return headDelimiterBefore(code4);
   }
-  function headDelimiterBefore(code3) {
-    if (code3 === 45 || code3 === 58) {
-      return headDelimiterValueBefore(code3);
+  function headDelimiterBefore(code4) {
+    if (code4 === 45 || code4 === 58) {
+      return headDelimiterValueBefore(code4);
     }
-    if (code3 === 124) {
+    if (code4 === 124) {
       seen = true;
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       return headDelimiterCellBefore;
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterCellBefore(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headDelimiterValueBefore, "whitespace")(code3);
+  function headDelimiterCellBefore(code4) {
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headDelimiterValueBefore, "whitespace")(code4);
     }
-    return headDelimiterValueBefore(code3);
+    return headDelimiterValueBefore(code4);
   }
-  function headDelimiterValueBefore(code3) {
-    if (code3 === 58) {
+  function headDelimiterValueBefore(code4) {
+    if (code4 === 58) {
       sizeB += 1;
       seen = true;
       effects.enter("tableDelimiterMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableDelimiterMarker");
       return headDelimiterLeftAlignmentAfter;
     }
-    if (code3 === 45) {
+    if (code4 === 45) {
       sizeB += 1;
-      return headDelimiterLeftAlignmentAfter(code3);
+      return headDelimiterLeftAlignmentAfter(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
-      return headDelimiterCellAfter(code3);
+    if (code4 === null || markdownLineEnding(code4)) {
+      return headDelimiterCellAfter(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterLeftAlignmentAfter(code3) {
-    if (code3 === 45) {
+  function headDelimiterLeftAlignmentAfter(code4) {
+    if (code4 === 45) {
       effects.enter("tableDelimiterFiller");
-      return headDelimiterFiller(code3);
+      return headDelimiterFiller(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterFiller(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function headDelimiterFiller(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return headDelimiterFiller;
     }
-    if (code3 === 58) {
+    if (code4 === 58) {
       seen = true;
       effects.exit("tableDelimiterFiller");
       effects.enter("tableDelimiterMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableDelimiterMarker");
       return headDelimiterRightAlignmentAfter;
     }
     effects.exit("tableDelimiterFiller");
-    return headDelimiterRightAlignmentAfter(code3);
+    return headDelimiterRightAlignmentAfter(code4);
   }
-  function headDelimiterRightAlignmentAfter(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headDelimiterCellAfter, "whitespace")(code3);
+  function headDelimiterRightAlignmentAfter(code4) {
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headDelimiterCellAfter, "whitespace")(code4);
     }
-    return headDelimiterCellAfter(code3);
+    return headDelimiterCellAfter(code4);
   }
-  function headDelimiterCellAfter(code3) {
-    if (code3 === 124) {
-      return headDelimiterBefore(code3);
+  function headDelimiterCellAfter(code4) {
+    if (code4 === 124) {
+      return headDelimiterBefore(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       if (!seen || size !== sizeB) {
-        return headDelimiterNok(code3);
+        return headDelimiterNok(code4);
       }
       effects.exit("tableDelimiterRow");
       effects.exit("tableHead");
-      return ok3(code3);
+      return ok4(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterNok(code3) {
-    return nok(code3);
+  function headDelimiterNok(code4) {
+    return nok(code4);
   }
-  function bodyRowStart(code3) {
+  function bodyRowStart(code4) {
     effects.enter("tableRow");
-    return bodyRowBreak(code3);
+    return bodyRowBreak(code4);
   }
-  function bodyRowBreak(code3) {
-    if (code3 === 124) {
+  function bodyRowBreak(code4) {
+    if (code4 === 124) {
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       return bodyRowBreak;
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("tableRow");
-      return ok3(code3);
+      return ok4(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, bodyRowBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, bodyRowBreak, "whitespace")(code4);
     }
     effects.enter("data");
-    return bodyRowData(code3);
+    return bodyRowData(code4);
   }
-  function bodyRowData(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+  function bodyRowData(code4) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace(code4)) {
       effects.exit("data");
-      return bodyRowBreak(code3);
+      return bodyRowBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? bodyRowEscape : bodyRowData;
+    effects.consume(code4);
+    return code4 === 92 ? bodyRowEscape : bodyRowData;
   }
-  function bodyRowEscape(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
+  function bodyRowEscape(code4) {
+    if (code4 === 92 || code4 === 124) {
+      effects.consume(code4);
       return bodyRowData;
     }
-    return bodyRowData(code3);
+    return bodyRowData(code4);
   }
 }
 function resolveTable(events, context) {
@@ -40634,7 +40634,7 @@ function resolveTable(events, context) {
   let currentTable;
   let currentBody;
   let currentCell;
-  const map5 = new EditMap();
+  const map9 = new EditMap();
   while (++index2 < events.length) {
     const event = events[index2];
     const token = event[1];
@@ -40642,7 +40642,7 @@ function resolveTable(events, context) {
       if (token.type === "tableHead") {
         afterHeadAwaitingFirstBodyRow = false;
         if (lastTableEnd !== 0) {
-          flushTableEnd(map5, context, lastTableEnd, currentTable, currentBody);
+          flushTableEnd(map9, context, lastTableEnd, currentTable, currentBody);
           currentBody = void 0;
           lastTableEnd = 0;
         }
@@ -40652,7 +40652,7 @@ function resolveTable(events, context) {
           // Note: correct end is set later.
           end: Object.assign({}, token.end)
         };
-        map5.add(index2, 0, [["enter", currentTable, context]]);
+        map9.add(index2, 0, [["enter", currentTable, context]]);
       } else if (token.type === "tableRow" || token.type === "tableDelimiterRow") {
         inFirstCellAwaitingPipe = true;
         currentCell = void 0;
@@ -40666,7 +40666,7 @@ function resolveTable(events, context) {
             // Note: correct end is set later.
             end: Object.assign({}, token.end)
           };
-          map5.add(index2, 0, [["enter", currentBody, context]]);
+          map9.add(index2, 0, [["enter", currentBody, context]]);
         }
         rowKind = token.type === "tableDelimiterRow" ? 2 : currentBody ? 3 : 1;
       } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
@@ -40675,7 +40675,7 @@ function resolveTable(events, context) {
           if (lastCell[1] !== 0) {
             cell[0] = cell[1];
             currentCell = flushCell(
-              map5,
+              map9,
               context,
               lastCell,
               rowKind,
@@ -40693,7 +40693,7 @@ function resolveTable(events, context) {
           if (lastCell[1] !== 0) {
             cell[0] = cell[1];
             currentCell = flushCell(
-              map5,
+              map9,
               context,
               lastCell,
               rowKind,
@@ -40713,7 +40713,7 @@ function resolveTable(events, context) {
       if (lastCell[1] !== 0) {
         cell[0] = cell[1];
         currentCell = flushCell(
-          map5,
+          map9,
           context,
           lastCell,
           rowKind,
@@ -40721,7 +40721,7 @@ function resolveTable(events, context) {
           currentCell
         );
       } else if (cell[1] !== 0) {
-        currentCell = flushCell(map5, context, cell, rowKind, index2, currentCell);
+        currentCell = flushCell(map9, context, cell, rowKind, index2, currentCell);
       }
       rowKind = 0;
     } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
@@ -40729,9 +40729,9 @@ function resolveTable(events, context) {
     }
   }
   if (lastTableEnd !== 0) {
-    flushTableEnd(map5, context, lastTableEnd, currentTable, currentBody);
+    flushTableEnd(map9, context, lastTableEnd, currentTable, currentBody);
   }
-  map5.consume(context.events);
+  map9.consume(context.events);
   index2 = -1;
   while (++index2 < context.events.length) {
     const event = context.events[index2];
@@ -40741,12 +40741,12 @@ function resolveTable(events, context) {
   }
   return events;
 }
-function flushCell(map5, context, range, rowKind, rowEnd, previousCell) {
+function flushCell(map9, context, range, rowKind, rowEnd, previousCell) {
   const groupName = rowKind === 1 ? "tableHeader" : rowKind === 2 ? "tableDelimiter" : "tableData";
   const valueName = "tableContent";
   if (range[0] !== 0) {
     previousCell.end = Object.assign({}, getPoint(context.events, range[0]));
-    map5.add(range[0], 0, [["exit", previousCell, context]]);
+    map9.add(range[0], 0, [["exit", previousCell, context]]);
   }
   const now = getPoint(context.events, range[1]);
   previousCell = {
@@ -40755,7 +40755,7 @@ function flushCell(map5, context, range, rowKind, rowEnd, previousCell) {
     // Note: correct end is set later.
     end: Object.assign({}, now)
   };
-  map5.add(range[1], 0, [["enter", previousCell, context]]);
+  map9.add(range[1], 0, [["enter", previousCell, context]]);
   if (range[2] !== 0) {
     const relatedStart = getPoint(context.events, range[2]);
     const relatedEnd = getPoint(context.events, range[3]);
@@ -40764,7 +40764,7 @@ function flushCell(map5, context, range, rowKind, rowEnd, previousCell) {
       start: Object.assign({}, relatedStart),
       end: Object.assign({}, relatedEnd)
     };
-    map5.add(range[2], 0, [["enter", valueToken, context]]);
+    map9.add(range[2], 0, [["enter", valueToken, context]]);
     if (rowKind !== 2) {
       const start = context.events[range[2]];
       const end = context.events[range[3]];
@@ -40774,19 +40774,19 @@ function flushCell(map5, context, range, rowKind, rowEnd, previousCell) {
       if (range[3] > range[2] + 1) {
         const a = range[2] + 1;
         const b = range[3] - range[2] - 1;
-        map5.add(a, b, []);
+        map9.add(a, b, []);
       }
     }
-    map5.add(range[3] + 1, 0, [["exit", valueToken, context]]);
+    map9.add(range[3] + 1, 0, [["exit", valueToken, context]]);
   }
   if (rowEnd !== void 0) {
     previousCell.end = Object.assign({}, getPoint(context.events, rowEnd));
-    map5.add(rowEnd, 0, [["exit", previousCell, context]]);
+    map9.add(rowEnd, 0, [["exit", previousCell, context]]);
     previousCell = void 0;
   }
   return previousCell;
 }
-function flushTableEnd(map5, context, index2, table, tableBody) {
+function flushTableEnd(map9, context, index2, table, tableBody) {
   const exits = [];
   const related = getPoint(context.events, index2);
   if (tableBody) {
@@ -40795,7 +40795,7 @@ function flushTableEnd(map5, context, index2, table, tableBody) {
   }
   table.end = Object.assign({}, related);
   exits.push(["exit", table, context]);
-  map5.add(index2 + 1, 0, exits);
+  map9.add(index2 + 1, 0, exits);
 }
 function getPoint(events, index2) {
   const event = events[index2];
@@ -40812,69 +40812,69 @@ var gfmTaskListItem = {
     [91]: tasklistCheck
   }
 };
-function tokenizeTasklistCheck(effects, ok3, nok) {
+function tokenizeTasklistCheck(effects, ok4, nok) {
   const self2 = this;
   return open;
-  function open(code3) {
+  function open(code4) {
     if (
       // Exit if there’s stuff before.
       self2.previous !== null || // Exit if not in the first content that is the first child of a list
       // item.
       !self2._gfmTasklistFirstContentOfListItem
     ) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("taskListCheck");
     effects.enter("taskListCheckMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("taskListCheckMarker");
     return inside;
   }
-  function inside(code3) {
-    if (markdownLineEndingOrSpace(code3)) {
+  function inside(code4) {
+    if (markdownLineEndingOrSpace(code4)) {
       effects.enter("taskListCheckValueUnchecked");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckValueUnchecked");
       return close;
     }
-    if (code3 === 88 || code3 === 120) {
+    if (code4 === 88 || code4 === 120) {
       effects.enter("taskListCheckValueChecked");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckValueChecked");
       return close;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function close(code3) {
-    if (code3 === 93) {
+  function close(code4) {
+    if (code4 === 93) {
       effects.enter("taskListCheckMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckMarker");
       effects.exit("taskListCheck");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    if (markdownLineEnding(code3)) {
-      return ok3(code3);
+  function after(code4) {
+    if (markdownLineEnding(code4)) {
+      return ok4(code4);
     }
-    if (markdownSpace(code3)) {
+    if (markdownSpace(code4)) {
       return effects.check(
         {
           tokenize: spaceThenNonSpace
         },
-        ok3,
+        ok4,
         nok
-      )(code3);
+      )(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
-function spaceThenNonSpace(effects, ok3, nok) {
+function spaceThenNonSpace(effects, ok4, nok) {
   return factorySpace(effects, after, "whitespace");
-  function after(code3) {
-    return code3 === null ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === null ? nok(code4) : ok4(code4);
   }
 }
 
@@ -40912,7 +40912,165 @@ function escapeStringRegexp(string3) {
   return string3.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
 }
 
-// node_modules/mdast-util-find-and-replace/lib/index.js
+// node_modules/remark-gfm/node_modules/unist-util-is/lib/index.js
+var convert2 = (
+  /**
+   * @type {(
+   *   (<Kind extends Node>(test: PredicateTest<Kind>) => AssertPredicate<Kind>) &
+   *   ((test?: Test) => AssertAnything)
+   * )}
+   */
+  /**
+   * @param {Test} [test]
+   * @returns {AssertAnything}
+   */
+  function(test) {
+    if (test === void 0 || test === null) {
+      return ok2;
+    }
+    if (typeof test === "string") {
+      return typeFactory2(test);
+    }
+    if (typeof test === "object") {
+      return Array.isArray(test) ? anyFactory2(test) : propsFactory2(test);
+    }
+    if (typeof test === "function") {
+      return castFactory2(test);
+    }
+    throw new Error("Expected function, string, or object as test");
+  }
+);
+function anyFactory2(tests) {
+  const checks = [];
+  let index2 = -1;
+  while (++index2 < tests.length) {
+    checks[index2] = convert2(tests[index2]);
+  }
+  return castFactory2(any);
+  function any(...parameters) {
+    let index3 = -1;
+    while (++index3 < checks.length) {
+      if (checks[index3].call(this, ...parameters))
+        return true;
+    }
+    return false;
+  }
+}
+function propsFactory2(check) {
+  return castFactory2(all3);
+  function all3(node3) {
+    let key;
+    for (key in check) {
+      if (node3[key] !== check[key])
+        return false;
+    }
+    return true;
+  }
+}
+function typeFactory2(check) {
+  return castFactory2(type2);
+  function type2(node3) {
+    return node3 && node3.type === check;
+  }
+}
+function castFactory2(check) {
+  return assertion;
+  function assertion(node3, ...parameters) {
+    return Boolean(
+      node3 && typeof node3 === "object" && "type" in node3 && // @ts-expect-error: fine.
+      Boolean(check.call(this, node3, ...parameters))
+    );
+  }
+}
+function ok2() {
+  return true;
+}
+
+// node_modules/remark-gfm/node_modules/unist-util-visit-parents/lib/color.js
+function color2(d) {
+  return "\x1B[33m" + d + "\x1B[39m";
+}
+
+// node_modules/remark-gfm/node_modules/unist-util-visit-parents/lib/index.js
+var CONTINUE2 = true;
+var EXIT2 = false;
+var SKIP2 = "skip";
+var visitParents2 = (
+  /**
+   * @type {(
+   *   (<Tree extends Node, Check extends Test>(tree: Tree, test: Check, visitor: BuildVisitor<Tree, Check>, reverse?: boolean | null | undefined) => void) &
+   *   (<Tree extends Node>(tree: Tree, visitor: BuildVisitor<Tree>, reverse?: boolean | null | undefined) => void)
+   * )}
+   */
+  /**
+   * @param {Node} tree
+   * @param {Test} test
+   * @param {Visitor<Node>} visitor
+   * @param {boolean | null | undefined} [reverse]
+   * @returns {void}
+   */
+  function(tree, test, visitor, reverse) {
+    if (typeof test === "function" && typeof visitor !== "function") {
+      reverse = visitor;
+      visitor = test;
+      test = null;
+    }
+    const is4 = convert2(test);
+    const step = reverse ? -1 : 1;
+    factory(tree, void 0, [])();
+    function factory(node3, index2, parents) {
+      const value = node3 && typeof node3 === "object" ? node3 : {};
+      if (typeof value.type === "string") {
+        const name = (
+          // `hast`
+          typeof value.tagName === "string" ? value.tagName : (
+            // `xast`
+            typeof value.name === "string" ? value.name : void 0
+          )
+        );
+        Object.defineProperty(visit3, "name", {
+          value: "node (" + color2(node3.type + (name ? "<" + name + ">" : "")) + ")"
+        });
+      }
+      return visit3;
+      function visit3() {
+        let result = [];
+        let subresult;
+        let offset;
+        let grandparents;
+        if (!test || is4(node3, index2, parents[parents.length - 1] || null)) {
+          result = toResult2(visitor(node3, parents));
+          if (result[0] === EXIT2) {
+            return result;
+          }
+        }
+        if (node3.children && result[0] !== SKIP2) {
+          offset = (reverse ? node3.children.length : -1) + step;
+          grandparents = parents.concat(node3);
+          while (offset > -1 && offset < node3.children.length) {
+            subresult = factory(node3.children[offset], offset, grandparents)();
+            if (subresult[0] === EXIT2) {
+              return subresult;
+            }
+            offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
+          }
+        }
+        return result;
+      }
+    }
+  }
+);
+function toResult2(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === "number") {
+    return [CONTINUE2, value];
+  }
+  return [value];
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-find-and-replace/lib/index.js
 var own5 = {}.hasOwnProperty;
 var findAndReplace = (
   /**
@@ -40942,14 +41100,14 @@ var findAndReplace = (
     if (!settings) {
       settings = {};
     }
-    const ignored = convert(settings.ignore || []);
+    const ignored = convert2(settings.ignore || []);
     const pairs2 = toPairs(schema2);
     let pairIndex = -1;
     while (++pairIndex < pairs2.length) {
-      visitParents(tree, "text", visitor);
+      visitParents2(tree, "text", visitor);
     }
     return tree;
-    function visitor(node2, parents) {
+    function visitor(node3, parents) {
       let index2 = -1;
       let grandparent;
       while (++index2 < parents.length) {
@@ -40965,26 +41123,26 @@ var findAndReplace = (
         grandparent = parent;
       }
       if (grandparent) {
-        return handler(node2, parents);
+        return handler(node3, parents);
       }
     }
-    function handler(node2, parents) {
+    function handler(node3, parents) {
       const parent = parents[parents.length - 1];
       const find2 = pairs2[pairIndex][0];
       const replace3 = pairs2[pairIndex][1];
       let start = 0;
-      const index2 = parent.children.indexOf(node2);
+      const index2 = parent.children.indexOf(node3);
       let change = false;
       let nodes = [];
       find2.lastIndex = 0;
-      let match = find2.exec(node2.value);
+      let match = find2.exec(node3.value);
       while (match) {
         const position2 = match.index;
         const matchObject = {
           index: match.index,
           input: match.input,
           // @ts-expect-error: stack is fine.
-          stack: [...parents, node2]
+          stack: [...parents, node3]
         };
         let value = replace3(...match, matchObject);
         if (typeof value === "string") {
@@ -40994,7 +41152,7 @@ var findAndReplace = (
           if (start !== position2) {
             nodes.push({
               type: "text",
-              value: node2.value.slice(start, position2)
+              value: node3.value.slice(start, position2)
             });
           }
           if (Array.isArray(value)) {
@@ -41008,15 +41166,15 @@ var findAndReplace = (
         if (!find2.global) {
           break;
         }
-        match = find2.exec(node2.value);
+        match = find2.exec(node3.value);
       }
       if (change) {
-        if (start < node2.value.length) {
-          nodes.push({ type: "text", value: node2.value.slice(start) });
+        if (start < node3.value.length) {
+          nodes.push({ type: "text", value: node3.value.slice(start) });
         }
         parent.children.splice(index2, 1, ...nodes);
       } else {
-        nodes = [node2];
+        nodes = [node3];
       }
       return index2 + nodes.length;
     }
@@ -41052,7 +41210,7 @@ function toFunction(replace2) {
   return typeof replace2 === "function" ? replace2 : () => replace2;
 }
 
-// node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
 var inConstruct = "phrasing";
 var notInConstruct = ["autolink", "link", "image", "label"];
 var gfmAutolinkLiteralFromMarkdown = {
@@ -41100,11 +41258,11 @@ function exitLiteralAutolinkHttp(token) {
 }
 function exitLiteralAutolinkWww(token) {
   this.config.exit.data.call(this, token);
-  const node2 = (
+  const node3 = (
     /** @type {Link} */
     this.stack[this.stack.length - 1]
   );
-  node2.url = "http://" + this.sliceSerialize(token);
+  node3.url = "http://" + this.sliceSerialize(token);
 }
 function exitLiteralAutolinkEmail(token) {
   this.config.exit.autolinkEmail.call(this, token);
@@ -41190,11 +41348,228 @@ function splitUrl(url) {
   return [url, trail2];
 }
 function previous2(match, email) {
-  const code3 = match.input.charCodeAt(match.index - 1);
-  return (match.index === 0 || unicodeWhitespace(code3) || unicodePunctuation(code3)) && (!email || code3 !== 47);
+  const code4 = match.input.charCodeAt(match.index - 1);
+  return (match.index === 0 || unicodeWhitespace(code4) || unicodePunctuation(code4)) && (!email || code4 !== 47);
 }
 
-// node_modules/mdast-util-gfm-footnote/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/association.js
+function association2(node3) {
+  if (node3.label || !node3.identifier) {
+    return node3.label || "";
+  }
+  return decodeString(node3.identifier);
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/container-flow.js
+function containerFlow2(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const tracker = state.createTracker(info2);
+  const results = [];
+  let index2 = -1;
+  indexStack.push(-1);
+  while (++index2 < children.length) {
+    const child = children[index2];
+    indexStack[indexStack.length - 1] = index2;
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          before: "\n",
+          after: "\n",
+          ...tracker.current()
+        })
+      )
+    );
+    if (child.type !== "list") {
+      state.bulletLastUsed = void 0;
+    }
+    if (index2 < children.length - 1) {
+      results.push(
+        tracker.move(between2(child, children[index2 + 1], parent, state))
+      );
+    }
+  }
+  indexStack.pop();
+  return results.join("");
+}
+function between2(left, right, parent, state) {
+  let index2 = state.join.length;
+  while (index2--) {
+    const result = state.join[index2](left, right, parent, state);
+    if (result === true || result === 1) {
+      break;
+    }
+    if (typeof result === "number") {
+      return "\n".repeat(1 + result);
+    }
+    if (result === false) {
+      return "\n\n<!---->\n\n";
+    }
+  }
+  return "\n\n";
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
+var eol2 = /\r?\n|\r/g;
+function indentLines2(value, map9) {
+  const result = [];
+  let start = 0;
+  let line = 0;
+  let match;
+  while (match = eol2.exec(value)) {
+    one3(value.slice(start, match.index));
+    result.push(match[0]);
+    start = match.index + match[0].length;
+    line++;
+  }
+  one3(value.slice(start));
+  return result.join("");
+  function one3(value2) {
+    result.push(map9(value2, line, !value2));
+  }
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/pattern-compile.js
+function patternCompile2(pattern) {
+  if (!pattern._compiled) {
+    const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
+    pattern._compiled = new RegExp(
+      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
+      "g"
+    );
+  }
+  return pattern._compiled;
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
+function patternInScope2(stack, pattern) {
+  return listInScope2(stack, pattern.inConstruct, true) && !listInScope2(stack, pattern.notInConstruct, false);
+}
+function listInScope2(stack, list5, none) {
+  if (typeof list5 === "string") {
+    list5 = [list5];
+  }
+  if (!list5 || list5.length === 0) {
+    return none;
+  }
+  let index2 = -1;
+  while (++index2 < list5.length) {
+    if (stack.includes(list5[index2])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/safe.js
+function safe2(state, input, config2) {
+  const value = (config2.before || "") + (input || "") + (config2.after || "");
+  const positions = [];
+  const result = [];
+  const infos = {};
+  let index2 = -1;
+  while (++index2 < state.unsafe.length) {
+    const pattern = state.unsafe[index2];
+    if (!patternInScope2(state.stack, pattern)) {
+      continue;
+    }
+    const expression = patternCompile2(pattern);
+    let match;
+    while (match = expression.exec(value)) {
+      const before = "before" in pattern || Boolean(pattern.atBreak);
+      const after = "after" in pattern;
+      const position2 = match.index + (before ? match[1].length : 0);
+      if (positions.includes(position2)) {
+        if (infos[position2].before && !before) {
+          infos[position2].before = false;
+        }
+        if (infos[position2].after && !after) {
+          infos[position2].after = false;
+        }
+      } else {
+        positions.push(position2);
+        infos[position2] = { before, after };
+      }
+    }
+  }
+  positions.sort(numerical2);
+  let start = config2.before ? config2.before.length : 0;
+  const end = value.length - (config2.after ? config2.after.length : 0);
+  index2 = -1;
+  while (++index2 < positions.length) {
+    const position2 = positions[index2];
+    if (position2 < start || position2 >= end) {
+      continue;
+    }
+    if (position2 + 1 < end && positions[index2 + 1] === position2 + 1 && infos[position2].after && !infos[position2 + 1].before && !infos[position2 + 1].after || positions[index2 - 1] === position2 - 1 && infos[position2].before && !infos[position2 - 1].before && !infos[position2 - 1].after) {
+      continue;
+    }
+    if (start !== position2) {
+      result.push(escapeBackslashes2(value.slice(start, position2), "\\"));
+    }
+    start = position2;
+    if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config2.encode || !config2.encode.includes(value.charAt(position2)))) {
+      result.push("\\");
+    } else {
+      result.push(
+        "&#x" + value.charCodeAt(position2).toString(16).toUpperCase() + ";"
+      );
+      start++;
+    }
+  }
+  result.push(escapeBackslashes2(value.slice(start, end), config2.after));
+  return result.join("");
+}
+function numerical2(a, b) {
+  return a - b;
+}
+function escapeBackslashes2(value, after) {
+  const expression = /\\(?=[!-/:-@[-`{-~])/g;
+  const positions = [];
+  const results = [];
+  const whole = value + after;
+  let index2 = -1;
+  let start = 0;
+  let match;
+  while (match = expression.exec(whole)) {
+    positions.push(match.index);
+  }
+  while (++index2 < positions.length) {
+    if (start !== positions[index2]) {
+      results.push(value.slice(start, positions[index2]));
+    }
+    results.push("\\");
+    start = positions[index2];
+  }
+  results.push(value.slice(start));
+  return results.join("");
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/track.js
+function track2(config2) {
+  const options = config2 || {};
+  const now = options.now || {};
+  let lineShift = options.lineShift || 0;
+  let line = now.line || 1;
+  let column = now.column || 1;
+  return { move, current, shift };
+  function current() {
+    return { now: { line, column }, lineShift };
+  }
+  function shift(value) {
+    lineShift += value;
+  }
+  function move(input) {
+    const value = input || "";
+    const chunks = value.split(/\r?\n|\r/g);
+    const tail = chunks[chunks.length - 1];
+    line += chunks.length - 1;
+    column = chunks.length === 1 ? column + tail.length : 1 + tail.length + lineShift;
+    return value;
+  }
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-gfm-footnote/lib/index.js
 footnoteReference.peek = footnoteReferencePeek;
 function gfmFootnoteFromMarkdown() {
   return {
@@ -41230,12 +41605,12 @@ function enterFootnoteDefinitionLabelString() {
 }
 function exitFootnoteDefinitionLabelString(token) {
   const label = this.resume();
-  const node2 = (
+  const node3 = (
     /** @type {FootnoteDefinition} */
     this.stack[this.stack.length - 1]
   );
-  node2.label = label;
-  node2.identifier = normalizeIdentifier(
+  node3.label = label;
+  node3.identifier = normalizeIdentifier(
     this.sliceSerialize(token)
   ).toLowerCase();
 }
@@ -41250,25 +41625,25 @@ function enterFootnoteCallString() {
 }
 function exitFootnoteCallString(token) {
   const label = this.resume();
-  const node2 = (
+  const node3 = (
     /** @type {FootnoteDefinition} */
     this.stack[this.stack.length - 1]
   );
-  node2.label = label;
-  node2.identifier = normalizeIdentifier(
+  node3.label = label;
+  node3.identifier = normalizeIdentifier(
     this.sliceSerialize(token)
   ).toLowerCase();
 }
 function exitFootnoteCall(token) {
   this.exit(token);
 }
-function footnoteReference(node2, _, context, safeOptions) {
-  const tracker = track(safeOptions);
+function footnoteReference(node3, _, context, safeOptions) {
+  const tracker = track2(safeOptions);
   let value = tracker.move("[^");
   const exit3 = context.enter("footnoteReference");
   const subexit = context.enter("reference");
   value += tracker.move(
-    safe(context, association(node2), {
+    safe2(context, association2(node3), {
       ...tracker.current(),
       before: value,
       after: "]"
@@ -41282,13 +41657,13 @@ function footnoteReference(node2, _, context, safeOptions) {
 function footnoteReferencePeek() {
   return "[";
 }
-function footnoteDefinition(node2, _, context, safeOptions) {
-  const tracker = track(safeOptions);
+function footnoteDefinition(node3, _, context, safeOptions) {
+  const tracker = track2(safeOptions);
   let value = tracker.move("[^");
   const exit3 = context.enter("footnoteDefinition");
   const subexit = context.enter("label");
   value += tracker.move(
-    safe(context, association(node2), {
+    safe2(context, association2(node3), {
       ...tracker.current(),
       before: value,
       after: "]"
@@ -41296,11 +41671,11 @@ function footnoteDefinition(node2, _, context, safeOptions) {
   );
   subexit();
   value += tracker.move(
-    "]:" + (node2.children && node2.children.length > 0 ? " " : "")
+    "]:" + (node3.children && node3.children.length > 0 ? " " : "")
   );
   tracker.shift(4);
   value += tracker.move(
-    indentLines(containerFlow(node2, context, tracker.current()), map3)
+    indentLines2(containerFlow2(node3, context, tracker.current()), map3)
   );
   exit3();
   return value;
@@ -41312,7 +41687,56 @@ function map3(line, index2, blank) {
   return (blank ? "" : "    ") + line;
 }
 
-// node_modules/mdast-util-gfm-strikethrough/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+function containerPhrasing2(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const results = [];
+  let index2 = -1;
+  let before = info2.before;
+  indexStack.push(-1);
+  let tracker = state.createTracker(info2);
+  while (++index2 < children.length) {
+    const child = children[index2];
+    let after;
+    indexStack[indexStack.length - 1] = index2;
+    if (index2 + 1 < children.length) {
+      let handle3 = state.handle.handlers[children[index2 + 1].type];
+      if (handle3 && handle3.peek)
+        handle3 = handle3.peek;
+      after = handle3 ? handle3(children[index2 + 1], parent, state, {
+        before: "",
+        after: "",
+        ...tracker.current()
+      }).charAt(0) : "";
+    } else {
+      after = info2.after;
+    }
+    if (results.length > 0 && (before === "\r" || before === "\n") && child.type === "html") {
+      results[results.length - 1] = results[results.length - 1].replace(
+        /(\r?\n|\r)$/,
+        " "
+      );
+      before = " ";
+      tracker = state.createTracker(info2);
+      tracker.move(results.join(""));
+    }
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          ...tracker.current(),
+          before,
+          after
+        })
+      )
+    );
+    before = results[results.length - 1].slice(-1);
+  }
+  indexStack.pop();
+  return results.join("");
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-gfm-strikethrough/lib/index.js
 var constructsWithoutStrikethrough = [
   "autolink",
   "destinationLiteral",
@@ -41343,11 +41767,11 @@ function enterStrikethrough(token) {
 function exitStrikethrough(token) {
   this.exit(token);
 }
-function handleDelete(node2, _, context, safeOptions) {
-  const tracker = track(safeOptions);
+function handleDelete(node3, _, context, safeOptions) {
+  const tracker = track2(safeOptions);
   const exit3 = context.enter("strikethrough");
   let value = tracker.move("~~");
-  value += containerPhrasing(node2, context, {
+  value += containerPhrasing2(node3, context, {
     ...tracker.current(),
     before: value,
     after: "~"
@@ -41358,6 +41782,38 @@ function handleDelete(node2, _, context, safeOptions) {
 }
 function peekDelete() {
   return "~";
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
+inlineCode2.peek = inlineCodePeek2;
+function inlineCode2(node3, _, state) {
+  let value = node3.value || "";
+  let sequence = "`";
+  let index2 = -1;
+  while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
+    sequence += "`";
+  }
+  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
+    value = " " + value + " ";
+  }
+  while (++index2 < state.unsafe.length) {
+    const pattern = state.unsafe[index2];
+    const expression = patternCompile2(pattern);
+    let match;
+    if (!pattern.atBreak)
+      continue;
+    while (match = expression.exec(value)) {
+      let position2 = match.index;
+      if (value.charCodeAt(position2) === 10 && value.charCodeAt(position2 - 1) === 13) {
+        position2--;
+      }
+      value = value.slice(0, position2) + " " + value.slice(match.index + 1);
+    }
+  }
+  return sequence + value + sequence;
+}
+function inlineCodePeek2() {
+  return "`";
 }
 
 // node_modules/markdown-table/index.js
@@ -41397,24 +41853,24 @@ function markdownTable(table, options = {}) {
       alignments[columnIndex] = toAlignment(align[columnIndex]);
     }
   } else {
-    const code3 = toAlignment(align);
+    const code4 = toAlignment(align);
     while (++columnIndex < mostCellsPerRow) {
-      alignments[columnIndex] = code3;
+      alignments[columnIndex] = code4;
     }
   }
   columnIndex = -1;
   const row = [];
   const sizes = [];
   while (++columnIndex < mostCellsPerRow) {
-    const code3 = alignments[columnIndex];
+    const code4 = alignments[columnIndex];
     let before = "";
     let after = "";
-    if (code3 === 99) {
+    if (code4 === 99) {
       before = ":";
       after = ":";
-    } else if (code3 === 108) {
+    } else if (code4 === 108) {
       before = ":";
-    } else if (code3 === 114) {
+    } else if (code4 === 114) {
       after = ":";
     }
     let size = options.alignDelimiters === false ? 1 : Math.max(
@@ -41446,10 +41902,10 @@ function markdownTable(table, options = {}) {
       let after = "";
       if (options.alignDelimiters !== false) {
         const size = longestCellByColumn[columnIndex] - (sizes2[columnIndex] || 0);
-        const code3 = alignments[columnIndex];
-        if (code3 === 114) {
+        const code4 = alignments[columnIndex];
+        if (code4 === 114) {
           before = " ".repeat(size);
-        } else if (code3 === 99) {
+        } else if (code4 === 99) {
           if (size % 2) {
             before = " ".repeat(size / 2 + 0.5);
             after = " ".repeat(size / 2 - 0.5);
@@ -41496,11 +41952,11 @@ function defaultStringLength(value) {
   return value.length;
 }
 function toAlignment(value) {
-  const code3 = typeof value === "string" ? value.codePointAt(0) : 0;
-  return code3 === 67 || code3 === 99 ? 99 : code3 === 76 || code3 === 108 ? 108 : code3 === 82 || code3 === 114 ? 114 : 0;
+  const code4 = typeof value === "string" ? value.codePointAt(0) : 0;
+  return code4 === 67 || code4 === 99 ? 99 : code4 === 76 || code4 === 108 ? 108 : code4 === 82 || code4 === 114 ? 114 : 0;
 }
 
-// node_modules/mdast-util-gfm-table/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-gfm-table/lib/index.js
 var gfmTableFromMarkdown = {
   enter: {
     table: enterTable,
@@ -41546,11 +42002,11 @@ function exitCodeText(token) {
   if (this.getData("inTable")) {
     value = value.replace(/\\([\\|])/g, replace);
   }
-  const node2 = (
+  const node3 = (
     /** @type {InlineCode} */
     this.stack[this.stack.length - 1]
   );
-  node2.value = value;
+  node3.value = value;
   this.exit(token);
 }
 function replace($0, $1) {
@@ -41588,21 +42044,21 @@ function gfmTableToMarkdown(options) {
       inlineCode: inlineCodeWithTable
     }
   };
-  function handleTable(node2, _, context, safeOptions) {
+  function handleTable(node3, _, context, safeOptions) {
     return serializeData(
-      handleTableAsData(node2, context, safeOptions),
-      node2.align
+      handleTableAsData(node3, context, safeOptions),
+      node3.align
     );
   }
-  function handleTableRow(node2, _, context, safeOptions) {
-    const row = handleTableRowAsData(node2, context, safeOptions);
+  function handleTableRow(node3, _, context, safeOptions) {
+    const row = handleTableRowAsData(node3, context, safeOptions);
     const value = serializeData([row]);
     return value.slice(0, value.indexOf("\n"));
   }
-  function handleTableCell(node2, _, context, safeOptions) {
+  function handleTableCell(node3, _, context, safeOptions) {
     const exit3 = context.enter("tableCell");
     const subexit = context.enter("phrasing");
-    const value = containerPhrasing(node2, context, {
+    const value = containerPhrasing2(node3, context, {
       ...safeOptions,
       before: around,
       after: around
@@ -41622,8 +42078,8 @@ function gfmTableToMarkdown(options) {
       stringLength
     });
   }
-  function handleTableAsData(node2, context, safeOptions) {
-    const children = node2.children;
+  function handleTableAsData(node3, context, safeOptions) {
+    const children = node3.children;
     let index2 = -1;
     const result = [];
     const subexit = context.enter("table");
@@ -41637,15 +42093,15 @@ function gfmTableToMarkdown(options) {
     subexit();
     return result;
   }
-  function handleTableRowAsData(node2, context, safeOptions) {
-    const children = node2.children;
+  function handleTableRowAsData(node3, context, safeOptions) {
+    const children = node3.children;
     let index2 = -1;
     const result = [];
     const subexit = context.enter("tableRow");
     while (++index2 < children.length) {
       result[index2] = handleTableCell(
         children[index2],
-        node2,
+        node3,
         context,
         safeOptions
       );
@@ -41653,8 +42109,8 @@ function gfmTableToMarkdown(options) {
     subexit();
     return result;
   }
-  function inlineCodeWithTable(node2, parent, context) {
-    let value = inlineCode(node2, parent, context);
+  function inlineCodeWithTable(node3, parent, context) {
+    let value = inlineCode2(node3, parent, context);
     if (context.stack.includes("tableCell")) {
       value = value.replace(/\|/g, "\\$&");
     }
@@ -41662,7 +42118,61 @@ function gfmTableToMarkdown(options) {
   }
 }
 
-// node_modules/mdast-util-gfm-task-list-item/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
+function checkBullet2(state) {
+  const marker = state.options.bullet || "*";
+  if (marker !== "*" && marker !== "+" && marker !== "-") {
+    throw new Error(
+      "Cannot serialize items with `" + marker + "` for `options.bullet`, expected `*`, `+`, or `-`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
+function checkListItemIndent2(state) {
+  const style = state.options.listItemIndent || "tab";
+  if (style === 1 || style === "1") {
+    return "one";
+  }
+  if (style !== "tab" && style !== "one" && style !== "mixed") {
+    throw new Error(
+      "Cannot serialize items with `" + style + "` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`"
+    );
+  }
+  return style;
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/handle/list-item.js
+function listItem2(node3, parent, state, info2) {
+  const listItemIndent = checkListItemIndent2(state);
+  let bullet = state.bulletCurrent || checkBullet2(state);
+  if (parent && parent.type === "list" && parent.ordered) {
+    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node3)) + bullet;
+  }
+  let size = bullet.length + 1;
+  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node3.spread)) {
+    size = Math.ceil(size / 4) * 4;
+  }
+  const tracker = state.createTracker(info2);
+  tracker.move(bullet + " ".repeat(size - bullet.length));
+  tracker.shift(size);
+  const exit3 = state.enter("listItem");
+  const value = state.indentLines(
+    state.containerFlow(node3, tracker.current()),
+    map9
+  );
+  exit3();
+  return value;
+  function map9(line, index2, blank) {
+    if (index2) {
+      return (blank ? "" : " ".repeat(size)) + line;
+    }
+    return (blank ? bullet : bullet + " ".repeat(size - bullet.length)) + line;
+  }
+}
+
+// node_modules/remark-gfm/node_modules/mdast-util-gfm-task-list-item/lib/index.js
 var gfmTaskListItemFromMarkdown = {
   exit: {
     taskListCheckValueChecked: exitCheck,
@@ -41675,11 +42185,11 @@ var gfmTaskListItemToMarkdown = {
   handlers: { listItem: listItemWithTaskListItem }
 };
 function exitCheck(token) {
-  const node2 = (
+  const node3 = (
     /** @type {ListItem} */
     this.stack[this.stack.length - 2]
   );
-  node2.checked = token.type === "taskListCheckValueChecked";
+  node3.checked = token.type === "taskListCheckValueChecked";
 }
 function exitParagraphWithTaskListItem(token) {
   const parent = (
@@ -41687,11 +42197,11 @@ function exitParagraphWithTaskListItem(token) {
     this.stack[this.stack.length - 2]
   );
   if (parent && parent.type === "listItem" && typeof parent.checked === "boolean") {
-    const node2 = (
+    const node3 = (
       /** @type {Paragraph} */
       this.stack[this.stack.length - 1]
     );
-    const head = node2.children[0];
+    const head = node3.children[0];
     if (head && head.type === "text") {
       const siblings = parent.children;
       let index2 = -1;
@@ -41703,29 +42213,29 @@ function exitParagraphWithTaskListItem(token) {
           break;
         }
       }
-      if (firstParaghraph === node2) {
+      if (firstParaghraph === node3) {
         head.value = head.value.slice(1);
         if (head.value.length === 0) {
-          node2.children.shift();
-        } else if (node2.position && head.position && typeof head.position.start.offset === "number") {
+          node3.children.shift();
+        } else if (node3.position && head.position && typeof head.position.start.offset === "number") {
           head.position.start.column++;
           head.position.start.offset++;
-          node2.position.start = Object.assign({}, head.position.start);
+          node3.position.start = Object.assign({}, head.position.start);
         }
       }
     }
   }
   this.exit(token);
 }
-function listItemWithTaskListItem(node2, parent, context, safeOptions) {
-  const head = node2.children[0];
-  const checkable = typeof node2.checked === "boolean" && head && head.type === "paragraph";
-  const checkbox = "[" + (node2.checked ? "x" : " ") + "] ";
-  const tracker = track(safeOptions);
+function listItemWithTaskListItem(node3, parent, context, safeOptions) {
+  const head = node3.children[0];
+  const checkable = typeof node3.checked === "boolean" && head && head.type === "paragraph";
+  const checkbox = "[" + (node3.checked ? "x" : " ") + "] ";
+  const tracker = track2(safeOptions);
   if (checkable) {
     tracker.move(checkbox);
   }
-  let value = listItem(node2, parent, context, {
+  let value = listItem2(node3, parent, context, {
     ...safeOptions,
     ...tracker.current()
   });
@@ -41738,7 +42248,7 @@ function listItemWithTaskListItem(node2, parent, context, safeOptions) {
   }
 }
 
-// node_modules/mdast-util-gfm/lib/index.js
+// node_modules/remark-gfm/node_modules/mdast-util-gfm/lib/index.js
 function gfmFromMarkdown() {
   return [
     gfmAutolinkLiteralFromMarkdown,
@@ -41767,18 +42277,18 @@ function remarkGfm(options = {}) {
   add("fromMarkdownExtensions", gfmFromMarkdown());
   add("toMarkdownExtensions", gfmToMarkdown(options));
   function add(field, value) {
-    const list3 = (
+    const list5 = (
       /** @type {unknown[]} */
       // Other extensions
       /* c8 ignore next 2 */
       data[field] ? data[field] : data[field] = []
     );
-    list3.push(value);
+    list5.push(value);
   }
 }
 
-// node_modules/unist-util-visit/node_modules/unist-util-is/lib/index.js
-var convert2 = (
+// node_modules/unist-util-is/lib/index.js
+var convert3 = (
   // Note: overloads in JSDoc can’t yet use different `@template`s.
   /**
    * @type {(
@@ -41795,27 +42305,27 @@ var convert2 = (
    */
   function(test) {
     if (test === null || test === void 0) {
-      return ok2;
+      return ok3;
     }
     if (typeof test === "function") {
-      return castFactory2(test);
+      return castFactory3(test);
     }
     if (typeof test === "object") {
-      return Array.isArray(test) ? anyFactory2(test) : propsFactory2(test);
+      return Array.isArray(test) ? anyFactory3(test) : propsFactory3(test);
     }
     if (typeof test === "string") {
-      return typeFactory2(test);
+      return typeFactory3(test);
     }
     throw new Error("Expected function, string, or object as test");
   }
 );
-function anyFactory2(tests) {
+function anyFactory3(tests) {
   const checks = [];
   let index2 = -1;
   while (++index2 < tests.length) {
-    checks[index2] = convert2(tests[index2]);
+    checks[index2] = convert3(tests[index2]);
   }
-  return castFactory2(any);
+  return castFactory3(any);
   function any(...parameters) {
     let index3 = -1;
     while (++index3 < checks.length) {
@@ -41825,17 +42335,17 @@ function anyFactory2(tests) {
     return false;
   }
 }
-function propsFactory2(check) {
+function propsFactory3(check) {
   const checkAsRecord = (
     /** @type {Record<string, unknown>} */
     check
   );
-  return castFactory2(all2);
-  function all2(node2) {
+  return castFactory3(all3);
+  function all3(node3) {
     const nodeAsRecord = (
       /** @type {Record<string, unknown>} */
       /** @type {unknown} */
-      node2
+      node3
     );
     let key;
     for (key in check) {
@@ -41845,13 +42355,13 @@ function propsFactory2(check) {
     return true;
   }
 }
-function typeFactory2(check) {
-  return castFactory2(type2);
-  function type2(node2) {
-    return node2 && node2.type === check;
+function typeFactory3(check) {
+  return castFactory3(type2);
+  function type2(node3) {
+    return node3 && node3.type === check;
   }
 }
-function castFactory2(testFunction) {
+function castFactory3(testFunction) {
   return check;
   function check(value, index2, parent) {
     return Boolean(
@@ -41864,24 +42374,24 @@ function castFactory2(testFunction) {
     );
   }
 }
-function ok2() {
+function ok3() {
   return true;
 }
 function looksLikeANode(value) {
   return value !== null && typeof value === "object" && "type" in value;
 }
 
-// node_modules/unist-util-visit/node_modules/unist-util-visit-parents/lib/color.node.js
-function color2(d) {
+// node_modules/unist-util-visit-parents/lib/color.node.js
+function color3(d) {
   return "\x1B[33m" + d + "\x1B[39m";
 }
 
-// node_modules/unist-util-visit/node_modules/unist-util-visit-parents/lib/index.js
+// node_modules/unist-util-visit-parents/lib/index.js
 var empty = [];
-var CONTINUE2 = true;
-var EXIT2 = false;
-var SKIP2 = "skip";
-function visitParents2(tree, test, visitor, reverse) {
+var CONTINUE3 = true;
+var EXIT3 = false;
+var SKIP3 = "skip";
+function visitParents3(tree, test, visitor, reverse) {
   let check;
   if (typeof test === "function" && typeof visitor !== "function") {
     reverse = visitor;
@@ -41889,13 +42399,13 @@ function visitParents2(tree, test, visitor, reverse) {
   } else {
     check = test;
   }
-  const is3 = convert2(check);
+  const is4 = convert3(check);
   const step = reverse ? -1 : 1;
   factory(tree, void 0, [])();
-  function factory(node2, index2, parents) {
+  function factory(node3, index2, parents) {
     const value = (
       /** @type {Record<string, unknown>} */
-      node2 && typeof node2 === "object" ? node2 : {}
+      node3 && typeof node3 === "object" ? node3 : {}
     );
     if (typeof value.type === "string") {
       const name = (
@@ -41906,7 +42416,7 @@ function visitParents2(tree, test, visitor, reverse) {
         )
       );
       Object.defineProperty(visit3, "name", {
-        value: "node (" + color2(node2.type + (name ? "<" + name + ">" : "")) + ")"
+        value: "node (" + color3(node3.type + (name ? "<" + name + ">" : "")) + ")"
       });
     }
     return visit3;
@@ -41915,24 +42425,24 @@ function visitParents2(tree, test, visitor, reverse) {
       let subresult;
       let offset;
       let grandparents;
-      if (!test || is3(node2, index2, parents[parents.length - 1] || void 0)) {
-        result = toResult2(visitor(node2, parents));
-        if (result[0] === EXIT2) {
+      if (!test || is4(node3, index2, parents[parents.length - 1] || void 0)) {
+        result = toResult3(visitor(node3, parents));
+        if (result[0] === EXIT3) {
           return result;
         }
       }
-      if ("children" in node2 && node2.children) {
+      if ("children" in node3 && node3.children) {
         const nodeAsParent = (
           /** @type {UnistParent} */
-          node2
+          node3
         );
-        if (nodeAsParent.children && result[0] !== SKIP2) {
+        if (nodeAsParent.children && result[0] !== SKIP3) {
           offset = (reverse ? nodeAsParent.children.length : -1) + step;
           grandparents = parents.concat(nodeAsParent);
           while (offset > -1 && offset < nodeAsParent.children.length) {
             const child = nodeAsParent.children[offset];
             subresult = factory(child, offset, grandparents)();
-            if (subresult[0] === EXIT2) {
+            if (subresult[0] === EXIT3) {
               return subresult;
             }
             offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
@@ -41943,12 +42453,12 @@ function visitParents2(tree, test, visitor, reverse) {
     }
   }
 }
-function toResult2(value) {
+function toResult3(value) {
   if (Array.isArray(value)) {
     return value;
   }
   if (typeof value === "number") {
-    return [CONTINUE2, value];
+    return [CONTINUE3, value];
   }
   return value === null || value === void 0 ? empty : [value];
 }
@@ -41967,11 +42477,11 @@ function visit2(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
     visitor = visitorOrReverse;
     reverse = maybeReverse;
   }
-  visitParents2(tree, test, overload, reverse);
-  function overload(node2, parents) {
+  visitParents3(tree, test, overload, reverse);
+  function overload(node3, parents) {
     const parent = parents[parents.length - 1];
-    const index2 = parent ? parent.children.indexOf(node2) : void 0;
-    return visitor(node2, index2, parent);
+    const index2 = parent ? parent.children.indexOf(node3) : void 0;
+    return visitor(node3, index2, parent);
   }
 }
 
@@ -41979,8 +42489,8 @@ function visit2(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
 var SOFT_BREAK_PATTERN = /$[^$]/gms;
 var stripSoftBreaks = () => {
   return (tree) => {
-    visit2(tree, "text", (node2) => {
-      node2.value = node2.value.replace(SOFT_BREAK_PATTERN, " ");
+    visit2(tree, "text", (node3) => {
+      node3.value = node3.value.replace(SOFT_BREAK_PATTERN, " ");
     });
   };
 };
@@ -42221,11 +42731,11 @@ var YAML_NODE_KINDS = [
   "sequence",
   "mapping"
 ];
-function compileStyleAliases(map5) {
+function compileStyleAliases(map9) {
   var result = {};
-  if (map5 !== null) {
-    Object.keys(map5).forEach(function(style) {
-      map5[style].forEach(function(alias) {
+  if (map9 !== null) {
+    Object.keys(map9).forEach(function(style) {
+      map9[style].forEach(function(alias) {
         result[String(alias)] = style;
       });
     });
@@ -42299,21 +42809,21 @@ function compileMap() {
   }
   return result;
 }
-function Schema$1(definition3) {
-  return this.extend(definition3);
+function Schema$1(definition4) {
+  return this.extend(definition4);
 }
-Schema$1.prototype.extend = function extend3(definition3) {
+Schema$1.prototype.extend = function extend3(definition4) {
   var implicit = [];
   var explicit = [];
-  if (definition3 instanceof type) {
-    explicit.push(definition3);
-  } else if (Array.isArray(definition3)) {
-    explicit = explicit.concat(definition3);
-  } else if (definition3 && (Array.isArray(definition3.implicit) || Array.isArray(definition3.explicit))) {
-    if (definition3.implicit)
-      implicit = implicit.concat(definition3.implicit);
-    if (definition3.explicit)
-      explicit = explicit.concat(definition3.explicit);
+  if (definition4 instanceof type) {
+    explicit.push(definition4);
+  } else if (Array.isArray(definition4)) {
+    explicit = explicit.concat(definition4);
+  } else if (definition4 && (Array.isArray(definition4.implicit) || Array.isArray(definition4.explicit))) {
+    if (definition4.implicit)
+      implicit = implicit.concat(definition4.implicit);
+    if (definition4.explicit)
+      explicit = explicit.concat(definition4.explicit);
   } else {
     throw new exception("Schema.extend argument should be a Type, [ Type ], or a schema definition ({ implicit: [...], explicit: [...] })");
   }
@@ -42718,26 +43228,26 @@ var BASE64_MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 function resolveYamlBinary(data) {
   if (data === null)
     return false;
-  var code3, idx, bitlen = 0, max = data.length, map5 = BASE64_MAP;
+  var code4, idx, bitlen = 0, max = data.length, map9 = BASE64_MAP;
   for (idx = 0; idx < max; idx++) {
-    code3 = map5.indexOf(data.charAt(idx));
-    if (code3 > 64)
+    code4 = map9.indexOf(data.charAt(idx));
+    if (code4 > 64)
       continue;
-    if (code3 < 0)
+    if (code4 < 0)
       return false;
     bitlen += 6;
   }
   return bitlen % 8 === 0;
 }
 function constructYamlBinary(data) {
-  var idx, tailbits, input = data.replace(/[\r\n=]/g, ""), max = input.length, map5 = BASE64_MAP, bits = 0, result = [];
+  var idx, tailbits, input = data.replace(/[\r\n=]/g, ""), max = input.length, map9 = BASE64_MAP, bits = 0, result = [];
   for (idx = 0; idx < max; idx++) {
     if (idx % 4 === 0 && idx) {
       result.push(bits >> 16 & 255);
       result.push(bits >> 8 & 255);
       result.push(bits & 255);
     }
-    bits = bits << 6 | map5.indexOf(input.charAt(idx));
+    bits = bits << 6 | map9.indexOf(input.charAt(idx));
   }
   tailbits = max % 4 * 6;
   if (tailbits === 0) {
@@ -42753,32 +43263,32 @@ function constructYamlBinary(data) {
   return new Uint8Array(result);
 }
 function representYamlBinary(object) {
-  var result = "", bits = 0, idx, tail, max = object.length, map5 = BASE64_MAP;
+  var result = "", bits = 0, idx, tail, max = object.length, map9 = BASE64_MAP;
   for (idx = 0; idx < max; idx++) {
     if (idx % 3 === 0 && idx) {
-      result += map5[bits >> 18 & 63];
-      result += map5[bits >> 12 & 63];
-      result += map5[bits >> 6 & 63];
-      result += map5[bits & 63];
+      result += map9[bits >> 18 & 63];
+      result += map9[bits >> 12 & 63];
+      result += map9[bits >> 6 & 63];
+      result += map9[bits & 63];
     }
     bits = (bits << 8) + object[idx];
   }
   tail = max % 3;
   if (tail === 0) {
-    result += map5[bits >> 18 & 63];
-    result += map5[bits >> 12 & 63];
-    result += map5[bits >> 6 & 63];
-    result += map5[bits & 63];
+    result += map9[bits >> 18 & 63];
+    result += map9[bits >> 12 & 63];
+    result += map9[bits >> 6 & 63];
+    result += map9[bits & 63];
   } else if (tail === 2) {
-    result += map5[bits >> 10 & 63];
-    result += map5[bits >> 4 & 63];
-    result += map5[bits << 2 & 63];
-    result += map5[64];
+    result += map9[bits >> 10 & 63];
+    result += map9[bits >> 4 & 63];
+    result += map9[bits << 2 & 63];
+    result += map9[64];
   } else if (tail === 1) {
-    result += map5[bits >> 2 & 63];
-    result += map5[bits << 4 & 63];
-    result += map5[64];
-    result += map5[64];
+    result += map9[bits >> 2 & 63];
+    result += map9[bits << 4 & 63];
+    result += map9[64];
+    result += map9[64];
   }
   return result;
 }
@@ -43034,17 +43544,17 @@ var directiveHandlers = {
     }
   },
   TAG: function handleTagDirective(state, name, args) {
-    var handle2, prefix;
+    var handle3, prefix;
     if (args.length !== 2) {
       throwError(state, "TAG directive accepts exactly two arguments");
     }
-    handle2 = args[0];
+    handle3 = args[0];
     prefix = args[1];
-    if (!PATTERN_TAG_HANDLE.test(handle2)) {
+    if (!PATTERN_TAG_HANDLE.test(handle3)) {
       throwError(state, "ill-formed tag handle (first argument) of the TAG directive");
     }
-    if (_hasOwnProperty$1.call(state.tagMap, handle2)) {
-      throwError(state, 'there is a previously declared suffix for "' + handle2 + '" tag handle');
+    if (_hasOwnProperty$1.call(state.tagMap, handle3)) {
+      throwError(state, 'there is a previously declared suffix for "' + handle3 + '" tag handle');
     }
     if (!PATTERN_TAG_URI.test(prefix)) {
       throwError(state, "ill-formed tag prefix (second argument) of the TAG directive");
@@ -43054,7 +43564,7 @@ var directiveHandlers = {
     } catch (err) {
       throwError(state, "tag prefix is malformed: " + prefix);
     }
-    state.tagMap[handle2] = prefix;
+    state.tagMap[handle3] = prefix;
   }
 };
 function captureSegment(state, start, end, checkJson) {
@@ -44118,15 +44628,15 @@ var DEPRECATED_BOOLEANS_SYNTAX = [
   "OFF"
 ];
 var DEPRECATED_BASE60_SYNTAX = /^[-+]?[0-9_]+(?::[0-9_]+)+(?:\.[0-9_]*)?$/;
-function compileStyleMap(schema2, map5) {
+function compileStyleMap(schema2, map9) {
   var result, keys2, index2, length, tag, style, type2;
-  if (map5 === null)
+  if (map9 === null)
     return {};
   result = {};
-  keys2 = Object.keys(map5);
+  keys2 = Object.keys(map9);
   for (index2 = 0, length = keys2.length; index2 < length; index2 += 1) {
     tag = keys2[index2];
-    style = String(map5[tag]);
+    style = String(map9[tag]);
     if (tag.slice(0, 2) === "!!") {
       tag = "tag:yaml.org,2002:" + tag.slice(2);
     }
@@ -44139,21 +44649,21 @@ function compileStyleMap(schema2, map5) {
   return result;
 }
 function encodeHex(character) {
-  var string3, handle2, length;
+  var string3, handle3, length;
   string3 = character.toString(16).toUpperCase();
   if (character <= 255) {
-    handle2 = "x";
+    handle3 = "x";
     length = 2;
   } else if (character <= 65535) {
-    handle2 = "u";
+    handle3 = "u";
     length = 4;
   } else if (character <= 4294967295) {
-    handle2 = "U";
+    handle3 = "U";
     length = 8;
   } else {
     throw new exception("code point within a string may not be greater than 0xFFFFFFFF");
   }
-  return "\\" + handle2 + common.repeat("0", length - string3.length) + string3;
+  return "\\" + handle3 + common.repeat("0", length - string3.length) + string3;
 }
 var QUOTING_TYPE_SINGLE = 1;
 var QUOTING_TYPE_DOUBLE = 2;
@@ -45065,8 +45575,8 @@ function isDiscussionReaction(reaction) {
 function isFileNotFoundError(value) {
   if (!isObject2(value))
     return false;
-  const code3 = value.code;
-  return code3 === "ENOENT";
+  const code4 = value.code;
+  return code4 === "ENOENT";
 }
 function isReleaseReaction(reaction) {
   return RELEASE_REACTIONS.includes(reaction);
@@ -45393,7 +45903,7 @@ async function createOrUpdateRelease({
           throw error2;
         const errors = error2.response.data.errors ?? [];
         const isExisting = errors.some(
-          ({ resource, code: code3 }) => resource === "Release" && code3 === "already_exists"
+          ({ resource, code: code4 }) => resource === "Release" && code4 === "already_exists"
         );
         if (!isExisting)
           throw error2;
@@ -45427,6 +45937,1656 @@ async function createOrUpdateRelease({
   return [updatedRelease, false];
 }
 
+// node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+var inConstruct2 = "phrasing";
+var notInConstruct2 = ["autolink", "link", "image", "label"];
+function gfmAutolinkLiteralToMarkdown2() {
+  return {
+    unsafe: [
+      {
+        character: "@",
+        before: "[+\\-.\\w]",
+        after: "[\\-.\\w]",
+        inConstruct: inConstruct2,
+        notInConstruct: notInConstruct2
+      },
+      {
+        character: ".",
+        before: "[Ww]",
+        after: "[\\-.\\w]",
+        inConstruct: inConstruct2,
+        notInConstruct: notInConstruct2
+      },
+      {
+        character: ":",
+        before: "[ps]",
+        after: "\\/",
+        inConstruct: inConstruct2,
+        notInConstruct: notInConstruct2
+      }
+    ]
+  };
+}
+
+// node_modules/mdast-util-gfm-footnote/lib/index.js
+footnoteReference2.peek = footnoteReferencePeek2;
+function gfmFootnoteToMarkdown2() {
+  return {
+    // This is on by default already.
+    unsafe: [{ character: "[", inConstruct: ["phrasing", "label", "reference"] }],
+    handlers: { footnoteDefinition: footnoteDefinition2, footnoteReference: footnoteReference2 }
+  };
+}
+function footnoteReference2(node3, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[^");
+  const exit3 = state.enter("footnoteReference");
+  const subexit = state.enter("reference");
+  value += tracker.move(
+    state.safe(state.associationId(node3), {
+      ...tracker.current(),
+      before: value,
+      after: "]"
+    })
+  );
+  subexit();
+  exit3();
+  value += tracker.move("]");
+  return value;
+}
+function footnoteReferencePeek2() {
+  return "[";
+}
+function footnoteDefinition2(node3, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[^");
+  const exit3 = state.enter("footnoteDefinition");
+  const subexit = state.enter("label");
+  value += tracker.move(
+    state.safe(state.associationId(node3), {
+      ...tracker.current(),
+      before: value,
+      after: "]"
+    })
+  );
+  subexit();
+  value += tracker.move(
+    "]:" + (node3.children && node3.children.length > 0 ? " " : "")
+  );
+  tracker.shift(4);
+  value += tracker.move(
+    state.indentLines(state.containerFlow(node3, tracker.current()), map5)
+  );
+  exit3();
+  return value;
+}
+function map5(line, index2, blank) {
+  if (index2 === 0) {
+    return line;
+  }
+  return (blank ? "" : "    ") + line;
+}
+
+// node_modules/mdast-util-gfm-strikethrough/lib/index.js
+var constructsWithoutStrikethrough2 = [
+  "autolink",
+  "destinationLiteral",
+  "destinationRaw",
+  "reference",
+  "titleQuote",
+  "titleApostrophe"
+];
+handleDelete2.peek = peekDelete2;
+function gfmStrikethroughToMarkdown2() {
+  return {
+    unsafe: [
+      {
+        character: "~",
+        inConstruct: "phrasing",
+        notInConstruct: constructsWithoutStrikethrough2
+      }
+    ],
+    handlers: { delete: handleDelete2 }
+  };
+}
+function handleDelete2(node3, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  const exit3 = state.enter("strikethrough");
+  let value = tracker.move("~~");
+  value += state.containerPhrasing(node3, {
+    ...tracker.current(),
+    before: value,
+    after: "~"
+  });
+  value += tracker.move("~~");
+  exit3();
+  return value;
+}
+function peekDelete2() {
+  return "~";
+}
+
+// node_modules/mdast-util-to-markdown/lib/configure.js
+var own6 = {}.hasOwnProperty;
+function configure3(base2, extension2) {
+  let index2 = -1;
+  let key;
+  if (extension2.extensions) {
+    while (++index2 < extension2.extensions.length) {
+      configure3(base2, extension2.extensions[index2]);
+    }
+  }
+  for (key in extension2) {
+    if (own6.call(extension2, key)) {
+      switch (key) {
+        case "extensions": {
+          break;
+        }
+        case "unsafe": {
+          list3(base2[key], extension2[key]);
+          break;
+        }
+        case "join": {
+          list3(base2[key], extension2[key]);
+          break;
+        }
+        case "handlers": {
+          map6(base2[key], extension2[key]);
+          break;
+        }
+        default: {
+          base2.options[key] = extension2[key];
+        }
+      }
+    }
+  }
+  return base2;
+}
+function list3(left, right) {
+  if (right) {
+    left.push(...right);
+  }
+}
+function map6(left, right) {
+  if (right) {
+    Object.assign(left, right);
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
+function blockquote2(node3, _, state, info2) {
+  const exit3 = state.enter("blockquote");
+  const tracker = state.createTracker(info2);
+  tracker.move("> ");
+  tracker.shift(2);
+  const value = state.indentLines(
+    state.containerFlow(node3, tracker.current()),
+    map7
+  );
+  exit3();
+  return value;
+}
+function map7(line, _, blank) {
+  return ">" + (blank ? "" : " ") + line;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
+function patternInScope3(stack, pattern) {
+  return listInScope3(stack, pattern.inConstruct, true) && !listInScope3(stack, pattern.notInConstruct, false);
+}
+function listInScope3(stack, list5, none) {
+  if (typeof list5 === "string") {
+    list5 = [list5];
+  }
+  if (!list5 || list5.length === 0) {
+    return none;
+  }
+  let index2 = -1;
+  while (++index2 < list5.length) {
+    if (stack.includes(list5[index2])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/break.js
+function hardBreak2(_, _1, state, info2) {
+  let index2 = -1;
+  while (++index2 < state.unsafe.length) {
+    if (state.unsafe[index2].character === "\n" && patternInScope3(state.stack, state.unsafe[index2])) {
+      return /[ \t]/.test(info2.before) ? "" : " ";
+    }
+  }
+  return "\\\n";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
+function formatCodeAsIndented2(node3, state) {
+  return Boolean(
+    state.options.fences === false && node3.value && // If there’s no info…
+    !node3.lang && // And there’s a non-whitespace character…
+    /[^ \r\n]/.test(node3.value) && // And the value doesn’t start or end in a blank…
+    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node3.value)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-fence.js
+function checkFence2(state) {
+  const marker = state.options.fence || "`";
+  if (marker !== "`" && marker !== "~") {
+    throw new Error(
+      "Cannot serialize code with `" + marker + "` for `options.fence`, expected `` ` `` or `~`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/code.js
+function code3(node3, _, state, info2) {
+  const marker = checkFence2(state);
+  const raw = node3.value || "";
+  const suffix = marker === "`" ? "GraveAccent" : "Tilde";
+  if (formatCodeAsIndented2(node3, state)) {
+    const exit4 = state.enter("codeIndented");
+    const value2 = state.indentLines(raw, map8);
+    exit4();
+    return value2;
+  }
+  const tracker = state.createTracker(info2);
+  const sequence = marker.repeat(Math.max(longestStreak(raw, marker) + 1, 3));
+  const exit3 = state.enter("codeFenced");
+  let value = tracker.move(sequence);
+  if (node3.lang) {
+    const subexit = state.enter(`codeFencedLang${suffix}`);
+    value += tracker.move(
+      state.safe(node3.lang, {
+        before: value,
+        after: " ",
+        encode: ["`"],
+        ...tracker.current()
+      })
+    );
+    subexit();
+  }
+  if (node3.lang && node3.meta) {
+    const subexit = state.enter(`codeFencedMeta${suffix}`);
+    value += tracker.move(" ");
+    value += tracker.move(
+      state.safe(node3.meta, {
+        before: value,
+        after: "\n",
+        encode: ["`"],
+        ...tracker.current()
+      })
+    );
+    subexit();
+  }
+  value += tracker.move("\n");
+  if (raw) {
+    value += tracker.move(raw + "\n");
+  }
+  value += tracker.move(sequence);
+  exit3();
+  return value;
+}
+function map8(line, _, blank) {
+  return (blank ? "" : "    ") + line;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-quote.js
+function checkQuote2(state) {
+  const marker = state.options.quote || '"';
+  if (marker !== '"' && marker !== "'") {
+    throw new Error(
+      "Cannot serialize title with `" + marker + "` for `options.quote`, expected `\"`, or `'`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/definition.js
+function definition3(node3, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const exit3 = state.enter("definition");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[");
+  value += tracker.move(
+    state.safe(state.associationId(node3), {
+      before: value,
+      after: "]",
+      ...tracker.current()
+    })
+  );
+  value += tracker.move("]: ");
+  subexit();
+  if (
+    // If there’s no url, or…
+    !node3.url || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node3.url, {
+        before: value,
+        after: node3.title ? " " : "\n",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node3.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node3.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
+function checkEmphasis2(state) {
+  const marker = state.options.emphasis || "*";
+  if (marker !== "*" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize emphasis with `" + marker + "` for `options.emphasis`, expected `*`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
+emphasis2.peek = emphasisPeek2;
+function emphasis2(node3, _, state, info2) {
+  const marker = checkEmphasis2(state);
+  const exit3 = state.enter("emphasis");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move(marker);
+  value += tracker.move(
+    state.containerPhrasing(node3, {
+      before: value,
+      after: marker,
+      ...tracker.current()
+    })
+  );
+  value += tracker.move(marker);
+  exit3();
+  return value;
+}
+function emphasisPeek2(_, _1, state) {
+  return state.options.emphasis || "*";
+}
+
+// node_modules/mdast-util-to-markdown/node_modules/mdast-util-to-string/lib/index.js
+var emptyOptions2 = {};
+function toString3(value, options) {
+  const settings = options || emptyOptions2;
+  const includeImageAlt = typeof settings.includeImageAlt === "boolean" ? settings.includeImageAlt : true;
+  const includeHtml = typeof settings.includeHtml === "boolean" ? settings.includeHtml : true;
+  return one2(value, includeImageAlt, includeHtml);
+}
+function one2(value, includeImageAlt, includeHtml) {
+  if (node2(value)) {
+    if ("value" in value) {
+      return value.type === "html" && !includeHtml ? "" : value.value;
+    }
+    if (includeImageAlt && "alt" in value && value.alt) {
+      return value.alt;
+    }
+    if ("children" in value) {
+      return all2(value.children, includeImageAlt, includeHtml);
+    }
+  }
+  if (Array.isArray(value)) {
+    return all2(value, includeImageAlt, includeHtml);
+  }
+  return "";
+}
+function all2(values, includeImageAlt, includeHtml) {
+  const result = [];
+  let index2 = -1;
+  while (++index2 < values.length) {
+    result[index2] = one2(values[index2], includeImageAlt, includeHtml);
+  }
+  return result.join("");
+}
+function node2(value) {
+  return Boolean(value && typeof value === "object");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
+function formatHeadingAsSetext2(node3, state) {
+  let literalWithBreak = false;
+  visit2(node3, function(node4) {
+    if ("value" in node4 && /\r?\n|\r/.test(node4.value) || node4.type === "break") {
+      literalWithBreak = true;
+      return EXIT3;
+    }
+  });
+  return Boolean(
+    (!node3.depth || node3.depth < 3) && toString3(node3) && (state.options.setext || literalWithBreak)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/heading.js
+function heading2(node3, _, state, info2) {
+  const rank = Math.max(Math.min(6, node3.depth || 1), 1);
+  const tracker = state.createTracker(info2);
+  if (formatHeadingAsSetext2(node3, state)) {
+    const exit4 = state.enter("headingSetext");
+    const subexit2 = state.enter("phrasing");
+    const value2 = state.containerPhrasing(node3, {
+      ...tracker.current(),
+      before: "\n",
+      after: "\n"
+    });
+    subexit2();
+    exit4();
+    return value2 + "\n" + (rank === 1 ? "=" : "-").repeat(
+      // The whole size…
+      value2.length - // Minus the position of the character after the last EOL (or
+      // 0 if there is none)…
+      (Math.max(value2.lastIndexOf("\r"), value2.lastIndexOf("\n")) + 1)
+    );
+  }
+  const sequence = "#".repeat(rank);
+  const exit3 = state.enter("headingAtx");
+  const subexit = state.enter("phrasing");
+  tracker.move(sequence + " ");
+  let value = state.containerPhrasing(node3, {
+    before: "# ",
+    after: "\n",
+    ...tracker.current()
+  });
+  if (/^[\t ]/.test(value)) {
+    value = "&#x" + value.charCodeAt(0).toString(16).toUpperCase() + ";" + value.slice(1);
+  }
+  value = value ? sequence + " " + value : sequence;
+  if (state.options.closeAtx) {
+    value += " " + sequence;
+  }
+  subexit();
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/html.js
+html2.peek = htmlPeek2;
+function html2(node3) {
+  return node3.value || "";
+}
+function htmlPeek2() {
+  return "<";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/image.js
+image2.peek = imagePeek2;
+function image2(node3, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const exit3 = state.enter("image");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("![");
+  value += tracker.move(
+    state.safe(node3.alt, { before: value, after: "]", ...tracker.current() })
+  );
+  value += tracker.move("](");
+  subexit();
+  if (
+    // If there’s no url but there is a title…
+    !node3.url && node3.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node3.url, {
+        before: value,
+        after: node3.title ? " " : ")",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node3.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node3.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  value += tracker.move(")");
+  exit3();
+  return value;
+}
+function imagePeek2() {
+  return "!";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
+imageReference2.peek = imageReferencePeek2;
+function imageReference2(node3, _, state, info2) {
+  const type2 = node3.referenceType;
+  const exit3 = state.enter("imageReference");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("![");
+  const alt = state.safe(node3.alt, {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  value += tracker.move(alt + "][");
+  subexit();
+  const stack = state.stack;
+  state.stack = [];
+  subexit = state.enter("reference");
+  const reference = state.safe(state.associationId(node3), {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  subexit();
+  state.stack = stack;
+  exit3();
+  if (type2 === "full" || !alt || alt !== reference) {
+    value += tracker.move(reference + "]");
+  } else if (type2 === "shortcut") {
+    value = value.slice(0, -1);
+  } else {
+    value += tracker.move("]");
+  }
+  return value;
+}
+function imageReferencePeek2() {
+  return "!";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/pattern-compile.js
+function patternCompile3(pattern) {
+  if (!pattern._compiled) {
+    const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
+    pattern._compiled = new RegExp(
+      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
+      "g"
+    );
+  }
+  return pattern._compiled;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
+inlineCode3.peek = inlineCodePeek3;
+function inlineCode3(node3, _, state) {
+  let value = node3.value || "";
+  let sequence = "`";
+  let index2 = -1;
+  while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
+    sequence += "`";
+  }
+  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
+    value = " " + value + " ";
+  }
+  while (++index2 < state.unsafe.length) {
+    const pattern = state.unsafe[index2];
+    const expression = patternCompile3(pattern);
+    let match;
+    if (!pattern.atBreak)
+      continue;
+    while (match = expression.exec(value)) {
+      let position2 = match.index;
+      if (value.charCodeAt(position2) === 10 && value.charCodeAt(position2 - 1) === 13) {
+        position2--;
+      }
+      value = value.slice(0, position2) + " " + value.slice(match.index + 1);
+    }
+  }
+  return sequence + value + sequence;
+}
+function inlineCodePeek3() {
+  return "`";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
+function formatLinkAsAutolink2(node3, state) {
+  const raw = toString3(node3);
+  return Boolean(
+    !state.options.resourceLink && // If there’s a url…
+    node3.url && // And there’s a no title…
+    !node3.title && // And the content of `node` is a single text node…
+    node3.children && node3.children.length === 1 && node3.children[0].type === "text" && // And if the url is the same as the content…
+    (raw === node3.url || "mailto:" + raw === node3.url) && // And that starts w/ a protocol…
+    /^[a-z][a-z+.-]+:/i.test(node3.url) && // And that doesn’t contain ASCII control codes (character escapes and
+    // references don’t work), space, or angle brackets…
+    !/[\0- <>\u007F]/.test(node3.url)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/link.js
+link2.peek = linkPeek2;
+function link2(node3, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const tracker = state.createTracker(info2);
+  let exit3;
+  let subexit;
+  if (formatLinkAsAutolink2(node3, state)) {
+    const stack = state.stack;
+    state.stack = [];
+    exit3 = state.enter("autolink");
+    let value2 = tracker.move("<");
+    value2 += tracker.move(
+      state.containerPhrasing(node3, {
+        before: value2,
+        after: ">",
+        ...tracker.current()
+      })
+    );
+    value2 += tracker.move(">");
+    exit3();
+    state.stack = stack;
+    return value2;
+  }
+  exit3 = state.enter("link");
+  subexit = state.enter("label");
+  let value = tracker.move("[");
+  value += tracker.move(
+    state.containerPhrasing(node3, {
+      before: value,
+      after: "](",
+      ...tracker.current()
+    })
+  );
+  value += tracker.move("](");
+  subexit();
+  if (
+    // If there’s no url but there is a title…
+    !node3.url && node3.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node3.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node3.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node3.url, {
+        before: value,
+        after: node3.title ? " " : ")",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node3.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node3.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  value += tracker.move(")");
+  exit3();
+  return value;
+}
+function linkPeek2(node3, _, state) {
+  return formatLinkAsAutolink2(node3, state) ? "<" : "[";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
+linkReference2.peek = linkReferencePeek2;
+function linkReference2(node3, _, state, info2) {
+  const type2 = node3.referenceType;
+  const exit3 = state.enter("linkReference");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[");
+  const text6 = state.containerPhrasing(node3, {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  value += tracker.move(text6 + "][");
+  subexit();
+  const stack = state.stack;
+  state.stack = [];
+  subexit = state.enter("reference");
+  const reference = state.safe(state.associationId(node3), {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  subexit();
+  state.stack = stack;
+  exit3();
+  if (type2 === "full" || !text6 || text6 !== reference) {
+    value += tracker.move(reference + "]");
+  } else if (type2 === "shortcut") {
+    value = value.slice(0, -1);
+  } else {
+    value += tracker.move("]");
+  }
+  return value;
+}
+function linkReferencePeek2() {
+  return "[";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
+function checkBullet3(state) {
+  const marker = state.options.bullet || "*";
+  if (marker !== "*" && marker !== "+" && marker !== "-") {
+    throw new Error(
+      "Cannot serialize items with `" + marker + "` for `options.bullet`, expected `*`, `+`, or `-`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
+function checkBulletOther2(state) {
+  const bullet = checkBullet3(state);
+  const bulletOther = state.options.bulletOther;
+  if (!bulletOther) {
+    return bullet === "*" ? "-" : "*";
+  }
+  if (bulletOther !== "*" && bulletOther !== "+" && bulletOther !== "-") {
+    throw new Error(
+      "Cannot serialize items with `" + bulletOther + "` for `options.bulletOther`, expected `*`, `+`, or `-`"
+    );
+  }
+  if (bulletOther === bullet) {
+    throw new Error(
+      "Expected `bullet` (`" + bullet + "`) and `bulletOther` (`" + bulletOther + "`) to be different"
+    );
+  }
+  return bulletOther;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
+function checkBulletOrdered2(state) {
+  const marker = state.options.bulletOrdered || ".";
+  if (marker !== "." && marker !== ")") {
+    throw new Error(
+      "Cannot serialize items with `" + marker + "` for `options.bulletOrdered`, expected `.` or `)`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-rule.js
+function checkRule2(state) {
+  const marker = state.options.rule || "*";
+  if (marker !== "*" && marker !== "-" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize rules with `" + marker + "` for `options.rule`, expected `*`, `-`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/list.js
+function list4(node3, parent, state, info2) {
+  const exit3 = state.enter("list");
+  const bulletCurrent = state.bulletCurrent;
+  let bullet = node3.ordered ? checkBulletOrdered2(state) : checkBullet3(state);
+  const bulletOther = node3.ordered ? bullet === "." ? ")" : "." : checkBulletOther2(state);
+  let useDifferentMarker = parent && state.bulletLastUsed ? bullet === state.bulletLastUsed : false;
+  if (!node3.ordered) {
+    const firstListItem = node3.children ? node3.children[0] : void 0;
+    if (
+      // Bullet could be used as a thematic break marker:
+      (bullet === "*" || bullet === "-") && // Empty first list item:
+      firstListItem && (!firstListItem.children || !firstListItem.children[0]) && // Directly in two other list items:
+      state.stack[state.stack.length - 1] === "list" && state.stack[state.stack.length - 2] === "listItem" && state.stack[state.stack.length - 3] === "list" && state.stack[state.stack.length - 4] === "listItem" && // That are each the first child.
+      state.indexStack[state.indexStack.length - 1] === 0 && state.indexStack[state.indexStack.length - 2] === 0 && state.indexStack[state.indexStack.length - 3] === 0
+    ) {
+      useDifferentMarker = true;
+    }
+    if (checkRule2(state) === bullet && firstListItem) {
+      let index2 = -1;
+      while (++index2 < node3.children.length) {
+        const item = node3.children[index2];
+        if (item && item.type === "listItem" && item.children && item.children[0] && item.children[0].type === "thematicBreak") {
+          useDifferentMarker = true;
+          break;
+        }
+      }
+    }
+  }
+  if (useDifferentMarker) {
+    bullet = bulletOther;
+  }
+  state.bulletCurrent = bullet;
+  const value = state.containerFlow(node3, info2);
+  state.bulletLastUsed = bullet;
+  state.bulletCurrent = bulletCurrent;
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
+function checkListItemIndent3(state) {
+  const style = state.options.listItemIndent || "one";
+  if (style !== "tab" && style !== "one" && style !== "mixed") {
+    throw new Error(
+      "Cannot serialize items with `" + style + "` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`"
+    );
+  }
+  return style;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/list-item.js
+function listItem3(node3, parent, state, info2) {
+  const listItemIndent = checkListItemIndent3(state);
+  let bullet = state.bulletCurrent || checkBullet3(state);
+  if (parent && parent.type === "list" && parent.ordered) {
+    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node3)) + bullet;
+  }
+  let size = bullet.length + 1;
+  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node3.spread)) {
+    size = Math.ceil(size / 4) * 4;
+  }
+  const tracker = state.createTracker(info2);
+  tracker.move(bullet + " ".repeat(size - bullet.length));
+  tracker.shift(size);
+  const exit3 = state.enter("listItem");
+  const value = state.indentLines(
+    state.containerFlow(node3, tracker.current()),
+    map9
+  );
+  exit3();
+  return value;
+  function map9(line, index2, blank) {
+    if (index2) {
+      return (blank ? "" : " ".repeat(size)) + line;
+    }
+    return (blank ? bullet : bullet + " ".repeat(size - bullet.length)) + line;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
+function paragraph2(node3, _, state, info2) {
+  const exit3 = state.enter("paragraph");
+  const subexit = state.enter("phrasing");
+  const value = state.containerPhrasing(node3, info2);
+  subexit();
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-phrasing/lib/index.js
+var phrasing2 = (
+  /** @type {(node?: unknown) => node is PhrasingContent} */
+  convert3([
+    "break",
+    "delete",
+    "emphasis",
+    "footnote",
+    "footnoteReference",
+    "image",
+    "imageReference",
+    "inlineCode",
+    "link",
+    "linkReference",
+    "strong",
+    "text"
+  ])
+);
+
+// node_modules/mdast-util-to-markdown/lib/handle/root.js
+function root2(node3, _, state, info2) {
+  const hasPhrasing = node3.children.some(function(d) {
+    return phrasing2(d);
+  });
+  const fn = hasPhrasing ? state.containerPhrasing : state.containerFlow;
+  return fn.call(state, node3, info2);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-strong.js
+function checkStrong2(state) {
+  const marker = state.options.strong || "*";
+  if (marker !== "*" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize strong with `" + marker + "` for `options.strong`, expected `*`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/strong.js
+strong2.peek = strongPeek2;
+function strong2(node3, _, state, info2) {
+  const marker = checkStrong2(state);
+  const exit3 = state.enter("strong");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move(marker + marker);
+  value += tracker.move(
+    state.containerPhrasing(node3, {
+      before: value,
+      after: marker,
+      ...tracker.current()
+    })
+  );
+  value += tracker.move(marker + marker);
+  exit3();
+  return value;
+}
+function strongPeek2(_, _1, state) {
+  return state.options.strong || "*";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/text.js
+function text5(node3, _, state, info2) {
+  return state.safe(node3.value, info2);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
+function checkRuleRepetition2(state) {
+  const repetition = state.options.ruleRepetition || 3;
+  if (repetition < 3) {
+    throw new Error(
+      "Cannot serialize rules with repetition `" + repetition + "` for `options.ruleRepetition`, expected `3` or more"
+    );
+  }
+  return repetition;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
+function thematicBreak3(_, _1, state) {
+  const value = (checkRule2(state) + (state.options.ruleSpaces ? " " : "")).repeat(checkRuleRepetition2(state));
+  return state.options.ruleSpaces ? value.slice(0, -1) : value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/index.js
+var handle2 = {
+  blockquote: blockquote2,
+  break: hardBreak2,
+  code: code3,
+  definition: definition3,
+  emphasis: emphasis2,
+  hardBreak: hardBreak2,
+  heading: heading2,
+  html: html2,
+  image: image2,
+  imageReference: imageReference2,
+  inlineCode: inlineCode3,
+  link: link2,
+  linkReference: linkReference2,
+  list: list4,
+  listItem: listItem3,
+  paragraph: paragraph2,
+  root: root2,
+  strong: strong2,
+  text: text5,
+  thematicBreak: thematicBreak3
+};
+
+// node_modules/mdast-util-to-markdown/lib/join.js
+var join2 = [joinDefaults2];
+function joinDefaults2(left, right, parent, state) {
+  if (right.type === "code" && formatCodeAsIndented2(right, state) && (left.type === "list" || left.type === right.type && formatCodeAsIndented2(left, state))) {
+    return false;
+  }
+  if ("spread" in parent && typeof parent.spread === "boolean") {
+    if (left.type === "paragraph" && // Two paragraphs.
+    (left.type === right.type || right.type === "definition" || // Paragraph followed by a setext heading.
+    right.type === "heading" && formatHeadingAsSetext2(right, state))) {
+      return;
+    }
+    return parent.spread ? 1 : 0;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/unsafe.js
+var fullPhrasingSpans2 = [
+  "autolink",
+  "destinationLiteral",
+  "destinationRaw",
+  "reference",
+  "titleQuote",
+  "titleApostrophe"
+];
+var unsafe2 = [
+  { character: "	", after: "[\\r\\n]", inConstruct: "phrasing" },
+  { character: "	", before: "[\\r\\n]", inConstruct: "phrasing" },
+  {
+    character: "	",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
+  },
+  {
+    character: "\r",
+    inConstruct: [
+      "codeFencedLangGraveAccent",
+      "codeFencedLangTilde",
+      "codeFencedMetaGraveAccent",
+      "codeFencedMetaTilde",
+      "destinationLiteral",
+      "headingAtx"
+    ]
+  },
+  {
+    character: "\n",
+    inConstruct: [
+      "codeFencedLangGraveAccent",
+      "codeFencedLangTilde",
+      "codeFencedMetaGraveAccent",
+      "codeFencedMetaTilde",
+      "destinationLiteral",
+      "headingAtx"
+    ]
+  },
+  { character: " ", after: "[\\r\\n]", inConstruct: "phrasing" },
+  { character: " ", before: "[\\r\\n]", inConstruct: "phrasing" },
+  {
+    character: " ",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
+  },
+  // An exclamation mark can start an image, if it is followed by a link or
+  // a link reference.
+  {
+    character: "!",
+    after: "\\[",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  // A quote can break out of a title.
+  { character: '"', inConstruct: "titleQuote" },
+  // A number sign could start an ATX heading if it starts a line.
+  { atBreak: true, character: "#" },
+  { character: "#", inConstruct: "headingAtx", after: "(?:[\r\n]|$)" },
+  // Dollar sign and percentage are not used in markdown.
+  // An ampersand could start a character reference.
+  { character: "&", after: "[#A-Za-z]", inConstruct: "phrasing" },
+  // An apostrophe can break out of a title.
+  { character: "'", inConstruct: "titleApostrophe" },
+  // A left paren could break out of a destination raw.
+  { character: "(", inConstruct: "destinationRaw" },
+  // A left paren followed by `]` could make something into a link or image.
+  {
+    before: "\\]",
+    character: "(",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  // A right paren could start a list item or break out of a destination
+  // raw.
+  { atBreak: true, before: "\\d+", character: ")" },
+  { character: ")", inConstruct: "destinationRaw" },
+  // An asterisk can start thematic breaks, list items, emphasis, strong.
+  { atBreak: true, character: "*", after: "(?:[ 	\r\n*])" },
+  { character: "*", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // A plus sign could start a list item.
+  { atBreak: true, character: "+", after: "(?:[ 	\r\n])" },
+  // A dash can start thematic breaks, list items, and setext heading
+  // underlines.
+  { atBreak: true, character: "-", after: "(?:[ 	\r\n-])" },
+  // A dot could start a list item.
+  { atBreak: true, before: "\\d+", character: ".", after: "(?:[ 	\r\n]|$)" },
+  // Slash, colon, and semicolon are not used in markdown for constructs.
+  // A less than can start html (flow or text) or an autolink.
+  // HTML could start with an exclamation mark (declaration, cdata, comment),
+  // slash (closing tag), question mark (instruction), or a letter (tag).
+  // An autolink also starts with a letter.
+  // Finally, it could break out of a destination literal.
+  { atBreak: true, character: "<", after: "[!/?A-Za-z]" },
+  {
+    character: "<",
+    after: "[!/?A-Za-z]",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  { character: "<", inConstruct: "destinationLiteral" },
+  // An equals to can start setext heading underlines.
+  { atBreak: true, character: "=" },
+  // A greater than can start block quotes and it can break out of a
+  // destination literal.
+  { atBreak: true, character: ">" },
+  { character: ">", inConstruct: "destinationLiteral" },
+  // Question mark and at sign are not used in markdown for constructs.
+  // A left bracket can start definitions, references, labels,
+  { atBreak: true, character: "[" },
+  { character: "[", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  { character: "[", inConstruct: ["label", "reference"] },
+  // A backslash can start an escape (when followed by punctuation) or a
+  // hard break (when followed by an eol).
+  // Note: typical escapes are handled in `safe`!
+  { character: "\\", after: "[\\r\\n]", inConstruct: "phrasing" },
+  // A right bracket can exit labels.
+  { character: "]", inConstruct: ["label", "reference"] },
+  // Caret is not used in markdown for constructs.
+  // An underscore can start emphasis, strong, or a thematic break.
+  { atBreak: true, character: "_" },
+  { character: "_", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // A grave accent can start code (fenced or text), or it can break out of
+  // a grave accent code fence.
+  { atBreak: true, character: "`" },
+  {
+    character: "`",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedMetaGraveAccent"]
+  },
+  { character: "`", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // Left brace, vertical bar, right brace are not used in markdown for
+  // constructs.
+  // A tilde can start code (fenced).
+  { atBreak: true, character: "~" }
+];
+
+// node_modules/mdast-util-to-markdown/node_modules/micromark-util-decode-numeric-character-reference/index.js
+function decodeNumericCharacterReference2(value, base2) {
+  const code4 = Number.parseInt(value, base2);
+  if (
+    // C0 except for HT, LF, FF, CR, space.
+    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of C0, and C1 controls.
+    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
+    code4 > 55295 && code4 < 57344 || // Noncharacters.
+    code4 > 64975 && code4 < 65008 || (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || // Out of range
+    code4 > 1114111
+  ) {
+    return "\uFFFD";
+  }
+  return String.fromCharCode(code4);
+}
+
+// node_modules/mdast-util-to-markdown/node_modules/micromark-util-decode-string/index.js
+var characterEscapeOrReference2 = /\\([!-/:-@[-`{-~])|&(#(?:\d{1,7}|x[\da-f]{1,6})|[\da-z]{1,31});/gi;
+function decodeString2(value) {
+  return value.replace(characterEscapeOrReference2, decode2);
+}
+function decode2($0, $1, $2) {
+  if ($1) {
+    return $1;
+  }
+  const head = $2.charCodeAt(0);
+  if (head === 35) {
+    const head2 = $2.charCodeAt(1);
+    const hex = head2 === 120 || head2 === 88;
+    return decodeNumericCharacterReference2($2.slice(hex ? 2 : 1), hex ? 16 : 10);
+  }
+  return decodeNamedCharacterReference($2) || $0;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/association.js
+function association3(node3) {
+  if (node3.label || !node3.identifier) {
+    return node3.label || "";
+  }
+  return decodeString2(node3.identifier);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+function containerPhrasing3(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const results = [];
+  let index2 = -1;
+  let before = info2.before;
+  indexStack.push(-1);
+  let tracker = state.createTracker(info2);
+  while (++index2 < children.length) {
+    const child = children[index2];
+    let after;
+    indexStack[indexStack.length - 1] = index2;
+    if (index2 + 1 < children.length) {
+      let handle3 = state.handle.handlers[children[index2 + 1].type];
+      if (handle3 && handle3.peek)
+        handle3 = handle3.peek;
+      after = handle3 ? handle3(children[index2 + 1], parent, state, {
+        before: "",
+        after: "",
+        ...tracker.current()
+      }).charAt(0) : "";
+    } else {
+      after = info2.after;
+    }
+    if (results.length > 0 && (before === "\r" || before === "\n") && child.type === "html") {
+      results[results.length - 1] = results[results.length - 1].replace(
+        /(\r?\n|\r)$/,
+        " "
+      );
+      before = " ";
+      tracker = state.createTracker(info2);
+      tracker.move(results.join(""));
+    }
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          ...tracker.current(),
+          before,
+          after
+        })
+      )
+    );
+    before = results[results.length - 1].slice(-1);
+  }
+  indexStack.pop();
+  return results.join("");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/container-flow.js
+function containerFlow3(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const tracker = state.createTracker(info2);
+  const results = [];
+  let index2 = -1;
+  indexStack.push(-1);
+  while (++index2 < children.length) {
+    const child = children[index2];
+    indexStack[indexStack.length - 1] = index2;
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          before: "\n",
+          after: "\n",
+          ...tracker.current()
+        })
+      )
+    );
+    if (child.type !== "list") {
+      state.bulletLastUsed = void 0;
+    }
+    if (index2 < children.length - 1) {
+      results.push(
+        tracker.move(between3(child, children[index2 + 1], parent, state))
+      );
+    }
+  }
+  indexStack.pop();
+  return results.join("");
+}
+function between3(left, right, parent, state) {
+  let index2 = state.join.length;
+  while (index2--) {
+    const result = state.join[index2](left, right, parent, state);
+    if (result === true || result === 1) {
+      break;
+    }
+    if (typeof result === "number") {
+      return "\n".repeat(1 + result);
+    }
+    if (result === false) {
+      return "\n\n<!---->\n\n";
+    }
+  }
+  return "\n\n";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
+var eol3 = /\r?\n|\r/g;
+function indentLines3(value, map9) {
+  const result = [];
+  let start = 0;
+  let line = 0;
+  let match;
+  while (match = eol3.exec(value)) {
+    one3(value.slice(start, match.index));
+    result.push(match[0]);
+    start = match.index + match[0].length;
+    line++;
+  }
+  one3(value.slice(start));
+  return result.join("");
+  function one3(value2) {
+    result.push(map9(value2, line, !value2));
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/safe.js
+function safe3(state, input, config2) {
+  const value = (config2.before || "") + (input || "") + (config2.after || "");
+  const positions = [];
+  const result = [];
+  const infos = {};
+  let index2 = -1;
+  while (++index2 < state.unsafe.length) {
+    const pattern = state.unsafe[index2];
+    if (!patternInScope3(state.stack, pattern)) {
+      continue;
+    }
+    const expression = patternCompile3(pattern);
+    let match;
+    while (match = expression.exec(value)) {
+      const before = "before" in pattern || Boolean(pattern.atBreak);
+      const after = "after" in pattern;
+      const position2 = match.index + (before ? match[1].length : 0);
+      if (positions.includes(position2)) {
+        if (infos[position2].before && !before) {
+          infos[position2].before = false;
+        }
+        if (infos[position2].after && !after) {
+          infos[position2].after = false;
+        }
+      } else {
+        positions.push(position2);
+        infos[position2] = { before, after };
+      }
+    }
+  }
+  positions.sort(numerical3);
+  let start = config2.before ? config2.before.length : 0;
+  const end = value.length - (config2.after ? config2.after.length : 0);
+  index2 = -1;
+  while (++index2 < positions.length) {
+    const position2 = positions[index2];
+    if (position2 < start || position2 >= end) {
+      continue;
+    }
+    if (position2 + 1 < end && positions[index2 + 1] === position2 + 1 && infos[position2].after && !infos[position2 + 1].before && !infos[position2 + 1].after || positions[index2 - 1] === position2 - 1 && infos[position2].before && !infos[position2 - 1].before && !infos[position2 - 1].after) {
+      continue;
+    }
+    if (start !== position2) {
+      result.push(escapeBackslashes3(value.slice(start, position2), "\\"));
+    }
+    start = position2;
+    if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config2.encode || !config2.encode.includes(value.charAt(position2)))) {
+      result.push("\\");
+    } else {
+      result.push(
+        "&#x" + value.charCodeAt(position2).toString(16).toUpperCase() + ";"
+      );
+      start++;
+    }
+  }
+  result.push(escapeBackslashes3(value.slice(start, end), config2.after));
+  return result.join("");
+}
+function numerical3(a, b) {
+  return a - b;
+}
+function escapeBackslashes3(value, after) {
+  const expression = /\\(?=[!-/:-@[-`{-~])/g;
+  const positions = [];
+  const results = [];
+  const whole = value + after;
+  let index2 = -1;
+  let start = 0;
+  let match;
+  while (match = expression.exec(whole)) {
+    positions.push(match.index);
+  }
+  while (++index2 < positions.length) {
+    if (start !== positions[index2]) {
+      results.push(value.slice(start, positions[index2]));
+    }
+    results.push("\\");
+    start = positions[index2];
+  }
+  results.push(value.slice(start));
+  return results.join("");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/track.js
+function track3(config2) {
+  const options = config2 || {};
+  const now = options.now || {};
+  let lineShift = options.lineShift || 0;
+  let line = now.line || 1;
+  let column = now.column || 1;
+  return { move, current, shift };
+  function current() {
+    return { now: { line, column }, lineShift };
+  }
+  function shift(value) {
+    lineShift += value;
+  }
+  function move(input) {
+    const value = input || "";
+    const chunks = value.split(/\r?\n|\r/g);
+    const tail = chunks[chunks.length - 1];
+    line += chunks.length - 1;
+    column = chunks.length === 1 ? column + tail.length : 1 + tail.length + lineShift;
+    return value;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/index.js
+function toMarkdown2(tree, options = {}) {
+  const state = {
+    enter,
+    indentLines: indentLines3,
+    associationId: association3,
+    containerPhrasing: containerPhrasingBound2,
+    containerFlow: containerFlowBound2,
+    createTracker: track3,
+    safe: safeBound2,
+    stack: [],
+    unsafe: [...unsafe2],
+    join: [...join2],
+    // @ts-expect-error: GFM / frontmatter are typed in `mdast` but not defined
+    // here.
+    handlers: { ...handle2 },
+    options: {},
+    indexStack: [],
+    // @ts-expect-error: add `handle` in a second.
+    handle: void 0
+  };
+  configure3(state, options);
+  if (state.options.tightDefinitions) {
+    state.join.push(joinDefinition2);
+  }
+  state.handle = zwitch("type", {
+    invalid: invalid2,
+    unknown: unknown2,
+    handlers: state.handlers
+  });
+  let result = state.handle(tree, void 0, state, {
+    before: "\n",
+    after: "\n",
+    now: { line: 1, column: 1 },
+    lineShift: 0
+  });
+  if (result && result.charCodeAt(result.length - 1) !== 10 && result.charCodeAt(result.length - 1) !== 13) {
+    result += "\n";
+  }
+  return result;
+  function enter(name) {
+    state.stack.push(name);
+    return exit3;
+    function exit3() {
+      state.stack.pop();
+    }
+  }
+}
+function invalid2(value) {
+  throw new Error("Cannot handle value `" + value + "`, expected node");
+}
+function unknown2(value) {
+  const node3 = (
+    /** @type {Nodes} */
+    value
+  );
+  throw new Error("Cannot handle unknown node `" + node3.type + "`");
+}
+function joinDefinition2(left, right) {
+  if (left.type === "definition" && left.type === right.type) {
+    return 0;
+  }
+}
+function containerPhrasingBound2(parent, info2) {
+  return containerPhrasing3(parent, this, info2);
+}
+function containerFlowBound2(parent, info2) {
+  return containerFlow3(parent, this, info2);
+}
+function safeBound2(value, config2) {
+  return safe3(this, value, config2);
+}
+
+// node_modules/mdast-util-gfm-table/lib/index.js
+function gfmTableToMarkdown2(options) {
+  const settings = options || {};
+  const padding = settings.tableCellPadding;
+  const alignDelimiters = settings.tablePipeAlign;
+  const stringLength = settings.stringLength;
+  const around = padding ? " " : "|";
+  return {
+    unsafe: [
+      { character: "\r", inConstruct: "tableCell" },
+      { character: "\n", inConstruct: "tableCell" },
+      // A pipe, when followed by a tab or space (padding), or a dash or colon
+      // (unpadded delimiter row), could result in a table.
+      { atBreak: true, character: "|", after: "[	 :-]" },
+      // A pipe in a cell must be encoded.
+      { character: "|", inConstruct: "tableCell" },
+      // A colon must be followed by a dash, in which case it could start a
+      // delimiter row.
+      { atBreak: true, character: ":", after: "-" },
+      // A delimiter row can also start with a dash, when followed by more
+      // dashes, a colon, or a pipe.
+      // This is a stricter version than the built in check for lists, thematic
+      // breaks, and setex heading underlines though:
+      // <https://github.com/syntax-tree/mdast-util-to-markdown/blob/51a2038/lib/unsafe.js#L57>
+      { atBreak: true, character: "-", after: "[:|-]" }
+    ],
+    handlers: {
+      inlineCode: inlineCodeWithTable,
+      table: handleTable,
+      tableCell: handleTableCell,
+      tableRow: handleTableRow
+    }
+  };
+  function handleTable(node3, _, state, info2) {
+    return serializeData(handleTableAsData(node3, state, info2), node3.align);
+  }
+  function handleTableRow(node3, _, state, info2) {
+    const row = handleTableRowAsData(node3, state, info2);
+    const value = serializeData([row]);
+    return value.slice(0, value.indexOf("\n"));
+  }
+  function handleTableCell(node3, _, state, info2) {
+    const exit3 = state.enter("tableCell");
+    const subexit = state.enter("phrasing");
+    const value = state.containerPhrasing(node3, {
+      ...info2,
+      before: around,
+      after: around
+    });
+    subexit();
+    exit3();
+    return value;
+  }
+  function serializeData(matrix, align) {
+    return markdownTable(matrix, {
+      align,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      alignDelimiters,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      padding,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      stringLength
+    });
+  }
+  function handleTableAsData(node3, state, info2) {
+    const children = node3.children;
+    let index2 = -1;
+    const result = [];
+    const subexit = state.enter("table");
+    while (++index2 < children.length) {
+      result[index2] = handleTableRowAsData(children[index2], state, info2);
+    }
+    subexit();
+    return result;
+  }
+  function handleTableRowAsData(node3, state, info2) {
+    const children = node3.children;
+    let index2 = -1;
+    const result = [];
+    const subexit = state.enter("tableRow");
+    while (++index2 < children.length) {
+      result[index2] = handleTableCell(children[index2], node3, state, info2);
+    }
+    subexit();
+    return result;
+  }
+  function inlineCodeWithTable(node3, parent, state) {
+    let value = handle2.inlineCode(node3, parent, state);
+    if (state.stack.includes("tableCell")) {
+      value = value.replace(/\|/g, "\\$&");
+    }
+    return value;
+  }
+}
+
+// node_modules/mdast-util-gfm-task-list-item/lib/index.js
+function gfmTaskListItemToMarkdown2() {
+  return {
+    unsafe: [{ atBreak: true, character: "-", after: "[:|-]" }],
+    handlers: { listItem: listItemWithTaskListItem2 }
+  };
+}
+function listItemWithTaskListItem2(node3, parent, state, info2) {
+  const head = node3.children[0];
+  const checkable = typeof node3.checked === "boolean" && head && head.type === "paragraph";
+  const checkbox = "[" + (node3.checked ? "x" : " ") + "] ";
+  const tracker = state.createTracker(info2);
+  if (checkable) {
+    tracker.move(checkbox);
+  }
+  let value = handle2.listItem(node3, parent, state, {
+    ...info2,
+    ...tracker.current()
+  });
+  if (checkable) {
+    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check);
+  }
+  return value;
+  function check($0) {
+    return $0 + checkbox;
+  }
+}
+
+// node_modules/mdast-util-gfm/lib/index.js
+function gfmToMarkdown2(options) {
+  return {
+    extensions: [
+      gfmAutolinkLiteralToMarkdown2(),
+      gfmFootnoteToMarkdown2(),
+      gfmStrikethroughToMarkdown2(),
+      gfmTableToMarkdown2(options),
+      gfmTaskListItemToMarkdown2()
+    ]
+  };
+}
+
 // src/summary.ts
 var BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 function renderSummary({
@@ -45439,7 +47599,7 @@ function renderSummary({
   const body = release.body ?? "";
   const name = release.name ?? "";
   const hasTagger = (tagger == null ? void 0 : tagger.avatarUrl) && (tagger == null ? void 0 : tagger.login);
-  const rendered = toMarkdown(
+  const rendered = toMarkdown2(
     {
       type: "root",
       children: [
@@ -45451,7 +47611,7 @@ function renderSummary({
       ]
     },
     {
-      extensions: [gfmToMarkdown()]
+      extensions: [gfmToMarkdown2()]
     }
   );
   return rendered.replace(BODY_TOKEN, body);
@@ -45636,9 +47796,9 @@ function renderSummary({
       children: [
         {
           type: "tableRow",
-          children: headings.map((heading2) => ({
+          children: headings.map((heading3) => ({
             type: "tableCell",
-            children: heading2
+            children: heading3
           }))
         },
         ...rows.map(
@@ -45658,7 +47818,7 @@ function renderSummary({
 }
 
 // src/tags.ts
-import { join as join2 } from "path";
+import { join as join3 } from "path";
 async function getTagger({
   graphql,
   owner,
@@ -45700,7 +47860,7 @@ async function getTagHtmlUrl({
 }) {
   const { data } = await repos.get({ owner, repo });
   const url = new URL(data.html_url);
-  url.pathname = join2(url.pathname, "tree", tag);
+  url.pathname = join3(url.pathname, "tree", tag);
   return url.toString();
 }
 
