@@ -1,10 +1,10 @@
 import {
   AlignType,
   PhrasingContent,
+  RootContent,
   Table,
   TableCell,
   TableRow,
-  RootContent,
 } from "mdast";
 import { gfmToMarkdown } from "mdast-util-gfm";
 import { toMarkdown } from "mdast-util-to-markdown";
