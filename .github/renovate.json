@@ -1,0 +1,6 @@
+{
+  "extends": ["github>ghalactic/renovate"],
+  "postUpgradeTasks": {
+    "commands": ["make precommit"]
+  }
+}
