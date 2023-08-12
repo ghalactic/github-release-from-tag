@@ -12,8 +12,8 @@
     "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/glob": "^0.4.0",
-    "@octokit/action": "^6.0.4",
-    "@octokit/plugin-retry": "^5.0.5",
+    "@octokit/action": "^4.0.10",
+    "@octokit/plugin-retry": "^4.1.6",
     "ajv": "^8.11.0",
     "js-yaml": "^4.1.0",
     "mdast-util-gfm": "^3.0.0",
@@ -24,7 +24,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@octokit/types": "^11.1.0",
+    "@octokit/types": "^10.0.0",
     "@types/jest": "^29.5.3",
     "@types/jest-environment-puppeteer": "^5.0.3",
     "@types/js-yaml": "^4.0.5",
