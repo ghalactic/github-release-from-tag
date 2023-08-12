@@ -1,6 +1,6 @@
 {
   "extends": ["github>ghalactic/renovate"],
   "postUpgradeTasks": {
-    "commands": ["make precommit"]
+    "commands": ["npm run renovate-post-update"]
   }
 }
