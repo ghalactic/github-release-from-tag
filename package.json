@@ -34,7 +34,7 @@
     "esbuild": "^0.18.11",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
-    "jest": "^29.6.1",
+    "jest": "^29.6.2",
     "jest-extended": "^4.0.0",
     "jest-mock-process": "^2.0.0",
     "jest-puppeteer": "^9.0.0",
