@@ -4,6 +4,10 @@
   "scripts": {
     "renovate-post-update": "rm -rf dist && node script/build.js dist/main.js"
   },
+  "engines": {
+    "node": "^16",
+    "npm": "^8"
+  },
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
