@@ -1,7 +1,7 @@
 {
+  "description": "DO NOT EDIT - This file is managed by ghalactic/repos.",
   "extends": ["github>ghalactic/renovate"],
   "postUpgradeTasks": {
-    "commands": ["npm run renovate-post-update"],
-    "fileFilters": ["dist/main.js", "dist/main.js.map"]
+    "commands": ["npm run renovate-post-update"]
   }
 }
