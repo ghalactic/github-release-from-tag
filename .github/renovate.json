@@ -1,6 +1,7 @@
 {
   "extends": ["github>ghalactic/renovate"],
   "postUpgradeTasks": {
-    "commands": ["npm run renovate-post-update"]
+    "commands": ["npm run renovate-post-update"],
+    "fileFilters": ["dist/main.js", "dist/main.js.map"]
   }
 }
