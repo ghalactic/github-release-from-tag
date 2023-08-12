@@ -5,7 +5,7 @@
     "renovate-post-update": "rm -rf dist && node script/build.js dist/main.js"
   },
   "engines": {
-    "node": "^16",
+    "node": "^18.0.0",
     "npm": "^8"
   },
   "dependencies": {
