@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "renovate-post-update": "rm -rf dist && node script/build.js dist/main.js"
+    "renovate-post-upgrade": "rm -rf dist && node script/build.js dist/main.js"
   },
   "engines": {
     "node": "^16",
