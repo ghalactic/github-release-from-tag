@@ -7,6 +7,15 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v4.1.1] - 2023-08-26
+
+[v4.1.1]: https://github.com/ghalactic/github-release-from-tag/releases/v4.1.1
+
+### Fixed
+
+- Fixed internal GitHub Actions shared workflow permissions issues. No effect on
+  the action itself.
+
 ## [v4.1.0] - 2023-08-26
 
 [v4.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v4.1.0
