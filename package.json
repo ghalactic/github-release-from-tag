@@ -43,6 +43,6 @@
     "prettier-plugin-organize-imports": "^3.2.3",
     "puppeteer": "^21.1.0",
     "typescript": "^5.2.2",
-    "unified": "^10.1.2"
+    "unified": "^11.0.0"
   }
 }

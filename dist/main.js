@@ -43544,7 +43544,7 @@ function bail(error2) {
   }
 }
 
-// node_modules/unified/lib/index.js
+// node_modules/remark/node_modules/unified/lib/index.js
 var import_is_buffer2 = __toESM(require_is_buffer(), 1);
 var import_extend = __toESM(require_extend(), 1);
 
@@ -44038,7 +44038,7 @@ function buffer(value) {
   return (0, import_is_buffer.default)(value);
 }
 
-// node_modules/unified/lib/index.js
+// node_modules/remark/node_modules/unified/lib/index.js
 var unified = base().freeze();
 var own = {}.hasOwnProperty;
 function base() {
