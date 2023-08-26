@@ -7,6 +7,14 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v4.1.0] - 2023-08-26
+
+[v4.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v4.1.0
+
+### Changed
+
+- This action now runs on Node.js `20.x` instead of `16.x`.
+
 ## [v4.0.1] - 2023-05-21
 
 [v4.0.1]: https://github.com/ghalactic/github-release-from-tag/releases/v4.0.1
