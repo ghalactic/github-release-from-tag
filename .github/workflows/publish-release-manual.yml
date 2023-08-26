@@ -19,5 +19,5 @@ jobs:
       discussions: write
     with:
       discussionCategory: Releases
-      useReleaseActionMain: true
+      releaseActionVersion: main
       tag: ${{ github.event.inputs.tag }}
