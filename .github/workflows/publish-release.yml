@@ -16,5 +16,5 @@ jobs:
       discussions: write
     with:
       discussionCategory: Releases
-      releaseActionVersion: main
+      useReleaseActionMain: true
       tag: ${{ github.ref_name }}
