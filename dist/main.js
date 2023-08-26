@@ -13389,7 +13389,7 @@ var require_codegen = __commonJS({
         return "{" + opts._n + super.render(opts) + "}" + opts._n;
       }
     };
-    var Root2 = class extends ParentNode {
+    var Root = class extends ParentNode {
     };
     var Else = class extends BlockNode {
     };
@@ -13578,7 +13578,7 @@ var require_codegen = __commonJS({
         this.opts = { ...opts, _n: opts.lines ? "\n" : "" };
         this._extScope = extScope;
         this._scope = new scope_1.Scope({ parent: extScope });
-        this._nodes = [new Root2()];
+        this._nodes = [new Root()];
       }
       toString() {
         return this._root.render(this.opts);
@@ -56263,15 +56263,14 @@ function visit2(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
 
 // src/markdown.ts
 var SOFT_BREAK_PATTERN = /$[^$]/gms;
-var stripSoftBreaks = () => {
-  return (tree) => {
-    visit2(tree, "text", (node4) => {
-      node4.value = node4.value.replace(SOFT_BREAK_PATTERN, " ");
-    });
-  };
-};
 function createProcessor() {
-  const createRemark = remark().use(remarkGfm).use(stripSoftBreaks).freeze();
+  const createRemark = remark().use(remarkGfm).use(() => {
+    return (tree) => {
+      visit2(tree, "text", (node4) => {
+        node4.value = node4.value.replace(SOFT_BREAK_PATTERN, " ");
+      });
+    };
+  }).freeze();
   return async function process2(original) {
     const processor = createRemark();
     return String(await processor.process(original));
