@@ -7,6 +7,16 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.0.0] - 2023-08-28
+
+[v5.0.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.0.0
+
+### Changed
+
+- This action now runs on the `node20` runner instead of `node16`. If you are
+  using this action on GitHub Enterprise Server, you will need to ensure your
+  runners support `node20` before upgrading to this version.
+
 ## [v4.2.0] - 2023-08-28
 
 [v4.2.0]: https://github.com/ghalactic/github-release-from-tag/releases/v4.2.0
