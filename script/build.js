@@ -19,7 +19,7 @@ await build({
   bundle: true,
   sourcemap: true,
   platform: "node",
-  target: "node20",
+  target: "node16",
   format: "esm",
   outfile,
   banner: {

@@ -201,6 +201,7 @@ export async function getDiscussionReactionGroupsByRelease(
 export async function getReleaseByTag(tag: string): Promise<ReleaseData> {
   const octokit = createOctokit();
 
+  // @ts-expect-error - Probably https://github.com/octokit/octokit.js/issues/2439
   const pages = octokit.paginate.iterator(octokit.rest.repos.listReleases, {
     owner,
     repo,
@@ -208,6 +209,7 @@ export async function getReleaseByTag(tag: string): Promise<ReleaseData> {
 
   for await (const { data: tags } of pages) {
     for (const data of tags) {
+      // @ts-expect-error - Probably https://github.com/octokit/octokit.js/issues/2439
       if (data.tag_name === tag) return data;
     }
   }
@@ -240,6 +242,7 @@ export async function listAnnotationsByWorkflowRun(
       `Unable to locate check runs for check suite ${checkSuiteId}`,
     );
 
+  // @ts-expect-error - Probably https://github.com/octokit/octokit.js/issues/2439
   return octokit.paginate(octokit.rest.checks.listAnnotations, {
     owner,
     repo,
