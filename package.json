@@ -19,7 +19,7 @@
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.0.0",
     "mime-types": "^2.1.35",
-    "remark": "^14.0.2",
+    "remark": "^15.0.0",
     "remark-gfm": "^3.0.1",
     "unist-util-visit": "^5.0.0"
   },
