@@ -16081,7 +16081,7 @@ var require_uri_all = __commonJS({
       function error$1(type2) {
         throw new RangeError(errors[type2]);
       }
-      function map9(array, fn) {
+      function map8(array, fn) {
         var result = [];
         var length = array.length;
         while (length--) {
@@ -16098,7 +16098,7 @@ var require_uri_all = __commonJS({
         }
         string3 = string3.replace(regexSeparators, ".");
         var labels = string3.split(".");
-        var encoded = map9(labels, fn).join(".");
+        var encoded = map8(labels, fn).join(".");
         return result + encoded;
       }
       function ucs2decode(string3) {
@@ -16153,7 +16153,7 @@ var require_uri_all = __commonJS({
         }
         return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
       };
-      var decode5 = function decode6(input) {
+      var decode4 = function decode5(input) {
         var output = [];
         var inputLength = input.length;
         var i = 0;
@@ -16327,7 +16327,7 @@ var require_uri_all = __commonJS({
       };
       var toUnicode = function toUnicode2(input) {
         return mapDomain(input, function(string3) {
-          return regexPunycode.test(string3) ? decode5(string3.slice(4).toLowerCase()) : string3;
+          return regexPunycode.test(string3) ? decode4(string3.slice(4).toLowerCase()) : string3;
         });
       };
       var toASCII = function toASCII2(input) {
@@ -16353,7 +16353,7 @@ var require_uri_all = __commonJS({
           "decode": ucs2decode,
           "encode": ucs2encode
         },
-        "decode": decode5,
+        "decode": decode4,
         "encode": encode,
         "toASCII": toASCII,
         "toUnicode": toUnicode
@@ -25429,9 +25429,9 @@ var require_utils2 = __commonJS({
       }
     };
     function convertToUTF8(data, charset, hint) {
-      const decode5 = getDecoder(charset);
-      if (decode5)
-        return decode5(data, hint);
+      const decode4 = getDecoder(charset);
+      if (decode4)
+        return decode4(data, hint);
     }
     function basename2(path2) {
       if (typeof path2 !== "string")
@@ -38962,7 +38962,7 @@ var require_util5 = __commonJS({
           if (encoding === "failure") {
             encoding = "UTF-8";
           }
-          return decode5(bytes, encoding);
+          return decode4(bytes, encoding);
         }
         case "ArrayBuffer": {
           const sequence = combineByteSequences(bytes);
@@ -38979,7 +38979,7 @@ var require_util5 = __commonJS({
         }
       }
     }
-    function decode5(ioQueue, encoding) {
+    function decode4(ioQueue, encoding) {
       const bytes = combineByteSequences(ioQueue);
       const BOMEncoding = BOMSniffing(bytes);
       let slice = 0;
@@ -42734,7 +42734,7 @@ var require_light = __commonJS({
       var Batcher_1 = Batcher;
       var require$$4$1 = () => console.log("You must import the full version of Bottleneck in order to use this feature.");
       var require$$8 = getCjsExportFromNamespace(version$2);
-      var Bottleneck, DEFAULT_PRIORITY$1, Events$4, Job$1, LocalDatastore$1, NUM_PRIORITIES$1, Queues$1, RedisDatastore$1, States$1, Sync$1, parser$5, splice4 = [].splice;
+      var Bottleneck, DEFAULT_PRIORITY$1, Events$4, Job$1, LocalDatastore$1, NUM_PRIORITIES$1, Queues$1, RedisDatastore$1, States$1, Sync$1, parser$5, splice3 = [].splice;
       NUM_PRIORITIES$1 = 10;
       DEFAULT_PRIORITY$1 = 5;
       parser$5 = parser;
@@ -43029,10 +43029,10 @@ var require_light = __commonJS({
           submit(...args) {
             var cb, fn, job, options, ref, ref1, task;
             if (typeof args[0] === "function") {
-              ref = args, [fn, ...args] = ref, [cb] = splice4.call(args, -1);
+              ref = args, [fn, ...args] = ref, [cb] = splice3.call(args, -1);
               options = parser$5.load({}, this.jobDefaults);
             } else {
-              ref1 = args, [options, fn, ...args] = ref1, [cb] = splice4.call(args, -1);
+              ref1 = args, [options, fn, ...args] = ref1, [cb] = splice3.call(args, -1);
               options = parser$5.load(options, this.jobDefaults);
             }
             task = (...args2) => {
@@ -47660,9 +47660,9 @@ function tokenizeCodeText(effects, ok4, nok) {
       return sequenceOpen;
     }
     effects.exit("codeTextSequence");
-    return between4(code4);
+    return between3(code4);
   }
-  function between4(code4) {
+  function between3(code4) {
     if (code4 === null) {
       return nok(code4);
     }
@@ -47670,7 +47670,7 @@ function tokenizeCodeText(effects, ok4, nok) {
       effects.enter("space");
       effects.consume(code4);
       effects.exit("space");
-      return between4;
+      return between3;
     }
     if (code4 === 96) {
       token = effects.enter("codeTextSequence");
@@ -47681,7 +47681,7 @@ function tokenizeCodeText(effects, ok4, nok) {
       effects.enter("lineEnding");
       effects.consume(code4);
       effects.exit("lineEnding");
-      return between4;
+      return between3;
     }
     effects.enter("codeTextData");
     return data(code4);
@@ -47689,7 +47689,7 @@ function tokenizeCodeText(effects, ok4, nok) {
   function data(code4) {
     if (code4 === null || code4 === 32 || code4 === 96 || markdownLineEnding(code4)) {
       effects.exit("codeTextData");
-      return between4(code4);
+      return between3(code4);
     }
     effects.consume(code4);
     return data;
@@ -50104,11 +50104,11 @@ function createTokenizer(parser, initialize, from) {
         // @ts-expect-error Looks like a construct.
         handleListOfConstructs([constructs3])
       ) : handleMapOfConstructs(constructs3);
-      function handleMapOfConstructs(map9) {
+      function handleMapOfConstructs(map8) {
         return start;
         function start(code4) {
-          const def = code4 !== null && map9[code4];
-          const all4 = code4 !== null && map9.null;
+          const def = code4 !== null && map8[code4];
+          const all4 = code4 !== null && map8.null;
           const list5 = [
             // To do: add more extension tests.
             /* c8 ignore next 2 */
@@ -50583,7 +50583,7 @@ function compiler(options) {
       image: opener(image3),
       label: buffer2,
       link: opener(link3),
-      listItem: opener(listItem4),
+      listItem: opener(listItem3),
       listItemValue: onenterlistitemvalue,
       listOrdered: opener(list5, onenterlistordered),
       listUnordered: opener(list5),
@@ -50724,7 +50724,7 @@ function compiler(options) {
     let index3 = start - 1;
     let containerBalance = -1;
     let listSpread = false;
-    let listItem5;
+    let listItem4;
     let lineIndex;
     let firstBlankLineIndex;
     let atMarker;
@@ -50739,7 +50739,7 @@ function compiler(options) {
         atMarker = void 0;
       } else if (event[1].type === "lineEndingBlank") {
         if (event[0] === "enter") {
-          if (listItem5 && !atMarker && !containerBalance && !firstBlankLineIndex) {
+          if (listItem4 && !atMarker && !containerBalance && !firstBlankLineIndex) {
             firstBlankLineIndex = index3;
           }
           atMarker = void 0;
@@ -50749,7 +50749,7 @@ function compiler(options) {
         atMarker = void 0;
       }
       if (!containerBalance && event[0] === "enter" && event[1].type === "listItemPrefix" || containerBalance === -1 && event[0] === "exit" && (event[1].type === "listUnordered" || event[1].type === "listOrdered")) {
-        if (listItem5) {
+        if (listItem4) {
           let tailIndex = index3;
           lineIndex = void 0;
           while (tailIndex--) {
@@ -50769,25 +50769,25 @@ function compiler(options) {
             }
           }
           if (firstBlankLineIndex && (!lineIndex || firstBlankLineIndex < lineIndex)) {
-            listItem5._spread = true;
+            listItem4._spread = true;
           }
-          listItem5.end = Object.assign(
+          listItem4.end = Object.assign(
             {},
             lineIndex ? events[lineIndex][1].start : event[1].end
           );
-          events.splice(lineIndex || index3, 0, ["exit", listItem5, event[2]]);
+          events.splice(lineIndex || index3, 0, ["exit", listItem4, event[2]]);
           index3++;
           length++;
         }
         if (event[1].type === "listItemPrefix") {
-          listItem5 = {
+          listItem4 = {
             type: "listItem",
             _spread: false,
             start: Object.assign({}, event[1].start),
             // @ts-expect-error: we’ll add `end` in a second.
             end: void 0
           };
-          events.splice(index3, 0, ["enter", listItem5, event[2]]);
+          events.splice(index3, 0, ["enter", listItem4, event[2]]);
           index3++;
           length++;
           firstBlankLineIndex = void 0;
@@ -51160,7 +51160,7 @@ function compiler(options) {
       children: []
     };
   }
-  function listItem4(token) {
+  function listItem3(token) {
     return {
       type: "listItem",
       spread: token._spread,
@@ -51666,7 +51666,7 @@ var visitParents = (
       visitor = test;
       test = null;
     }
-    const is4 = convert(test);
+    const is3 = convert(test);
     const step = reverse ? -1 : 1;
     factory(tree, void 0, [])();
     function factory(node4, index3, parents) {
@@ -51689,7 +51689,7 @@ var visitParents = (
         let subresult;
         let offset;
         let grandparents;
-        if (!test || is4(node4, index3, parents[parents.length - 1] || null)) {
+        if (!test || is3(node4, index3, parents[parents.length - 1] || null)) {
           result = toResult(visitor(node4, parents));
           if (result[0] === EXIT) {
             return result;
@@ -52279,11 +52279,11 @@ function listItem(node4, parent, state, info2) {
   const exit3 = state.enter("listItem");
   const value = state.indentLines(
     state.containerFlow(node4, tracker.current()),
-    map9
+    map8
   );
   exit3();
   return value;
-  function map9(line, index3, blank) {
+  function map8(line, index3, blank) {
     if (index3) {
       return (blank ? "" : " ".repeat(size)) + line;
     }
@@ -52701,7 +52701,7 @@ function between(left, right, parent, state) {
 
 // node_modules/remark-stringify/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
 var eol = /\r?\n|\r/g;
-function indentLines(value, map9) {
+function indentLines(value, map8) {
   const result = [];
   let start = 0;
   let line = 0;
@@ -52715,7 +52715,7 @@ function indentLines(value, map9) {
   one4(value.slice(start));
   return result.join("");
   function one4(value2) {
-    result.push(map9(value2, line, !value2));
+    result.push(map8(value2, line, !value2));
   }
 }
 
@@ -52922,7 +52922,2467 @@ function remarkStringify(options) {
 // node_modules/remark/index.js
 var remark = unified().use(remarkParse).use(remarkStringify).freeze();
 
-// node_modules/micromark-extension-gfm/node_modules/micromark-util-chunked/index.js
+// node_modules/ccount/index.js
+function ccount(value, character) {
+  const source = String(value);
+  if (typeof character !== "string") {
+    throw new TypeError("Expected character");
+  }
+  let count = 0;
+  let index3 = source.indexOf(character);
+  while (index3 !== -1) {
+    count++;
+    index3 = source.indexOf(character, index3 + character.length);
+  }
+  return count;
+}
+
+// node_modules/devlop/lib/default.js
+function ok2() {
+}
+
+// node_modules/micromark-util-character/index.js
+var unicodePunctuationInternal = regexCheck2(/\p{P}/u);
+var asciiAlpha2 = regexCheck2(/[A-Za-z]/);
+var asciiAlphanumeric2 = regexCheck2(/[\dA-Za-z]/);
+var asciiAtext2 = regexCheck2(/[#-'*+\--9=?A-Z^-~]/);
+function asciiControl2(code4) {
+  return (
+    // Special whitespace codes (which have negative values), C0 and Control
+    // character DEL
+    code4 !== null && (code4 < 32 || code4 === 127)
+  );
+}
+var asciiDigit2 = regexCheck2(/\d/);
+var asciiHexDigit2 = regexCheck2(/[\dA-Fa-f]/);
+var asciiPunctuation2 = regexCheck2(/[!-/:-@[-`{-~]/);
+function markdownLineEnding2(code4) {
+  return code4 !== null && code4 < -2;
+}
+function markdownLineEndingOrSpace2(code4) {
+  return code4 !== null && (code4 < 0 || code4 === 32);
+}
+function markdownSpace2(code4) {
+  return code4 === -2 || code4 === -1 || code4 === 32;
+}
+function unicodePunctuation2(code4) {
+  return asciiPunctuation2(code4) || unicodePunctuationInternal(code4);
+}
+var unicodeWhitespace2 = regexCheck2(/\s/);
+function regexCheck2(regex) {
+  return check;
+  function check(code4) {
+    return code4 !== null && code4 > -1 && regex.test(String.fromCharCode(code4));
+  }
+}
+
+// node_modules/escape-string-regexp/index.js
+function escapeStringRegexp(string3) {
+  if (typeof string3 !== "string") {
+    throw new TypeError("Expected a string");
+  }
+  return string3.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
+}
+
+// node_modules/unist-util-is/lib/index.js
+var convert2 = (
+  // Note: overloads in JSDoc can’t yet use different `@template`s.
+  /**
+   * @type {(
+   *   (<Condition extends string>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & {type: Condition}) &
+   *   (<Condition extends Props>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Condition) &
+   *   (<Condition extends TestFunction>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Predicate<Condition, Node>) &
+   *   ((test?: null | undefined) => (node?: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node) &
+   *   ((test?: Test) => Check)
+   * )}
+   */
+  /**
+   * @param {Test} [test]
+   * @returns {Check}
+   */
+  function(test) {
+    if (test === null || test === void 0) {
+      return ok3;
+    }
+    if (typeof test === "function") {
+      return castFactory2(test);
+    }
+    if (typeof test === "object") {
+      return Array.isArray(test) ? anyFactory2(test) : propsFactory2(test);
+    }
+    if (typeof test === "string") {
+      return typeFactory2(test);
+    }
+    throw new Error("Expected function, string, or object as test");
+  }
+);
+function anyFactory2(tests) {
+  const checks = [];
+  let index3 = -1;
+  while (++index3 < tests.length) {
+    checks[index3] = convert2(tests[index3]);
+  }
+  return castFactory2(any);
+  function any(...parameters) {
+    let index4 = -1;
+    while (++index4 < checks.length) {
+      if (checks[index4].apply(this, parameters))
+        return true;
+    }
+    return false;
+  }
+}
+function propsFactory2(check) {
+  const checkAsRecord = (
+    /** @type {Record<string, unknown>} */
+    check
+  );
+  return castFactory2(all4);
+  function all4(node4) {
+    const nodeAsRecord = (
+      /** @type {Record<string, unknown>} */
+      /** @type {unknown} */
+      node4
+    );
+    let key;
+    for (key in check) {
+      if (nodeAsRecord[key] !== checkAsRecord[key])
+        return false;
+    }
+    return true;
+  }
+}
+function typeFactory2(check) {
+  return castFactory2(type2);
+  function type2(node4) {
+    return node4 && node4.type === check;
+  }
+}
+function castFactory2(testFunction) {
+  return check;
+  function check(value, index3, parent) {
+    return Boolean(
+      looksLikeANode(value) && testFunction.call(
+        this,
+        value,
+        typeof index3 === "number" ? index3 : void 0,
+        parent || void 0
+      )
+    );
+  }
+}
+function ok3() {
+  return true;
+}
+function looksLikeANode(value) {
+  return value !== null && typeof value === "object" && "type" in value;
+}
+
+// node_modules/unist-util-visit-parents/lib/color.node.js
+function color2(d) {
+  return "\x1B[33m" + d + "\x1B[39m";
+}
+
+// node_modules/unist-util-visit-parents/lib/index.js
+var empty = [];
+var CONTINUE2 = true;
+var EXIT2 = false;
+var SKIP2 = "skip";
+function visitParents2(tree, test, visitor, reverse) {
+  let check;
+  if (typeof test === "function" && typeof visitor !== "function") {
+    reverse = visitor;
+    visitor = test;
+  } else {
+    check = test;
+  }
+  const is3 = convert2(check);
+  const step = reverse ? -1 : 1;
+  factory(tree, void 0, [])();
+  function factory(node4, index3, parents) {
+    const value = (
+      /** @type {Record<string, unknown>} */
+      node4 && typeof node4 === "object" ? node4 : {}
+    );
+    if (typeof value.type === "string") {
+      const name = (
+        // `hast`
+        typeof value.tagName === "string" ? value.tagName : (
+          // `xast`
+          typeof value.name === "string" ? value.name : void 0
+        )
+      );
+      Object.defineProperty(visit3, "name", {
+        value: "node (" + color2(node4.type + (name ? "<" + name + ">" : "")) + ")"
+      });
+    }
+    return visit3;
+    function visit3() {
+      let result = empty;
+      let subresult;
+      let offset;
+      let grandparents;
+      if (!test || is3(node4, index3, parents[parents.length - 1] || void 0)) {
+        result = toResult2(visitor(node4, parents));
+        if (result[0] === EXIT2) {
+          return result;
+        }
+      }
+      if ("children" in node4 && node4.children) {
+        const nodeAsParent = (
+          /** @type {UnistParent} */
+          node4
+        );
+        if (nodeAsParent.children && result[0] !== SKIP2) {
+          offset = (reverse ? nodeAsParent.children.length : -1) + step;
+          grandparents = parents.concat(nodeAsParent);
+          while (offset > -1 && offset < nodeAsParent.children.length) {
+            const child = nodeAsParent.children[offset];
+            subresult = factory(child, offset, grandparents)();
+            if (subresult[0] === EXIT2) {
+              return subresult;
+            }
+            offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
+          }
+        }
+      }
+      return result;
+    }
+  }
+}
+function toResult2(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === "number") {
+    return [CONTINUE2, value];
+  }
+  return value === null || value === void 0 ? empty : [value];
+}
+
+// node_modules/mdast-util-find-and-replace/lib/index.js
+function findAndReplace(tree, list5, options) {
+  const settings = options || {};
+  const ignored = convert2(settings.ignore || []);
+  const pairs2 = toPairs(list5);
+  let pairIndex = -1;
+  while (++pairIndex < pairs2.length) {
+    visitParents2(tree, "text", visitor);
+  }
+  function visitor(node4, parents) {
+    let index3 = -1;
+    let grandparent;
+    while (++index3 < parents.length) {
+      const parent = parents[index3];
+      const siblings = grandparent ? grandparent.children : void 0;
+      if (ignored(
+        parent,
+        siblings ? siblings.indexOf(parent) : void 0,
+        grandparent
+      )) {
+        return;
+      }
+      grandparent = parent;
+    }
+    if (grandparent) {
+      return handler(node4, parents);
+    }
+  }
+  function handler(node4, parents) {
+    const parent = parents[parents.length - 1];
+    const find = pairs2[pairIndex][0];
+    const replace2 = pairs2[pairIndex][1];
+    let start = 0;
+    const siblings = parent.children;
+    const index3 = siblings.indexOf(node4);
+    let change = false;
+    let nodes = [];
+    find.lastIndex = 0;
+    let match = find.exec(node4.value);
+    while (match) {
+      const position3 = match.index;
+      const matchObject = {
+        index: match.index,
+        input: match.input,
+        stack: [...parents, node4]
+      };
+      let value = replace2(...match, matchObject);
+      if (typeof value === "string") {
+        value = value.length > 0 ? { type: "text", value } : void 0;
+      }
+      if (value === false) {
+        find.lastIndex = position3 + 1;
+      } else {
+        if (start !== position3) {
+          nodes.push({
+            type: "text",
+            value: node4.value.slice(start, position3)
+          });
+        }
+        if (Array.isArray(value)) {
+          nodes.push(...value);
+        } else if (value) {
+          nodes.push(value);
+        }
+        start = position3 + match[0].length;
+        change = true;
+      }
+      if (!find.global) {
+        break;
+      }
+      match = find.exec(node4.value);
+    }
+    if (change) {
+      if (start < node4.value.length) {
+        nodes.push({ type: "text", value: node4.value.slice(start) });
+      }
+      parent.children.splice(index3, 1, ...nodes);
+    } else {
+      nodes = [node4];
+    }
+    return index3 + nodes.length;
+  }
+}
+function toPairs(tupleOrList) {
+  const result = [];
+  if (!Array.isArray(tupleOrList)) {
+    throw new TypeError("Expected find and replace tuple or list of tuples");
+  }
+  const list5 = !tupleOrList[0] || Array.isArray(tupleOrList[0]) ? tupleOrList : [tupleOrList];
+  let index3 = -1;
+  while (++index3 < list5.length) {
+    const tuple = list5[index3];
+    result.push([toExpression(tuple[0]), toFunction(tuple[1])]);
+  }
+  return result;
+}
+function toExpression(find) {
+  return typeof find === "string" ? new RegExp(escapeStringRegexp(find), "g") : find;
+}
+function toFunction(replace2) {
+  return typeof replace2 === "function" ? replace2 : function() {
+    return replace2;
+  };
+}
+
+// node_modules/mdast-util-gfm-autolink-literal/lib/index.js
+var inConstruct = "phrasing";
+var notInConstruct = ["autolink", "link", "image", "label"];
+function gfmAutolinkLiteralFromMarkdown() {
+  return {
+    transforms: [transformGfmAutolinkLiterals],
+    enter: {
+      literalAutolink: enterLiteralAutolink,
+      literalAutolinkEmail: enterLiteralAutolinkValue,
+      literalAutolinkHttp: enterLiteralAutolinkValue,
+      literalAutolinkWww: enterLiteralAutolinkValue
+    },
+    exit: {
+      literalAutolink: exitLiteralAutolink,
+      literalAutolinkEmail: exitLiteralAutolinkEmail,
+      literalAutolinkHttp: exitLiteralAutolinkHttp,
+      literalAutolinkWww: exitLiteralAutolinkWww
+    }
+  };
+}
+function gfmAutolinkLiteralToMarkdown() {
+  return {
+    unsafe: [
+      {
+        character: "@",
+        before: "[+\\-.\\w]",
+        after: "[\\-.\\w]",
+        inConstruct,
+        notInConstruct
+      },
+      {
+        character: ".",
+        before: "[Ww]",
+        after: "[\\-.\\w]",
+        inConstruct,
+        notInConstruct
+      },
+      {
+        character: ":",
+        before: "[ps]",
+        after: "\\/",
+        inConstruct,
+        notInConstruct
+      }
+    ]
+  };
+}
+function enterLiteralAutolink(token) {
+  this.enter({ type: "link", title: null, url: "", children: [] }, token);
+}
+function enterLiteralAutolinkValue(token) {
+  this.config.enter.autolinkProtocol.call(this, token);
+}
+function exitLiteralAutolinkHttp(token) {
+  this.config.exit.autolinkProtocol.call(this, token);
+}
+function exitLiteralAutolinkWww(token) {
+  this.config.exit.data.call(this, token);
+  const node4 = this.stack[this.stack.length - 1];
+  ok2(node4.type === "link");
+  node4.url = "http://" + this.sliceSerialize(token);
+}
+function exitLiteralAutolinkEmail(token) {
+  this.config.exit.autolinkEmail.call(this, token);
+}
+function exitLiteralAutolink(token) {
+  this.exit(token);
+}
+function transformGfmAutolinkLiterals(tree) {
+  findAndReplace(
+    tree,
+    [
+      [/(https?:\/\/|www(?=\.))([-.\w]+)([^ \t\r\n]*)/gi, findUrl],
+      [/([-.\w+]+)@([-\w]+(?:\.[-\w]+)+)/g, findEmail]
+    ],
+    { ignore: ["link", "linkReference"] }
+  );
+}
+function findUrl(_, protocol, domain2, path2, match) {
+  let prefix = "";
+  if (!previous2(match)) {
+    return false;
+  }
+  if (/^w/i.test(protocol)) {
+    domain2 = protocol + domain2;
+    protocol = "";
+    prefix = "http://";
+  }
+  if (!isCorrectDomain(domain2)) {
+    return false;
+  }
+  const parts = splitUrl(domain2 + path2);
+  if (!parts[0])
+    return false;
+  const result = {
+    type: "link",
+    title: null,
+    url: prefix + protocol + parts[0],
+    children: [{ type: "text", value: protocol + parts[0] }]
+  };
+  if (parts[1]) {
+    return [result, { type: "text", value: parts[1] }];
+  }
+  return result;
+}
+function findEmail(_, atext, label, match) {
+  if (
+    // Not an expected previous character.
+    !previous2(match, true) || // Label ends in not allowed character.
+    /[-\d_]$/.test(label)
+  ) {
+    return false;
+  }
+  return {
+    type: "link",
+    title: null,
+    url: "mailto:" + atext + "@" + label,
+    children: [{ type: "text", value: atext + "@" + label }]
+  };
+}
+function isCorrectDomain(domain2) {
+  const parts = domain2.split(".");
+  if (parts.length < 2 || parts[parts.length - 1] && (/_/.test(parts[parts.length - 1]) || !/[a-zA-Z\d]/.test(parts[parts.length - 1])) || parts[parts.length - 2] && (/_/.test(parts[parts.length - 2]) || !/[a-zA-Z\d]/.test(parts[parts.length - 2]))) {
+    return false;
+  }
+  return true;
+}
+function splitUrl(url) {
+  const trailExec = /[!"&'),.:;<>?\]}]+$/.exec(url);
+  if (!trailExec) {
+    return [url, void 0];
+  }
+  url = url.slice(0, trailExec.index);
+  let trail2 = trailExec[0];
+  let closingParenIndex = trail2.indexOf(")");
+  const openingParens = ccount(url, "(");
+  let closingParens = ccount(url, ")");
+  while (closingParenIndex !== -1 && openingParens > closingParens) {
+    url += trail2.slice(0, closingParenIndex + 1);
+    trail2 = trail2.slice(closingParenIndex + 1);
+    closingParenIndex = trail2.indexOf(")");
+    closingParens++;
+  }
+  return [url, trail2];
+}
+function previous2(match, email) {
+  const code4 = match.input.charCodeAt(match.index - 1);
+  return (match.index === 0 || unicodeWhitespace2(code4) || unicodePunctuation2(code4)) && (!email || code4 !== 47);
+}
+
+// node_modules/micromark-util-normalize-identifier/index.js
+function normalizeIdentifier2(value) {
+  return value.replace(/[\t\n\r ]+/g, " ").replace(/^ | $/g, "").toLowerCase().toUpperCase();
+}
+
+// node_modules/mdast-util-gfm-footnote/lib/index.js
+footnoteReference.peek = footnoteReferencePeek;
+function gfmFootnoteFromMarkdown() {
+  return {
+    enter: {
+      gfmFootnoteDefinition: enterFootnoteDefinition,
+      gfmFootnoteDefinitionLabelString: enterFootnoteDefinitionLabelString,
+      gfmFootnoteCall: enterFootnoteCall,
+      gfmFootnoteCallString: enterFootnoteCallString
+    },
+    exit: {
+      gfmFootnoteDefinition: exitFootnoteDefinition,
+      gfmFootnoteDefinitionLabelString: exitFootnoteDefinitionLabelString,
+      gfmFootnoteCall: exitFootnoteCall,
+      gfmFootnoteCallString: exitFootnoteCallString
+    }
+  };
+}
+function gfmFootnoteToMarkdown() {
+  return {
+    // This is on by default already.
+    unsafe: [{ character: "[", inConstruct: ["phrasing", "label", "reference"] }],
+    handlers: { footnoteDefinition, footnoteReference }
+  };
+}
+function enterFootnoteDefinition(token) {
+  this.enter(
+    { type: "footnoteDefinition", identifier: "", label: "", children: [] },
+    token
+  );
+}
+function enterFootnoteDefinitionLabelString() {
+  this.buffer();
+}
+function exitFootnoteDefinitionLabelString(token) {
+  const label = this.resume();
+  const node4 = this.stack[this.stack.length - 1];
+  ok2(node4.type === "footnoteDefinition");
+  node4.label = label;
+  node4.identifier = normalizeIdentifier2(
+    this.sliceSerialize(token)
+  ).toLowerCase();
+}
+function exitFootnoteDefinition(token) {
+  this.exit(token);
+}
+function enterFootnoteCall(token) {
+  this.enter({ type: "footnoteReference", identifier: "", label: "" }, token);
+}
+function enterFootnoteCallString() {
+  this.buffer();
+}
+function exitFootnoteCallString(token) {
+  const label = this.resume();
+  const node4 = this.stack[this.stack.length - 1];
+  ok2(node4.type === "footnoteReference");
+  node4.label = label;
+  node4.identifier = normalizeIdentifier2(
+    this.sliceSerialize(token)
+  ).toLowerCase();
+}
+function exitFootnoteCall(token) {
+  this.exit(token);
+}
+function footnoteReference(node4, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[^");
+  const exit3 = state.enter("footnoteReference");
+  const subexit = state.enter("reference");
+  value += tracker.move(
+    state.safe(state.associationId(node4), {
+      ...tracker.current(),
+      before: value,
+      after: "]"
+    })
+  );
+  subexit();
+  exit3();
+  value += tracker.move("]");
+  return value;
+}
+function footnoteReferencePeek() {
+  return "[";
+}
+function footnoteDefinition(node4, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[^");
+  const exit3 = state.enter("footnoteDefinition");
+  const subexit = state.enter("label");
+  value += tracker.move(
+    state.safe(state.associationId(node4), {
+      ...tracker.current(),
+      before: value,
+      after: "]"
+    })
+  );
+  subexit();
+  value += tracker.move(
+    "]:" + (node4.children && node4.children.length > 0 ? " " : "")
+  );
+  tracker.shift(4);
+  value += tracker.move(
+    state.indentLines(state.containerFlow(node4, tracker.current()), map3)
+  );
+  exit3();
+  return value;
+}
+function map3(line, index3, blank) {
+  if (index3 === 0) {
+    return line;
+  }
+  return (blank ? "" : "    ") + line;
+}
+
+// node_modules/mdast-util-gfm-strikethrough/lib/index.js
+var constructsWithoutStrikethrough = [
+  "autolink",
+  "destinationLiteral",
+  "destinationRaw",
+  "reference",
+  "titleQuote",
+  "titleApostrophe"
+];
+handleDelete.peek = peekDelete;
+function gfmStrikethroughFromMarkdown() {
+  return {
+    canContainEols: ["delete"],
+    enter: { strikethrough: enterStrikethrough },
+    exit: { strikethrough: exitStrikethrough }
+  };
+}
+function gfmStrikethroughToMarkdown() {
+  return {
+    unsafe: [
+      {
+        character: "~",
+        inConstruct: "phrasing",
+        notInConstruct: constructsWithoutStrikethrough
+      }
+    ],
+    handlers: { delete: handleDelete }
+  };
+}
+function enterStrikethrough(token) {
+  this.enter({ type: "delete", children: [] }, token);
+}
+function exitStrikethrough(token) {
+  this.exit(token);
+}
+function handleDelete(node4, _, state, info2) {
+  const tracker = state.createTracker(info2);
+  const exit3 = state.enter("strikethrough");
+  let value = tracker.move("~~");
+  value += state.containerPhrasing(node4, {
+    ...tracker.current(),
+    before: value,
+    after: "~"
+  });
+  value += tracker.move("~~");
+  exit3();
+  return value;
+}
+function peekDelete() {
+  return "~";
+}
+
+// node_modules/markdown-table/index.js
+function markdownTable(table, options = {}) {
+  const align = (options.align || []).concat();
+  const stringLength = options.stringLength || defaultStringLength;
+  const alignments = [];
+  const cellMatrix = [];
+  const sizeMatrix = [];
+  const longestCellByColumn = [];
+  let mostCellsPerRow = 0;
+  let rowIndex = -1;
+  while (++rowIndex < table.length) {
+    const row2 = [];
+    const sizes2 = [];
+    let columnIndex2 = -1;
+    if (table[rowIndex].length > mostCellsPerRow) {
+      mostCellsPerRow = table[rowIndex].length;
+    }
+    while (++columnIndex2 < table[rowIndex].length) {
+      const cell = serialize(table[rowIndex][columnIndex2]);
+      if (options.alignDelimiters !== false) {
+        const size = stringLength(cell);
+        sizes2[columnIndex2] = size;
+        if (longestCellByColumn[columnIndex2] === void 0 || size > longestCellByColumn[columnIndex2]) {
+          longestCellByColumn[columnIndex2] = size;
+        }
+      }
+      row2.push(cell);
+    }
+    cellMatrix[rowIndex] = row2;
+    sizeMatrix[rowIndex] = sizes2;
+  }
+  let columnIndex = -1;
+  if (typeof align === "object" && "length" in align) {
+    while (++columnIndex < mostCellsPerRow) {
+      alignments[columnIndex] = toAlignment(align[columnIndex]);
+    }
+  } else {
+    const code4 = toAlignment(align);
+    while (++columnIndex < mostCellsPerRow) {
+      alignments[columnIndex] = code4;
+    }
+  }
+  columnIndex = -1;
+  const row = [];
+  const sizes = [];
+  while (++columnIndex < mostCellsPerRow) {
+    const code4 = alignments[columnIndex];
+    let before = "";
+    let after = "";
+    if (code4 === 99) {
+      before = ":";
+      after = ":";
+    } else if (code4 === 108) {
+      before = ":";
+    } else if (code4 === 114) {
+      after = ":";
+    }
+    let size = options.alignDelimiters === false ? 1 : Math.max(
+      1,
+      longestCellByColumn[columnIndex] - before.length - after.length
+    );
+    const cell = before + "-".repeat(size) + after;
+    if (options.alignDelimiters !== false) {
+      size = before.length + size + after.length;
+      if (size > longestCellByColumn[columnIndex]) {
+        longestCellByColumn[columnIndex] = size;
+      }
+      sizes[columnIndex] = size;
+    }
+    row[columnIndex] = cell;
+  }
+  cellMatrix.splice(1, 0, row);
+  sizeMatrix.splice(1, 0, sizes);
+  rowIndex = -1;
+  const lines = [];
+  while (++rowIndex < cellMatrix.length) {
+    const row2 = cellMatrix[rowIndex];
+    const sizes2 = sizeMatrix[rowIndex];
+    columnIndex = -1;
+    const line = [];
+    while (++columnIndex < mostCellsPerRow) {
+      const cell = row2[columnIndex] || "";
+      let before = "";
+      let after = "";
+      if (options.alignDelimiters !== false) {
+        const size = longestCellByColumn[columnIndex] - (sizes2[columnIndex] || 0);
+        const code4 = alignments[columnIndex];
+        if (code4 === 114) {
+          before = " ".repeat(size);
+        } else if (code4 === 99) {
+          if (size % 2) {
+            before = " ".repeat(size / 2 + 0.5);
+            after = " ".repeat(size / 2 - 0.5);
+          } else {
+            before = " ".repeat(size / 2);
+            after = before;
+          }
+        } else {
+          after = " ".repeat(size);
+        }
+      }
+      if (options.delimiterStart !== false && !columnIndex) {
+        line.push("|");
+      }
+      if (options.padding !== false && // Don’t add the opening space if we’re not aligning and the cell is
+      // empty: there will be a closing space.
+      !(options.alignDelimiters === false && cell === "") && (options.delimiterStart !== false || columnIndex)) {
+        line.push(" ");
+      }
+      if (options.alignDelimiters !== false) {
+        line.push(before);
+      }
+      line.push(cell);
+      if (options.alignDelimiters !== false) {
+        line.push(after);
+      }
+      if (options.padding !== false) {
+        line.push(" ");
+      }
+      if (options.delimiterEnd !== false || columnIndex !== mostCellsPerRow - 1) {
+        line.push("|");
+      }
+    }
+    lines.push(
+      options.delimiterEnd === false ? line.join("").replace(/ +$/, "") : line.join("")
+    );
+  }
+  return lines.join("\n");
+}
+function serialize(value) {
+  return value === null || value === void 0 ? "" : String(value);
+}
+function defaultStringLength(value) {
+  return value.length;
+}
+function toAlignment(value) {
+  const code4 = typeof value === "string" ? value.codePointAt(0) : 0;
+  return code4 === 67 || code4 === 99 ? 99 : code4 === 76 || code4 === 108 ? 108 : code4 === 82 || code4 === 114 ? 114 : 0;
+}
+
+// node_modules/mdast-util-to-markdown/lib/configure.js
+var own5 = {}.hasOwnProperty;
+function configure3(base2, extension2) {
+  let index3 = -1;
+  let key;
+  if (extension2.extensions) {
+    while (++index3 < extension2.extensions.length) {
+      configure3(base2, extension2.extensions[index3]);
+    }
+  }
+  for (key in extension2) {
+    if (own5.call(extension2, key)) {
+      switch (key) {
+        case "extensions": {
+          break;
+        }
+        case "unsafe": {
+          list3(base2[key], extension2[key]);
+          break;
+        }
+        case "join": {
+          list3(base2[key], extension2[key]);
+          break;
+        }
+        case "handlers": {
+          map4(base2[key], extension2[key]);
+          break;
+        }
+        default: {
+          base2.options[key] = extension2[key];
+        }
+      }
+    }
+  }
+  return base2;
+}
+function list3(left, right) {
+  if (right) {
+    left.push(...right);
+  }
+}
+function map4(left, right) {
+  if (right) {
+    Object.assign(left, right);
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
+function blockquote2(node4, _, state, info2) {
+  const exit3 = state.enter("blockquote");
+  const tracker = state.createTracker(info2);
+  tracker.move("> ");
+  tracker.shift(2);
+  const value = state.indentLines(
+    state.containerFlow(node4, tracker.current()),
+    map5
+  );
+  exit3();
+  return value;
+}
+function map5(line, _, blank) {
+  return ">" + (blank ? "" : " ") + line;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
+function patternInScope2(stack, pattern) {
+  return listInScope2(stack, pattern.inConstruct, true) && !listInScope2(stack, pattern.notInConstruct, false);
+}
+function listInScope2(stack, list5, none) {
+  if (typeof list5 === "string") {
+    list5 = [list5];
+  }
+  if (!list5 || list5.length === 0) {
+    return none;
+  }
+  let index3 = -1;
+  while (++index3 < list5.length) {
+    if (stack.includes(list5[index3])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/break.js
+function hardBreak2(_, _1, state, info2) {
+  let index3 = -1;
+  while (++index3 < state.unsafe.length) {
+    if (state.unsafe[index3].character === "\n" && patternInScope2(state.stack, state.unsafe[index3])) {
+      return /[ \t]/.test(info2.before) ? "" : " ";
+    }
+  }
+  return "\\\n";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
+function formatCodeAsIndented2(node4, state) {
+  return Boolean(
+    state.options.fences === false && node4.value && // If there’s no info…
+    !node4.lang && // And there’s a non-whitespace character…
+    /[^ \r\n]/.test(node4.value) && // And the value doesn’t start or end in a blank…
+    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node4.value)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-fence.js
+function checkFence2(state) {
+  const marker = state.options.fence || "`";
+  if (marker !== "`" && marker !== "~") {
+    throw new Error(
+      "Cannot serialize code with `" + marker + "` for `options.fence`, expected `` ` `` or `~`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/code.js
+function code2(node4, _, state, info2) {
+  const marker = checkFence2(state);
+  const raw = node4.value || "";
+  const suffix = marker === "`" ? "GraveAccent" : "Tilde";
+  if (formatCodeAsIndented2(node4, state)) {
+    const exit4 = state.enter("codeIndented");
+    const value2 = state.indentLines(raw, map6);
+    exit4();
+    return value2;
+  }
+  const tracker = state.createTracker(info2);
+  const sequence = marker.repeat(Math.max(longestStreak(raw, marker) + 1, 3));
+  const exit3 = state.enter("codeFenced");
+  let value = tracker.move(sequence);
+  if (node4.lang) {
+    const subexit = state.enter(`codeFencedLang${suffix}`);
+    value += tracker.move(
+      state.safe(node4.lang, {
+        before: value,
+        after: " ",
+        encode: ["`"],
+        ...tracker.current()
+      })
+    );
+    subexit();
+  }
+  if (node4.lang && node4.meta) {
+    const subexit = state.enter(`codeFencedMeta${suffix}`);
+    value += tracker.move(" ");
+    value += tracker.move(
+      state.safe(node4.meta, {
+        before: value,
+        after: "\n",
+        encode: ["`"],
+        ...tracker.current()
+      })
+    );
+    subexit();
+  }
+  value += tracker.move("\n");
+  if (raw) {
+    value += tracker.move(raw + "\n");
+  }
+  value += tracker.move(sequence);
+  exit3();
+  return value;
+}
+function map6(line, _, blank) {
+  return (blank ? "" : "    ") + line;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-quote.js
+function checkQuote2(state) {
+  const marker = state.options.quote || '"';
+  if (marker !== '"' && marker !== "'") {
+    throw new Error(
+      "Cannot serialize title with `" + marker + "` for `options.quote`, expected `\"`, or `'`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/definition.js
+function definition3(node4, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const exit3 = state.enter("definition");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[");
+  value += tracker.move(
+    state.safe(state.associationId(node4), {
+      before: value,
+      after: "]",
+      ...tracker.current()
+    })
+  );
+  value += tracker.move("]: ");
+  subexit();
+  if (
+    // If there’s no url, or…
+    !node4.url || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node4.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node4.url, {
+        before: value,
+        after: node4.title ? " " : "\n",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node4.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node4.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
+function checkEmphasis2(state) {
+  const marker = state.options.emphasis || "*";
+  if (marker !== "*" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize emphasis with `" + marker + "` for `options.emphasis`, expected `*`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
+emphasis2.peek = emphasisPeek2;
+function emphasis2(node4, _, state, info2) {
+  const marker = checkEmphasis2(state);
+  const exit3 = state.enter("emphasis");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move(marker);
+  value += tracker.move(
+    state.containerPhrasing(node4, {
+      before: value,
+      after: marker,
+      ...tracker.current()
+    })
+  );
+  value += tracker.move(marker);
+  exit3();
+  return value;
+}
+function emphasisPeek2(_, _1, state) {
+  return state.options.emphasis || "*";
+}
+
+// node_modules/unist-util-visit/lib/index.js
+function visit2(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
+  let reverse;
+  let test;
+  let visitor;
+  if (typeof testOrVisitor === "function" && typeof visitorOrReverse !== "function") {
+    test = void 0;
+    visitor = testOrVisitor;
+    reverse = visitorOrReverse;
+  } else {
+    test = testOrVisitor;
+    visitor = visitorOrReverse;
+    reverse = maybeReverse;
+  }
+  visitParents2(tree, test, overload, reverse);
+  function overload(node4, parents) {
+    const parent = parents[parents.length - 1];
+    const index3 = parent ? parent.children.indexOf(node4) : void 0;
+    return visitor(node4, index3, parent);
+  }
+}
+
+// node_modules/mdast-util-to-string/lib/index.js
+var emptyOptions3 = {};
+function toString3(value, options) {
+  const settings = options || emptyOptions3;
+  const includeImageAlt = typeof settings.includeImageAlt === "boolean" ? settings.includeImageAlt : true;
+  const includeHtml = typeof settings.includeHtml === "boolean" ? settings.includeHtml : true;
+  return one3(value, includeImageAlt, includeHtml);
+}
+function one3(value, includeImageAlt, includeHtml) {
+  if (node3(value)) {
+    if ("value" in value) {
+      return value.type === "html" && !includeHtml ? "" : value.value;
+    }
+    if (includeImageAlt && "alt" in value && value.alt) {
+      return value.alt;
+    }
+    if ("children" in value) {
+      return all3(value.children, includeImageAlt, includeHtml);
+    }
+  }
+  if (Array.isArray(value)) {
+    return all3(value, includeImageAlt, includeHtml);
+  }
+  return "";
+}
+function all3(values, includeImageAlt, includeHtml) {
+  const result = [];
+  let index3 = -1;
+  while (++index3 < values.length) {
+    result[index3] = one3(values[index3], includeImageAlt, includeHtml);
+  }
+  return result.join("");
+}
+function node3(value) {
+  return Boolean(value && typeof value === "object");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
+function formatHeadingAsSetext2(node4, state) {
+  let literalWithBreak = false;
+  visit2(node4, function(node5) {
+    if ("value" in node5 && /\r?\n|\r/.test(node5.value) || node5.type === "break") {
+      literalWithBreak = true;
+      return EXIT2;
+    }
+  });
+  return Boolean(
+    (!node4.depth || node4.depth < 3) && toString3(node4) && (state.options.setext || literalWithBreak)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/heading.js
+function heading2(node4, _, state, info2) {
+  const rank = Math.max(Math.min(6, node4.depth || 1), 1);
+  const tracker = state.createTracker(info2);
+  if (formatHeadingAsSetext2(node4, state)) {
+    const exit4 = state.enter("headingSetext");
+    const subexit2 = state.enter("phrasing");
+    const value2 = state.containerPhrasing(node4, {
+      ...tracker.current(),
+      before: "\n",
+      after: "\n"
+    });
+    subexit2();
+    exit4();
+    return value2 + "\n" + (rank === 1 ? "=" : "-").repeat(
+      // The whole size…
+      value2.length - // Minus the position of the character after the last EOL (or
+      // 0 if there is none)…
+      (Math.max(value2.lastIndexOf("\r"), value2.lastIndexOf("\n")) + 1)
+    );
+  }
+  const sequence = "#".repeat(rank);
+  const exit3 = state.enter("headingAtx");
+  const subexit = state.enter("phrasing");
+  tracker.move(sequence + " ");
+  let value = state.containerPhrasing(node4, {
+    before: "# ",
+    after: "\n",
+    ...tracker.current()
+  });
+  if (/^[\t ]/.test(value)) {
+    value = "&#x" + value.charCodeAt(0).toString(16).toUpperCase() + ";" + value.slice(1);
+  }
+  value = value ? sequence + " " + value : sequence;
+  if (state.options.closeAtx) {
+    value += " " + sequence;
+  }
+  subexit();
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/html.js
+html2.peek = htmlPeek2;
+function html2(node4) {
+  return node4.value || "";
+}
+function htmlPeek2() {
+  return "<";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/image.js
+image2.peek = imagePeek2;
+function image2(node4, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const exit3 = state.enter("image");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("![");
+  value += tracker.move(
+    state.safe(node4.alt, { before: value, after: "]", ...tracker.current() })
+  );
+  value += tracker.move("](");
+  subexit();
+  if (
+    // If there’s no url but there is a title…
+    !node4.url && node4.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node4.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node4.url, {
+        before: value,
+        after: node4.title ? " " : ")",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node4.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node4.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  value += tracker.move(")");
+  exit3();
+  return value;
+}
+function imagePeek2() {
+  return "!";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
+imageReference2.peek = imageReferencePeek2;
+function imageReference2(node4, _, state, info2) {
+  const type2 = node4.referenceType;
+  const exit3 = state.enter("imageReference");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("![");
+  const alt = state.safe(node4.alt, {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  value += tracker.move(alt + "][");
+  subexit();
+  const stack = state.stack;
+  state.stack = [];
+  subexit = state.enter("reference");
+  const reference = state.safe(state.associationId(node4), {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  subexit();
+  state.stack = stack;
+  exit3();
+  if (type2 === "full" || !alt || alt !== reference) {
+    value += tracker.move(reference + "]");
+  } else if (type2 === "shortcut") {
+    value = value.slice(0, -1);
+  } else {
+    value += tracker.move("]");
+  }
+  return value;
+}
+function imageReferencePeek2() {
+  return "!";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
+inlineCode2.peek = inlineCodePeek2;
+function inlineCode2(node4, _, state) {
+  let value = node4.value || "";
+  let sequence = "`";
+  let index3 = -1;
+  while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
+    sequence += "`";
+  }
+  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
+    value = " " + value + " ";
+  }
+  while (++index3 < state.unsafe.length) {
+    const pattern = state.unsafe[index3];
+    const expression = state.compilePattern(pattern);
+    let match;
+    if (!pattern.atBreak)
+      continue;
+    while (match = expression.exec(value)) {
+      let position3 = match.index;
+      if (value.charCodeAt(position3) === 10 && value.charCodeAt(position3 - 1) === 13) {
+        position3--;
+      }
+      value = value.slice(0, position3) + " " + value.slice(match.index + 1);
+    }
+  }
+  return sequence + value + sequence;
+}
+function inlineCodePeek2() {
+  return "`";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
+function formatLinkAsAutolink2(node4, state) {
+  const raw = toString3(node4);
+  return Boolean(
+    !state.options.resourceLink && // If there’s a url…
+    node4.url && // And there’s a no title…
+    !node4.title && // And the content of `node` is a single text node…
+    node4.children && node4.children.length === 1 && node4.children[0].type === "text" && // And if the url is the same as the content…
+    (raw === node4.url || "mailto:" + raw === node4.url) && // And that starts w/ a protocol…
+    /^[a-z][a-z+.-]+:/i.test(node4.url) && // And that doesn’t contain ASCII control codes (character escapes and
+    // references don’t work), space, or angle brackets…
+    !/[\0- <>\u007F]/.test(node4.url)
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/link.js
+link2.peek = linkPeek2;
+function link2(node4, _, state, info2) {
+  const quote = checkQuote2(state);
+  const suffix = quote === '"' ? "Quote" : "Apostrophe";
+  const tracker = state.createTracker(info2);
+  let exit3;
+  let subexit;
+  if (formatLinkAsAutolink2(node4, state)) {
+    const stack = state.stack;
+    state.stack = [];
+    exit3 = state.enter("autolink");
+    let value2 = tracker.move("<");
+    value2 += tracker.move(
+      state.containerPhrasing(node4, {
+        before: value2,
+        after: ">",
+        ...tracker.current()
+      })
+    );
+    value2 += tracker.move(">");
+    exit3();
+    state.stack = stack;
+    return value2;
+  }
+  exit3 = state.enter("link");
+  subexit = state.enter("label");
+  let value = tracker.move("[");
+  value += tracker.move(
+    state.containerPhrasing(node4, {
+      before: value,
+      after: "](",
+      ...tracker.current()
+    })
+  );
+  value += tracker.move("](");
+  subexit();
+  if (
+    // If there’s no url but there is a title…
+    !node4.url && node4.title || // If there are control characters or whitespace.
+    /[\0- \u007F]/.test(node4.url)
+  ) {
+    subexit = state.enter("destinationLiteral");
+    value += tracker.move("<");
+    value += tracker.move(
+      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
+    );
+    value += tracker.move(">");
+  } else {
+    subexit = state.enter("destinationRaw");
+    value += tracker.move(
+      state.safe(node4.url, {
+        before: value,
+        after: node4.title ? " " : ")",
+        ...tracker.current()
+      })
+    );
+  }
+  subexit();
+  if (node4.title) {
+    subexit = state.enter(`title${suffix}`);
+    value += tracker.move(" " + quote);
+    value += tracker.move(
+      state.safe(node4.title, {
+        before: value,
+        after: quote,
+        ...tracker.current()
+      })
+    );
+    value += tracker.move(quote);
+    subexit();
+  }
+  value += tracker.move(")");
+  exit3();
+  return value;
+}
+function linkPeek2(node4, _, state) {
+  return formatLinkAsAutolink2(node4, state) ? "<" : "[";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
+linkReference2.peek = linkReferencePeek2;
+function linkReference2(node4, _, state, info2) {
+  const type2 = node4.referenceType;
+  const exit3 = state.enter("linkReference");
+  let subexit = state.enter("label");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move("[");
+  const text6 = state.containerPhrasing(node4, {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  value += tracker.move(text6 + "][");
+  subexit();
+  const stack = state.stack;
+  state.stack = [];
+  subexit = state.enter("reference");
+  const reference = state.safe(state.associationId(node4), {
+    before: value,
+    after: "]",
+    ...tracker.current()
+  });
+  subexit();
+  state.stack = stack;
+  exit3();
+  if (type2 === "full" || !text6 || text6 !== reference) {
+    value += tracker.move(reference + "]");
+  } else if (type2 === "shortcut") {
+    value = value.slice(0, -1);
+  } else {
+    value += tracker.move("]");
+  }
+  return value;
+}
+function linkReferencePeek2() {
+  return "[";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
+function checkBullet2(state) {
+  const marker = state.options.bullet || "*";
+  if (marker !== "*" && marker !== "+" && marker !== "-") {
+    throw new Error(
+      "Cannot serialize items with `" + marker + "` for `options.bullet`, expected `*`, `+`, or `-`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
+function checkBulletOther2(state) {
+  const bullet = checkBullet2(state);
+  const bulletOther = state.options.bulletOther;
+  if (!bulletOther) {
+    return bullet === "*" ? "-" : "*";
+  }
+  if (bulletOther !== "*" && bulletOther !== "+" && bulletOther !== "-") {
+    throw new Error(
+      "Cannot serialize items with `" + bulletOther + "` for `options.bulletOther`, expected `*`, `+`, or `-`"
+    );
+  }
+  if (bulletOther === bullet) {
+    throw new Error(
+      "Expected `bullet` (`" + bullet + "`) and `bulletOther` (`" + bulletOther + "`) to be different"
+    );
+  }
+  return bulletOther;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
+function checkBulletOrdered2(state) {
+  const marker = state.options.bulletOrdered || ".";
+  if (marker !== "." && marker !== ")") {
+    throw new Error(
+      "Cannot serialize items with `" + marker + "` for `options.bulletOrdered`, expected `.` or `)`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-rule.js
+function checkRule2(state) {
+  const marker = state.options.rule || "*";
+  if (marker !== "*" && marker !== "-" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize rules with `" + marker + "` for `options.rule`, expected `*`, `-`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/list.js
+function list4(node4, parent, state, info2) {
+  const exit3 = state.enter("list");
+  const bulletCurrent = state.bulletCurrent;
+  let bullet = node4.ordered ? checkBulletOrdered2(state) : checkBullet2(state);
+  const bulletOther = node4.ordered ? bullet === "." ? ")" : "." : checkBulletOther2(state);
+  let useDifferentMarker = parent && state.bulletLastUsed ? bullet === state.bulletLastUsed : false;
+  if (!node4.ordered) {
+    const firstListItem = node4.children ? node4.children[0] : void 0;
+    if (
+      // Bullet could be used as a thematic break marker:
+      (bullet === "*" || bullet === "-") && // Empty first list item:
+      firstListItem && (!firstListItem.children || !firstListItem.children[0]) && // Directly in two other list items:
+      state.stack[state.stack.length - 1] === "list" && state.stack[state.stack.length - 2] === "listItem" && state.stack[state.stack.length - 3] === "list" && state.stack[state.stack.length - 4] === "listItem" && // That are each the first child.
+      state.indexStack[state.indexStack.length - 1] === 0 && state.indexStack[state.indexStack.length - 2] === 0 && state.indexStack[state.indexStack.length - 3] === 0
+    ) {
+      useDifferentMarker = true;
+    }
+    if (checkRule2(state) === bullet && firstListItem) {
+      let index3 = -1;
+      while (++index3 < node4.children.length) {
+        const item = node4.children[index3];
+        if (item && item.type === "listItem" && item.children && item.children[0] && item.children[0].type === "thematicBreak") {
+          useDifferentMarker = true;
+          break;
+        }
+      }
+    }
+  }
+  if (useDifferentMarker) {
+    bullet = bulletOther;
+  }
+  state.bulletCurrent = bullet;
+  const value = state.containerFlow(node4, info2);
+  state.bulletLastUsed = bullet;
+  state.bulletCurrent = bulletCurrent;
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
+function checkListItemIndent2(state) {
+  const style = state.options.listItemIndent || "one";
+  if (style !== "tab" && style !== "one" && style !== "mixed") {
+    throw new Error(
+      "Cannot serialize items with `" + style + "` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`"
+    );
+  }
+  return style;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/list-item.js
+function listItem2(node4, parent, state, info2) {
+  const listItemIndent = checkListItemIndent2(state);
+  let bullet = state.bulletCurrent || checkBullet2(state);
+  if (parent && parent.type === "list" && parent.ordered) {
+    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node4)) + bullet;
+  }
+  let size = bullet.length + 1;
+  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node4.spread)) {
+    size = Math.ceil(size / 4) * 4;
+  }
+  const tracker = state.createTracker(info2);
+  tracker.move(bullet + " ".repeat(size - bullet.length));
+  tracker.shift(size);
+  const exit3 = state.enter("listItem");
+  const value = state.indentLines(
+    state.containerFlow(node4, tracker.current()),
+    map8
+  );
+  exit3();
+  return value;
+  function map8(line, index3, blank) {
+    if (index3) {
+      return (blank ? "" : " ".repeat(size)) + line;
+    }
+    return (blank ? bullet : bullet + " ".repeat(size - bullet.length)) + line;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
+function paragraph2(node4, _, state, info2) {
+  const exit3 = state.enter("paragraph");
+  const subexit = state.enter("phrasing");
+  const value = state.containerPhrasing(node4, info2);
+  subexit();
+  exit3();
+  return value;
+}
+
+// node_modules/mdast-util-phrasing/lib/index.js
+var phrasing2 = (
+  /** @type {(node?: unknown) => node is PhrasingContent} */
+  convert2([
+    "break",
+    "delete",
+    "emphasis",
+    "footnote",
+    "footnoteReference",
+    "image",
+    "imageReference",
+    "inlineCode",
+    "link",
+    "linkReference",
+    "strong",
+    "text"
+  ])
+);
+
+// node_modules/mdast-util-to-markdown/lib/handle/root.js
+function root2(node4, _, state, info2) {
+  const hasPhrasing = node4.children.some(function(d) {
+    return phrasing2(d);
+  });
+  const fn = hasPhrasing ? state.containerPhrasing : state.containerFlow;
+  return fn.call(state, node4, info2);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-strong.js
+function checkStrong2(state) {
+  const marker = state.options.strong || "*";
+  if (marker !== "*" && marker !== "_") {
+    throw new Error(
+      "Cannot serialize strong with `" + marker + "` for `options.strong`, expected `*`, or `_`"
+    );
+  }
+  return marker;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/strong.js
+strong2.peek = strongPeek2;
+function strong2(node4, _, state, info2) {
+  const marker = checkStrong2(state);
+  const exit3 = state.enter("strong");
+  const tracker = state.createTracker(info2);
+  let value = tracker.move(marker + marker);
+  value += tracker.move(
+    state.containerPhrasing(node4, {
+      before: value,
+      after: marker,
+      ...tracker.current()
+    })
+  );
+  value += tracker.move(marker + marker);
+  exit3();
+  return value;
+}
+function strongPeek2(_, _1, state) {
+  return state.options.strong || "*";
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/text.js
+function text4(node4, _, state, info2) {
+  return state.safe(node4.value, info2);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
+function checkRuleRepetition2(state) {
+  const repetition = state.options.ruleRepetition || 3;
+  if (repetition < 3) {
+    throw new Error(
+      "Cannot serialize rules with repetition `" + repetition + "` for `options.ruleRepetition`, expected `3` or more"
+    );
+  }
+  return repetition;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
+function thematicBreak3(_, _1, state) {
+  const value = (checkRule2(state) + (state.options.ruleSpaces ? " " : "")).repeat(checkRuleRepetition2(state));
+  return state.options.ruleSpaces ? value.slice(0, -1) : value;
+}
+
+// node_modules/mdast-util-to-markdown/lib/handle/index.js
+var handle2 = {
+  blockquote: blockquote2,
+  break: hardBreak2,
+  code: code2,
+  definition: definition3,
+  emphasis: emphasis2,
+  hardBreak: hardBreak2,
+  heading: heading2,
+  html: html2,
+  image: image2,
+  imageReference: imageReference2,
+  inlineCode: inlineCode2,
+  link: link2,
+  linkReference: linkReference2,
+  list: list4,
+  listItem: listItem2,
+  paragraph: paragraph2,
+  root: root2,
+  strong: strong2,
+  text: text4,
+  thematicBreak: thematicBreak3
+};
+
+// node_modules/mdast-util-to-markdown/lib/join.js
+var join2 = [joinDefaults2];
+function joinDefaults2(left, right, parent, state) {
+  if (right.type === "code" && formatCodeAsIndented2(right, state) && (left.type === "list" || left.type === right.type && formatCodeAsIndented2(left, state))) {
+    return false;
+  }
+  if ("spread" in parent && typeof parent.spread === "boolean") {
+    if (left.type === "paragraph" && // Two paragraphs.
+    (left.type === right.type || right.type === "definition" || // Paragraph followed by a setext heading.
+    right.type === "heading" && formatHeadingAsSetext2(right, state))) {
+      return;
+    }
+    return parent.spread ? 1 : 0;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/unsafe.js
+var fullPhrasingSpans2 = [
+  "autolink",
+  "destinationLiteral",
+  "destinationRaw",
+  "reference",
+  "titleQuote",
+  "titleApostrophe"
+];
+var unsafe2 = [
+  { character: "	", after: "[\\r\\n]", inConstruct: "phrasing" },
+  { character: "	", before: "[\\r\\n]", inConstruct: "phrasing" },
+  {
+    character: "	",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
+  },
+  {
+    character: "\r",
+    inConstruct: [
+      "codeFencedLangGraveAccent",
+      "codeFencedLangTilde",
+      "codeFencedMetaGraveAccent",
+      "codeFencedMetaTilde",
+      "destinationLiteral",
+      "headingAtx"
+    ]
+  },
+  {
+    character: "\n",
+    inConstruct: [
+      "codeFencedLangGraveAccent",
+      "codeFencedLangTilde",
+      "codeFencedMetaGraveAccent",
+      "codeFencedMetaTilde",
+      "destinationLiteral",
+      "headingAtx"
+    ]
+  },
+  { character: " ", after: "[\\r\\n]", inConstruct: "phrasing" },
+  { character: " ", before: "[\\r\\n]", inConstruct: "phrasing" },
+  {
+    character: " ",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
+  },
+  // An exclamation mark can start an image, if it is followed by a link or
+  // a link reference.
+  {
+    character: "!",
+    after: "\\[",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  // A quote can break out of a title.
+  { character: '"', inConstruct: "titleQuote" },
+  // A number sign could start an ATX heading if it starts a line.
+  { atBreak: true, character: "#" },
+  { character: "#", inConstruct: "headingAtx", after: "(?:[\r\n]|$)" },
+  // Dollar sign and percentage are not used in markdown.
+  // An ampersand could start a character reference.
+  { character: "&", after: "[#A-Za-z]", inConstruct: "phrasing" },
+  // An apostrophe can break out of a title.
+  { character: "'", inConstruct: "titleApostrophe" },
+  // A left paren could break out of a destination raw.
+  { character: "(", inConstruct: "destinationRaw" },
+  // A left paren followed by `]` could make something into a link or image.
+  {
+    before: "\\]",
+    character: "(",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  // A right paren could start a list item or break out of a destination
+  // raw.
+  { atBreak: true, before: "\\d+", character: ")" },
+  { character: ")", inConstruct: "destinationRaw" },
+  // An asterisk can start thematic breaks, list items, emphasis, strong.
+  { atBreak: true, character: "*", after: "(?:[ 	\r\n*])" },
+  { character: "*", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // A plus sign could start a list item.
+  { atBreak: true, character: "+", after: "(?:[ 	\r\n])" },
+  // A dash can start thematic breaks, list items, and setext heading
+  // underlines.
+  { atBreak: true, character: "-", after: "(?:[ 	\r\n-])" },
+  // A dot could start a list item.
+  { atBreak: true, before: "\\d+", character: ".", after: "(?:[ 	\r\n]|$)" },
+  // Slash, colon, and semicolon are not used in markdown for constructs.
+  // A less than can start html (flow or text) or an autolink.
+  // HTML could start with an exclamation mark (declaration, cdata, comment),
+  // slash (closing tag), question mark (instruction), or a letter (tag).
+  // An autolink also starts with a letter.
+  // Finally, it could break out of a destination literal.
+  { atBreak: true, character: "<", after: "[!/?A-Za-z]" },
+  {
+    character: "<",
+    after: "[!/?A-Za-z]",
+    inConstruct: "phrasing",
+    notInConstruct: fullPhrasingSpans2
+  },
+  { character: "<", inConstruct: "destinationLiteral" },
+  // An equals to can start setext heading underlines.
+  { atBreak: true, character: "=" },
+  // A greater than can start block quotes and it can break out of a
+  // destination literal.
+  { atBreak: true, character: ">" },
+  { character: ">", inConstruct: "destinationLiteral" },
+  // Question mark and at sign are not used in markdown for constructs.
+  // A left bracket can start definitions, references, labels,
+  { atBreak: true, character: "[" },
+  { character: "[", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  { character: "[", inConstruct: ["label", "reference"] },
+  // A backslash can start an escape (when followed by punctuation) or a
+  // hard break (when followed by an eol).
+  // Note: typical escapes are handled in `safe`!
+  { character: "\\", after: "[\\r\\n]", inConstruct: "phrasing" },
+  // A right bracket can exit labels.
+  { character: "]", inConstruct: ["label", "reference"] },
+  // Caret is not used in markdown for constructs.
+  // An underscore can start emphasis, strong, or a thematic break.
+  { atBreak: true, character: "_" },
+  { character: "_", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // A grave accent can start code (fenced or text), or it can break out of
+  // a grave accent code fence.
+  { atBreak: true, character: "`" },
+  {
+    character: "`",
+    inConstruct: ["codeFencedLangGraveAccent", "codeFencedMetaGraveAccent"]
+  },
+  { character: "`", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
+  // Left brace, vertical bar, right brace are not used in markdown for
+  // constructs.
+  // A tilde can start code (fenced).
+  { atBreak: true, character: "~" }
+];
+
+// node_modules/micromark-util-decode-numeric-character-reference/index.js
+function decodeNumericCharacterReference3(value, base2) {
+  const code4 = Number.parseInt(value, base2);
+  if (
+    // C0 except for HT, LF, FF, CR, space.
+    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of C0, and C1 controls.
+    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
+    code4 > 55295 && code4 < 57344 || // Noncharacters.
+    code4 > 64975 && code4 < 65008 || (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || // Out of range
+    code4 > 1114111
+  ) {
+    return "\uFFFD";
+  }
+  return String.fromCharCode(code4);
+}
+
+// node_modules/micromark-util-decode-string/index.js
+var characterEscapeOrReference3 = /\\([!-/:-@[-`{-~])|&(#(?:\d{1,7}|x[\da-f]{1,6})|[\da-z]{1,31});/gi;
+function decodeString3(value) {
+  return value.replace(characterEscapeOrReference3, decode3);
+}
+function decode3($0, $1, $2) {
+  if ($1) {
+    return $1;
+  }
+  const head = $2.charCodeAt(0);
+  if (head === 35) {
+    const head2 = $2.charCodeAt(1);
+    const hex = head2 === 120 || head2 === 88;
+    return decodeNumericCharacterReference3($2.slice(hex ? 2 : 1), hex ? 16 : 10);
+  }
+  return decodeNamedCharacterReference($2) || $0;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/association.js
+function association2(node4) {
+  if (node4.label || !node4.identifier) {
+    return node4.label || "";
+  }
+  return decodeString3(node4.identifier);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/compile-pattern.js
+function compilePattern(pattern) {
+  if (!pattern._compiled) {
+    const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
+    pattern._compiled = new RegExp(
+      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
+      "g"
+    );
+  }
+  return pattern._compiled;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+function containerPhrasing2(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const results = [];
+  let index3 = -1;
+  let before = info2.before;
+  indexStack.push(-1);
+  let tracker = state.createTracker(info2);
+  while (++index3 < children.length) {
+    const child = children[index3];
+    let after;
+    indexStack[indexStack.length - 1] = index3;
+    if (index3 + 1 < children.length) {
+      let handle3 = state.handle.handlers[children[index3 + 1].type];
+      if (handle3 && handle3.peek)
+        handle3 = handle3.peek;
+      after = handle3 ? handle3(children[index3 + 1], parent, state, {
+        before: "",
+        after: "",
+        ...tracker.current()
+      }).charAt(0) : "";
+    } else {
+      after = info2.after;
+    }
+    if (results.length > 0 && (before === "\r" || before === "\n") && child.type === "html") {
+      results[results.length - 1] = results[results.length - 1].replace(
+        /(\r?\n|\r)$/,
+        " "
+      );
+      before = " ";
+      tracker = state.createTracker(info2);
+      tracker.move(results.join(""));
+    }
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          ...tracker.current(),
+          before,
+          after
+        })
+      )
+    );
+    before = results[results.length - 1].slice(-1);
+  }
+  indexStack.pop();
+  return results.join("");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/container-flow.js
+function containerFlow2(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const tracker = state.createTracker(info2);
+  const results = [];
+  let index3 = -1;
+  indexStack.push(-1);
+  while (++index3 < children.length) {
+    const child = children[index3];
+    indexStack[indexStack.length - 1] = index3;
+    results.push(
+      tracker.move(
+        state.handle(child, parent, state, {
+          before: "\n",
+          after: "\n",
+          ...tracker.current()
+        })
+      )
+    );
+    if (child.type !== "list") {
+      state.bulletLastUsed = void 0;
+    }
+    if (index3 < children.length - 1) {
+      results.push(
+        tracker.move(between2(child, children[index3 + 1], parent, state))
+      );
+    }
+  }
+  indexStack.pop();
+  return results.join("");
+}
+function between2(left, right, parent, state) {
+  let index3 = state.join.length;
+  while (index3--) {
+    const result = state.join[index3](left, right, parent, state);
+    if (result === true || result === 1) {
+      break;
+    }
+    if (typeof result === "number") {
+      return "\n".repeat(1 + result);
+    }
+    if (result === false) {
+      return "\n\n<!---->\n\n";
+    }
+  }
+  return "\n\n";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
+var eol2 = /\r?\n|\r/g;
+function indentLines2(value, map8) {
+  const result = [];
+  let start = 0;
+  let line = 0;
+  let match;
+  while (match = eol2.exec(value)) {
+    one4(value.slice(start, match.index));
+    result.push(match[0]);
+    start = match.index + match[0].length;
+    line++;
+  }
+  one4(value.slice(start));
+  return result.join("");
+  function one4(value2) {
+    result.push(map8(value2, line, !value2));
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/safe.js
+function safe2(state, input, config2) {
+  const value = (config2.before || "") + (input || "") + (config2.after || "");
+  const positions = [];
+  const result = [];
+  const infos = {};
+  let index3 = -1;
+  while (++index3 < state.unsafe.length) {
+    const pattern = state.unsafe[index3];
+    if (!patternInScope2(state.stack, pattern)) {
+      continue;
+    }
+    const expression = state.compilePattern(pattern);
+    let match;
+    while (match = expression.exec(value)) {
+      const before = "before" in pattern || Boolean(pattern.atBreak);
+      const after = "after" in pattern;
+      const position3 = match.index + (before ? match[1].length : 0);
+      if (positions.includes(position3)) {
+        if (infos[position3].before && !before) {
+          infos[position3].before = false;
+        }
+        if (infos[position3].after && !after) {
+          infos[position3].after = false;
+        }
+      } else {
+        positions.push(position3);
+        infos[position3] = { before, after };
+      }
+    }
+  }
+  positions.sort(numerical2);
+  let start = config2.before ? config2.before.length : 0;
+  const end = value.length - (config2.after ? config2.after.length : 0);
+  index3 = -1;
+  while (++index3 < positions.length) {
+    const position3 = positions[index3];
+    if (position3 < start || position3 >= end) {
+      continue;
+    }
+    if (position3 + 1 < end && positions[index3 + 1] === position3 + 1 && infos[position3].after && !infos[position3 + 1].before && !infos[position3 + 1].after || positions[index3 - 1] === position3 - 1 && infos[position3].before && !infos[position3 - 1].before && !infos[position3 - 1].after) {
+      continue;
+    }
+    if (start !== position3) {
+      result.push(escapeBackslashes2(value.slice(start, position3), "\\"));
+    }
+    start = position3;
+    if (/[!-/:-@[-`{-~]/.test(value.charAt(position3)) && (!config2.encode || !config2.encode.includes(value.charAt(position3)))) {
+      result.push("\\");
+    } else {
+      result.push(
+        "&#x" + value.charCodeAt(position3).toString(16).toUpperCase() + ";"
+      );
+      start++;
+    }
+  }
+  result.push(escapeBackslashes2(value.slice(start, end), config2.after));
+  return result.join("");
+}
+function numerical2(a, b) {
+  return a - b;
+}
+function escapeBackslashes2(value, after) {
+  const expression = /\\(?=[!-/:-@[-`{-~])/g;
+  const positions = [];
+  const results = [];
+  const whole = value + after;
+  let index3 = -1;
+  let start = 0;
+  let match;
+  while (match = expression.exec(whole)) {
+    positions.push(match.index);
+  }
+  while (++index3 < positions.length) {
+    if (start !== positions[index3]) {
+      results.push(value.slice(start, positions[index3]));
+    }
+    results.push("\\");
+    start = positions[index3];
+  }
+  results.push(value.slice(start));
+  return results.join("");
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/track.js
+function track2(config2) {
+  const options = config2 || {};
+  const now = options.now || {};
+  let lineShift = options.lineShift || 0;
+  let line = now.line || 1;
+  let column = now.column || 1;
+  return { move, current, shift };
+  function current() {
+    return { now: { line, column }, lineShift };
+  }
+  function shift(value) {
+    lineShift += value;
+  }
+  function move(input) {
+    const value = input || "";
+    const chunks = value.split(/\r?\n|\r/g);
+    const tail = chunks[chunks.length - 1];
+    line += chunks.length - 1;
+    column = chunks.length === 1 ? column + tail.length : 1 + tail.length + lineShift;
+    return value;
+  }
+}
+
+// node_modules/mdast-util-to-markdown/lib/index.js
+function toMarkdown2(tree, options = {}) {
+  const state = {
+    enter,
+    indentLines: indentLines2,
+    associationId: association2,
+    containerPhrasing: containerPhrasingBound2,
+    containerFlow: containerFlowBound2,
+    createTracker: track2,
+    compilePattern,
+    safe: safeBound2,
+    stack: [],
+    unsafe: [...unsafe2],
+    join: [...join2],
+    // @ts-expect-error: GFM / frontmatter are typed in `mdast` but not defined
+    // here.
+    handlers: { ...handle2 },
+    options: {},
+    indexStack: [],
+    // @ts-expect-error: add `handle` in a second.
+    handle: void 0
+  };
+  configure3(state, options);
+  if (state.options.tightDefinitions) {
+    state.join.push(joinDefinition2);
+  }
+  state.handle = zwitch("type", {
+    invalid: invalid2,
+    unknown: unknown2,
+    handlers: state.handlers
+  });
+  let result = state.handle(tree, void 0, state, {
+    before: "\n",
+    after: "\n",
+    now: { line: 1, column: 1 },
+    lineShift: 0
+  });
+  if (result && result.charCodeAt(result.length - 1) !== 10 && result.charCodeAt(result.length - 1) !== 13) {
+    result += "\n";
+  }
+  return result;
+  function enter(name) {
+    state.stack.push(name);
+    return exit3;
+    function exit3() {
+      state.stack.pop();
+    }
+  }
+}
+function invalid2(value) {
+  throw new Error("Cannot handle value `" + value + "`, expected node");
+}
+function unknown2(value) {
+  const node4 = (
+    /** @type {Nodes} */
+    value
+  );
+  throw new Error("Cannot handle unknown node `" + node4.type + "`");
+}
+function joinDefinition2(left, right) {
+  if (left.type === "definition" && left.type === right.type) {
+    return 0;
+  }
+}
+function containerPhrasingBound2(parent, info2) {
+  return containerPhrasing2(parent, this, info2);
+}
+function containerFlowBound2(parent, info2) {
+  return containerFlow2(parent, this, info2);
+}
+function safeBound2(value, config2) {
+  return safe2(this, value, config2);
+}
+
+// node_modules/mdast-util-gfm-table/lib/index.js
+function gfmTableFromMarkdown() {
+  return {
+    enter: {
+      table: enterTable,
+      tableData: enterCell,
+      tableHeader: enterCell,
+      tableRow: enterRow
+    },
+    exit: {
+      codeText: exitCodeText,
+      table: exitTable,
+      tableData: exit2,
+      tableHeader: exit2,
+      tableRow: exit2
+    }
+  };
+}
+function enterTable(token) {
+  const align = token._align;
+  ok2(align, "expected `_align` on table");
+  this.enter(
+    {
+      type: "table",
+      align: align.map(function(d) {
+        return d === "none" ? null : d;
+      }),
+      children: []
+    },
+    token
+  );
+  this.data.inTable = true;
+}
+function exitTable(token) {
+  this.exit(token);
+  this.data.inTable = void 0;
+}
+function enterRow(token) {
+  this.enter({ type: "tableRow", children: [] }, token);
+}
+function exit2(token) {
+  this.exit(token);
+}
+function enterCell(token) {
+  this.enter({ type: "tableCell", children: [] }, token);
+}
+function exitCodeText(token) {
+  let value = this.resume();
+  if (this.data.inTable) {
+    value = value.replace(/\\([\\|])/g, replace);
+  }
+  const node4 = this.stack[this.stack.length - 1];
+  ok2(node4.type === "inlineCode");
+  node4.value = value;
+  this.exit(token);
+}
+function replace($0, $1) {
+  return $1 === "|" ? $1 : $0;
+}
+function gfmTableToMarkdown(options) {
+  const settings = options || {};
+  const padding = settings.tableCellPadding;
+  const alignDelimiters = settings.tablePipeAlign;
+  const stringLength = settings.stringLength;
+  const around = padding ? " " : "|";
+  return {
+    unsafe: [
+      { character: "\r", inConstruct: "tableCell" },
+      { character: "\n", inConstruct: "tableCell" },
+      // A pipe, when followed by a tab or space (padding), or a dash or colon
+      // (unpadded delimiter row), could result in a table.
+      { atBreak: true, character: "|", after: "[	 :-]" },
+      // A pipe in a cell must be encoded.
+      { character: "|", inConstruct: "tableCell" },
+      // A colon must be followed by a dash, in which case it could start a
+      // delimiter row.
+      { atBreak: true, character: ":", after: "-" },
+      // A delimiter row can also start with a dash, when followed by more
+      // dashes, a colon, or a pipe.
+      // This is a stricter version than the built in check for lists, thematic
+      // breaks, and setex heading underlines though:
+      // <https://github.com/syntax-tree/mdast-util-to-markdown/blob/51a2038/lib/unsafe.js#L57>
+      { atBreak: true, character: "-", after: "[:|-]" }
+    ],
+    handlers: {
+      inlineCode: inlineCodeWithTable,
+      table: handleTable,
+      tableCell: handleTableCell,
+      tableRow: handleTableRow
+    }
+  };
+  function handleTable(node4, _, state, info2) {
+    return serializeData(handleTableAsData(node4, state, info2), node4.align);
+  }
+  function handleTableRow(node4, _, state, info2) {
+    const row = handleTableRowAsData(node4, state, info2);
+    const value = serializeData([row]);
+    return value.slice(0, value.indexOf("\n"));
+  }
+  function handleTableCell(node4, _, state, info2) {
+    const exit3 = state.enter("tableCell");
+    const subexit = state.enter("phrasing");
+    const value = state.containerPhrasing(node4, {
+      ...info2,
+      before: around,
+      after: around
+    });
+    subexit();
+    exit3();
+    return value;
+  }
+  function serializeData(matrix, align) {
+    return markdownTable(matrix, {
+      align,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      alignDelimiters,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      padding,
+      // @ts-expect-error: `markdown-table` types should support `null`.
+      stringLength
+    });
+  }
+  function handleTableAsData(node4, state, info2) {
+    const children = node4.children;
+    let index3 = -1;
+    const result = [];
+    const subexit = state.enter("table");
+    while (++index3 < children.length) {
+      result[index3] = handleTableRowAsData(children[index3], state, info2);
+    }
+    subexit();
+    return result;
+  }
+  function handleTableRowAsData(node4, state, info2) {
+    const children = node4.children;
+    let index3 = -1;
+    const result = [];
+    const subexit = state.enter("tableRow");
+    while (++index3 < children.length) {
+      result[index3] = handleTableCell(children[index3], node4, state, info2);
+    }
+    subexit();
+    return result;
+  }
+  function inlineCodeWithTable(node4, parent, state) {
+    let value = handle2.inlineCode(node4, parent, state);
+    if (state.stack.includes("tableCell")) {
+      value = value.replace(/\|/g, "\\$&");
+    }
+    return value;
+  }
+}
+
+// node_modules/mdast-util-gfm-task-list-item/lib/index.js
+function gfmTaskListItemFromMarkdown() {
+  return {
+    exit: {
+      taskListCheckValueChecked: exitCheck,
+      taskListCheckValueUnchecked: exitCheck,
+      paragraph: exitParagraphWithTaskListItem
+    }
+  };
+}
+function gfmTaskListItemToMarkdown() {
+  return {
+    unsafe: [{ atBreak: true, character: "-", after: "[:|-]" }],
+    handlers: { listItem: listItemWithTaskListItem }
+  };
+}
+function exitCheck(token) {
+  const node4 = this.stack[this.stack.length - 2];
+  ok2(node4.type === "listItem");
+  node4.checked = token.type === "taskListCheckValueChecked";
+}
+function exitParagraphWithTaskListItem(token) {
+  const parent = this.stack[this.stack.length - 2];
+  if (parent && parent.type === "listItem" && typeof parent.checked === "boolean") {
+    const node4 = this.stack[this.stack.length - 1];
+    ok2(node4.type === "paragraph");
+    const head = node4.children[0];
+    if (head && head.type === "text") {
+      const siblings = parent.children;
+      let index3 = -1;
+      let firstParaghraph;
+      while (++index3 < siblings.length) {
+        const sibling = siblings[index3];
+        if (sibling.type === "paragraph") {
+          firstParaghraph = sibling;
+          break;
+        }
+      }
+      if (firstParaghraph === node4) {
+        head.value = head.value.slice(1);
+        if (head.value.length === 0) {
+          node4.children.shift();
+        } else if (node4.position && head.position && typeof head.position.start.offset === "number") {
+          head.position.start.column++;
+          head.position.start.offset++;
+          node4.position.start = Object.assign({}, head.position.start);
+        }
+      }
+    }
+  }
+  this.exit(token);
+}
+function listItemWithTaskListItem(node4, parent, state, info2) {
+  const head = node4.children[0];
+  const checkable = typeof node4.checked === "boolean" && head && head.type === "paragraph";
+  const checkbox = "[" + (node4.checked ? "x" : " ") + "] ";
+  const tracker = state.createTracker(info2);
+  if (checkable) {
+    tracker.move(checkbox);
+  }
+  let value = handle2.listItem(node4, parent, state, {
+    ...info2,
+    ...tracker.current()
+  });
+  if (checkable) {
+    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check);
+  }
+  return value;
+  function check($0) {
+    return $0 + checkbox;
+  }
+}
+
+// node_modules/mdast-util-gfm/lib/index.js
+function gfmFromMarkdown() {
+  return [
+    gfmAutolinkLiteralFromMarkdown(),
+    gfmFootnoteFromMarkdown(),
+    gfmStrikethroughFromMarkdown(),
+    gfmTableFromMarkdown(),
+    gfmTaskListItemFromMarkdown()
+  ];
+}
+function gfmToMarkdown(options) {
+  return {
+    extensions: [
+      gfmAutolinkLiteralToMarkdown(),
+      gfmFootnoteToMarkdown(),
+      gfmStrikethroughToMarkdown(),
+      gfmTableToMarkdown(options),
+      gfmTaskListItemToMarkdown()
+    ]
+  };
+}
+
+// node_modules/micromark-util-chunked/index.js
 function splice2(list5, start, remove, items) {
   const end = list5.length;
   let chunkStart = 0;
@@ -52950,7 +55410,7 @@ function splice2(list5, start, remove, items) {
   }
 }
 
-// node_modules/micromark-extension-gfm/node_modules/micromark-util-combine-extensions/index.js
+// node_modules/micromark-util-combine-extensions/index.js
 var hasOwnProperty2 = {}.hasOwnProperty;
 function combineExtensions2(extensions) {
   const all4 = {};
@@ -52991,35 +55451,6 @@ function constructs2(existing, list5) {
   splice2(existing, 0, 0, before);
 }
 
-// node_modules/micromark-extension-gfm-autolink-literal/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex2 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/micromark-extension-gfm-autolink-literal/node_modules/micromark-util-character/index.js
-var asciiAlpha2 = regexCheck2(/[A-Za-z]/);
-var asciiAlphanumeric2 = regexCheck2(/[\dA-Za-z]/);
-var asciiAtext2 = regexCheck2(/[#-'*+\--9=?A-Z^-~]/);
-function asciiControl2(code4) {
-  return (
-    // Special whitespace codes (which have negative values), C0 and Control
-    // character DEL
-    code4 !== null && (code4 < 32 || code4 === 127)
-  );
-}
-var asciiDigit2 = regexCheck2(/\d/);
-var asciiHexDigit2 = regexCheck2(/[\dA-Fa-f]/);
-var asciiPunctuation2 = regexCheck2(/[!-/:-@[-`{-~]/);
-function markdownLineEndingOrSpace2(code4) {
-  return code4 !== null && (code4 < 0 || code4 === 32);
-}
-var unicodePunctuation2 = regexCheck2(unicodePunctuationRegex2);
-var unicodeWhitespace2 = regexCheck2(/\s/);
-function regexCheck2(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
-  }
-}
-
 // node_modules/micromark-extension-gfm-autolink-literal/lib/syntax.js
 var wwwPrefix = {
   tokenize: tokenizeWwwPrefix,
@@ -53053,27 +55484,29 @@ var emailAutolink = {
   tokenize: tokenizeEmailAutolink,
   previous: previousEmail
 };
-var text4 = {};
-var gfmAutolinkLiteral = {
-  text: text4
-};
-var code2 = 48;
-while (code2 < 123) {
-  text4[code2] = emailAutolink;
-  code2++;
-  if (code2 === 58)
-    code2 = 65;
-  else if (code2 === 91)
-    code2 = 97;
+var text5 = {};
+function gfmAutolinkLiteral() {
+  return {
+    text: text5
+  };
 }
-text4[43] = emailAutolink;
-text4[45] = emailAutolink;
-text4[46] = emailAutolink;
-text4[95] = emailAutolink;
-text4[72] = [emailAutolink, protocolAutolink];
-text4[104] = [emailAutolink, protocolAutolink];
-text4[87] = [emailAutolink, wwwAutolink];
-text4[119] = [emailAutolink, wwwAutolink];
+var code3 = 48;
+while (code3 < 123) {
+  text5[code3] = emailAutolink;
+  code3++;
+  if (code3 === 58)
+    code3 = 65;
+  else if (code3 === 91)
+    code3 = 97;
+}
+text5[43] = emailAutolink;
+text5[45] = emailAutolink;
+text5[46] = emailAutolink;
+text5[95] = emailAutolink;
+text5[72] = [emailAutolink, protocolAutolink];
+text5[104] = [emailAutolink, protocolAutolink];
+text5[87] = [emailAutolink, wwwAutolink];
+text5[119] = [emailAutolink, wwwAutolink];
 function tokenizeEmailAutolink(effects, ok4, nok) {
   const self2 = this;
   let dot;
@@ -53367,35 +55800,31 @@ function previousUnbalanced(events) {
   return result;
 }
 
-// node_modules/micromark-extension-gfm-footnote/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex3 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/micromark-extension-gfm-footnote/node_modules/micromark-util-character/index.js
-var asciiAlpha3 = regexCheck3(/[A-Za-z]/);
-var asciiAlphanumeric3 = regexCheck3(/[\dA-Za-z]/);
-var asciiAtext3 = regexCheck3(/[#-'*+\--9=?A-Z^-~]/);
-var asciiDigit3 = regexCheck3(/\d/);
-var asciiHexDigit3 = regexCheck3(/[\dA-Fa-f]/);
-var asciiPunctuation3 = regexCheck3(/[!-/:-@[-`{-~]/);
-function markdownLineEnding2(code4) {
-  return code4 !== null && code4 < -2;
-}
-function markdownLineEndingOrSpace3(code4) {
-  return code4 !== null && (code4 < 0 || code4 === 32);
-}
-function markdownSpace2(code4) {
-  return code4 === -2 || code4 === -1 || code4 === 32;
-}
-var unicodePunctuation3 = regexCheck3(unicodePunctuationRegex3);
-var unicodeWhitespace3 = regexCheck3(/\s/);
-function regexCheck3(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
+// node_modules/micromark-util-classify-character/index.js
+function classifyCharacter2(code4) {
+  if (code4 === null || markdownLineEndingOrSpace2(code4) || unicodeWhitespace2(code4)) {
+    return 1;
+  }
+  if (unicodePunctuation2(code4)) {
+    return 2;
   }
 }
 
-// node_modules/micromark-extension-gfm-footnote/node_modules/micromark-factory-space/index.js
+// node_modules/micromark-util-resolve-all/index.js
+function resolveAll2(constructs3, events, context) {
+  const called = [];
+  let index3 = -1;
+  while (++index3 < constructs3.length) {
+    const resolve = constructs3[index3].resolveAll;
+    if (resolve && !called.includes(resolve)) {
+      events = resolve(events, context);
+      called.push(resolve);
+    }
+  }
+  return events;
+}
+
+// node_modules/micromark-factory-space/index.js
 function factorySpace2(effects, ok4, type2, max) {
   const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
   let size = 0;
@@ -53417,7 +55846,7 @@ function factorySpace2(effects, ok4, type2, max) {
   }
 }
 
-// node_modules/micromark-extension-gfm-footnote/node_modules/micromark-core-commonmark/lib/blank-line.js
+// node_modules/micromark-core-commonmark/lib/blank-line.js
 var blankLine2 = {
   tokenize: tokenizeBlankLine2,
   partial: true
@@ -53430,11 +55859,6 @@ function tokenizeBlankLine2(effects, ok4, nok) {
   function after(code4) {
     return code4 === null || markdownLineEnding2(code4) ? ok4(code4) : nok(code4);
   }
-}
-
-// node_modules/micromark-extension-gfm-footnote/node_modules/micromark-util-normalize-identifier/index.js
-function normalizeIdentifier2(value) {
-  return value.replace(/[\t\n\r ]+/g, " ").replace(/^ | $/g, "").toLowerCase().toUpperCase();
 }
 
 // node_modules/micromark-extension-gfm-footnote/lib/syntax.js
@@ -53588,7 +56012,7 @@ function tokenizeGfmFootnoteCall(effects, ok4, nok) {
       size > 999 || // Closing brace with nothing.
       code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code4 === null || code4 === 91 || markdownLineEndingOrSpace3(code4)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace2(code4)
     ) {
       return nok(code4);
     }
@@ -53604,7 +56028,7 @@ function tokenizeGfmFootnoteCall(effects, ok4, nok) {
       effects.exit("gfmFootnoteCall");
       return ok4;
     }
-    if (!markdownLineEndingOrSpace3(code4)) {
+    if (!markdownLineEndingOrSpace2(code4)) {
       data = true;
     }
     size++;
@@ -53652,7 +56076,7 @@ function tokenizeDefinitionStart(effects, ok4, nok) {
       size > 999 || // Closing brace with nothing.
       code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code4 === null || code4 === 91 || markdownLineEndingOrSpace3(code4)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace2(code4)
     ) {
       return nok(code4);
     }
@@ -53666,7 +56090,7 @@ function tokenizeDefinitionStart(effects, ok4, nok) {
       effects.exit("gfmFootnoteDefinitionLabel");
       return labelAfter;
     }
-    if (!markdownLineEndingOrSpace3(code4)) {
+    if (!markdownLineEndingOrSpace2(code4)) {
       data = true;
     }
     size++;
@@ -53721,80 +56145,6 @@ function tokenizeIndent2(effects, ok4, nok) {
   }
 }
 
-// node_modules/micromark-extension-gfm-strikethrough/node_modules/micromark-util-chunked/index.js
-function splice3(list5, start, remove, items) {
-  const end = list5.length;
-  let chunkStart = 0;
-  let parameters;
-  if (start < 0) {
-    start = -start > end ? 0 : end + start;
-  } else {
-    start = start > end ? end : start;
-  }
-  remove = remove > 0 ? remove : 0;
-  if (items.length < 1e4) {
-    parameters = Array.from(items);
-    parameters.unshift(start, remove);
-    list5.splice(...parameters);
-  } else {
-    if (remove)
-      list5.splice(start, remove);
-    while (chunkStart < items.length) {
-      parameters = items.slice(chunkStart, chunkStart + 1e4);
-      parameters.unshift(start, 0);
-      list5.splice(...parameters);
-      chunkStart += 1e4;
-      start += 1e4;
-    }
-  }
-}
-
-// node_modules/micromark-extension-gfm-strikethrough/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex4 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/micromark-extension-gfm-strikethrough/node_modules/micromark-util-character/index.js
-var asciiAlpha4 = regexCheck4(/[A-Za-z]/);
-var asciiAlphanumeric4 = regexCheck4(/[\dA-Za-z]/);
-var asciiAtext4 = regexCheck4(/[#-'*+\--9=?A-Z^-~]/);
-var asciiDigit4 = regexCheck4(/\d/);
-var asciiHexDigit4 = regexCheck4(/[\dA-Fa-f]/);
-var asciiPunctuation4 = regexCheck4(/[!-/:-@[-`{-~]/);
-function markdownLineEndingOrSpace4(code4) {
-  return code4 !== null && (code4 < 0 || code4 === 32);
-}
-var unicodePunctuation4 = regexCheck4(unicodePunctuationRegex4);
-var unicodeWhitespace4 = regexCheck4(/\s/);
-function regexCheck4(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
-  }
-}
-
-// node_modules/micromark-extension-gfm-strikethrough/node_modules/micromark-util-classify-character/index.js
-function classifyCharacter2(code4) {
-  if (code4 === null || markdownLineEndingOrSpace4(code4) || unicodeWhitespace4(code4)) {
-    return 1;
-  }
-  if (unicodePunctuation4(code4)) {
-    return 2;
-  }
-}
-
-// node_modules/micromark-extension-gfm-strikethrough/node_modules/micromark-util-resolve-all/index.js
-function resolveAll2(constructs3, events, context) {
-  const called = [];
-  let index3 = -1;
-  while (++index3 < constructs3.length) {
-    const resolve = constructs3[index3].resolveAll;
-    if (resolve && !called.includes(resolve)) {
-      events = resolve(events, context);
-      called.push(resolve);
-    }
-  }
-  return events;
-}
-
 // node_modules/micromark-extension-gfm-strikethrough/lib/syntax.js
 function gfmStrikethrough(options) {
   const options_ = options || {};
@@ -53845,20 +56195,20 @@ function gfmStrikethrough(options) {
             ];
             const insideSpan2 = context.parser.constructs.insideSpan.null;
             if (insideSpan2) {
-              splice3(
+              splice2(
                 nextEvents,
                 nextEvents.length,
                 0,
                 resolveAll2(insideSpan2, events.slice(open + 1, index3), context)
               );
             }
-            splice3(nextEvents, nextEvents.length, 0, [
+            splice2(nextEvents, nextEvents.length, 0, [
               ["exit", text6, context],
               ["enter", events[index3][1], context],
               ["exit", events[index3][1], context],
               ["exit", strikethrough, context]
             ]);
-            splice3(events, open - 1, index3 - open + 3, nextEvents);
+            splice2(events, open - 1, index3 - open + 3, nextEvents);
             index3 = open + nextEvents.length - 2;
             break;
           }
@@ -53905,56 +56255,6 @@ function gfmStrikethrough(options) {
   }
 }
 
-// node_modules/micromark-extension-gfm-table/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex5 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/micromark-extension-gfm-table/node_modules/micromark-util-character/index.js
-var asciiAlpha5 = regexCheck5(/[A-Za-z]/);
-var asciiAlphanumeric5 = regexCheck5(/[\dA-Za-z]/);
-var asciiAtext5 = regexCheck5(/[#-'*+\--9=?A-Z^-~]/);
-var asciiDigit5 = regexCheck5(/\d/);
-var asciiHexDigit5 = regexCheck5(/[\dA-Fa-f]/);
-var asciiPunctuation5 = regexCheck5(/[!-/:-@[-`{-~]/);
-function markdownLineEnding3(code4) {
-  return code4 !== null && code4 < -2;
-}
-function markdownLineEndingOrSpace5(code4) {
-  return code4 !== null && (code4 < 0 || code4 === 32);
-}
-function markdownSpace3(code4) {
-  return code4 === -2 || code4 === -1 || code4 === 32;
-}
-var unicodePunctuation5 = regexCheck5(unicodePunctuationRegex5);
-var unicodeWhitespace5 = regexCheck5(/\s/);
-function regexCheck5(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
-  }
-}
-
-// node_modules/micromark-extension-gfm-table/node_modules/micromark-factory-space/index.js
-function factorySpace3(effects, ok4, type2, max) {
-  const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
-  let size = 0;
-  return start;
-  function start(code4) {
-    if (markdownSpace3(code4)) {
-      effects.enter(type2);
-      return prefix(code4);
-    }
-    return ok4(code4);
-  }
-  function prefix(code4) {
-    if (markdownSpace3(code4) && size++ < limit) {
-      effects.consume(code4);
-      return prefix;
-    }
-    effects.exit(type2);
-    return ok4(code4);
-  }
-}
-
 // node_modules/micromark-extension-gfm-table/lib/edit-map.js
 var EditMap = class {
   /**
@@ -53969,19 +56269,19 @@ var EditMap = class {
    * @param {number} index
    * @param {number} remove
    * @param {Array<Event>} add
-   * @returns {void}
+   * @returns {undefined}
    */
   add(index3, remove, add) {
     addImpl(this, index3, remove, add);
   }
-  // To do: not used here.
+  // To do: add this when moving to `micromark`.
   // /**
   //  * Create an edit: but insert `add` before existing additions.
   //  *
   //  * @param {number} index
   //  * @param {number} remove
   //  * @param {Array<Event>} add
-  //  * @returns {void}
+  //  * @returns {undefined}
   //  */
   // addBefore(index, remove, add) {
   //   addImpl(this, index, remove, add, true)
@@ -53990,10 +56290,12 @@ var EditMap = class {
    * Done, change the events.
    *
    * @param {Array<Event>} events
-   * @returns {void}
+   * @returns {undefined}
    */
   consume(events) {
-    this.map.sort((a, b) => a[0] - b[0]);
+    this.map.sort(function(a, b) {
+      return a[0] - b[0];
+    });
     if (this.map.length === 0) {
       return;
     }
@@ -54001,8 +56303,10 @@ var EditMap = class {
     const vecs = [];
     while (index3 > 0) {
       index3 -= 1;
-      vecs.push(events.slice(this.map[index3][0] + this.map[index3][1]));
-      vecs.push(this.map[index3][2]);
+      vecs.push(
+        events.slice(this.map[index3][0] + this.map[index3][1]),
+        this.map[index3][2]
+      );
       events.length = this.map[index3][0];
     }
     vecs.push([...events]);
@@ -54061,14 +56365,16 @@ function gfmTableAlign(events, index3) {
 }
 
 // node_modules/micromark-extension-gfm-table/lib/syntax.js
-var gfmTable = {
-  flow: {
-    null: {
-      tokenize: tokenizeTable,
-      resolveAll: resolveTable
+function gfmTable() {
+  return {
+    flow: {
+      null: {
+        tokenize: tokenizeTable,
+        resolveAll: resolveTable
+      }
     }
-  }
-};
+  };
+}
 function tokenizeTable(effects, ok4, nok) {
   const self2 = this;
   let size = 0;
@@ -54109,7 +56415,7 @@ function tokenizeTable(effects, ok4, nok) {
     if (code4 === null) {
       return nok(code4);
     }
-    if (markdownLineEnding3(code4)) {
+    if (markdownLineEnding2(code4)) {
       if (sizeB > 1) {
         sizeB = 0;
         self2.interrupt = true;
@@ -54121,8 +56427,8 @@ function tokenizeTable(effects, ok4, nok) {
       }
       return nok(code4);
     }
-    if (markdownSpace3(code4)) {
-      return factorySpace3(effects, headRowBreak, "whitespace")(code4);
+    if (markdownSpace2(code4)) {
+      return factorySpace2(effects, headRowBreak, "whitespace")(code4);
     }
     sizeB += 1;
     if (seen) {
@@ -54140,7 +56446,7 @@ function tokenizeTable(effects, ok4, nok) {
     return headRowData(code4);
   }
   function headRowData(code4) {
-    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace5(code4)) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace2(code4)) {
       effects.exit("data");
       return headRowBreak(code4);
     }
@@ -54161,8 +56467,8 @@ function tokenizeTable(effects, ok4, nok) {
     }
     effects.enter("tableDelimiterRow");
     seen = false;
-    if (markdownSpace3(code4)) {
-      return factorySpace3(
+    if (markdownSpace2(code4)) {
+      return factorySpace2(
         effects,
         headDelimiterBefore,
         "linePrefix",
@@ -54185,8 +56491,8 @@ function tokenizeTable(effects, ok4, nok) {
     return headDelimiterNok(code4);
   }
   function headDelimiterCellBefore(code4) {
-    if (markdownSpace3(code4)) {
-      return factorySpace3(effects, headDelimiterValueBefore, "whitespace")(code4);
+    if (markdownSpace2(code4)) {
+      return factorySpace2(effects, headDelimiterValueBefore, "whitespace")(code4);
     }
     return headDelimiterValueBefore(code4);
   }
@@ -54203,7 +56509,7 @@ function tokenizeTable(effects, ok4, nok) {
       sizeB += 1;
       return headDelimiterLeftAlignmentAfter(code4);
     }
-    if (code4 === null || markdownLineEnding3(code4)) {
+    if (code4 === null || markdownLineEnding2(code4)) {
       return headDelimiterCellAfter(code4);
     }
     return headDelimiterNok(code4);
@@ -54232,8 +56538,8 @@ function tokenizeTable(effects, ok4, nok) {
     return headDelimiterRightAlignmentAfter(code4);
   }
   function headDelimiterRightAlignmentAfter(code4) {
-    if (markdownSpace3(code4)) {
-      return factorySpace3(effects, headDelimiterCellAfter, "whitespace")(code4);
+    if (markdownSpace2(code4)) {
+      return factorySpace2(effects, headDelimiterCellAfter, "whitespace")(code4);
     }
     return headDelimiterCellAfter(code4);
   }
@@ -54241,7 +56547,7 @@ function tokenizeTable(effects, ok4, nok) {
     if (code4 === 124) {
       return headDelimiterBefore(code4);
     }
-    if (code4 === null || markdownLineEnding3(code4)) {
+    if (code4 === null || markdownLineEnding2(code4)) {
       if (!seen || size !== sizeB) {
         return headDelimiterNok(code4);
       }
@@ -54265,18 +56571,18 @@ function tokenizeTable(effects, ok4, nok) {
       effects.exit("tableCellDivider");
       return bodyRowBreak;
     }
-    if (code4 === null || markdownLineEnding3(code4)) {
+    if (code4 === null || markdownLineEnding2(code4)) {
       effects.exit("tableRow");
       return ok4(code4);
     }
-    if (markdownSpace3(code4)) {
-      return factorySpace3(effects, bodyRowBreak, "whitespace")(code4);
+    if (markdownSpace2(code4)) {
+      return factorySpace2(effects, bodyRowBreak, "whitespace")(code4);
     }
     effects.enter("data");
     return bodyRowData(code4);
   }
   function bodyRowData(code4) {
-    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace5(code4)) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace2(code4)) {
       effects.exit("data");
       return bodyRowBreak(code4);
     }
@@ -54302,7 +56608,7 @@ function resolveTable(events, context) {
   let currentTable;
   let currentBody;
   let currentCell;
-  const map9 = new EditMap();
+  const map8 = new EditMap();
   while (++index3 < events.length) {
     const event = events[index3];
     const token = event[1];
@@ -54310,7 +56616,7 @@ function resolveTable(events, context) {
       if (token.type === "tableHead") {
         afterHeadAwaitingFirstBodyRow = false;
         if (lastTableEnd !== 0) {
-          flushTableEnd(map9, context, lastTableEnd, currentTable, currentBody);
+          flushTableEnd(map8, context, lastTableEnd, currentTable, currentBody);
           currentBody = void 0;
           lastTableEnd = 0;
         }
@@ -54320,7 +56626,7 @@ function resolveTable(events, context) {
           // Note: correct end is set later.
           end: Object.assign({}, token.end)
         };
-        map9.add(index3, 0, [["enter", currentTable, context]]);
+        map8.add(index3, 0, [["enter", currentTable, context]]);
       } else if (token.type === "tableRow" || token.type === "tableDelimiterRow") {
         inFirstCellAwaitingPipe = true;
         currentCell = void 0;
@@ -54334,7 +56640,7 @@ function resolveTable(events, context) {
             // Note: correct end is set later.
             end: Object.assign({}, token.end)
           };
-          map9.add(index3, 0, [["enter", currentBody, context]]);
+          map8.add(index3, 0, [["enter", currentBody, context]]);
         }
         rowKind = token.type === "tableDelimiterRow" ? 2 : currentBody ? 3 : 1;
       } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
@@ -54343,7 +56649,7 @@ function resolveTable(events, context) {
           if (lastCell[1] !== 0) {
             cell[0] = cell[1];
             currentCell = flushCell(
-              map9,
+              map8,
               context,
               lastCell,
               rowKind,
@@ -54361,7 +56667,7 @@ function resolveTable(events, context) {
           if (lastCell[1] !== 0) {
             cell[0] = cell[1];
             currentCell = flushCell(
-              map9,
+              map8,
               context,
               lastCell,
               rowKind,
@@ -54381,7 +56687,7 @@ function resolveTable(events, context) {
       if (lastCell[1] !== 0) {
         cell[0] = cell[1];
         currentCell = flushCell(
-          map9,
+          map8,
           context,
           lastCell,
           rowKind,
@@ -54389,7 +56695,7 @@ function resolveTable(events, context) {
           currentCell
         );
       } else if (cell[1] !== 0) {
-        currentCell = flushCell(map9, context, cell, rowKind, index3, currentCell);
+        currentCell = flushCell(map8, context, cell, rowKind, index3, currentCell);
       }
       rowKind = 0;
     } else if (rowKind && (token.type === "data" || token.type === "tableDelimiterMarker" || token.type === "tableDelimiterFiller")) {
@@ -54397,9 +56703,9 @@ function resolveTable(events, context) {
     }
   }
   if (lastTableEnd !== 0) {
-    flushTableEnd(map9, context, lastTableEnd, currentTable, currentBody);
+    flushTableEnd(map8, context, lastTableEnd, currentTable, currentBody);
   }
-  map9.consume(context.events);
+  map8.consume(context.events);
   index3 = -1;
   while (++index3 < context.events.length) {
     const event = context.events[index3];
@@ -54409,12 +56715,12 @@ function resolveTable(events, context) {
   }
   return events;
 }
-function flushCell(map9, context, range, rowKind, rowEnd, previousCell) {
+function flushCell(map8, context, range, rowKind, rowEnd, previousCell) {
   const groupName = rowKind === 1 ? "tableHeader" : rowKind === 2 ? "tableDelimiter" : "tableData";
   const valueName = "tableContent";
   if (range[0] !== 0) {
     previousCell.end = Object.assign({}, getPoint(context.events, range[0]));
-    map9.add(range[0], 0, [["exit", previousCell, context]]);
+    map8.add(range[0], 0, [["exit", previousCell, context]]);
   }
   const now = getPoint(context.events, range[1]);
   previousCell = {
@@ -54423,7 +56729,7 @@ function flushCell(map9, context, range, rowKind, rowEnd, previousCell) {
     // Note: correct end is set later.
     end: Object.assign({}, now)
   };
-  map9.add(range[1], 0, [["enter", previousCell, context]]);
+  map8.add(range[1], 0, [["enter", previousCell, context]]);
   if (range[2] !== 0) {
     const relatedStart = getPoint(context.events, range[2]);
     const relatedEnd = getPoint(context.events, range[3]);
@@ -54432,7 +56738,7 @@ function flushCell(map9, context, range, rowKind, rowEnd, previousCell) {
       start: Object.assign({}, relatedStart),
       end: Object.assign({}, relatedEnd)
     };
-    map9.add(range[2], 0, [["enter", valueToken, context]]);
+    map8.add(range[2], 0, [["enter", valueToken, context]]);
     if (rowKind !== 2) {
       const start = context.events[range[2]];
       const end = context.events[range[3]];
@@ -54442,19 +56748,19 @@ function flushCell(map9, context, range, rowKind, rowEnd, previousCell) {
       if (range[3] > range[2] + 1) {
         const a = range[2] + 1;
         const b = range[3] - range[2] - 1;
-        map9.add(a, b, []);
+        map8.add(a, b, []);
       }
     }
-    map9.add(range[3] + 1, 0, [["exit", valueToken, context]]);
+    map8.add(range[3] + 1, 0, [["exit", valueToken, context]]);
   }
   if (rowEnd !== void 0) {
     previousCell.end = Object.assign({}, getPoint(context.events, rowEnd));
-    map9.add(rowEnd, 0, [["exit", previousCell, context]]);
+    map8.add(rowEnd, 0, [["exit", previousCell, context]]);
     previousCell = void 0;
   }
   return previousCell;
 }
-function flushTableEnd(map9, context, index3, table, tableBody) {
+function flushTableEnd(map8, context, index3, table, tableBody) {
   const exits = [];
   const related = getPoint(context.events, index3);
   if (tableBody) {
@@ -54463,7 +56769,7 @@ function flushTableEnd(map9, context, index3, table, tableBody) {
   }
   table.end = Object.assign({}, related);
   exits.push(["exit", table, context]);
-  map9.add(index3 + 1, 0, exits);
+  map8.add(index3 + 1, 0, exits);
 }
 function getPoint(events, index3) {
   const event = events[index3];
@@ -54471,65 +56777,17 @@ function getPoint(events, index3) {
   return event[1][side];
 }
 
-// node_modules/micromark-extension-gfm-task-list-item/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex6 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/micromark-extension-gfm-task-list-item/node_modules/micromark-util-character/index.js
-var asciiAlpha6 = regexCheck6(/[A-Za-z]/);
-var asciiAlphanumeric6 = regexCheck6(/[\dA-Za-z]/);
-var asciiAtext6 = regexCheck6(/[#-'*+\--9=?A-Z^-~]/);
-var asciiDigit6 = regexCheck6(/\d/);
-var asciiHexDigit6 = regexCheck6(/[\dA-Fa-f]/);
-var asciiPunctuation6 = regexCheck6(/[!-/:-@[-`{-~]/);
-function markdownLineEnding4(code4) {
-  return code4 !== null && code4 < -2;
-}
-function markdownLineEndingOrSpace6(code4) {
-  return code4 !== null && (code4 < 0 || code4 === 32);
-}
-function markdownSpace4(code4) {
-  return code4 === -2 || code4 === -1 || code4 === 32;
-}
-var unicodePunctuation6 = regexCheck6(unicodePunctuationRegex6);
-var unicodeWhitespace6 = regexCheck6(/\s/);
-function regexCheck6(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
-  }
-}
-
-// node_modules/micromark-extension-gfm-task-list-item/node_modules/micromark-factory-space/index.js
-function factorySpace4(effects, ok4, type2, max) {
-  const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
-  let size = 0;
-  return start;
-  function start(code4) {
-    if (markdownSpace4(code4)) {
-      effects.enter(type2);
-      return prefix(code4);
-    }
-    return ok4(code4);
-  }
-  function prefix(code4) {
-    if (markdownSpace4(code4) && size++ < limit) {
-      effects.consume(code4);
-      return prefix;
-    }
-    effects.exit(type2);
-    return ok4(code4);
-  }
-}
-
 // node_modules/micromark-extension-gfm-task-list-item/lib/syntax.js
 var tasklistCheck = {
   tokenize: tokenizeTasklistCheck
 };
-var gfmTaskListItem = {
-  text: {
-    [91]: tasklistCheck
-  }
-};
+function gfmTaskListItem() {
+  return {
+    text: {
+      [91]: tasklistCheck
+    }
+  };
+}
 function tokenizeTasklistCheck(effects, ok4, nok) {
   const self2 = this;
   return open;
@@ -54549,7 +56807,7 @@ function tokenizeTasklistCheck(effects, ok4, nok) {
     return inside;
   }
   function inside(code4) {
-    if (markdownLineEndingOrSpace6(code4)) {
+    if (markdownLineEndingOrSpace2(code4)) {
       effects.enter("taskListCheckValueUnchecked");
       effects.consume(code4);
       effects.exit("taskListCheckValueUnchecked");
@@ -54574,10 +56832,10 @@ function tokenizeTasklistCheck(effects, ok4, nok) {
     return nok(code4);
   }
   function after(code4) {
-    if (markdownLineEnding4(code4)) {
+    if (markdownLineEnding2(code4)) {
       return ok4(code4);
     }
-    if (markdownSpace4(code4)) {
+    if (markdownSpace2(code4)) {
       return effects.check(
         {
           tokenize: spaceThenNonSpace
@@ -54590,7 +56848,7 @@ function tokenizeTasklistCheck(effects, ok4, nok) {
   }
 }
 function spaceThenNonSpace(effects, ok4, nok) {
-  return factorySpace4(effects, after, "whitespace");
+  return factorySpace2(effects, after, "whitespace");
   function after(code4) {
     return code4 === null ? nok(code4) : ok4(code4);
   }
@@ -54599,1666 +56857,29 @@ function spaceThenNonSpace(effects, ok4, nok) {
 // node_modules/micromark-extension-gfm/index.js
 function gfm(options) {
   return combineExtensions2([
-    gfmAutolinkLiteral,
+    gfmAutolinkLiteral(),
     gfmFootnote(),
     gfmStrikethrough(options),
-    gfmTable,
-    gfmTaskListItem
+    gfmTable(),
+    gfmTaskListItem()
   ]);
 }
 
-// node_modules/ccount/index.js
-function ccount(value, character) {
-  const source = String(value);
-  if (typeof character !== "string") {
-    throw new TypeError("Expected character");
-  }
-  let count = 0;
-  let index3 = source.indexOf(character);
-  while (index3 !== -1) {
-    count++;
-    index3 = source.indexOf(character, index3 + character.length);
-  }
-  return count;
-}
-
-// node_modules/escape-string-regexp/index.js
-function escapeStringRegexp(string3) {
-  if (typeof string3 !== "string") {
-    throw new TypeError("Expected a string");
-  }
-  return string3.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
-}
-
-// node_modules/remark-gfm/node_modules/unist-util-is/lib/index.js
-var convert2 = (
-  /**
-   * @type {(
-   *   (<Kind extends Node>(test: PredicateTest<Kind>) => AssertPredicate<Kind>) &
-   *   ((test?: Test) => AssertAnything)
-   * )}
-   */
-  /**
-   * @param {Test} [test]
-   * @returns {AssertAnything}
-   */
-  function(test) {
-    if (test === void 0 || test === null) {
-      return ok2;
-    }
-    if (typeof test === "string") {
-      return typeFactory2(test);
-    }
-    if (typeof test === "object") {
-      return Array.isArray(test) ? anyFactory2(test) : propsFactory2(test);
-    }
-    if (typeof test === "function") {
-      return castFactory2(test);
-    }
-    throw new Error("Expected function, string, or object as test");
-  }
-);
-function anyFactory2(tests) {
-  const checks = [];
-  let index3 = -1;
-  while (++index3 < tests.length) {
-    checks[index3] = convert2(tests[index3]);
-  }
-  return castFactory2(any);
-  function any(...parameters) {
-    let index4 = -1;
-    while (++index4 < checks.length) {
-      if (checks[index4].call(this, ...parameters))
-        return true;
-    }
-    return false;
-  }
-}
-function propsFactory2(check) {
-  return castFactory2(all4);
-  function all4(node4) {
-    let key;
-    for (key in check) {
-      if (node4[key] !== check[key])
-        return false;
-    }
-    return true;
-  }
-}
-function typeFactory2(check) {
-  return castFactory2(type2);
-  function type2(node4) {
-    return node4 && node4.type === check;
-  }
-}
-function castFactory2(check) {
-  return assertion;
-  function assertion(node4, ...parameters) {
-    return Boolean(
-      node4 && typeof node4 === "object" && "type" in node4 && // @ts-expect-error: fine.
-      Boolean(check.call(this, node4, ...parameters))
-    );
-  }
-}
-function ok2() {
-  return true;
-}
-
-// node_modules/remark-gfm/node_modules/unist-util-visit-parents/lib/color.js
-function color2(d) {
-  return "\x1B[33m" + d + "\x1B[39m";
-}
-
-// node_modules/remark-gfm/node_modules/unist-util-visit-parents/lib/index.js
-var CONTINUE2 = true;
-var EXIT2 = false;
-var SKIP2 = "skip";
-var visitParents2 = (
-  /**
-   * @type {(
-   *   (<Tree extends Node, Check extends Test>(tree: Tree, test: Check, visitor: BuildVisitor<Tree, Check>, reverse?: boolean | null | undefined) => void) &
-   *   (<Tree extends Node>(tree: Tree, visitor: BuildVisitor<Tree>, reverse?: boolean | null | undefined) => void)
-   * )}
-   */
-  /**
-   * @param {Node} tree
-   * @param {Test} test
-   * @param {Visitor<Node>} visitor
-   * @param {boolean | null | undefined} [reverse]
-   * @returns {void}
-   */
-  function(tree, test, visitor, reverse) {
-    if (typeof test === "function" && typeof visitor !== "function") {
-      reverse = visitor;
-      visitor = test;
-      test = null;
-    }
-    const is4 = convert2(test);
-    const step = reverse ? -1 : 1;
-    factory(tree, void 0, [])();
-    function factory(node4, index3, parents) {
-      const value = node4 && typeof node4 === "object" ? node4 : {};
-      if (typeof value.type === "string") {
-        const name = (
-          // `hast`
-          typeof value.tagName === "string" ? value.tagName : (
-            // `xast`
-            typeof value.name === "string" ? value.name : void 0
-          )
-        );
-        Object.defineProperty(visit3, "name", {
-          value: "node (" + color2(node4.type + (name ? "<" + name + ">" : "")) + ")"
-        });
-      }
-      return visit3;
-      function visit3() {
-        let result = [];
-        let subresult;
-        let offset;
-        let grandparents;
-        if (!test || is4(node4, index3, parents[parents.length - 1] || null)) {
-          result = toResult2(visitor(node4, parents));
-          if (result[0] === EXIT2) {
-            return result;
-          }
-        }
-        if (node4.children && result[0] !== SKIP2) {
-          offset = (reverse ? node4.children.length : -1) + step;
-          grandparents = parents.concat(node4);
-          while (offset > -1 && offset < node4.children.length) {
-            subresult = factory(node4.children[offset], offset, grandparents)();
-            if (subresult[0] === EXIT2) {
-              return subresult;
-            }
-            offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
-          }
-        }
-        return result;
-      }
-    }
-  }
-);
-function toResult2(value) {
-  if (Array.isArray(value)) {
-    return value;
-  }
-  if (typeof value === "number") {
-    return [CONTINUE2, value];
-  }
-  return [value];
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-find-and-replace/lib/index.js
-var own5 = {}.hasOwnProperty;
-var findAndReplace = (
-  /**
-   * @type {(
-   *   (<Tree extends Node>(tree: Tree, find: Find, replace?: Replace | null | undefined, options?: Options | null | undefined) => Tree) &
-   *   (<Tree extends Node>(tree: Tree, schema: FindAndReplaceSchema | FindAndReplaceList, options?: Options | null | undefined) => Tree)
-   * )}
-   **/
-  /**
-   * @template {Node} Tree
-   * @param {Tree} tree
-   * @param {Find | FindAndReplaceSchema | FindAndReplaceList} find
-   * @param {Replace | Options | null | undefined} [replace]
-   * @param {Options | null | undefined} [options]
-   * @returns {Tree}
-   */
-  function(tree, find, replace2, options) {
-    let settings;
-    let schema2;
-    if (typeof find === "string" || find instanceof RegExp) {
-      schema2 = [[find, replace2]];
-      settings = options;
-    } else {
-      schema2 = find;
-      settings = replace2;
-    }
-    if (!settings) {
-      settings = {};
-    }
-    const ignored = convert2(settings.ignore || []);
-    const pairs2 = toPairs(schema2);
-    let pairIndex = -1;
-    while (++pairIndex < pairs2.length) {
-      visitParents2(tree, "text", visitor);
-    }
-    return tree;
-    function visitor(node4, parents) {
-      let index3 = -1;
-      let grandparent;
-      while (++index3 < parents.length) {
-        const parent = parents[index3];
-        if (ignored(
-          parent,
-          // @ts-expect-error: TS doesn’t understand but it’s perfect.
-          grandparent ? grandparent.children.indexOf(parent) : void 0,
-          grandparent
-        )) {
-          return;
-        }
-        grandparent = parent;
-      }
-      if (grandparent) {
-        return handler(node4, parents);
-      }
-    }
-    function handler(node4, parents) {
-      const parent = parents[parents.length - 1];
-      const find2 = pairs2[pairIndex][0];
-      const replace3 = pairs2[pairIndex][1];
-      let start = 0;
-      const index3 = parent.children.indexOf(node4);
-      let change = false;
-      let nodes = [];
-      find2.lastIndex = 0;
-      let match = find2.exec(node4.value);
-      while (match) {
-        const position3 = match.index;
-        const matchObject = {
-          index: match.index,
-          input: match.input,
-          // @ts-expect-error: stack is fine.
-          stack: [...parents, node4]
-        };
-        let value = replace3(...match, matchObject);
-        if (typeof value === "string") {
-          value = value.length > 0 ? { type: "text", value } : void 0;
-        }
-        if (value !== false) {
-          if (start !== position3) {
-            nodes.push({
-              type: "text",
-              value: node4.value.slice(start, position3)
-            });
-          }
-          if (Array.isArray(value)) {
-            nodes.push(...value);
-          } else if (value) {
-            nodes.push(value);
-          }
-          start = position3 + match[0].length;
-          change = true;
-        }
-        if (!find2.global) {
-          break;
-        }
-        match = find2.exec(node4.value);
-      }
-      if (change) {
-        if (start < node4.value.length) {
-          nodes.push({ type: "text", value: node4.value.slice(start) });
-        }
-        parent.children.splice(index3, 1, ...nodes);
-      } else {
-        nodes = [node4];
-      }
-      return index3 + nodes.length;
-    }
-  }
-);
-function toPairs(schema2) {
-  const result = [];
-  if (typeof schema2 !== "object") {
-    throw new TypeError("Expected array or object as schema");
-  }
-  if (Array.isArray(schema2)) {
-    let index3 = -1;
-    while (++index3 < schema2.length) {
-      result.push([
-        toExpression(schema2[index3][0]),
-        toFunction(schema2[index3][1])
-      ]);
-    }
-  } else {
-    let key;
-    for (key in schema2) {
-      if (own5.call(schema2, key)) {
-        result.push([toExpression(key), toFunction(schema2[key])]);
-      }
-    }
-  }
-  return result;
-}
-function toExpression(find) {
-  return typeof find === "string" ? new RegExp(escapeStringRegexp(find), "g") : find;
-}
-function toFunction(replace2) {
-  return typeof replace2 === "function" ? replace2 : () => replace2;
-}
-
-// node_modules/remark-gfm/node_modules/micromark-util-character/lib/unicode-punctuation-regex.js
-var unicodePunctuationRegex7 = /[!-\/:-@\[-`\{-~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061D-\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C77\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1B7D\u1B7E\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4F\u2E52-\u2E5D\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]/;
-
-// node_modules/remark-gfm/node_modules/micromark-util-character/index.js
-var asciiAlpha7 = regexCheck7(/[A-Za-z]/);
-var asciiAlphanumeric7 = regexCheck7(/[\dA-Za-z]/);
-var asciiAtext7 = regexCheck7(/[#-'*+\--9=?A-Z^-~]/);
-var asciiDigit7 = regexCheck7(/\d/);
-var asciiHexDigit7 = regexCheck7(/[\dA-Fa-f]/);
-var asciiPunctuation7 = regexCheck7(/[!-/:-@[-`{-~]/);
-var unicodePunctuation7 = regexCheck7(unicodePunctuationRegex7);
-var unicodeWhitespace7 = regexCheck7(/\s/);
-function regexCheck7(regex) {
-  return check;
-  function check(code4) {
-    return code4 !== null && regex.test(String.fromCharCode(code4));
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm-autolink-literal/lib/index.js
-var inConstruct = "phrasing";
-var notInConstruct = ["autolink", "link", "image", "label"];
-var gfmAutolinkLiteralFromMarkdown = {
-  transforms: [transformGfmAutolinkLiterals],
-  enter: {
-    literalAutolink: enterLiteralAutolink,
-    literalAutolinkEmail: enterLiteralAutolinkValue,
-    literalAutolinkHttp: enterLiteralAutolinkValue,
-    literalAutolinkWww: enterLiteralAutolinkValue
-  },
-  exit: {
-    literalAutolink: exitLiteralAutolink,
-    literalAutolinkEmail: exitLiteralAutolinkEmail,
-    literalAutolinkHttp: exitLiteralAutolinkHttp,
-    literalAutolinkWww: exitLiteralAutolinkWww
-  }
-};
-var gfmAutolinkLiteralToMarkdown = {
-  unsafe: [
-    {
-      character: "@",
-      before: "[+\\-.\\w]",
-      after: "[\\-.\\w]",
-      inConstruct,
-      notInConstruct
-    },
-    {
-      character: ".",
-      before: "[Ww]",
-      after: "[\\-.\\w]",
-      inConstruct,
-      notInConstruct
-    },
-    { character: ":", before: "[ps]", after: "\\/", inConstruct, notInConstruct }
-  ]
-};
-function enterLiteralAutolink(token) {
-  this.enter({ type: "link", title: null, url: "", children: [] }, token);
-}
-function enterLiteralAutolinkValue(token) {
-  this.config.enter.autolinkProtocol.call(this, token);
-}
-function exitLiteralAutolinkHttp(token) {
-  this.config.exit.autolinkProtocol.call(this, token);
-}
-function exitLiteralAutolinkWww(token) {
-  this.config.exit.data.call(this, token);
-  const node4 = (
-    /** @type {Link} */
-    this.stack[this.stack.length - 1]
+// node_modules/remark-gfm/lib/index.js
+var emptyOptions4 = {};
+function remarkGfm(options) {
+  const self2 = (
+    /** @type {Processor} */
+    this
   );
-  node4.url = "http://" + this.sliceSerialize(token);
-}
-function exitLiteralAutolinkEmail(token) {
-  this.config.exit.autolinkEmail.call(this, token);
-}
-function exitLiteralAutolink(token) {
-  this.exit(token);
-}
-function transformGfmAutolinkLiterals(tree) {
-  findAndReplace(
-    tree,
-    [
-      [/(https?:\/\/|www(?=\.))([-.\w]+)([^ \t\r\n]*)/gi, findUrl],
-      [/([-.\w+]+)@([-\w]+(?:\.[-\w]+)+)/g, findEmail]
-    ],
-    { ignore: ["link", "linkReference"] }
-  );
-}
-function findUrl(_, protocol, domain2, path2, match) {
-  let prefix = "";
-  if (!previous2(match)) {
-    return false;
-  }
-  if (/^w/i.test(protocol)) {
-    domain2 = protocol + domain2;
-    protocol = "";
-    prefix = "http://";
-  }
-  if (!isCorrectDomain(domain2)) {
-    return false;
-  }
-  const parts = splitUrl(domain2 + path2);
-  if (!parts[0])
-    return false;
-  const result = {
-    type: "link",
-    title: null,
-    url: prefix + protocol + parts[0],
-    children: [{ type: "text", value: protocol + parts[0] }]
-  };
-  if (parts[1]) {
-    return [result, { type: "text", value: parts[1] }];
-  }
-  return result;
-}
-function findEmail(_, atext, label, match) {
-  if (
-    // Not an expected previous character.
-    !previous2(match, true) || // Label ends in not allowed character.
-    /[-\d_]$/.test(label)
-  ) {
-    return false;
-  }
-  return {
-    type: "link",
-    title: null,
-    url: "mailto:" + atext + "@" + label,
-    children: [{ type: "text", value: atext + "@" + label }]
-  };
-}
-function isCorrectDomain(domain2) {
-  const parts = domain2.split(".");
-  if (parts.length < 2 || parts[parts.length - 1] && (/_/.test(parts[parts.length - 1]) || !/[a-zA-Z\d]/.test(parts[parts.length - 1])) || parts[parts.length - 2] && (/_/.test(parts[parts.length - 2]) || !/[a-zA-Z\d]/.test(parts[parts.length - 2]))) {
-    return false;
-  }
-  return true;
-}
-function splitUrl(url) {
-  const trailExec = /[!"&'),.:;<>?\]}]+$/.exec(url);
-  if (!trailExec) {
-    return [url, void 0];
-  }
-  url = url.slice(0, trailExec.index);
-  let trail2 = trailExec[0];
-  let closingParenIndex = trail2.indexOf(")");
-  const openingParens = ccount(url, "(");
-  let closingParens = ccount(url, ")");
-  while (closingParenIndex !== -1 && openingParens > closingParens) {
-    url += trail2.slice(0, closingParenIndex + 1);
-    trail2 = trail2.slice(closingParenIndex + 1);
-    closingParenIndex = trail2.indexOf(")");
-    closingParens++;
-  }
-  return [url, trail2];
-}
-function previous2(match, email) {
-  const code4 = match.input.charCodeAt(match.index - 1);
-  return (match.index === 0 || unicodeWhitespace7(code4) || unicodePunctuation7(code4)) && (!email || code4 !== 47);
-}
-
-// node_modules/remark-gfm/node_modules/micromark-util-normalize-identifier/index.js
-function normalizeIdentifier3(value) {
-  return value.replace(/[\t\n\r ]+/g, " ").replace(/^ | $/g, "").toLowerCase().toUpperCase();
-}
-
-// node_modules/remark-gfm/node_modules/micromark-util-decode-numeric-character-reference/index.js
-function decodeNumericCharacterReference3(value, base2) {
-  const code4 = Number.parseInt(value, base2);
-  if (
-    // C0 except for HT, LF, FF, CR, space.
-    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of C0, and C1 controls.
-    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
-    code4 > 55295 && code4 < 57344 || // Noncharacters.
-    code4 > 64975 && code4 < 65008 || (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || // Out of range
-    code4 > 1114111
-  ) {
-    return "\uFFFD";
-  }
-  return String.fromCharCode(code4);
-}
-
-// node_modules/remark-gfm/node_modules/micromark-util-decode-string/index.js
-var characterEscapeOrReference3 = /\\([!-/:-@[-`{-~])|&(#(?:\d{1,7}|x[\da-f]{1,6})|[\da-z]{1,31});/gi;
-function decodeString3(value) {
-  return value.replace(characterEscapeOrReference3, decode3);
-}
-function decode3($0, $1, $2) {
-  if ($1) {
-    return $1;
-  }
-  const head = $2.charCodeAt(0);
-  if (head === 35) {
-    const head2 = $2.charCodeAt(1);
-    const hex = head2 === 120 || head2 === 88;
-    return decodeNumericCharacterReference3($2.slice(hex ? 2 : 1), hex ? 16 : 10);
-  }
-  return decodeNamedCharacterReference($2) || $0;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/association.js
-function association2(node4) {
-  if (node4.label || !node4.identifier) {
-    return node4.label || "";
-  }
-  return decodeString3(node4.identifier);
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/container-flow.js
-function containerFlow2(parent, state, info2) {
-  const indexStack = state.indexStack;
-  const children = parent.children || [];
-  const tracker = state.createTracker(info2);
-  const results = [];
-  let index3 = -1;
-  indexStack.push(-1);
-  while (++index3 < children.length) {
-    const child = children[index3];
-    indexStack[indexStack.length - 1] = index3;
-    results.push(
-      tracker.move(
-        state.handle(child, parent, state, {
-          before: "\n",
-          after: "\n",
-          ...tracker.current()
-        })
-      )
-    );
-    if (child.type !== "list") {
-      state.bulletLastUsed = void 0;
-    }
-    if (index3 < children.length - 1) {
-      results.push(
-        tracker.move(between2(child, children[index3 + 1], parent, state))
-      );
-    }
-  }
-  indexStack.pop();
-  return results.join("");
-}
-function between2(left, right, parent, state) {
-  let index3 = state.join.length;
-  while (index3--) {
-    const result = state.join[index3](left, right, parent, state);
-    if (result === true || result === 1) {
-      break;
-    }
-    if (typeof result === "number") {
-      return "\n".repeat(1 + result);
-    }
-    if (result === false) {
-      return "\n\n<!---->\n\n";
-    }
-  }
-  return "\n\n";
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
-var eol2 = /\r?\n|\r/g;
-function indentLines2(value, map9) {
-  const result = [];
-  let start = 0;
-  let line = 0;
-  let match;
-  while (match = eol2.exec(value)) {
-    one4(value.slice(start, match.index));
-    result.push(match[0]);
-    start = match.index + match[0].length;
-    line++;
-  }
-  one4(value.slice(start));
-  return result.join("");
-  function one4(value2) {
-    result.push(map9(value2, line, !value2));
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/pattern-compile.js
-function patternCompile2(pattern) {
-  if (!pattern._compiled) {
-    const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
-    pattern._compiled = new RegExp(
-      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
-      "g"
-    );
-  }
-  return pattern._compiled;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
-function patternInScope2(stack, pattern) {
-  return listInScope2(stack, pattern.inConstruct, true) && !listInScope2(stack, pattern.notInConstruct, false);
-}
-function listInScope2(stack, list5, none) {
-  if (typeof list5 === "string") {
-    list5 = [list5];
-  }
-  if (!list5 || list5.length === 0) {
-    return none;
-  }
-  let index3 = -1;
-  while (++index3 < list5.length) {
-    if (stack.includes(list5[index3])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/safe.js
-function safe2(state, input, config2) {
-  const value = (config2.before || "") + (input || "") + (config2.after || "");
-  const positions = [];
-  const result = [];
-  const infos = {};
-  let index3 = -1;
-  while (++index3 < state.unsafe.length) {
-    const pattern = state.unsafe[index3];
-    if (!patternInScope2(state.stack, pattern)) {
-      continue;
-    }
-    const expression = patternCompile2(pattern);
-    let match;
-    while (match = expression.exec(value)) {
-      const before = "before" in pattern || Boolean(pattern.atBreak);
-      const after = "after" in pattern;
-      const position3 = match.index + (before ? match[1].length : 0);
-      if (positions.includes(position3)) {
-        if (infos[position3].before && !before) {
-          infos[position3].before = false;
-        }
-        if (infos[position3].after && !after) {
-          infos[position3].after = false;
-        }
-      } else {
-        positions.push(position3);
-        infos[position3] = { before, after };
-      }
-    }
-  }
-  positions.sort(numerical2);
-  let start = config2.before ? config2.before.length : 0;
-  const end = value.length - (config2.after ? config2.after.length : 0);
-  index3 = -1;
-  while (++index3 < positions.length) {
-    const position3 = positions[index3];
-    if (position3 < start || position3 >= end) {
-      continue;
-    }
-    if (position3 + 1 < end && positions[index3 + 1] === position3 + 1 && infos[position3].after && !infos[position3 + 1].before && !infos[position3 + 1].after || positions[index3 - 1] === position3 - 1 && infos[position3].before && !infos[position3 - 1].before && !infos[position3 - 1].after) {
-      continue;
-    }
-    if (start !== position3) {
-      result.push(escapeBackslashes2(value.slice(start, position3), "\\"));
-    }
-    start = position3;
-    if (/[!-/:-@[-`{-~]/.test(value.charAt(position3)) && (!config2.encode || !config2.encode.includes(value.charAt(position3)))) {
-      result.push("\\");
-    } else {
-      result.push(
-        "&#x" + value.charCodeAt(position3).toString(16).toUpperCase() + ";"
-      );
-      start++;
-    }
-  }
-  result.push(escapeBackslashes2(value.slice(start, end), config2.after));
-  return result.join("");
-}
-function numerical2(a, b) {
-  return a - b;
-}
-function escapeBackslashes2(value, after) {
-  const expression = /\\(?=[!-/:-@[-`{-~])/g;
-  const positions = [];
-  const results = [];
-  const whole = value + after;
-  let index3 = -1;
-  let start = 0;
-  let match;
-  while (match = expression.exec(whole)) {
-    positions.push(match.index);
-  }
-  while (++index3 < positions.length) {
-    if (start !== positions[index3]) {
-      results.push(value.slice(start, positions[index3]));
-    }
-    results.push("\\");
-    start = positions[index3];
-  }
-  results.push(value.slice(start));
-  return results.join("");
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/track.js
-function track2(config2) {
-  const options = config2 || {};
-  const now = options.now || {};
-  let lineShift = options.lineShift || 0;
-  let line = now.line || 1;
-  let column = now.column || 1;
-  return { move, current, shift };
-  function current() {
-    return { now: { line, column }, lineShift };
-  }
-  function shift(value) {
-    lineShift += value;
-  }
-  function move(input) {
-    const value = input || "";
-    const chunks = value.split(/\r?\n|\r/g);
-    const tail = chunks[chunks.length - 1];
-    line += chunks.length - 1;
-    column = chunks.length === 1 ? column + tail.length : 1 + tail.length + lineShift;
-    return value;
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm-footnote/lib/index.js
-footnoteReference.peek = footnoteReferencePeek;
-function gfmFootnoteFromMarkdown() {
-  return {
-    enter: {
-      gfmFootnoteDefinition: enterFootnoteDefinition,
-      gfmFootnoteDefinitionLabelString: enterFootnoteDefinitionLabelString,
-      gfmFootnoteCall: enterFootnoteCall,
-      gfmFootnoteCallString: enterFootnoteCallString
-    },
-    exit: {
-      gfmFootnoteDefinition: exitFootnoteDefinition,
-      gfmFootnoteDefinitionLabelString: exitFootnoteDefinitionLabelString,
-      gfmFootnoteCall: exitFootnoteCall,
-      gfmFootnoteCallString: exitFootnoteCallString
-    }
-  };
-}
-function gfmFootnoteToMarkdown() {
-  return {
-    // This is on by default already.
-    unsafe: [{ character: "[", inConstruct: ["phrasing", "label", "reference"] }],
-    handlers: { footnoteDefinition, footnoteReference }
-  };
-}
-function enterFootnoteDefinition(token) {
-  this.enter(
-    { type: "footnoteDefinition", identifier: "", label: "", children: [] },
-    token
-  );
-}
-function enterFootnoteDefinitionLabelString() {
-  this.buffer();
-}
-function exitFootnoteDefinitionLabelString(token) {
-  const label = this.resume();
-  const node4 = (
-    /** @type {FootnoteDefinition} */
-    this.stack[this.stack.length - 1]
-  );
-  node4.label = label;
-  node4.identifier = normalizeIdentifier3(
-    this.sliceSerialize(token)
-  ).toLowerCase();
-}
-function exitFootnoteDefinition(token) {
-  this.exit(token);
-}
-function enterFootnoteCall(token) {
-  this.enter({ type: "footnoteReference", identifier: "", label: "" }, token);
-}
-function enterFootnoteCallString() {
-  this.buffer();
-}
-function exitFootnoteCallString(token) {
-  const label = this.resume();
-  const node4 = (
-    /** @type {FootnoteDefinition} */
-    this.stack[this.stack.length - 1]
-  );
-  node4.label = label;
-  node4.identifier = normalizeIdentifier3(
-    this.sliceSerialize(token)
-  ).toLowerCase();
-}
-function exitFootnoteCall(token) {
-  this.exit(token);
-}
-function footnoteReference(node4, _, context, safeOptions) {
-  const tracker = track2(safeOptions);
-  let value = tracker.move("[^");
-  const exit3 = context.enter("footnoteReference");
-  const subexit = context.enter("reference");
-  value += tracker.move(
-    safe2(context, association2(node4), {
-      ...tracker.current(),
-      before: value,
-      after: "]"
-    })
-  );
-  subexit();
-  exit3();
-  value += tracker.move("]");
-  return value;
-}
-function footnoteReferencePeek() {
-  return "[";
-}
-function footnoteDefinition(node4, _, context, safeOptions) {
-  const tracker = track2(safeOptions);
-  let value = tracker.move("[^");
-  const exit3 = context.enter("footnoteDefinition");
-  const subexit = context.enter("label");
-  value += tracker.move(
-    safe2(context, association2(node4), {
-      ...tracker.current(),
-      before: value,
-      after: "]"
-    })
-  );
-  subexit();
-  value += tracker.move(
-    "]:" + (node4.children && node4.children.length > 0 ? " " : "")
-  );
-  tracker.shift(4);
-  value += tracker.move(
-    indentLines2(containerFlow2(node4, context, tracker.current()), map3)
-  );
-  exit3();
-  return value;
-}
-function map3(line, index3, blank) {
-  if (index3 === 0) {
-    return line;
-  }
-  return (blank ? "" : "    ") + line;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
-function containerPhrasing2(parent, state, info2) {
-  const indexStack = state.indexStack;
-  const children = parent.children || [];
-  const results = [];
-  let index3 = -1;
-  let before = info2.before;
-  indexStack.push(-1);
-  let tracker = state.createTracker(info2);
-  while (++index3 < children.length) {
-    const child = children[index3];
-    let after;
-    indexStack[indexStack.length - 1] = index3;
-    if (index3 + 1 < children.length) {
-      let handle3 = state.handle.handlers[children[index3 + 1].type];
-      if (handle3 && handle3.peek)
-        handle3 = handle3.peek;
-      after = handle3 ? handle3(children[index3 + 1], parent, state, {
-        before: "",
-        after: "",
-        ...tracker.current()
-      }).charAt(0) : "";
-    } else {
-      after = info2.after;
-    }
-    if (results.length > 0 && (before === "\r" || before === "\n") && child.type === "html") {
-      results[results.length - 1] = results[results.length - 1].replace(
-        /(\r?\n|\r)$/,
-        " "
-      );
-      before = " ";
-      tracker = state.createTracker(info2);
-      tracker.move(results.join(""));
-    }
-    results.push(
-      tracker.move(
-        state.handle(child, parent, state, {
-          ...tracker.current(),
-          before,
-          after
-        })
-      )
-    );
-    before = results[results.length - 1].slice(-1);
-  }
-  indexStack.pop();
-  return results.join("");
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm-strikethrough/lib/index.js
-var constructsWithoutStrikethrough = [
-  "autolink",
-  "destinationLiteral",
-  "destinationRaw",
-  "reference",
-  "titleQuote",
-  "titleApostrophe"
-];
-handleDelete.peek = peekDelete;
-var gfmStrikethroughFromMarkdown = {
-  canContainEols: ["delete"],
-  enter: { strikethrough: enterStrikethrough },
-  exit: { strikethrough: exitStrikethrough }
-};
-var gfmStrikethroughToMarkdown = {
-  unsafe: [
-    {
-      character: "~",
-      inConstruct: "phrasing",
-      notInConstruct: constructsWithoutStrikethrough
-    }
-  ],
-  handlers: { delete: handleDelete }
-};
-function enterStrikethrough(token) {
-  this.enter({ type: "delete", children: [] }, token);
-}
-function exitStrikethrough(token) {
-  this.exit(token);
-}
-function handleDelete(node4, _, context, safeOptions) {
-  const tracker = track2(safeOptions);
-  const exit3 = context.enter("strikethrough");
-  let value = tracker.move("~~");
-  value += containerPhrasing2(node4, context, {
-    ...tracker.current(),
-    before: value,
-    after: "~"
-  });
-  value += tracker.move("~~");
-  exit3();
-  return value;
-}
-function peekDelete() {
-  return "~";
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
-inlineCode2.peek = inlineCodePeek2;
-function inlineCode2(node4, _, state) {
-  let value = node4.value || "";
-  let sequence = "`";
-  let index3 = -1;
-  while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
-    sequence += "`";
-  }
-  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
-    value = " " + value + " ";
-  }
-  while (++index3 < state.unsafe.length) {
-    const pattern = state.unsafe[index3];
-    const expression = patternCompile2(pattern);
-    let match;
-    if (!pattern.atBreak)
-      continue;
-    while (match = expression.exec(value)) {
-      let position3 = match.index;
-      if (value.charCodeAt(position3) === 10 && value.charCodeAt(position3 - 1) === 13) {
-        position3--;
-      }
-      value = value.slice(0, position3) + " " + value.slice(match.index + 1);
-    }
-  }
-  return sequence + value + sequence;
-}
-function inlineCodePeek2() {
-  return "`";
-}
-
-// node_modules/markdown-table/index.js
-function markdownTable(table, options = {}) {
-  const align = (options.align || []).concat();
-  const stringLength = options.stringLength || defaultStringLength;
-  const alignments = [];
-  const cellMatrix = [];
-  const sizeMatrix = [];
-  const longestCellByColumn = [];
-  let mostCellsPerRow = 0;
-  let rowIndex = -1;
-  while (++rowIndex < table.length) {
-    const row2 = [];
-    const sizes2 = [];
-    let columnIndex2 = -1;
-    if (table[rowIndex].length > mostCellsPerRow) {
-      mostCellsPerRow = table[rowIndex].length;
-    }
-    while (++columnIndex2 < table[rowIndex].length) {
-      const cell = serialize(table[rowIndex][columnIndex2]);
-      if (options.alignDelimiters !== false) {
-        const size = stringLength(cell);
-        sizes2[columnIndex2] = size;
-        if (longestCellByColumn[columnIndex2] === void 0 || size > longestCellByColumn[columnIndex2]) {
-          longestCellByColumn[columnIndex2] = size;
-        }
-      }
-      row2.push(cell);
-    }
-    cellMatrix[rowIndex] = row2;
-    sizeMatrix[rowIndex] = sizes2;
-  }
-  let columnIndex = -1;
-  if (typeof align === "object" && "length" in align) {
-    while (++columnIndex < mostCellsPerRow) {
-      alignments[columnIndex] = toAlignment(align[columnIndex]);
-    }
-  } else {
-    const code4 = toAlignment(align);
-    while (++columnIndex < mostCellsPerRow) {
-      alignments[columnIndex] = code4;
-    }
-  }
-  columnIndex = -1;
-  const row = [];
-  const sizes = [];
-  while (++columnIndex < mostCellsPerRow) {
-    const code4 = alignments[columnIndex];
-    let before = "";
-    let after = "";
-    if (code4 === 99) {
-      before = ":";
-      after = ":";
-    } else if (code4 === 108) {
-      before = ":";
-    } else if (code4 === 114) {
-      after = ":";
-    }
-    let size = options.alignDelimiters === false ? 1 : Math.max(
-      1,
-      longestCellByColumn[columnIndex] - before.length - after.length
-    );
-    const cell = before + "-".repeat(size) + after;
-    if (options.alignDelimiters !== false) {
-      size = before.length + size + after.length;
-      if (size > longestCellByColumn[columnIndex]) {
-        longestCellByColumn[columnIndex] = size;
-      }
-      sizes[columnIndex] = size;
-    }
-    row[columnIndex] = cell;
-  }
-  cellMatrix.splice(1, 0, row);
-  sizeMatrix.splice(1, 0, sizes);
-  rowIndex = -1;
-  const lines = [];
-  while (++rowIndex < cellMatrix.length) {
-    const row2 = cellMatrix[rowIndex];
-    const sizes2 = sizeMatrix[rowIndex];
-    columnIndex = -1;
-    const line = [];
-    while (++columnIndex < mostCellsPerRow) {
-      const cell = row2[columnIndex] || "";
-      let before = "";
-      let after = "";
-      if (options.alignDelimiters !== false) {
-        const size = longestCellByColumn[columnIndex] - (sizes2[columnIndex] || 0);
-        const code4 = alignments[columnIndex];
-        if (code4 === 114) {
-          before = " ".repeat(size);
-        } else if (code4 === 99) {
-          if (size % 2) {
-            before = " ".repeat(size / 2 + 0.5);
-            after = " ".repeat(size / 2 - 0.5);
-          } else {
-            before = " ".repeat(size / 2);
-            after = before;
-          }
-        } else {
-          after = " ".repeat(size);
-        }
-      }
-      if (options.delimiterStart !== false && !columnIndex) {
-        line.push("|");
-      }
-      if (options.padding !== false && // Don’t add the opening space if we’re not aligning and the cell is
-      // empty: there will be a closing space.
-      !(options.alignDelimiters === false && cell === "") && (options.delimiterStart !== false || columnIndex)) {
-        line.push(" ");
-      }
-      if (options.alignDelimiters !== false) {
-        line.push(before);
-      }
-      line.push(cell);
-      if (options.alignDelimiters !== false) {
-        line.push(after);
-      }
-      if (options.padding !== false) {
-        line.push(" ");
-      }
-      if (options.delimiterEnd !== false || columnIndex !== mostCellsPerRow - 1) {
-        line.push("|");
-      }
-    }
-    lines.push(
-      options.delimiterEnd === false ? line.join("").replace(/ +$/, "") : line.join("")
-    );
-  }
-  return lines.join("\n");
-}
-function serialize(value) {
-  return value === null || value === void 0 ? "" : String(value);
-}
-function defaultStringLength(value) {
-  return value.length;
-}
-function toAlignment(value) {
-  const code4 = typeof value === "string" ? value.codePointAt(0) : 0;
-  return code4 === 67 || code4 === 99 ? 99 : code4 === 76 || code4 === 108 ? 108 : code4 === 82 || code4 === 114 ? 114 : 0;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm-table/lib/index.js
-var gfmTableFromMarkdown = {
-  enter: {
-    table: enterTable,
-    tableData: enterCell,
-    tableHeader: enterCell,
-    tableRow: enterRow
-  },
-  exit: {
-    codeText: exitCodeText,
-    table: exitTable,
-    tableData: exit2,
-    tableHeader: exit2,
-    tableRow: exit2
-  }
-};
-function enterTable(token) {
-  const align = token._align;
-  this.enter(
-    {
-      type: "table",
-      align: align.map((d) => d === "none" ? null : d),
-      children: []
-    },
-    token
-  );
-  this.setData("inTable", true);
-}
-function exitTable(token) {
-  this.exit(token);
-  this.setData("inTable");
-}
-function enterRow(token) {
-  this.enter({ type: "tableRow", children: [] }, token);
-}
-function exit2(token) {
-  this.exit(token);
-}
-function enterCell(token) {
-  this.enter({ type: "tableCell", children: [] }, token);
-}
-function exitCodeText(token) {
-  let value = this.resume();
-  if (this.getData("inTable")) {
-    value = value.replace(/\\([\\|])/g, replace);
-  }
-  const node4 = (
-    /** @type {InlineCode} */
-    this.stack[this.stack.length - 1]
-  );
-  node4.value = value;
-  this.exit(token);
-}
-function replace($0, $1) {
-  return $1 === "|" ? $1 : $0;
-}
-function gfmTableToMarkdown(options) {
-  const settings = options || {};
-  const padding = settings.tableCellPadding;
-  const alignDelimiters = settings.tablePipeAlign;
-  const stringLength = settings.stringLength;
-  const around = padding ? " " : "|";
-  return {
-    unsafe: [
-      { character: "\r", inConstruct: "tableCell" },
-      { character: "\n", inConstruct: "tableCell" },
-      // A pipe, when followed by a tab or space (padding), or a dash or colon
-      // (unpadded delimiter row), could result in a table.
-      { atBreak: true, character: "|", after: "[	 :-]" },
-      // A pipe in a cell must be encoded.
-      { character: "|", inConstruct: "tableCell" },
-      // A colon must be followed by a dash, in which case it could start a
-      // delimiter row.
-      { atBreak: true, character: ":", after: "-" },
-      // A delimiter row can also start with a dash, when followed by more
-      // dashes, a colon, or a pipe.
-      // This is a stricter version than the built in check for lists, thematic
-      // breaks, and setex heading underlines though:
-      // <https://github.com/syntax-tree/mdast-util-to-markdown/blob/51a2038/lib/unsafe.js#L57>
-      { atBreak: true, character: "-", after: "[:|-]" }
-    ],
-    handlers: {
-      table: handleTable,
-      tableRow: handleTableRow,
-      tableCell: handleTableCell,
-      inlineCode: inlineCodeWithTable
-    }
-  };
-  function handleTable(node4, _, context, safeOptions) {
-    return serializeData(
-      handleTableAsData(node4, context, safeOptions),
-      node4.align
-    );
-  }
-  function handleTableRow(node4, _, context, safeOptions) {
-    const row = handleTableRowAsData(node4, context, safeOptions);
-    const value = serializeData([row]);
-    return value.slice(0, value.indexOf("\n"));
-  }
-  function handleTableCell(node4, _, context, safeOptions) {
-    const exit3 = context.enter("tableCell");
-    const subexit = context.enter("phrasing");
-    const value = containerPhrasing2(node4, context, {
-      ...safeOptions,
-      before: around,
-      after: around
-    });
-    subexit();
-    exit3();
-    return value;
-  }
-  function serializeData(matrix, align) {
-    return markdownTable(matrix, {
-      align,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      alignDelimiters,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      padding,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      stringLength
-    });
-  }
-  function handleTableAsData(node4, context, safeOptions) {
-    const children = node4.children;
-    let index3 = -1;
-    const result = [];
-    const subexit = context.enter("table");
-    while (++index3 < children.length) {
-      result[index3] = handleTableRowAsData(
-        children[index3],
-        context,
-        safeOptions
-      );
-    }
-    subexit();
-    return result;
-  }
-  function handleTableRowAsData(node4, context, safeOptions) {
-    const children = node4.children;
-    let index3 = -1;
-    const result = [];
-    const subexit = context.enter("tableRow");
-    while (++index3 < children.length) {
-      result[index3] = handleTableCell(
-        children[index3],
-        node4,
-        context,
-        safeOptions
-      );
-    }
-    subexit();
-    return result;
-  }
-  function inlineCodeWithTable(node4, parent, context) {
-    let value = inlineCode2(node4, parent, context);
-    if (context.stack.includes("tableCell")) {
-      value = value.replace(/\|/g, "\\$&");
-    }
-    return value;
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
-function checkBullet2(state) {
-  const marker = state.options.bullet || "*";
-  if (marker !== "*" && marker !== "+" && marker !== "-") {
-    throw new Error(
-      "Cannot serialize items with `" + marker + "` for `options.bullet`, expected `*`, `+`, or `-`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
-function checkListItemIndent2(state) {
-  const style = state.options.listItemIndent || "tab";
-  if (style === 1 || style === "1") {
-    return "one";
-  }
-  if (style !== "tab" && style !== "one" && style !== "mixed") {
-    throw new Error(
-      "Cannot serialize items with `" + style + "` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`"
-    );
-  }
-  return style;
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-to-markdown/lib/handle/list-item.js
-function listItem2(node4, parent, state, info2) {
-  const listItemIndent = checkListItemIndent2(state);
-  let bullet = state.bulletCurrent || checkBullet2(state);
-  if (parent && parent.type === "list" && parent.ordered) {
-    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node4)) + bullet;
-  }
-  let size = bullet.length + 1;
-  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node4.spread)) {
-    size = Math.ceil(size / 4) * 4;
-  }
-  const tracker = state.createTracker(info2);
-  tracker.move(bullet + " ".repeat(size - bullet.length));
-  tracker.shift(size);
-  const exit3 = state.enter("listItem");
-  const value = state.indentLines(
-    state.containerFlow(node4, tracker.current()),
-    map9
-  );
-  exit3();
-  return value;
-  function map9(line, index3, blank) {
-    if (index3) {
-      return (blank ? "" : " ".repeat(size)) + line;
-    }
-    return (blank ? bullet : bullet + " ".repeat(size - bullet.length)) + line;
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm-task-list-item/lib/index.js
-var gfmTaskListItemFromMarkdown = {
-  exit: {
-    taskListCheckValueChecked: exitCheck,
-    taskListCheckValueUnchecked: exitCheck,
-    paragraph: exitParagraphWithTaskListItem
-  }
-};
-var gfmTaskListItemToMarkdown = {
-  unsafe: [{ atBreak: true, character: "-", after: "[:|-]" }],
-  handlers: { listItem: listItemWithTaskListItem }
-};
-function exitCheck(token) {
-  const node4 = (
-    /** @type {ListItem} */
-    this.stack[this.stack.length - 2]
-  );
-  node4.checked = token.type === "taskListCheckValueChecked";
-}
-function exitParagraphWithTaskListItem(token) {
-  const parent = (
-    /** @type {Parents} */
-    this.stack[this.stack.length - 2]
-  );
-  if (parent && parent.type === "listItem" && typeof parent.checked === "boolean") {
-    const node4 = (
-      /** @type {Paragraph} */
-      this.stack[this.stack.length - 1]
-    );
-    const head = node4.children[0];
-    if (head && head.type === "text") {
-      const siblings = parent.children;
-      let index3 = -1;
-      let firstParaghraph;
-      while (++index3 < siblings.length) {
-        const sibling = siblings[index3];
-        if (sibling.type === "paragraph") {
-          firstParaghraph = sibling;
-          break;
-        }
-      }
-      if (firstParaghraph === node4) {
-        head.value = head.value.slice(1);
-        if (head.value.length === 0) {
-          node4.children.shift();
-        } else if (node4.position && head.position && typeof head.position.start.offset === "number") {
-          head.position.start.column++;
-          head.position.start.offset++;
-          node4.position.start = Object.assign({}, head.position.start);
-        }
-      }
-    }
-  }
-  this.exit(token);
-}
-function listItemWithTaskListItem(node4, parent, context, safeOptions) {
-  const head = node4.children[0];
-  const checkable = typeof node4.checked === "boolean" && head && head.type === "paragraph";
-  const checkbox = "[" + (node4.checked ? "x" : " ") + "] ";
-  const tracker = track2(safeOptions);
-  if (checkable) {
-    tracker.move(checkbox);
-  }
-  let value = listItem2(node4, parent, context, {
-    ...safeOptions,
-    ...tracker.current()
-  });
-  if (checkable) {
-    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check);
-  }
-  return value;
-  function check($0) {
-    return $0 + checkbox;
-  }
-}
-
-// node_modules/remark-gfm/node_modules/mdast-util-gfm/lib/index.js
-function gfmFromMarkdown() {
-  return [
-    gfmAutolinkLiteralFromMarkdown,
-    gfmFootnoteFromMarkdown(),
-    gfmStrikethroughFromMarkdown,
-    gfmTableFromMarkdown,
-    gfmTaskListItemFromMarkdown
-  ];
-}
-function gfmToMarkdown(options) {
-  return {
-    extensions: [
-      gfmAutolinkLiteralToMarkdown,
-      gfmFootnoteToMarkdown(),
-      gfmStrikethroughToMarkdown,
-      gfmTableToMarkdown(options),
-      gfmTaskListItemToMarkdown
-    ]
-  };
-}
-
-// node_modules/remark-gfm/index.js
-function remarkGfm(options = {}) {
-  const data = this.data();
-  add("micromarkExtensions", gfm(options));
-  add("fromMarkdownExtensions", gfmFromMarkdown());
-  add("toMarkdownExtensions", gfmToMarkdown(options));
-  function add(field, value) {
-    const list5 = (
-      /** @type {unknown[]} */
-      // Other extensions
-      /* c8 ignore next 2 */
-      data[field] ? data[field] : data[field] = []
-    );
-    list5.push(value);
-  }
-}
-
-// node_modules/unist-util-is/lib/index.js
-var convert3 = (
-  // Note: overloads in JSDoc can’t yet use different `@template`s.
-  /**
-   * @type {(
-   *   (<Condition extends string>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & {type: Condition}) &
-   *   (<Condition extends Props>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Condition) &
-   *   (<Condition extends TestFunction>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Predicate<Condition, Node>) &
-   *   ((test?: null | undefined) => (node?: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node) &
-   *   ((test?: Test) => Check)
-   * )}
-   */
-  /**
-   * @param {Test} [test]
-   * @returns {Check}
-   */
-  function(test) {
-    if (test === null || test === void 0) {
-      return ok3;
-    }
-    if (typeof test === "function") {
-      return castFactory3(test);
-    }
-    if (typeof test === "object") {
-      return Array.isArray(test) ? anyFactory3(test) : propsFactory3(test);
-    }
-    if (typeof test === "string") {
-      return typeFactory3(test);
-    }
-    throw new Error("Expected function, string, or object as test");
-  }
-);
-function anyFactory3(tests) {
-  const checks = [];
-  let index3 = -1;
-  while (++index3 < tests.length) {
-    checks[index3] = convert3(tests[index3]);
-  }
-  return castFactory3(any);
-  function any(...parameters) {
-    let index4 = -1;
-    while (++index4 < checks.length) {
-      if (checks[index4].apply(this, parameters))
-        return true;
-    }
-    return false;
-  }
-}
-function propsFactory3(check) {
-  const checkAsRecord = (
-    /** @type {Record<string, unknown>} */
-    check
-  );
-  return castFactory3(all4);
-  function all4(node4) {
-    const nodeAsRecord = (
-      /** @type {Record<string, unknown>} */
-      /** @type {unknown} */
-      node4
-    );
-    let key;
-    for (key in check) {
-      if (nodeAsRecord[key] !== checkAsRecord[key])
-        return false;
-    }
-    return true;
-  }
-}
-function typeFactory3(check) {
-  return castFactory3(type2);
-  function type2(node4) {
-    return node4 && node4.type === check;
-  }
-}
-function castFactory3(testFunction) {
-  return check;
-  function check(value, index3, parent) {
-    return Boolean(
-      looksLikeANode(value) && testFunction.call(
-        this,
-        value,
-        typeof index3 === "number" ? index3 : void 0,
-        parent || void 0
-      )
-    );
-  }
-}
-function ok3() {
-  return true;
-}
-function looksLikeANode(value) {
-  return value !== null && typeof value === "object" && "type" in value;
-}
-
-// node_modules/unist-util-visit-parents/lib/color.node.js
-function color3(d) {
-  return "\x1B[33m" + d + "\x1B[39m";
-}
-
-// node_modules/unist-util-visit-parents/lib/index.js
-var empty = [];
-var CONTINUE3 = true;
-var EXIT3 = false;
-var SKIP3 = "skip";
-function visitParents3(tree, test, visitor, reverse) {
-  let check;
-  if (typeof test === "function" && typeof visitor !== "function") {
-    reverse = visitor;
-    visitor = test;
-  } else {
-    check = test;
-  }
-  const is4 = convert3(check);
-  const step = reverse ? -1 : 1;
-  factory(tree, void 0, [])();
-  function factory(node4, index3, parents) {
-    const value = (
-      /** @type {Record<string, unknown>} */
-      node4 && typeof node4 === "object" ? node4 : {}
-    );
-    if (typeof value.type === "string") {
-      const name = (
-        // `hast`
-        typeof value.tagName === "string" ? value.tagName : (
-          // `xast`
-          typeof value.name === "string" ? value.name : void 0
-        )
-      );
-      Object.defineProperty(visit3, "name", {
-        value: "node (" + color3(node4.type + (name ? "<" + name + ">" : "")) + ")"
-      });
-    }
-    return visit3;
-    function visit3() {
-      let result = empty;
-      let subresult;
-      let offset;
-      let grandparents;
-      if (!test || is4(node4, index3, parents[parents.length - 1] || void 0)) {
-        result = toResult3(visitor(node4, parents));
-        if (result[0] === EXIT3) {
-          return result;
-        }
-      }
-      if ("children" in node4 && node4.children) {
-        const nodeAsParent = (
-          /** @type {UnistParent} */
-          node4
-        );
-        if (nodeAsParent.children && result[0] !== SKIP3) {
-          offset = (reverse ? nodeAsParent.children.length : -1) + step;
-          grandparents = parents.concat(nodeAsParent);
-          while (offset > -1 && offset < nodeAsParent.children.length) {
-            const child = nodeAsParent.children[offset];
-            subresult = factory(child, offset, grandparents)();
-            if (subresult[0] === EXIT3) {
-              return subresult;
-            }
-            offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
-          }
-        }
-      }
-      return result;
-    }
-  }
-}
-function toResult3(value) {
-  if (Array.isArray(value)) {
-    return value;
-  }
-  if (typeof value === "number") {
-    return [CONTINUE3, value];
-  }
-  return value === null || value === void 0 ? empty : [value];
-}
-
-// node_modules/unist-util-visit/lib/index.js
-function visit2(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
-  let reverse;
-  let test;
-  let visitor;
-  if (typeof testOrVisitor === "function" && typeof visitorOrReverse !== "function") {
-    test = void 0;
-    visitor = testOrVisitor;
-    reverse = visitorOrReverse;
-  } else {
-    test = testOrVisitor;
-    visitor = visitorOrReverse;
-    reverse = maybeReverse;
-  }
-  visitParents3(tree, test, overload, reverse);
-  function overload(node4, parents) {
-    const parent = parents[parents.length - 1];
-    const index3 = parent ? parent.children.indexOf(node4) : void 0;
-    return visitor(node4, index3, parent);
-  }
+  const settings = options || emptyOptions4;
+  const data = self2.data();
+  const micromarkExtensions = data.micromarkExtensions || (data.micromarkExtensions = []);
+  const fromMarkdownExtensions = data.fromMarkdownExtensions || (data.fromMarkdownExtensions = []);
+  const toMarkdownExtensions = data.toMarkdownExtensions || (data.toMarkdownExtensions = []);
+  micromarkExtensions.push(gfm(settings));
+  fromMarkdownExtensions.push(gfmFromMarkdown());
+  toMarkdownExtensions.push(gfmToMarkdown(settings));
 }
 
 // src/markdown.ts
@@ -56405,7 +57026,7 @@ function YAMLException$1(reason, mark) {
 }
 YAMLException$1.prototype = Object.create(Error.prototype);
 YAMLException$1.prototype.constructor = YAMLException$1;
-YAMLException$1.prototype.toString = function toString3(compact) {
+YAMLException$1.prototype.toString = function toString4(compact) {
   return this.name + ": " + formatError(this, compact);
 };
 var exception = YAMLException$1;
@@ -56506,11 +57127,11 @@ var YAML_NODE_KINDS = [
   "sequence",
   "mapping"
 ];
-function compileStyleAliases(map9) {
+function compileStyleAliases(map8) {
   var result = {};
-  if (map9 !== null) {
-    Object.keys(map9).forEach(function(style) {
-      map9[style].forEach(function(alias) {
+  if (map8 !== null) {
+    Object.keys(map8).forEach(function(style) {
+      map8[style].forEach(function(alias) {
         result[String(alias)] = style;
       });
     });
@@ -56639,7 +57260,7 @@ var seq = new type("tag:yaml.org,2002:seq", {
     return data !== null ? data : [];
   }
 });
-var map4 = new type("tag:yaml.org,2002:map", {
+var map7 = new type("tag:yaml.org,2002:map", {
   kind: "mapping",
   construct: function(data) {
     return data !== null ? data : {};
@@ -56649,7 +57270,7 @@ var failsafe = new schema({
   explicit: [
     str,
     seq,
-    map4
+    map7
   ]
 });
 function resolveYamlNull(data) {
@@ -57003,9 +57624,9 @@ var BASE64_MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 function resolveYamlBinary(data) {
   if (data === null)
     return false;
-  var code4, idx, bitlen = 0, max = data.length, map9 = BASE64_MAP;
+  var code4, idx, bitlen = 0, max = data.length, map8 = BASE64_MAP;
   for (idx = 0; idx < max; idx++) {
-    code4 = map9.indexOf(data.charAt(idx));
+    code4 = map8.indexOf(data.charAt(idx));
     if (code4 > 64)
       continue;
     if (code4 < 0)
@@ -57015,14 +57636,14 @@ function resolveYamlBinary(data) {
   return bitlen % 8 === 0;
 }
 function constructYamlBinary(data) {
-  var idx, tailbits, input = data.replace(/[\r\n=]/g, ""), max = input.length, map9 = BASE64_MAP, bits = 0, result = [];
+  var idx, tailbits, input = data.replace(/[\r\n=]/g, ""), max = input.length, map8 = BASE64_MAP, bits = 0, result = [];
   for (idx = 0; idx < max; idx++) {
     if (idx % 4 === 0 && idx) {
       result.push(bits >> 16 & 255);
       result.push(bits >> 8 & 255);
       result.push(bits & 255);
     }
-    bits = bits << 6 | map9.indexOf(input.charAt(idx));
+    bits = bits << 6 | map8.indexOf(input.charAt(idx));
   }
   tailbits = max % 4 * 6;
   if (tailbits === 0) {
@@ -57038,32 +57659,32 @@ function constructYamlBinary(data) {
   return new Uint8Array(result);
 }
 function representYamlBinary(object) {
-  var result = "", bits = 0, idx, tail, max = object.length, map9 = BASE64_MAP;
+  var result = "", bits = 0, idx, tail, max = object.length, map8 = BASE64_MAP;
   for (idx = 0; idx < max; idx++) {
     if (idx % 3 === 0 && idx) {
-      result += map9[bits >> 18 & 63];
-      result += map9[bits >> 12 & 63];
-      result += map9[bits >> 6 & 63];
-      result += map9[bits & 63];
+      result += map8[bits >> 18 & 63];
+      result += map8[bits >> 12 & 63];
+      result += map8[bits >> 6 & 63];
+      result += map8[bits & 63];
     }
     bits = (bits << 8) + object[idx];
   }
   tail = max % 3;
   if (tail === 0) {
-    result += map9[bits >> 18 & 63];
-    result += map9[bits >> 12 & 63];
-    result += map9[bits >> 6 & 63];
-    result += map9[bits & 63];
+    result += map8[bits >> 18 & 63];
+    result += map8[bits >> 12 & 63];
+    result += map8[bits >> 6 & 63];
+    result += map8[bits & 63];
   } else if (tail === 2) {
-    result += map9[bits >> 10 & 63];
-    result += map9[bits >> 4 & 63];
-    result += map9[bits << 2 & 63];
-    result += map9[64];
+    result += map8[bits >> 10 & 63];
+    result += map8[bits >> 4 & 63];
+    result += map8[bits << 2 & 63];
+    result += map8[64];
   } else if (tail === 1) {
-    result += map9[bits >> 2 & 63];
-    result += map9[bits << 4 & 63];
-    result += map9[64];
-    result += map9[64];
+    result += map8[bits >> 2 & 63];
+    result += map8[bits << 4 & 63];
+    result += map8[64];
+    result += map8[64];
   }
   return result;
 }
@@ -58403,15 +59024,15 @@ var DEPRECATED_BOOLEANS_SYNTAX = [
   "OFF"
 ];
 var DEPRECATED_BASE60_SYNTAX = /^[-+]?[0-9_]+(?::[0-9_]+)+(?:\.[0-9_]*)?$/;
-function compileStyleMap(schema2, map9) {
+function compileStyleMap(schema2, map8) {
   var result, keys2, index3, length, tag, style, type2;
-  if (map9 === null)
+  if (map8 === null)
     return {};
   result = {};
-  keys2 = Object.keys(map9);
+  keys2 = Object.keys(map8);
   for (index3 = 0, length = keys2.length; index3 < length; index3 += 1) {
     tag = keys2[index3];
-    style = String(map9[tag]);
+    style = String(map8[tag]);
     if (tag.slice(0, 2) === "!!") {
       tag = "tag:yaml.org,2002:" + tag.slice(2);
     }
@@ -59712,1657 +60333,6 @@ async function createOrUpdateRelease({
   return [updatedRelease, false];
 }
 
-// node_modules/mdast-util-gfm-autolink-literal/lib/index.js
-var inConstruct2 = "phrasing";
-var notInConstruct2 = ["autolink", "link", "image", "label"];
-function gfmAutolinkLiteralToMarkdown2() {
-  return {
-    unsafe: [
-      {
-        character: "@",
-        before: "[+\\-.\\w]",
-        after: "[\\-.\\w]",
-        inConstruct: inConstruct2,
-        notInConstruct: notInConstruct2
-      },
-      {
-        character: ".",
-        before: "[Ww]",
-        after: "[\\-.\\w]",
-        inConstruct: inConstruct2,
-        notInConstruct: notInConstruct2
-      },
-      {
-        character: ":",
-        before: "[ps]",
-        after: "\\/",
-        inConstruct: inConstruct2,
-        notInConstruct: notInConstruct2
-      }
-    ]
-  };
-}
-
-// node_modules/mdast-util-gfm-footnote/lib/index.js
-footnoteReference2.peek = footnoteReferencePeek2;
-function gfmFootnoteToMarkdown2() {
-  return {
-    // This is on by default already.
-    unsafe: [{ character: "[", inConstruct: ["phrasing", "label", "reference"] }],
-    handlers: { footnoteDefinition: footnoteDefinition2, footnoteReference: footnoteReference2 }
-  };
-}
-function footnoteReference2(node4, _, state, info2) {
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("[^");
-  const exit3 = state.enter("footnoteReference");
-  const subexit = state.enter("reference");
-  value += tracker.move(
-    state.safe(state.associationId(node4), {
-      ...tracker.current(),
-      before: value,
-      after: "]"
-    })
-  );
-  subexit();
-  exit3();
-  value += tracker.move("]");
-  return value;
-}
-function footnoteReferencePeek2() {
-  return "[";
-}
-function footnoteDefinition2(node4, _, state, info2) {
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("[^");
-  const exit3 = state.enter("footnoteDefinition");
-  const subexit = state.enter("label");
-  value += tracker.move(
-    state.safe(state.associationId(node4), {
-      ...tracker.current(),
-      before: value,
-      after: "]"
-    })
-  );
-  subexit();
-  value += tracker.move(
-    "]:" + (node4.children && node4.children.length > 0 ? " " : "")
-  );
-  tracker.shift(4);
-  value += tracker.move(
-    state.indentLines(state.containerFlow(node4, tracker.current()), map5)
-  );
-  exit3();
-  return value;
-}
-function map5(line, index3, blank) {
-  if (index3 === 0) {
-    return line;
-  }
-  return (blank ? "" : "    ") + line;
-}
-
-// node_modules/mdast-util-gfm-strikethrough/lib/index.js
-var constructsWithoutStrikethrough2 = [
-  "autolink",
-  "destinationLiteral",
-  "destinationRaw",
-  "reference",
-  "titleQuote",
-  "titleApostrophe"
-];
-handleDelete2.peek = peekDelete2;
-function gfmStrikethroughToMarkdown2() {
-  return {
-    unsafe: [
-      {
-        character: "~",
-        inConstruct: "phrasing",
-        notInConstruct: constructsWithoutStrikethrough2
-      }
-    ],
-    handlers: { delete: handleDelete2 }
-  };
-}
-function handleDelete2(node4, _, state, info2) {
-  const tracker = state.createTracker(info2);
-  const exit3 = state.enter("strikethrough");
-  let value = tracker.move("~~");
-  value += state.containerPhrasing(node4, {
-    ...tracker.current(),
-    before: value,
-    after: "~"
-  });
-  value += tracker.move("~~");
-  exit3();
-  return value;
-}
-function peekDelete2() {
-  return "~";
-}
-
-// node_modules/mdast-util-to-markdown/lib/configure.js
-var own6 = {}.hasOwnProperty;
-function configure3(base2, extension2) {
-  let index3 = -1;
-  let key;
-  if (extension2.extensions) {
-    while (++index3 < extension2.extensions.length) {
-      configure3(base2, extension2.extensions[index3]);
-    }
-  }
-  for (key in extension2) {
-    if (own6.call(extension2, key)) {
-      switch (key) {
-        case "extensions": {
-          break;
-        }
-        case "unsafe": {
-          list3(base2[key], extension2[key]);
-          break;
-        }
-        case "join": {
-          list3(base2[key], extension2[key]);
-          break;
-        }
-        case "handlers": {
-          map6(base2[key], extension2[key]);
-          break;
-        }
-        default: {
-          base2.options[key] = extension2[key];
-        }
-      }
-    }
-  }
-  return base2;
-}
-function list3(left, right) {
-  if (right) {
-    left.push(...right);
-  }
-}
-function map6(left, right) {
-  if (right) {
-    Object.assign(left, right);
-  }
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/blockquote.js
-function blockquote2(node4, _, state, info2) {
-  const exit3 = state.enter("blockquote");
-  const tracker = state.createTracker(info2);
-  tracker.move("> ");
-  tracker.shift(2);
-  const value = state.indentLines(
-    state.containerFlow(node4, tracker.current()),
-    map7
-  );
-  exit3();
-  return value;
-}
-function map7(line, _, blank) {
-  return ">" + (blank ? "" : " ") + line;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/pattern-in-scope.js
-function patternInScope3(stack, pattern) {
-  return listInScope3(stack, pattern.inConstruct, true) && !listInScope3(stack, pattern.notInConstruct, false);
-}
-function listInScope3(stack, list5, none) {
-  if (typeof list5 === "string") {
-    list5 = [list5];
-  }
-  if (!list5 || list5.length === 0) {
-    return none;
-  }
-  let index3 = -1;
-  while (++index3 < list5.length) {
-    if (stack.includes(list5[index3])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/break.js
-function hardBreak2(_, _1, state, info2) {
-  let index3 = -1;
-  while (++index3 < state.unsafe.length) {
-    if (state.unsafe[index3].character === "\n" && patternInScope3(state.stack, state.unsafe[index3])) {
-      return /[ \t]/.test(info2.before) ? "" : " ";
-    }
-  }
-  return "\\\n";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/format-code-as-indented.js
-function formatCodeAsIndented2(node4, state) {
-  return Boolean(
-    state.options.fences === false && node4.value && // If there’s no info…
-    !node4.lang && // And there’s a non-whitespace character…
-    /[^ \r\n]/.test(node4.value) && // And the value doesn’t start or end in a blank…
-    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node4.value)
-  );
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-fence.js
-function checkFence2(state) {
-  const marker = state.options.fence || "`";
-  if (marker !== "`" && marker !== "~") {
-    throw new Error(
-      "Cannot serialize code with `" + marker + "` for `options.fence`, expected `` ` `` or `~`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/code.js
-function code3(node4, _, state, info2) {
-  const marker = checkFence2(state);
-  const raw = node4.value || "";
-  const suffix = marker === "`" ? "GraveAccent" : "Tilde";
-  if (formatCodeAsIndented2(node4, state)) {
-    const exit4 = state.enter("codeIndented");
-    const value2 = state.indentLines(raw, map8);
-    exit4();
-    return value2;
-  }
-  const tracker = state.createTracker(info2);
-  const sequence = marker.repeat(Math.max(longestStreak(raw, marker) + 1, 3));
-  const exit3 = state.enter("codeFenced");
-  let value = tracker.move(sequence);
-  if (node4.lang) {
-    const subexit = state.enter(`codeFencedLang${suffix}`);
-    value += tracker.move(
-      state.safe(node4.lang, {
-        before: value,
-        after: " ",
-        encode: ["`"],
-        ...tracker.current()
-      })
-    );
-    subexit();
-  }
-  if (node4.lang && node4.meta) {
-    const subexit = state.enter(`codeFencedMeta${suffix}`);
-    value += tracker.move(" ");
-    value += tracker.move(
-      state.safe(node4.meta, {
-        before: value,
-        after: "\n",
-        encode: ["`"],
-        ...tracker.current()
-      })
-    );
-    subexit();
-  }
-  value += tracker.move("\n");
-  if (raw) {
-    value += tracker.move(raw + "\n");
-  }
-  value += tracker.move(sequence);
-  exit3();
-  return value;
-}
-function map8(line, _, blank) {
-  return (blank ? "" : "    ") + line;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-quote.js
-function checkQuote2(state) {
-  const marker = state.options.quote || '"';
-  if (marker !== '"' && marker !== "'") {
-    throw new Error(
-      "Cannot serialize title with `" + marker + "` for `options.quote`, expected `\"`, or `'`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/definition.js
-function definition3(node4, _, state, info2) {
-  const quote = checkQuote2(state);
-  const suffix = quote === '"' ? "Quote" : "Apostrophe";
-  const exit3 = state.enter("definition");
-  let subexit = state.enter("label");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("[");
-  value += tracker.move(
-    state.safe(state.associationId(node4), {
-      before: value,
-      after: "]",
-      ...tracker.current()
-    })
-  );
-  value += tracker.move("]: ");
-  subexit();
-  if (
-    // If there’s no url, or…
-    !node4.url || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node4.url)
-  ) {
-    subexit = state.enter("destinationLiteral");
-    value += tracker.move("<");
-    value += tracker.move(
-      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
-    );
-    value += tracker.move(">");
-  } else {
-    subexit = state.enter("destinationRaw");
-    value += tracker.move(
-      state.safe(node4.url, {
-        before: value,
-        after: node4.title ? " " : "\n",
-        ...tracker.current()
-      })
-    );
-  }
-  subexit();
-  if (node4.title) {
-    subexit = state.enter(`title${suffix}`);
-    value += tracker.move(" " + quote);
-    value += tracker.move(
-      state.safe(node4.title, {
-        before: value,
-        after: quote,
-        ...tracker.current()
-      })
-    );
-    value += tracker.move(quote);
-    subexit();
-  }
-  exit3();
-  return value;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-emphasis.js
-function checkEmphasis2(state) {
-  const marker = state.options.emphasis || "*";
-  if (marker !== "*" && marker !== "_") {
-    throw new Error(
-      "Cannot serialize emphasis with `" + marker + "` for `options.emphasis`, expected `*`, or `_`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
-emphasis2.peek = emphasisPeek2;
-function emphasis2(node4, _, state, info2) {
-  const marker = checkEmphasis2(state);
-  const exit3 = state.enter("emphasis");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move(marker);
-  value += tracker.move(
-    state.containerPhrasing(node4, {
-      before: value,
-      after: marker,
-      ...tracker.current()
-    })
-  );
-  value += tracker.move(marker);
-  exit3();
-  return value;
-}
-function emphasisPeek2(_, _1, state) {
-  return state.options.emphasis || "*";
-}
-
-// node_modules/mdast-util-to-string/lib/index.js
-var emptyOptions3 = {};
-function toString4(value, options) {
-  const settings = options || emptyOptions3;
-  const includeImageAlt = typeof settings.includeImageAlt === "boolean" ? settings.includeImageAlt : true;
-  const includeHtml = typeof settings.includeHtml === "boolean" ? settings.includeHtml : true;
-  return one3(value, includeImageAlt, includeHtml);
-}
-function one3(value, includeImageAlt, includeHtml) {
-  if (node3(value)) {
-    if ("value" in value) {
-      return value.type === "html" && !includeHtml ? "" : value.value;
-    }
-    if (includeImageAlt && "alt" in value && value.alt) {
-      return value.alt;
-    }
-    if ("children" in value) {
-      return all3(value.children, includeImageAlt, includeHtml);
-    }
-  }
-  if (Array.isArray(value)) {
-    return all3(value, includeImageAlt, includeHtml);
-  }
-  return "";
-}
-function all3(values, includeImageAlt, includeHtml) {
-  const result = [];
-  let index3 = -1;
-  while (++index3 < values.length) {
-    result[index3] = one3(values[index3], includeImageAlt, includeHtml);
-  }
-  return result.join("");
-}
-function node3(value) {
-  return Boolean(value && typeof value === "object");
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/format-heading-as-setext.js
-function formatHeadingAsSetext2(node4, state) {
-  let literalWithBreak = false;
-  visit2(node4, function(node5) {
-    if ("value" in node5 && /\r?\n|\r/.test(node5.value) || node5.type === "break") {
-      literalWithBreak = true;
-      return EXIT3;
-    }
-  });
-  return Boolean(
-    (!node4.depth || node4.depth < 3) && toString4(node4) && (state.options.setext || literalWithBreak)
-  );
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/heading.js
-function heading2(node4, _, state, info2) {
-  const rank = Math.max(Math.min(6, node4.depth || 1), 1);
-  const tracker = state.createTracker(info2);
-  if (formatHeadingAsSetext2(node4, state)) {
-    const exit4 = state.enter("headingSetext");
-    const subexit2 = state.enter("phrasing");
-    const value2 = state.containerPhrasing(node4, {
-      ...tracker.current(),
-      before: "\n",
-      after: "\n"
-    });
-    subexit2();
-    exit4();
-    return value2 + "\n" + (rank === 1 ? "=" : "-").repeat(
-      // The whole size…
-      value2.length - // Minus the position of the character after the last EOL (or
-      // 0 if there is none)…
-      (Math.max(value2.lastIndexOf("\r"), value2.lastIndexOf("\n")) + 1)
-    );
-  }
-  const sequence = "#".repeat(rank);
-  const exit3 = state.enter("headingAtx");
-  const subexit = state.enter("phrasing");
-  tracker.move(sequence + " ");
-  let value = state.containerPhrasing(node4, {
-    before: "# ",
-    after: "\n",
-    ...tracker.current()
-  });
-  if (/^[\t ]/.test(value)) {
-    value = "&#x" + value.charCodeAt(0).toString(16).toUpperCase() + ";" + value.slice(1);
-  }
-  value = value ? sequence + " " + value : sequence;
-  if (state.options.closeAtx) {
-    value += " " + sequence;
-  }
-  subexit();
-  exit3();
-  return value;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/html.js
-html2.peek = htmlPeek2;
-function html2(node4) {
-  return node4.value || "";
-}
-function htmlPeek2() {
-  return "<";
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/image.js
-image2.peek = imagePeek2;
-function image2(node4, _, state, info2) {
-  const quote = checkQuote2(state);
-  const suffix = quote === '"' ? "Quote" : "Apostrophe";
-  const exit3 = state.enter("image");
-  let subexit = state.enter("label");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("![");
-  value += tracker.move(
-    state.safe(node4.alt, { before: value, after: "]", ...tracker.current() })
-  );
-  value += tracker.move("](");
-  subexit();
-  if (
-    // If there’s no url but there is a title…
-    !node4.url && node4.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node4.url)
-  ) {
-    subexit = state.enter("destinationLiteral");
-    value += tracker.move("<");
-    value += tracker.move(
-      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
-    );
-    value += tracker.move(">");
-  } else {
-    subexit = state.enter("destinationRaw");
-    value += tracker.move(
-      state.safe(node4.url, {
-        before: value,
-        after: node4.title ? " " : ")",
-        ...tracker.current()
-      })
-    );
-  }
-  subexit();
-  if (node4.title) {
-    subexit = state.enter(`title${suffix}`);
-    value += tracker.move(" " + quote);
-    value += tracker.move(
-      state.safe(node4.title, {
-        before: value,
-        after: quote,
-        ...tracker.current()
-      })
-    );
-    value += tracker.move(quote);
-    subexit();
-  }
-  value += tracker.move(")");
-  exit3();
-  return value;
-}
-function imagePeek2() {
-  return "!";
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/image-reference.js
-imageReference2.peek = imageReferencePeek2;
-function imageReference2(node4, _, state, info2) {
-  const type2 = node4.referenceType;
-  const exit3 = state.enter("imageReference");
-  let subexit = state.enter("label");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("![");
-  const alt = state.safe(node4.alt, {
-    before: value,
-    after: "]",
-    ...tracker.current()
-  });
-  value += tracker.move(alt + "][");
-  subexit();
-  const stack = state.stack;
-  state.stack = [];
-  subexit = state.enter("reference");
-  const reference = state.safe(state.associationId(node4), {
-    before: value,
-    after: "]",
-    ...tracker.current()
-  });
-  subexit();
-  state.stack = stack;
-  exit3();
-  if (type2 === "full" || !alt || alt !== reference) {
-    value += tracker.move(reference + "]");
-  } else if (type2 === "shortcut") {
-    value = value.slice(0, -1);
-  } else {
-    value += tracker.move("]");
-  }
-  return value;
-}
-function imageReferencePeek2() {
-  return "!";
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/inline-code.js
-inlineCode3.peek = inlineCodePeek3;
-function inlineCode3(node4, _, state) {
-  let value = node4.value || "";
-  let sequence = "`";
-  let index3 = -1;
-  while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
-    sequence += "`";
-  }
-  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
-    value = " " + value + " ";
-  }
-  while (++index3 < state.unsafe.length) {
-    const pattern = state.unsafe[index3];
-    const expression = state.compilePattern(pattern);
-    let match;
-    if (!pattern.atBreak)
-      continue;
-    while (match = expression.exec(value)) {
-      let position3 = match.index;
-      if (value.charCodeAt(position3) === 10 && value.charCodeAt(position3 - 1) === 13) {
-        position3--;
-      }
-      value = value.slice(0, position3) + " " + value.slice(match.index + 1);
-    }
-  }
-  return sequence + value + sequence;
-}
-function inlineCodePeek3() {
-  return "`";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/format-link-as-autolink.js
-function formatLinkAsAutolink2(node4, state) {
-  const raw = toString4(node4);
-  return Boolean(
-    !state.options.resourceLink && // If there’s a url…
-    node4.url && // And there’s a no title…
-    !node4.title && // And the content of `node` is a single text node…
-    node4.children && node4.children.length === 1 && node4.children[0].type === "text" && // And if the url is the same as the content…
-    (raw === node4.url || "mailto:" + raw === node4.url) && // And that starts w/ a protocol…
-    /^[a-z][a-z+.-]+:/i.test(node4.url) && // And that doesn’t contain ASCII control codes (character escapes and
-    // references don’t work), space, or angle brackets…
-    !/[\0- <>\u007F]/.test(node4.url)
-  );
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/link.js
-link2.peek = linkPeek2;
-function link2(node4, _, state, info2) {
-  const quote = checkQuote2(state);
-  const suffix = quote === '"' ? "Quote" : "Apostrophe";
-  const tracker = state.createTracker(info2);
-  let exit3;
-  let subexit;
-  if (formatLinkAsAutolink2(node4, state)) {
-    const stack = state.stack;
-    state.stack = [];
-    exit3 = state.enter("autolink");
-    let value2 = tracker.move("<");
-    value2 += tracker.move(
-      state.containerPhrasing(node4, {
-        before: value2,
-        after: ">",
-        ...tracker.current()
-      })
-    );
-    value2 += tracker.move(">");
-    exit3();
-    state.stack = stack;
-    return value2;
-  }
-  exit3 = state.enter("link");
-  subexit = state.enter("label");
-  let value = tracker.move("[");
-  value += tracker.move(
-    state.containerPhrasing(node4, {
-      before: value,
-      after: "](",
-      ...tracker.current()
-    })
-  );
-  value += tracker.move("](");
-  subexit();
-  if (
-    // If there’s no url but there is a title…
-    !node4.url && node4.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node4.url)
-  ) {
-    subexit = state.enter("destinationLiteral");
-    value += tracker.move("<");
-    value += tracker.move(
-      state.safe(node4.url, { before: value, after: ">", ...tracker.current() })
-    );
-    value += tracker.move(">");
-  } else {
-    subexit = state.enter("destinationRaw");
-    value += tracker.move(
-      state.safe(node4.url, {
-        before: value,
-        after: node4.title ? " " : ")",
-        ...tracker.current()
-      })
-    );
-  }
-  subexit();
-  if (node4.title) {
-    subexit = state.enter(`title${suffix}`);
-    value += tracker.move(" " + quote);
-    value += tracker.move(
-      state.safe(node4.title, {
-        before: value,
-        after: quote,
-        ...tracker.current()
-      })
-    );
-    value += tracker.move(quote);
-    subexit();
-  }
-  value += tracker.move(")");
-  exit3();
-  return value;
-}
-function linkPeek2(node4, _, state) {
-  return formatLinkAsAutolink2(node4, state) ? "<" : "[";
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/link-reference.js
-linkReference2.peek = linkReferencePeek2;
-function linkReference2(node4, _, state, info2) {
-  const type2 = node4.referenceType;
-  const exit3 = state.enter("linkReference");
-  let subexit = state.enter("label");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move("[");
-  const text6 = state.containerPhrasing(node4, {
-    before: value,
-    after: "]",
-    ...tracker.current()
-  });
-  value += tracker.move(text6 + "][");
-  subexit();
-  const stack = state.stack;
-  state.stack = [];
-  subexit = state.enter("reference");
-  const reference = state.safe(state.associationId(node4), {
-    before: value,
-    after: "]",
-    ...tracker.current()
-  });
-  subexit();
-  state.stack = stack;
-  exit3();
-  if (type2 === "full" || !text6 || text6 !== reference) {
-    value += tracker.move(reference + "]");
-  } else if (type2 === "shortcut") {
-    value = value.slice(0, -1);
-  } else {
-    value += tracker.move("]");
-  }
-  return value;
-}
-function linkReferencePeek2() {
-  return "[";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet.js
-function checkBullet3(state) {
-  const marker = state.options.bullet || "*";
-  if (marker !== "*" && marker !== "+" && marker !== "-") {
-    throw new Error(
-      "Cannot serialize items with `" + marker + "` for `options.bullet`, expected `*`, `+`, or `-`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet-other.js
-function checkBulletOther2(state) {
-  const bullet = checkBullet3(state);
-  const bulletOther = state.options.bulletOther;
-  if (!bulletOther) {
-    return bullet === "*" ? "-" : "*";
-  }
-  if (bulletOther !== "*" && bulletOther !== "+" && bulletOther !== "-") {
-    throw new Error(
-      "Cannot serialize items with `" + bulletOther + "` for `options.bulletOther`, expected `*`, `+`, or `-`"
-    );
-  }
-  if (bulletOther === bullet) {
-    throw new Error(
-      "Expected `bullet` (`" + bullet + "`) and `bulletOther` (`" + bulletOther + "`) to be different"
-    );
-  }
-  return bulletOther;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-bullet-ordered.js
-function checkBulletOrdered2(state) {
-  const marker = state.options.bulletOrdered || ".";
-  if (marker !== "." && marker !== ")") {
-    throw new Error(
-      "Cannot serialize items with `" + marker + "` for `options.bulletOrdered`, expected `.` or `)`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-rule.js
-function checkRule2(state) {
-  const marker = state.options.rule || "*";
-  if (marker !== "*" && marker !== "-" && marker !== "_") {
-    throw new Error(
-      "Cannot serialize rules with `" + marker + "` for `options.rule`, expected `*`, `-`, or `_`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/list.js
-function list4(node4, parent, state, info2) {
-  const exit3 = state.enter("list");
-  const bulletCurrent = state.bulletCurrent;
-  let bullet = node4.ordered ? checkBulletOrdered2(state) : checkBullet3(state);
-  const bulletOther = node4.ordered ? bullet === "." ? ")" : "." : checkBulletOther2(state);
-  let useDifferentMarker = parent && state.bulletLastUsed ? bullet === state.bulletLastUsed : false;
-  if (!node4.ordered) {
-    const firstListItem = node4.children ? node4.children[0] : void 0;
-    if (
-      // Bullet could be used as a thematic break marker:
-      (bullet === "*" || bullet === "-") && // Empty first list item:
-      firstListItem && (!firstListItem.children || !firstListItem.children[0]) && // Directly in two other list items:
-      state.stack[state.stack.length - 1] === "list" && state.stack[state.stack.length - 2] === "listItem" && state.stack[state.stack.length - 3] === "list" && state.stack[state.stack.length - 4] === "listItem" && // That are each the first child.
-      state.indexStack[state.indexStack.length - 1] === 0 && state.indexStack[state.indexStack.length - 2] === 0 && state.indexStack[state.indexStack.length - 3] === 0
-    ) {
-      useDifferentMarker = true;
-    }
-    if (checkRule2(state) === bullet && firstListItem) {
-      let index3 = -1;
-      while (++index3 < node4.children.length) {
-        const item = node4.children[index3];
-        if (item && item.type === "listItem" && item.children && item.children[0] && item.children[0].type === "thematicBreak") {
-          useDifferentMarker = true;
-          break;
-        }
-      }
-    }
-  }
-  if (useDifferentMarker) {
-    bullet = bulletOther;
-  }
-  state.bulletCurrent = bullet;
-  const value = state.containerFlow(node4, info2);
-  state.bulletLastUsed = bullet;
-  state.bulletCurrent = bulletCurrent;
-  exit3();
-  return value;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-list-item-indent.js
-function checkListItemIndent3(state) {
-  const style = state.options.listItemIndent || "one";
-  if (style !== "tab" && style !== "one" && style !== "mixed") {
-    throw new Error(
-      "Cannot serialize items with `" + style + "` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`"
-    );
-  }
-  return style;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/list-item.js
-function listItem3(node4, parent, state, info2) {
-  const listItemIndent = checkListItemIndent3(state);
-  let bullet = state.bulletCurrent || checkBullet3(state);
-  if (parent && parent.type === "list" && parent.ordered) {
-    bullet = (typeof parent.start === "number" && parent.start > -1 ? parent.start : 1) + (state.options.incrementListMarker === false ? 0 : parent.children.indexOf(node4)) + bullet;
-  }
-  let size = bullet.length + 1;
-  if (listItemIndent === "tab" || listItemIndent === "mixed" && (parent && parent.type === "list" && parent.spread || node4.spread)) {
-    size = Math.ceil(size / 4) * 4;
-  }
-  const tracker = state.createTracker(info2);
-  tracker.move(bullet + " ".repeat(size - bullet.length));
-  tracker.shift(size);
-  const exit3 = state.enter("listItem");
-  const value = state.indentLines(
-    state.containerFlow(node4, tracker.current()),
-    map9
-  );
-  exit3();
-  return value;
-  function map9(line, index3, blank) {
-    if (index3) {
-      return (blank ? "" : " ".repeat(size)) + line;
-    }
-    return (blank ? bullet : bullet + " ".repeat(size - bullet.length)) + line;
-  }
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/paragraph.js
-function paragraph2(node4, _, state, info2) {
-  const exit3 = state.enter("paragraph");
-  const subexit = state.enter("phrasing");
-  const value = state.containerPhrasing(node4, info2);
-  subexit();
-  exit3();
-  return value;
-}
-
-// node_modules/mdast-util-phrasing/lib/index.js
-var phrasing2 = (
-  /** @type {(node?: unknown) => node is PhrasingContent} */
-  convert3([
-    "break",
-    "delete",
-    "emphasis",
-    "footnote",
-    "footnoteReference",
-    "image",
-    "imageReference",
-    "inlineCode",
-    "link",
-    "linkReference",
-    "strong",
-    "text"
-  ])
-);
-
-// node_modules/mdast-util-to-markdown/lib/handle/root.js
-function root2(node4, _, state, info2) {
-  const hasPhrasing = node4.children.some(function(d) {
-    return phrasing2(d);
-  });
-  const fn = hasPhrasing ? state.containerPhrasing : state.containerFlow;
-  return fn.call(state, node4, info2);
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-strong.js
-function checkStrong2(state) {
-  const marker = state.options.strong || "*";
-  if (marker !== "*" && marker !== "_") {
-    throw new Error(
-      "Cannot serialize strong with `" + marker + "` for `options.strong`, expected `*`, or `_`"
-    );
-  }
-  return marker;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/strong.js
-strong2.peek = strongPeek2;
-function strong2(node4, _, state, info2) {
-  const marker = checkStrong2(state);
-  const exit3 = state.enter("strong");
-  const tracker = state.createTracker(info2);
-  let value = tracker.move(marker + marker);
-  value += tracker.move(
-    state.containerPhrasing(node4, {
-      before: value,
-      after: marker,
-      ...tracker.current()
-    })
-  );
-  value += tracker.move(marker + marker);
-  exit3();
-  return value;
-}
-function strongPeek2(_, _1, state) {
-  return state.options.strong || "*";
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/text.js
-function text5(node4, _, state, info2) {
-  return state.safe(node4.value, info2);
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
-function checkRuleRepetition2(state) {
-  const repetition = state.options.ruleRepetition || 3;
-  if (repetition < 3) {
-    throw new Error(
-      "Cannot serialize rules with repetition `" + repetition + "` for `options.ruleRepetition`, expected `3` or more"
-    );
-  }
-  return repetition;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/thematic-break.js
-function thematicBreak3(_, _1, state) {
-  const value = (checkRule2(state) + (state.options.ruleSpaces ? " " : "")).repeat(checkRuleRepetition2(state));
-  return state.options.ruleSpaces ? value.slice(0, -1) : value;
-}
-
-// node_modules/mdast-util-to-markdown/lib/handle/index.js
-var handle2 = {
-  blockquote: blockquote2,
-  break: hardBreak2,
-  code: code3,
-  definition: definition3,
-  emphasis: emphasis2,
-  hardBreak: hardBreak2,
-  heading: heading2,
-  html: html2,
-  image: image2,
-  imageReference: imageReference2,
-  inlineCode: inlineCode3,
-  link: link2,
-  linkReference: linkReference2,
-  list: list4,
-  listItem: listItem3,
-  paragraph: paragraph2,
-  root: root2,
-  strong: strong2,
-  text: text5,
-  thematicBreak: thematicBreak3
-};
-
-// node_modules/mdast-util-to-markdown/lib/join.js
-var join2 = [joinDefaults2];
-function joinDefaults2(left, right, parent, state) {
-  if (right.type === "code" && formatCodeAsIndented2(right, state) && (left.type === "list" || left.type === right.type && formatCodeAsIndented2(left, state))) {
-    return false;
-  }
-  if ("spread" in parent && typeof parent.spread === "boolean") {
-    if (left.type === "paragraph" && // Two paragraphs.
-    (left.type === right.type || right.type === "definition" || // Paragraph followed by a setext heading.
-    right.type === "heading" && formatHeadingAsSetext2(right, state))) {
-      return;
-    }
-    return parent.spread ? 1 : 0;
-  }
-}
-
-// node_modules/mdast-util-to-markdown/lib/unsafe.js
-var fullPhrasingSpans2 = [
-  "autolink",
-  "destinationLiteral",
-  "destinationRaw",
-  "reference",
-  "titleQuote",
-  "titleApostrophe"
-];
-var unsafe2 = [
-  { character: "	", after: "[\\r\\n]", inConstruct: "phrasing" },
-  { character: "	", before: "[\\r\\n]", inConstruct: "phrasing" },
-  {
-    character: "	",
-    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
-  },
-  {
-    character: "\r",
-    inConstruct: [
-      "codeFencedLangGraveAccent",
-      "codeFencedLangTilde",
-      "codeFencedMetaGraveAccent",
-      "codeFencedMetaTilde",
-      "destinationLiteral",
-      "headingAtx"
-    ]
-  },
-  {
-    character: "\n",
-    inConstruct: [
-      "codeFencedLangGraveAccent",
-      "codeFencedLangTilde",
-      "codeFencedMetaGraveAccent",
-      "codeFencedMetaTilde",
-      "destinationLiteral",
-      "headingAtx"
-    ]
-  },
-  { character: " ", after: "[\\r\\n]", inConstruct: "phrasing" },
-  { character: " ", before: "[\\r\\n]", inConstruct: "phrasing" },
-  {
-    character: " ",
-    inConstruct: ["codeFencedLangGraveAccent", "codeFencedLangTilde"]
-  },
-  // An exclamation mark can start an image, if it is followed by a link or
-  // a link reference.
-  {
-    character: "!",
-    after: "\\[",
-    inConstruct: "phrasing",
-    notInConstruct: fullPhrasingSpans2
-  },
-  // A quote can break out of a title.
-  { character: '"', inConstruct: "titleQuote" },
-  // A number sign could start an ATX heading if it starts a line.
-  { atBreak: true, character: "#" },
-  { character: "#", inConstruct: "headingAtx", after: "(?:[\r\n]|$)" },
-  // Dollar sign and percentage are not used in markdown.
-  // An ampersand could start a character reference.
-  { character: "&", after: "[#A-Za-z]", inConstruct: "phrasing" },
-  // An apostrophe can break out of a title.
-  { character: "'", inConstruct: "titleApostrophe" },
-  // A left paren could break out of a destination raw.
-  { character: "(", inConstruct: "destinationRaw" },
-  // A left paren followed by `]` could make something into a link or image.
-  {
-    before: "\\]",
-    character: "(",
-    inConstruct: "phrasing",
-    notInConstruct: fullPhrasingSpans2
-  },
-  // A right paren could start a list item or break out of a destination
-  // raw.
-  { atBreak: true, before: "\\d+", character: ")" },
-  { character: ")", inConstruct: "destinationRaw" },
-  // An asterisk can start thematic breaks, list items, emphasis, strong.
-  { atBreak: true, character: "*", after: "(?:[ 	\r\n*])" },
-  { character: "*", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
-  // A plus sign could start a list item.
-  { atBreak: true, character: "+", after: "(?:[ 	\r\n])" },
-  // A dash can start thematic breaks, list items, and setext heading
-  // underlines.
-  { atBreak: true, character: "-", after: "(?:[ 	\r\n-])" },
-  // A dot could start a list item.
-  { atBreak: true, before: "\\d+", character: ".", after: "(?:[ 	\r\n]|$)" },
-  // Slash, colon, and semicolon are not used in markdown for constructs.
-  // A less than can start html (flow or text) or an autolink.
-  // HTML could start with an exclamation mark (declaration, cdata, comment),
-  // slash (closing tag), question mark (instruction), or a letter (tag).
-  // An autolink also starts with a letter.
-  // Finally, it could break out of a destination literal.
-  { atBreak: true, character: "<", after: "[!/?A-Za-z]" },
-  {
-    character: "<",
-    after: "[!/?A-Za-z]",
-    inConstruct: "phrasing",
-    notInConstruct: fullPhrasingSpans2
-  },
-  { character: "<", inConstruct: "destinationLiteral" },
-  // An equals to can start setext heading underlines.
-  { atBreak: true, character: "=" },
-  // A greater than can start block quotes and it can break out of a
-  // destination literal.
-  { atBreak: true, character: ">" },
-  { character: ">", inConstruct: "destinationLiteral" },
-  // Question mark and at sign are not used in markdown for constructs.
-  // A left bracket can start definitions, references, labels,
-  { atBreak: true, character: "[" },
-  { character: "[", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
-  { character: "[", inConstruct: ["label", "reference"] },
-  // A backslash can start an escape (when followed by punctuation) or a
-  // hard break (when followed by an eol).
-  // Note: typical escapes are handled in `safe`!
-  { character: "\\", after: "[\\r\\n]", inConstruct: "phrasing" },
-  // A right bracket can exit labels.
-  { character: "]", inConstruct: ["label", "reference"] },
-  // Caret is not used in markdown for constructs.
-  // An underscore can start emphasis, strong, or a thematic break.
-  { atBreak: true, character: "_" },
-  { character: "_", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
-  // A grave accent can start code (fenced or text), or it can break out of
-  // a grave accent code fence.
-  { atBreak: true, character: "`" },
-  {
-    character: "`",
-    inConstruct: ["codeFencedLangGraveAccent", "codeFencedMetaGraveAccent"]
-  },
-  { character: "`", inConstruct: "phrasing", notInConstruct: fullPhrasingSpans2 },
-  // Left brace, vertical bar, right brace are not used in markdown for
-  // constructs.
-  // A tilde can start code (fenced).
-  { atBreak: true, character: "~" }
-];
-
-// node_modules/micromark-util-decode-numeric-character-reference/index.js
-function decodeNumericCharacterReference4(value, base2) {
-  const code4 = Number.parseInt(value, base2);
-  if (
-    // C0 except for HT, LF, FF, CR, space.
-    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of C0, and C1 controls.
-    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
-    code4 > 55295 && code4 < 57344 || // Noncharacters.
-    code4 > 64975 && code4 < 65008 || (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || // Out of range
-    code4 > 1114111
-  ) {
-    return "\uFFFD";
-  }
-  return String.fromCharCode(code4);
-}
-
-// node_modules/micromark-util-decode-string/index.js
-var characterEscapeOrReference4 = /\\([!-/:-@[-`{-~])|&(#(?:\d{1,7}|x[\da-f]{1,6})|[\da-z]{1,31});/gi;
-function decodeString4(value) {
-  return value.replace(characterEscapeOrReference4, decode4);
-}
-function decode4($0, $1, $2) {
-  if ($1) {
-    return $1;
-  }
-  const head = $2.charCodeAt(0);
-  if (head === 35) {
-    const head2 = $2.charCodeAt(1);
-    const hex = head2 === 120 || head2 === 88;
-    return decodeNumericCharacterReference4($2.slice(hex ? 2 : 1), hex ? 16 : 10);
-  }
-  return decodeNamedCharacterReference($2) || $0;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/association.js
-function association3(node4) {
-  if (node4.label || !node4.identifier) {
-    return node4.label || "";
-  }
-  return decodeString4(node4.identifier);
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/compile-pattern.js
-function compilePattern(pattern) {
-  if (!pattern._compiled) {
-    const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
-    pattern._compiled = new RegExp(
-      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
-      "g"
-    );
-  }
-  return pattern._compiled;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
-function containerPhrasing3(parent, state, info2) {
-  const indexStack = state.indexStack;
-  const children = parent.children || [];
-  const results = [];
-  let index3 = -1;
-  let before = info2.before;
-  indexStack.push(-1);
-  let tracker = state.createTracker(info2);
-  while (++index3 < children.length) {
-    const child = children[index3];
-    let after;
-    indexStack[indexStack.length - 1] = index3;
-    if (index3 + 1 < children.length) {
-      let handle3 = state.handle.handlers[children[index3 + 1].type];
-      if (handle3 && handle3.peek)
-        handle3 = handle3.peek;
-      after = handle3 ? handle3(children[index3 + 1], parent, state, {
-        before: "",
-        after: "",
-        ...tracker.current()
-      }).charAt(0) : "";
-    } else {
-      after = info2.after;
-    }
-    if (results.length > 0 && (before === "\r" || before === "\n") && child.type === "html") {
-      results[results.length - 1] = results[results.length - 1].replace(
-        /(\r?\n|\r)$/,
-        " "
-      );
-      before = " ";
-      tracker = state.createTracker(info2);
-      tracker.move(results.join(""));
-    }
-    results.push(
-      tracker.move(
-        state.handle(child, parent, state, {
-          ...tracker.current(),
-          before,
-          after
-        })
-      )
-    );
-    before = results[results.length - 1].slice(-1);
-  }
-  indexStack.pop();
-  return results.join("");
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/container-flow.js
-function containerFlow3(parent, state, info2) {
-  const indexStack = state.indexStack;
-  const children = parent.children || [];
-  const tracker = state.createTracker(info2);
-  const results = [];
-  let index3 = -1;
-  indexStack.push(-1);
-  while (++index3 < children.length) {
-    const child = children[index3];
-    indexStack[indexStack.length - 1] = index3;
-    results.push(
-      tracker.move(
-        state.handle(child, parent, state, {
-          before: "\n",
-          after: "\n",
-          ...tracker.current()
-        })
-      )
-    );
-    if (child.type !== "list") {
-      state.bulletLastUsed = void 0;
-    }
-    if (index3 < children.length - 1) {
-      results.push(
-        tracker.move(between3(child, children[index3 + 1], parent, state))
-      );
-    }
-  }
-  indexStack.pop();
-  return results.join("");
-}
-function between3(left, right, parent, state) {
-  let index3 = state.join.length;
-  while (index3--) {
-    const result = state.join[index3](left, right, parent, state);
-    if (result === true || result === 1) {
-      break;
-    }
-    if (typeof result === "number") {
-      return "\n".repeat(1 + result);
-    }
-    if (result === false) {
-      return "\n\n<!---->\n\n";
-    }
-  }
-  return "\n\n";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/indent-lines.js
-var eol3 = /\r?\n|\r/g;
-function indentLines3(value, map9) {
-  const result = [];
-  let start = 0;
-  let line = 0;
-  let match;
-  while (match = eol3.exec(value)) {
-    one4(value.slice(start, match.index));
-    result.push(match[0]);
-    start = match.index + match[0].length;
-    line++;
-  }
-  one4(value.slice(start));
-  return result.join("");
-  function one4(value2) {
-    result.push(map9(value2, line, !value2));
-  }
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/safe.js
-function safe3(state, input, config2) {
-  const value = (config2.before || "") + (input || "") + (config2.after || "");
-  const positions = [];
-  const result = [];
-  const infos = {};
-  let index3 = -1;
-  while (++index3 < state.unsafe.length) {
-    const pattern = state.unsafe[index3];
-    if (!patternInScope3(state.stack, pattern)) {
-      continue;
-    }
-    const expression = state.compilePattern(pattern);
-    let match;
-    while (match = expression.exec(value)) {
-      const before = "before" in pattern || Boolean(pattern.atBreak);
-      const after = "after" in pattern;
-      const position3 = match.index + (before ? match[1].length : 0);
-      if (positions.includes(position3)) {
-        if (infos[position3].before && !before) {
-          infos[position3].before = false;
-        }
-        if (infos[position3].after && !after) {
-          infos[position3].after = false;
-        }
-      } else {
-        positions.push(position3);
-        infos[position3] = { before, after };
-      }
-    }
-  }
-  positions.sort(numerical3);
-  let start = config2.before ? config2.before.length : 0;
-  const end = value.length - (config2.after ? config2.after.length : 0);
-  index3 = -1;
-  while (++index3 < positions.length) {
-    const position3 = positions[index3];
-    if (position3 < start || position3 >= end) {
-      continue;
-    }
-    if (position3 + 1 < end && positions[index3 + 1] === position3 + 1 && infos[position3].after && !infos[position3 + 1].before && !infos[position3 + 1].after || positions[index3 - 1] === position3 - 1 && infos[position3].before && !infos[position3 - 1].before && !infos[position3 - 1].after) {
-      continue;
-    }
-    if (start !== position3) {
-      result.push(escapeBackslashes3(value.slice(start, position3), "\\"));
-    }
-    start = position3;
-    if (/[!-/:-@[-`{-~]/.test(value.charAt(position3)) && (!config2.encode || !config2.encode.includes(value.charAt(position3)))) {
-      result.push("\\");
-    } else {
-      result.push(
-        "&#x" + value.charCodeAt(position3).toString(16).toUpperCase() + ";"
-      );
-      start++;
-    }
-  }
-  result.push(escapeBackslashes3(value.slice(start, end), config2.after));
-  return result.join("");
-}
-function numerical3(a, b) {
-  return a - b;
-}
-function escapeBackslashes3(value, after) {
-  const expression = /\\(?=[!-/:-@[-`{-~])/g;
-  const positions = [];
-  const results = [];
-  const whole = value + after;
-  let index3 = -1;
-  let start = 0;
-  let match;
-  while (match = expression.exec(whole)) {
-    positions.push(match.index);
-  }
-  while (++index3 < positions.length) {
-    if (start !== positions[index3]) {
-      results.push(value.slice(start, positions[index3]));
-    }
-    results.push("\\");
-    start = positions[index3];
-  }
-  results.push(value.slice(start));
-  return results.join("");
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/track.js
-function track3(config2) {
-  const options = config2 || {};
-  const now = options.now || {};
-  let lineShift = options.lineShift || 0;
-  let line = now.line || 1;
-  let column = now.column || 1;
-  return { move, current, shift };
-  function current() {
-    return { now: { line, column }, lineShift };
-  }
-  function shift(value) {
-    lineShift += value;
-  }
-  function move(input) {
-    const value = input || "";
-    const chunks = value.split(/\r?\n|\r/g);
-    const tail = chunks[chunks.length - 1];
-    line += chunks.length - 1;
-    column = chunks.length === 1 ? column + tail.length : 1 + tail.length + lineShift;
-    return value;
-  }
-}
-
-// node_modules/mdast-util-to-markdown/lib/index.js
-function toMarkdown2(tree, options = {}) {
-  const state = {
-    enter,
-    indentLines: indentLines3,
-    associationId: association3,
-    containerPhrasing: containerPhrasingBound2,
-    containerFlow: containerFlowBound2,
-    createTracker: track3,
-    compilePattern,
-    safe: safeBound2,
-    stack: [],
-    unsafe: [...unsafe2],
-    join: [...join2],
-    // @ts-expect-error: GFM / frontmatter are typed in `mdast` but not defined
-    // here.
-    handlers: { ...handle2 },
-    options: {},
-    indexStack: [],
-    // @ts-expect-error: add `handle` in a second.
-    handle: void 0
-  };
-  configure3(state, options);
-  if (state.options.tightDefinitions) {
-    state.join.push(joinDefinition2);
-  }
-  state.handle = zwitch("type", {
-    invalid: invalid2,
-    unknown: unknown2,
-    handlers: state.handlers
-  });
-  let result = state.handle(tree, void 0, state, {
-    before: "\n",
-    after: "\n",
-    now: { line: 1, column: 1 },
-    lineShift: 0
-  });
-  if (result && result.charCodeAt(result.length - 1) !== 10 && result.charCodeAt(result.length - 1) !== 13) {
-    result += "\n";
-  }
-  return result;
-  function enter(name) {
-    state.stack.push(name);
-    return exit3;
-    function exit3() {
-      state.stack.pop();
-    }
-  }
-}
-function invalid2(value) {
-  throw new Error("Cannot handle value `" + value + "`, expected node");
-}
-function unknown2(value) {
-  const node4 = (
-    /** @type {Nodes} */
-    value
-  );
-  throw new Error("Cannot handle unknown node `" + node4.type + "`");
-}
-function joinDefinition2(left, right) {
-  if (left.type === "definition" && left.type === right.type) {
-    return 0;
-  }
-}
-function containerPhrasingBound2(parent, info2) {
-  return containerPhrasing3(parent, this, info2);
-}
-function containerFlowBound2(parent, info2) {
-  return containerFlow3(parent, this, info2);
-}
-function safeBound2(value, config2) {
-  return safe3(this, value, config2);
-}
-
-// node_modules/mdast-util-gfm-table/lib/index.js
-function gfmTableToMarkdown2(options) {
-  const settings = options || {};
-  const padding = settings.tableCellPadding;
-  const alignDelimiters = settings.tablePipeAlign;
-  const stringLength = settings.stringLength;
-  const around = padding ? " " : "|";
-  return {
-    unsafe: [
-      { character: "\r", inConstruct: "tableCell" },
-      { character: "\n", inConstruct: "tableCell" },
-      // A pipe, when followed by a tab or space (padding), or a dash or colon
-      // (unpadded delimiter row), could result in a table.
-      { atBreak: true, character: "|", after: "[	 :-]" },
-      // A pipe in a cell must be encoded.
-      { character: "|", inConstruct: "tableCell" },
-      // A colon must be followed by a dash, in which case it could start a
-      // delimiter row.
-      { atBreak: true, character: ":", after: "-" },
-      // A delimiter row can also start with a dash, when followed by more
-      // dashes, a colon, or a pipe.
-      // This is a stricter version than the built in check for lists, thematic
-      // breaks, and setex heading underlines though:
-      // <https://github.com/syntax-tree/mdast-util-to-markdown/blob/51a2038/lib/unsafe.js#L57>
-      { atBreak: true, character: "-", after: "[:|-]" }
-    ],
-    handlers: {
-      inlineCode: inlineCodeWithTable,
-      table: handleTable,
-      tableCell: handleTableCell,
-      tableRow: handleTableRow
-    }
-  };
-  function handleTable(node4, _, state, info2) {
-    return serializeData(handleTableAsData(node4, state, info2), node4.align);
-  }
-  function handleTableRow(node4, _, state, info2) {
-    const row = handleTableRowAsData(node4, state, info2);
-    const value = serializeData([row]);
-    return value.slice(0, value.indexOf("\n"));
-  }
-  function handleTableCell(node4, _, state, info2) {
-    const exit3 = state.enter("tableCell");
-    const subexit = state.enter("phrasing");
-    const value = state.containerPhrasing(node4, {
-      ...info2,
-      before: around,
-      after: around
-    });
-    subexit();
-    exit3();
-    return value;
-  }
-  function serializeData(matrix, align) {
-    return markdownTable(matrix, {
-      align,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      alignDelimiters,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      padding,
-      // @ts-expect-error: `markdown-table` types should support `null`.
-      stringLength
-    });
-  }
-  function handleTableAsData(node4, state, info2) {
-    const children = node4.children;
-    let index3 = -1;
-    const result = [];
-    const subexit = state.enter("table");
-    while (++index3 < children.length) {
-      result[index3] = handleTableRowAsData(children[index3], state, info2);
-    }
-    subexit();
-    return result;
-  }
-  function handleTableRowAsData(node4, state, info2) {
-    const children = node4.children;
-    let index3 = -1;
-    const result = [];
-    const subexit = state.enter("tableRow");
-    while (++index3 < children.length) {
-      result[index3] = handleTableCell(children[index3], node4, state, info2);
-    }
-    subexit();
-    return result;
-  }
-  function inlineCodeWithTable(node4, parent, state) {
-    let value = handle2.inlineCode(node4, parent, state);
-    if (state.stack.includes("tableCell")) {
-      value = value.replace(/\|/g, "\\$&");
-    }
-    return value;
-  }
-}
-
-// node_modules/mdast-util-gfm-task-list-item/lib/index.js
-function gfmTaskListItemToMarkdown2() {
-  return {
-    unsafe: [{ atBreak: true, character: "-", after: "[:|-]" }],
-    handlers: { listItem: listItemWithTaskListItem2 }
-  };
-}
-function listItemWithTaskListItem2(node4, parent, state, info2) {
-  const head = node4.children[0];
-  const checkable = typeof node4.checked === "boolean" && head && head.type === "paragraph";
-  const checkbox = "[" + (node4.checked ? "x" : " ") + "] ";
-  const tracker = state.createTracker(info2);
-  if (checkable) {
-    tracker.move(checkbox);
-  }
-  let value = handle2.listItem(node4, parent, state, {
-    ...info2,
-    ...tracker.current()
-  });
-  if (checkable) {
-    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check);
-  }
-  return value;
-  function check($0) {
-    return $0 + checkbox;
-  }
-}
-
-// node_modules/mdast-util-gfm/lib/index.js
-function gfmToMarkdown2(options) {
-  return {
-    extensions: [
-      gfmAutolinkLiteralToMarkdown2(),
-      gfmFootnoteToMarkdown2(),
-      gfmStrikethroughToMarkdown2(),
-      gfmTableToMarkdown2(options),
-      gfmTaskListItemToMarkdown2()
-    ]
-  };
-}
-
 // src/summary.ts
 var BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 function renderSummary({
@@ -61387,7 +60357,7 @@ function renderSummary({
       ]
     },
     {
-      extensions: [gfmToMarkdown2()]
+      extensions: [gfmToMarkdown()]
     }
   );
   return rendered.replace(BODY_TOKEN, body);
