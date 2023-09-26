@@ -19,8 +19,8 @@
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.0.0",
     "mime-types": "^2.1.35",
-    "remark": "^14.0.2",
-    "remark-gfm": "^3.0.1",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {

@@ -10,7 +10,7 @@ export function createProcessor(): (original: string) => Promise<string> {
     // strip soft breaks
     .use(() => {
       return (tree) => {
-        visit(tree, "text", (node) => {
+        visit(tree, "text", (node: { value: string }) => {
           node.value = node.value.replace(SOFT_BREAK_PATTERN, " ");
         });
       };
