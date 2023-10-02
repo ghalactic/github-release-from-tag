@@ -22335,9 +22335,9 @@ var require_dist_node10 = __commonJS({
   }
 });
 
-// node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js
+// node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js
 var require_dist_node11 = __commonJS({
-  "node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js"(exports, module) {
+  "node_modules/@octokit/plugin-rest-endpoint-methods/dist-node/index.js"(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -43221,7 +43221,7 @@ var require_dist_node13 = __commonJS({
       }
       return response;
     }
-    var VERSION = "6.0.0";
+    var VERSION = "6.0.1";
     function retry2(octokit, octokitOptions) {
       const state = Object.assign(
         {
