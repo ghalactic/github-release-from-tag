@@ -29,7 +29,7 @@
     "@types/jest-environment-puppeteer": "^5.0.4",
     "@types/js-yaml": "^4.0.6",
     "@types/mdast": "^4.0.1",
-    "@types/mime-types": "^2.1.1",
+    "@types/mime-types": "^2.1.2",
     "es-jest": "^2.0.0",
     "esbuild": "^0.19.3",
     "escape-string-regexp": "^5.0.0",
