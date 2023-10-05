@@ -45789,7 +45789,7 @@ function normalizeIdentifier(value) {
 }
 
 // node_modules/micromark-util-character/index.js
-var unicodePunctuationInternal = regexCheck(/\p{P}/u);
+var unicodePunctuationInternal = regexCheck(new RegExp("\\p{P}", "u"));
 var asciiAlpha = regexCheck(/[A-Za-z]/);
 var asciiAlphanumeric = regexCheck(/[\dA-Za-z]/);
 var asciiAtext = regexCheck(/[#-'*+\--9=?A-Z^-~]/);
