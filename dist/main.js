@@ -24382,7 +24382,13 @@ var require_symbols = __commonJS({
       kProxy: Symbol("proxy agent options"),
       kCounter: Symbol("socket request counter"),
       kInterceptors: Symbol("dispatch interceptors"),
-      kMaxResponseSize: Symbol("max response size")
+      kMaxResponseSize: Symbol("max response size"),
+      kHTTP2Session: Symbol("http2Session"),
+      kHTTP2SessionState: Symbol("http2Session state"),
+      kHTTP2BuildRequest: Symbol("http2 build request"),
+      kHTTP1BuildRequest: Symbol("http1 build request"),
+      kHTTP2CopyHeaders: Symbol("http2 copy headers"),
+      kHTTPConnVersion: Symbol("http connection version")
     };
   }
 });
@@ -24632,25 +24638,25 @@ var require_util2 = __commonJS({
       if (!url || typeof url !== "object") {
         throw new InvalidArgumentError("Invalid URL: The URL argument must be a non-null object.");
       }
-      if (url.port != null && url.port !== "" && !Number.isFinite(parseInt(url.port))) {
-        throw new InvalidArgumentError("Invalid URL: port must be a valid integer or a string representation of an integer.");
-      }
-      if (url.path != null && typeof url.path !== "string") {
-        throw new InvalidArgumentError("Invalid URL path: the path must be a string or null/undefined.");
-      }
-      if (url.pathname != null && typeof url.pathname !== "string") {
-        throw new InvalidArgumentError("Invalid URL pathname: the pathname must be a string or null/undefined.");
-      }
-      if (url.hostname != null && typeof url.hostname !== "string") {
-        throw new InvalidArgumentError("Invalid URL hostname: the hostname must be a string or null/undefined.");
-      }
-      if (url.origin != null && typeof url.origin !== "string") {
-        throw new InvalidArgumentError("Invalid URL origin: the origin must be a string or null/undefined.");
-      }
       if (!/^https?:/.test(url.origin || url.protocol)) {
         throw new InvalidArgumentError("Invalid URL protocol: the URL must start with `http:` or `https:`.");
       }
       if (!(url instanceof URL)) {
+        if (url.port != null && url.port !== "" && !Number.isFinite(parseInt(url.port))) {
+          throw new InvalidArgumentError("Invalid URL: port must be a valid integer or a string representation of an integer.");
+        }
+        if (url.path != null && typeof url.path !== "string") {
+          throw new InvalidArgumentError("Invalid URL path: the path must be a string or null/undefined.");
+        }
+        if (url.pathname != null && typeof url.pathname !== "string") {
+          throw new InvalidArgumentError("Invalid URL pathname: the pathname must be a string or null/undefined.");
+        }
+        if (url.hostname != null && typeof url.hostname !== "string") {
+          throw new InvalidArgumentError("Invalid URL hostname: the hostname must be a string or null/undefined.");
+        }
+        if (url.origin != null && typeof url.origin !== "string") {
+          throw new InvalidArgumentError("Invalid URL origin: the origin must be a string or null/undefined.");
+        }
         const port = url.port != null ? url.port : url.protocol === "https:" ? 443 : 80;
         let origin = url.origin != null ? url.origin : `${url.protocol}//${url.hostname}:${port}`;
         let path2 = url.path != null ? url.path : `${url.pathname || ""}${url.search || ""}`;
@@ -24707,7 +24713,7 @@ var require_util2 = __commonJS({
         return 0;
       } else if (isStream(body)) {
         const state = body._readableState;
-        return state && state.ended === true && Number.isFinite(state.length) ? state.length : null;
+        return state && state.objectMode === false && state.ended === true && Number.isFinite(state.length) ? state.length : null;
       } else if (isBlobLike(body)) {
         return body.size != null ? body.size : null;
       } else if (isBuffer(body)) {
@@ -24746,6 +24752,8 @@ var require_util2 = __commonJS({
       return m ? parseInt(m[1], 10) * 1e3 : null;
     }
     function parseHeaders(headers, obj = {}) {
+      if (!Array.isArray(headers))
+        return headers;
       for (let i = 0; i < headers.length; i += 2) {
         const key = headers[i].toString().toLowerCase();
         let val = obj[key];
@@ -24846,13 +24854,18 @@ var require_util2 = __commonJS({
         bytesRead: socket.bytesRead
       };
     }
+    async function* convertIterableToBuffer(iterable) {
+      for await (const chunk of iterable) {
+        yield Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      }
+    }
     var ReadableStream;
     function ReadableStreamFrom(iterable) {
       if (!ReadableStream) {
         ReadableStream = __require("stream/web").ReadableStream;
       }
       if (ReadableStream.from) {
-        return ReadableStream.from(iterable);
+        return ReadableStream.from(convertIterableToBuffer(iterable));
       }
       let iterator;
       return new ReadableStream(
@@ -25043,382 +25056,665 @@ var require_timers = __commonJS({
   }
 });
 
-// node_modules/busboy/lib/utils.js
-var require_utils2 = __commonJS({
-  "node_modules/busboy/lib/utils.js"(exports, module) {
+// node_modules/@fastify/busboy/deps/streamsearch/sbmh.js
+var require_sbmh = __commonJS({
+  "node_modules/@fastify/busboy/deps/streamsearch/sbmh.js"(exports, module) {
     "use strict";
-    function parseContentType(str2) {
-      if (str2.length === 0)
-        return;
-      const params = /* @__PURE__ */ Object.create(null);
-      let i = 0;
-      for (; i < str2.length; ++i) {
-        const code3 = str2.charCodeAt(i);
-        if (TOKEN[code3] !== 1) {
-          if (code3 !== 47 || i === 0)
-            return;
-          break;
-        }
+    var EventEmitter = __require("node:events").EventEmitter;
+    var inherits = __require("node:util").inherits;
+    function SBMH(needle) {
+      if (typeof needle === "string") {
+        needle = Buffer.from(needle);
       }
-      if (i === str2.length)
-        return;
-      const type2 = str2.slice(0, i).toLowerCase();
-      const subtypeStart = ++i;
-      for (; i < str2.length; ++i) {
-        const code3 = str2.charCodeAt(i);
-        if (TOKEN[code3] !== 1) {
-          if (i === subtypeStart)
-            return;
-          if (parseContentTypeParams(str2, i, params) === void 0)
-            return;
-          break;
-        }
+      if (!Buffer.isBuffer(needle)) {
+        throw new TypeError("The needle has to be a String or a Buffer.");
       }
-      if (i === subtypeStart)
-        return;
-      const subtype = str2.slice(subtypeStart, i).toLowerCase();
-      return { type: type2, subtype, params };
+      const needleLength = needle.length;
+      if (needleLength === 0) {
+        throw new Error("The needle cannot be an empty String/Buffer.");
+      }
+      if (needleLength > 256) {
+        throw new Error("The needle cannot have a length bigger than 256.");
+      }
+      this.maxMatches = Infinity;
+      this.matches = 0;
+      this._occ = new Array(256).fill(needleLength);
+      this._lookbehind_size = 0;
+      this._needle = needle;
+      this._bufpos = 0;
+      this._lookbehind = Buffer.alloc(needleLength);
+      for (var i = 0; i < needleLength - 1; ++i) {
+        this._occ[needle[i]] = needleLength - 1 - i;
+      }
     }
-    function parseContentTypeParams(str2, i, params) {
-      while (i < str2.length) {
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (code3 !== 32 && code3 !== 9)
-            break;
+    inherits(SBMH, EventEmitter);
+    SBMH.prototype.reset = function() {
+      this._lookbehind_size = 0;
+      this.matches = 0;
+      this._bufpos = 0;
+    };
+    SBMH.prototype.push = function(chunk, pos) {
+      if (!Buffer.isBuffer(chunk)) {
+        chunk = Buffer.from(chunk, "binary");
+      }
+      const chlen = chunk.length;
+      this._bufpos = pos || 0;
+      let r;
+      while (r !== chlen && this.matches < this.maxMatches) {
+        r = this._sbmh_feed(chunk);
+      }
+      return r;
+    };
+    SBMH.prototype._sbmh_feed = function(data) {
+      const len = data.length;
+      const needle = this._needle;
+      const needleLength = needle.length;
+      const lastNeedleChar = needle[needleLength - 1];
+      let pos = -this._lookbehind_size;
+      let ch;
+      if (pos < 0) {
+        while (pos < 0 && pos <= len - needleLength) {
+          ch = this._sbmh_lookup_char(data, pos + needleLength - 1);
+          if (ch === lastNeedleChar && this._sbmh_memcmp(data, pos, needleLength - 1)) {
+            this._lookbehind_size = 0;
+            ++this.matches;
+            this.emit("info", true);
+            return this._bufpos = pos + needleLength;
+          }
+          pos += this._occ[ch];
         }
-        if (i === str2.length)
-          break;
-        if (str2.charCodeAt(i++) !== 59)
-          return;
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (code3 !== 32 && code3 !== 9)
-            break;
-        }
-        if (i === str2.length)
-          return;
-        let name;
-        const nameStart = i;
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (TOKEN[code3] !== 1) {
-            if (code3 !== 61)
-              return;
-            break;
+        if (pos < 0) {
+          while (pos < 0 && !this._sbmh_memcmp(data, pos, len - pos)) {
+            ++pos;
           }
         }
-        if (i === str2.length)
-          return;
-        name = str2.slice(nameStart, i);
-        ++i;
-        if (i === str2.length)
-          return;
-        let value = "";
-        let valueStart;
-        if (str2.charCodeAt(i) === 34) {
-          valueStart = ++i;
-          let escaping = false;
-          for (; i < str2.length; ++i) {
-            const code3 = str2.charCodeAt(i);
-            if (code3 === 92) {
-              if (escaping) {
-                valueStart = i;
-                escaping = false;
-              } else {
-                value += str2.slice(valueStart, i);
-                escaping = true;
-              }
-              continue;
-            }
-            if (code3 === 34) {
-              if (escaping) {
-                valueStart = i;
-                escaping = false;
-                continue;
-              }
-              value += str2.slice(valueStart, i);
-              break;
-            }
-            if (escaping) {
-              valueStart = i - 1;
-              escaping = false;
-            }
-            if (QDTEXT[code3] !== 1)
-              return;
-          }
-          if (i === str2.length)
-            return;
-          ++i;
+        if (pos >= 0) {
+          this.emit("info", false, this._lookbehind, 0, this._lookbehind_size);
+          this._lookbehind_size = 0;
         } else {
-          valueStart = i;
-          for (; i < str2.length; ++i) {
-            const code3 = str2.charCodeAt(i);
-            if (TOKEN[code3] !== 1) {
-              if (i === valueStart)
-                return;
-              break;
-            }
+          const bytesToCutOff = this._lookbehind_size + pos;
+          if (bytesToCutOff > 0) {
+            this.emit("info", false, this._lookbehind, 0, bytesToCutOff);
           }
-          value = str2.slice(valueStart, i);
-        }
-        name = name.toLowerCase();
-        if (params[name] === void 0)
-          params[name] = value;
-      }
-      return params;
-    }
-    function parseDisposition(str2, defDecoder) {
-      if (str2.length === 0)
-        return;
-      const params = /* @__PURE__ */ Object.create(null);
-      let i = 0;
-      for (; i < str2.length; ++i) {
-        const code3 = str2.charCodeAt(i);
-        if (TOKEN[code3] !== 1) {
-          if (parseDispositionParams(str2, i, params, defDecoder) === void 0)
-            return;
-          break;
+          this._lookbehind.copy(
+            this._lookbehind,
+            0,
+            bytesToCutOff,
+            this._lookbehind_size - bytesToCutOff
+          );
+          this._lookbehind_size -= bytesToCutOff;
+          data.copy(this._lookbehind, this._lookbehind_size);
+          this._lookbehind_size += len;
+          this._bufpos = len;
+          return len;
         }
       }
-      const type2 = str2.slice(0, i).toLowerCase();
-      return { type: type2, params };
-    }
-    function parseDispositionParams(str2, i, params, defDecoder) {
-      while (i < str2.length) {
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (code3 !== 32 && code3 !== 9)
-            break;
-        }
-        if (i === str2.length)
-          break;
-        if (str2.charCodeAt(i++) !== 59)
-          return;
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (code3 !== 32 && code3 !== 9)
-            break;
-        }
-        if (i === str2.length)
-          return;
-        let name;
-        const nameStart = i;
-        for (; i < str2.length; ++i) {
-          const code3 = str2.charCodeAt(i);
-          if (TOKEN[code3] !== 1) {
-            if (code3 === 61)
-              break;
-            return;
-          }
-        }
-        if (i === str2.length)
-          return;
-        let value = "";
-        let valueStart;
-        let charset;
-        name = str2.slice(nameStart, i);
-        if (name.charCodeAt(name.length - 1) === 42) {
-          const charsetStart = ++i;
-          for (; i < str2.length; ++i) {
-            const code3 = str2.charCodeAt(i);
-            if (CHARSET[code3] !== 1) {
-              if (code3 !== 39)
-                return;
-              break;
-            }
-          }
-          if (i === str2.length)
-            return;
-          charset = str2.slice(charsetStart, i);
-          ++i;
-          for (; i < str2.length; ++i) {
-            const code3 = str2.charCodeAt(i);
-            if (code3 === 39)
-              break;
-          }
-          if (i === str2.length)
-            return;
-          ++i;
-          if (i === str2.length)
-            return;
-          valueStart = i;
-          let encode = 0;
-          for (; i < str2.length; ++i) {
-            const code3 = str2.charCodeAt(i);
-            if (EXTENDED_VALUE[code3] !== 1) {
-              if (code3 === 37) {
-                let hexUpper;
-                let hexLower;
-                if (i + 2 < str2.length && (hexUpper = HEX_VALUES[str2.charCodeAt(i + 1)]) !== -1 && (hexLower = HEX_VALUES[str2.charCodeAt(i + 2)]) !== -1) {
-                  const byteVal = (hexUpper << 4) + hexLower;
-                  value += str2.slice(valueStart, i);
-                  value += String.fromCharCode(byteVal);
-                  i += 2;
-                  valueStart = i + 1;
-                  if (byteVal >= 128)
-                    encode = 2;
-                  else if (encode === 0)
-                    encode = 1;
-                  continue;
-                }
-                return;
-              }
-              break;
-            }
-          }
-          value += str2.slice(valueStart, i);
-          value = convertToUTF8(value, charset, encode);
-          if (value === void 0)
-            return;
+      pos += (pos >= 0) * this._bufpos;
+      if (data.indexOf(needle, pos) !== -1) {
+        pos = data.indexOf(needle, pos);
+        ++this.matches;
+        if (pos > 0) {
+          this.emit("info", true, data, this._bufpos, pos);
         } else {
-          ++i;
-          if (i === str2.length)
-            return;
-          if (str2.charCodeAt(i) === 34) {
-            valueStart = ++i;
-            let escaping = false;
-            for (; i < str2.length; ++i) {
-              const code3 = str2.charCodeAt(i);
-              if (code3 === 92) {
-                if (escaping) {
-                  valueStart = i;
-                  escaping = false;
-                } else {
-                  value += str2.slice(valueStart, i);
-                  escaping = true;
-                }
-                continue;
-              }
-              if (code3 === 34) {
-                if (escaping) {
-                  valueStart = i;
-                  escaping = false;
-                  continue;
-                }
-                value += str2.slice(valueStart, i);
-                break;
-              }
-              if (escaping) {
-                valueStart = i - 1;
-                escaping = false;
-              }
-              if (QDTEXT[code3] !== 1)
-                return;
-            }
-            if (i === str2.length)
-              return;
-            ++i;
+          this.emit("info", true);
+        }
+        return this._bufpos = pos + needleLength;
+      } else {
+        pos = len - needleLength;
+      }
+      while (pos < len && (data[pos] !== needle[0] || Buffer.compare(
+        data.subarray(pos, pos + len - pos),
+        needle.subarray(0, len - pos)
+      ) !== 0)) {
+        ++pos;
+      }
+      if (pos < len) {
+        data.copy(this._lookbehind, 0, pos, pos + (len - pos));
+        this._lookbehind_size = len - pos;
+      }
+      if (pos > 0) {
+        this.emit("info", false, data, this._bufpos, pos < len ? pos : len);
+      }
+      this._bufpos = len;
+      return len;
+    };
+    SBMH.prototype._sbmh_lookup_char = function(data, pos) {
+      return pos < 0 ? this._lookbehind[this._lookbehind_size + pos] : data[pos];
+    };
+    SBMH.prototype._sbmh_memcmp = function(data, pos, len) {
+      for (var i = 0; i < len; ++i) {
+        if (this._sbmh_lookup_char(data, pos + i) !== this._needle[i]) {
+          return false;
+        }
+      }
+      return true;
+    };
+    module.exports = SBMH;
+  }
+});
+
+// node_modules/@fastify/busboy/deps/dicer/lib/PartStream.js
+var require_PartStream = __commonJS({
+  "node_modules/@fastify/busboy/deps/dicer/lib/PartStream.js"(exports, module) {
+    "use strict";
+    var inherits = __require("node:util").inherits;
+    var ReadableStream = __require("node:stream").Readable;
+    function PartStream(opts) {
+      ReadableStream.call(this, opts);
+    }
+    inherits(PartStream, ReadableStream);
+    PartStream.prototype._read = function(n) {
+    };
+    module.exports = PartStream;
+  }
+});
+
+// node_modules/@fastify/busboy/lib/utils/getLimit.js
+var require_getLimit = __commonJS({
+  "node_modules/@fastify/busboy/lib/utils/getLimit.js"(exports, module) {
+    "use strict";
+    module.exports = function getLimit(limits, name, defaultLimit) {
+      if (!limits || limits[name] === void 0 || limits[name] === null) {
+        return defaultLimit;
+      }
+      if (typeof limits[name] !== "number" || isNaN(limits[name])) {
+        throw new TypeError("Limit " + name + " is not a valid number");
+      }
+      return limits[name];
+    };
+  }
+});
+
+// node_modules/@fastify/busboy/deps/dicer/lib/HeaderParser.js
+var require_HeaderParser = __commonJS({
+  "node_modules/@fastify/busboy/deps/dicer/lib/HeaderParser.js"(exports, module) {
+    "use strict";
+    var EventEmitter = __require("node:events").EventEmitter;
+    var inherits = __require("node:util").inherits;
+    var getLimit = require_getLimit();
+    var StreamSearch = require_sbmh();
+    var B_DCRLF = Buffer.from("\r\n\r\n");
+    var RE_CRLF = /\r\n/g;
+    var RE_HDR = /^([^:]+):[ \t]?([\x00-\xFF]+)?$/;
+    function HeaderParser(cfg) {
+      EventEmitter.call(this);
+      cfg = cfg || {};
+      const self2 = this;
+      this.nread = 0;
+      this.maxed = false;
+      this.npairs = 0;
+      this.maxHeaderPairs = getLimit(cfg, "maxHeaderPairs", 2e3);
+      this.maxHeaderSize = getLimit(cfg, "maxHeaderSize", 80 * 1024);
+      this.buffer = "";
+      this.header = {};
+      this.finished = false;
+      this.ss = new StreamSearch(B_DCRLF);
+      this.ss.on("info", function(isMatch, data, start, end) {
+        if (data && !self2.maxed) {
+          if (self2.nread + end - start >= self2.maxHeaderSize) {
+            end = self2.maxHeaderSize - self2.nread + start;
+            self2.nread = self2.maxHeaderSize;
+            self2.maxed = true;
           } else {
-            valueStart = i;
-            for (; i < str2.length; ++i) {
-              const code3 = str2.charCodeAt(i);
-              if (TOKEN[code3] !== 1) {
-                if (i === valueStart)
-                  return;
-                break;
-              }
-            }
-            value = str2.slice(valueStart, i);
+            self2.nread += end - start;
           }
-          value = defDecoder(value, 2);
-          if (value === void 0)
-            return;
+          self2.buffer += data.toString("binary", start, end);
         }
-        name = name.toLowerCase();
-        if (params[name] === void 0)
-          params[name] = value;
-      }
-      return params;
+        if (isMatch) {
+          self2._finish();
+        }
+      });
     }
-    function getDecoder(charset) {
-      let lc;
-      while (true) {
-        switch (charset) {
-          case "utf-8":
-          case "utf8":
-            return decoders.utf8;
-          case "latin1":
-          case "ascii":
-          case "us-ascii":
-          case "iso-8859-1":
-          case "iso8859-1":
-          case "iso88591":
-          case "iso_8859-1":
-          case "windows-1252":
-          case "iso_8859-1:1987":
-          case "cp1252":
-          case "x-cp1252":
-            return decoders.latin1;
-          case "utf16le":
-          case "utf-16le":
-          case "ucs2":
-          case "ucs-2":
-            return decoders.utf16le;
-          case "base64":
-            return decoders.base64;
-          default:
-            if (lc === void 0) {
-              lc = true;
-              charset = charset.toLowerCase();
-              continue;
-            }
-            return decoders.other.bind(charset);
-        }
+    inherits(HeaderParser, EventEmitter);
+    HeaderParser.prototype.push = function(data) {
+      const r = this.ss.push(data);
+      if (this.finished) {
+        return r;
       }
-    }
-    var decoders = {
-      utf8: (data, hint) => {
-        if (data.length === 0)
-          return "";
-        if (typeof data === "string") {
-          if (hint < 2)
-            return data;
-          data = Buffer.from(data, "latin1");
+    };
+    HeaderParser.prototype.reset = function() {
+      this.finished = false;
+      this.buffer = "";
+      this.header = {};
+      this.ss.reset();
+    };
+    HeaderParser.prototype._finish = function() {
+      if (this.buffer) {
+        this._parseHeader();
+      }
+      this.ss.matches = this.ss.maxMatches;
+      const header = this.header;
+      this.header = {};
+      this.buffer = "";
+      this.finished = true;
+      this.nread = this.npairs = 0;
+      this.maxed = false;
+      this.emit("header", header);
+    };
+    HeaderParser.prototype._parseHeader = function() {
+      if (this.npairs === this.maxHeaderPairs) {
+        return;
+      }
+      const lines = this.buffer.split(RE_CRLF);
+      const len = lines.length;
+      let m, h;
+      for (var i = 0; i < len; ++i) {
+        if (lines[i].length === 0) {
+          continue;
         }
-        return data.utf8Slice(0, data.length);
-      },
-      latin1: (data, hint) => {
-        if (data.length === 0)
-          return "";
-        if (typeof data === "string")
-          return data;
-        return data.latin1Slice(0, data.length);
-      },
-      utf16le: (data, hint) => {
-        if (data.length === 0)
-          return "";
-        if (typeof data === "string")
-          data = Buffer.from(data, "latin1");
-        return data.ucs2Slice(0, data.length);
-      },
-      base64: (data, hint) => {
-        if (data.length === 0)
-          return "";
-        if (typeof data === "string")
-          data = Buffer.from(data, "latin1");
-        return data.base64Slice(0, data.length);
-      },
-      other: (data, hint) => {
-        if (data.length === 0)
-          return "";
-        if (typeof data === "string")
-          data = Buffer.from(data, "latin1");
-        try {
-          const decoder = new TextDecoder(exports);
-          return decoder.decode(data);
-        } catch {
+        if (lines[i][0] === "	" || lines[i][0] === " ") {
+          if (h) {
+            this.header[h][this.header[h].length - 1] += lines[i];
+            continue;
+          }
+        }
+        const posColon = lines[i].indexOf(":");
+        if (posColon === -1 || posColon === 0) {
+          return;
+        }
+        m = RE_HDR.exec(lines[i]);
+        h = m[1].toLowerCase();
+        this.header[h] = this.header[h] || [];
+        this.header[h].push(m[2] || "");
+        if (++this.npairs === this.maxHeaderPairs) {
+          break;
         }
       }
     };
-    function convertToUTF8(data, charset, hint) {
-      const decode2 = getDecoder(charset);
-      if (decode2)
-        return decode2(data, hint);
+    module.exports = HeaderParser;
+  }
+});
+
+// node_modules/@fastify/busboy/deps/dicer/lib/Dicer.js
+var require_Dicer = __commonJS({
+  "node_modules/@fastify/busboy/deps/dicer/lib/Dicer.js"(exports, module) {
+    "use strict";
+    var WritableStream = __require("node:stream").Writable;
+    var inherits = __require("node:util").inherits;
+    var StreamSearch = require_sbmh();
+    var PartStream = require_PartStream();
+    var HeaderParser = require_HeaderParser();
+    var DASH = 45;
+    var B_ONEDASH = Buffer.from("-");
+    var B_CRLF = Buffer.from("\r\n");
+    var EMPTY_FN = function() {
+    };
+    function Dicer(cfg) {
+      if (!(this instanceof Dicer)) {
+        return new Dicer(cfg);
+      }
+      WritableStream.call(this, cfg);
+      if (!cfg || !cfg.headerFirst && typeof cfg.boundary !== "string") {
+        throw new TypeError("Boundary required");
+      }
+      if (typeof cfg.boundary === "string") {
+        this.setBoundary(cfg.boundary);
+      } else {
+        this._bparser = void 0;
+      }
+      this._headerFirst = cfg.headerFirst;
+      this._dashes = 0;
+      this._parts = 0;
+      this._finished = false;
+      this._realFinish = false;
+      this._isPreamble = true;
+      this._justMatched = false;
+      this._firstWrite = true;
+      this._inHeader = true;
+      this._part = void 0;
+      this._cb = void 0;
+      this._ignoreData = false;
+      this._partOpts = { highWaterMark: cfg.partHwm };
+      this._pause = false;
+      const self2 = this;
+      this._hparser = new HeaderParser(cfg);
+      this._hparser.on("header", function(header) {
+        self2._inHeader = false;
+        self2._part.emit("header", header);
+      });
     }
-    function basename2(path2) {
-      if (typeof path2 !== "string")
+    inherits(Dicer, WritableStream);
+    Dicer.prototype.emit = function(ev) {
+      if (ev === "finish" && !this._realFinish) {
+        if (!this._finished) {
+          const self2 = this;
+          process.nextTick(function() {
+            self2.emit("error", new Error("Unexpected end of multipart data"));
+            if (self2._part && !self2._ignoreData) {
+              const type2 = self2._isPreamble ? "Preamble" : "Part";
+              self2._part.emit("error", new Error(type2 + " terminated early due to unexpected end of multipart data"));
+              self2._part.push(null);
+              process.nextTick(function() {
+                self2._realFinish = true;
+                self2.emit("finish");
+                self2._realFinish = false;
+              });
+              return;
+            }
+            self2._realFinish = true;
+            self2.emit("finish");
+            self2._realFinish = false;
+          });
+        }
+      } else {
+        WritableStream.prototype.emit.apply(this, arguments);
+      }
+    };
+    Dicer.prototype._write = function(data, encoding, cb) {
+      if (!this._hparser && !this._bparser) {
+        return cb();
+      }
+      if (this._headerFirst && this._isPreamble) {
+        if (!this._part) {
+          this._part = new PartStream(this._partOpts);
+          if (this._events.preamble) {
+            this.emit("preamble", this._part);
+          } else {
+            this._ignore();
+          }
+        }
+        const r = this._hparser.push(data);
+        if (!this._inHeader && r !== void 0 && r < data.length) {
+          data = data.slice(r);
+        } else {
+          return cb();
+        }
+      }
+      if (this._firstWrite) {
+        this._bparser.push(B_CRLF);
+        this._firstWrite = false;
+      }
+      this._bparser.push(data);
+      if (this._pause) {
+        this._cb = cb;
+      } else {
+        cb();
+      }
+    };
+    Dicer.prototype.reset = function() {
+      this._part = void 0;
+      this._bparser = void 0;
+      this._hparser = void 0;
+    };
+    Dicer.prototype.setBoundary = function(boundary) {
+      const self2 = this;
+      this._bparser = new StreamSearch("\r\n--" + boundary);
+      this._bparser.on("info", function(isMatch, data, start, end) {
+        self2._oninfo(isMatch, data, start, end);
+      });
+    };
+    Dicer.prototype._ignore = function() {
+      if (this._part && !this._ignoreData) {
+        this._ignoreData = true;
+        this._part.on("error", EMPTY_FN);
+        this._part.resume();
+      }
+    };
+    Dicer.prototype._oninfo = function(isMatch, data, start, end) {
+      let buf;
+      const self2 = this;
+      let i = 0;
+      let r;
+      let shouldWriteMore = true;
+      if (!this._part && this._justMatched && data) {
+        while (this._dashes < 2 && start + i < end) {
+          if (data[start + i] === DASH) {
+            ++i;
+            ++this._dashes;
+          } else {
+            if (this._dashes) {
+              buf = B_ONEDASH;
+            }
+            this._dashes = 0;
+            break;
+          }
+        }
+        if (this._dashes === 2) {
+          if (start + i < end && this._events.trailer) {
+            this.emit("trailer", data.slice(start + i, end));
+          }
+          this.reset();
+          this._finished = true;
+          if (self2._parts === 0) {
+            self2._realFinish = true;
+            self2.emit("finish");
+            self2._realFinish = false;
+          }
+        }
+        if (this._dashes) {
+          return;
+        }
+      }
+      if (this._justMatched) {
+        this._justMatched = false;
+      }
+      if (!this._part) {
+        this._part = new PartStream(this._partOpts);
+        this._part._read = function(n) {
+          self2._unpause();
+        };
+        if (this._isPreamble && this._events.preamble) {
+          this.emit("preamble", this._part);
+        } else if (this._isPreamble !== true && this._events.part) {
+          this.emit("part", this._part);
+        } else {
+          this._ignore();
+        }
+        if (!this._isPreamble) {
+          this._inHeader = true;
+        }
+      }
+      if (data && start < end && !this._ignoreData) {
+        if (this._isPreamble || !this._inHeader) {
+          if (buf) {
+            shouldWriteMore = this._part.push(buf);
+          }
+          shouldWriteMore = this._part.push(data.slice(start, end));
+          if (!shouldWriteMore) {
+            this._pause = true;
+          }
+        } else if (!this._isPreamble && this._inHeader) {
+          if (buf) {
+            this._hparser.push(buf);
+          }
+          r = this._hparser.push(data.slice(start, end));
+          if (!this._inHeader && r !== void 0 && r < end) {
+            this._oninfo(false, data, start + r, end);
+          }
+        }
+      }
+      if (isMatch) {
+        this._hparser.reset();
+        if (this._isPreamble) {
+          this._isPreamble = false;
+        } else {
+          if (start !== end) {
+            ++this._parts;
+            this._part.on("end", function() {
+              if (--self2._parts === 0) {
+                if (self2._finished) {
+                  self2._realFinish = true;
+                  self2.emit("finish");
+                  self2._realFinish = false;
+                } else {
+                  self2._unpause();
+                }
+              }
+            });
+          }
+        }
+        this._part.push(null);
+        this._part = void 0;
+        this._ignoreData = false;
+        this._justMatched = true;
+        this._dashes = 0;
+      }
+    };
+    Dicer.prototype._unpause = function() {
+      if (!this._pause) {
+        return;
+      }
+      this._pause = false;
+      if (this._cb) {
+        const cb = this._cb;
+        this._cb = void 0;
+        cb();
+      }
+    };
+    module.exports = Dicer;
+  }
+});
+
+// node_modules/@fastify/busboy/lib/utils/decodeText.js
+var require_decodeText = __commonJS({
+  "node_modules/@fastify/busboy/lib/utils/decodeText.js"(exports, module) {
+    "use strict";
+    var utf8Decoder = new TextDecoder("utf-8");
+    var textDecoders = /* @__PURE__ */ new Map([
+      ["utf-8", utf8Decoder],
+      ["utf8", utf8Decoder]
+    ]);
+    function decodeText(text5, textEncoding, destEncoding) {
+      if (text5) {
+        if (textDecoders.has(destEncoding)) {
+          try {
+            return textDecoders.get(destEncoding).decode(Buffer.from(text5, textEncoding));
+          } catch (e) {
+          }
+        } else {
+          try {
+            textDecoders.set(destEncoding, new TextDecoder(destEncoding));
+            return textDecoders.get(destEncoding).decode(Buffer.from(text5, textEncoding));
+          } catch (e) {
+          }
+        }
+      }
+      return text5;
+    }
+    module.exports = decodeText;
+  }
+});
+
+// node_modules/@fastify/busboy/lib/utils/parseParams.js
+var require_parseParams = __commonJS({
+  "node_modules/@fastify/busboy/lib/utils/parseParams.js"(exports, module) {
+    "use strict";
+    var decodeText = require_decodeText();
+    var RE_ENCODED = /%([a-fA-F0-9]{2})/g;
+    function encodedReplacer(match, byte) {
+      return String.fromCharCode(parseInt(byte, 16));
+    }
+    function parseParams(str2) {
+      const res = [];
+      let state = "key";
+      let charset = "";
+      let inquote = false;
+      let escaping = false;
+      let p = 0;
+      let tmp = "";
+      for (var i = 0, len = str2.length; i < len; ++i) {
+        const char = str2[i];
+        if (char === "\\" && inquote) {
+          if (escaping) {
+            escaping = false;
+          } else {
+            escaping = true;
+            continue;
+          }
+        } else if (char === '"') {
+          if (!escaping) {
+            if (inquote) {
+              inquote = false;
+              state = "key";
+            } else {
+              inquote = true;
+            }
+            continue;
+          } else {
+            escaping = false;
+          }
+        } else {
+          if (escaping && inquote) {
+            tmp += "\\";
+          }
+          escaping = false;
+          if ((state === "charset" || state === "lang") && char === "'") {
+            if (state === "charset") {
+              state = "lang";
+              charset = tmp.substring(1);
+            } else {
+              state = "value";
+            }
+            tmp = "";
+            continue;
+          } else if (state === "key" && (char === "*" || char === "=") && res.length) {
+            if (char === "*") {
+              state = "charset";
+            } else {
+              state = "value";
+            }
+            res[p] = [tmp, void 0];
+            tmp = "";
+            continue;
+          } else if (!inquote && char === ";") {
+            state = "key";
+            if (charset) {
+              if (tmp.length) {
+                tmp = decodeText(
+                  tmp.replace(RE_ENCODED, encodedReplacer),
+                  "binary",
+                  charset
+                );
+              }
+              charset = "";
+            } else if (tmp.length) {
+              tmp = decodeText(tmp, "binary", "utf8");
+            }
+            if (res[p] === void 0) {
+              res[p] = tmp;
+            } else {
+              res[p][1] = tmp;
+            }
+            tmp = "";
+            ++p;
+            continue;
+          } else if (!inquote && (char === " " || char === "	")) {
+            continue;
+          }
+        }
+        tmp += char;
+      }
+      if (charset && tmp.length) {
+        tmp = decodeText(
+          tmp.replace(RE_ENCODED, encodedReplacer),
+          "binary",
+          charset
+        );
+      } else if (tmp) {
+        tmp = decodeText(tmp, "binary", "utf8");
+      }
+      if (res[p] === void 0) {
+        if (tmp) {
+          res[p] = tmp;
+        }
+      } else {
+        res[p][1] = tmp;
+      }
+      return res;
+    }
+    module.exports = parseParams;
+  }
+});
+
+// node_modules/@fastify/busboy/lib/utils/basename.js
+var require_basename = __commonJS({
+  "node_modules/@fastify/busboy/lib/utils/basename.js"(exports, module) {
+    "use strict";
+    module.exports = function basename2(path2) {
+      if (typeof path2 !== "string") {
         return "";
-      for (let i = path2.length - 1; i >= 0; --i) {
+      }
+      for (var i = path2.length - 1; i >= 0; --i) {
         switch (path2.charCodeAt(i)) {
           case 47:
           case 92:
@@ -25427,3347 +25723,760 @@ var require_utils2 = __commonJS({
         }
       }
       return path2 === ".." || path2 === "." ? "" : path2;
-    }
-    var TOKEN = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ];
-    var QDTEXT = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ];
-    var CHARSET = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ];
-    var EXTENDED_VALUE = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ];
-    var HEX_VALUES = [
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1
-    ];
-    module.exports = {
-      basename: basename2,
-      convertToUTF8,
-      getDecoder,
-      parseContentType,
-      parseDisposition
     };
   }
 });
 
-// node_modules/streamsearch/lib/sbmh.js
-var require_sbmh = __commonJS({
-  "node_modules/streamsearch/lib/sbmh.js"(exports, module) {
-    "use strict";
-    function memcmp(buf1, pos1, buf2, pos2, num) {
-      for (let i = 0; i < num; ++i) {
-        if (buf1[pos1 + i] !== buf2[pos2 + i])
-          return false;
-      }
-      return true;
-    }
-    var SBMH = class {
-      constructor(needle, cb) {
-        if (typeof cb !== "function")
-          throw new Error("Missing match callback");
-        if (typeof needle === "string")
-          needle = Buffer.from(needle);
-        else if (!Buffer.isBuffer(needle))
-          throw new Error(`Expected Buffer for needle, got ${typeof needle}`);
-        const needleLen = needle.length;
-        this.maxMatches = Infinity;
-        this.matches = 0;
-        this._cb = cb;
-        this._lookbehindSize = 0;
-        this._needle = needle;
-        this._bufPos = 0;
-        this._lookbehind = Buffer.allocUnsafe(needleLen);
-        this._occ = [
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen,
-          needleLen
-        ];
-        if (needleLen > 1) {
-          for (let i = 0; i < needleLen - 1; ++i)
-            this._occ[needle[i]] = needleLen - 1 - i;
-        }
-      }
-      reset() {
-        this.matches = 0;
-        this._lookbehindSize = 0;
-        this._bufPos = 0;
-      }
-      push(chunk, pos) {
-        let result;
-        if (!Buffer.isBuffer(chunk))
-          chunk = Buffer.from(chunk, "latin1");
-        const chunkLen = chunk.length;
-        this._bufPos = pos || 0;
-        while (result !== chunkLen && this.matches < this.maxMatches)
-          result = feed(this, chunk);
-        return result;
-      }
-      destroy() {
-        const lbSize = this._lookbehindSize;
-        if (lbSize)
-          this._cb(false, this._lookbehind, 0, lbSize, false);
-        this.reset();
-      }
-    };
-    function feed(self2, data) {
-      const len = data.length;
-      const needle = self2._needle;
-      const needleLen = needle.length;
-      let pos = -self2._lookbehindSize;
-      const lastNeedleCharPos = needleLen - 1;
-      const lastNeedleChar = needle[lastNeedleCharPos];
-      const end = len - needleLen;
-      const occ = self2._occ;
-      const lookbehind = self2._lookbehind;
-      if (pos < 0) {
-        while (pos < 0 && pos <= end) {
-          const nextPos = pos + lastNeedleCharPos;
-          const ch = nextPos < 0 ? lookbehind[self2._lookbehindSize + nextPos] : data[nextPos];
-          if (ch === lastNeedleChar && matchNeedle(self2, data, pos, lastNeedleCharPos)) {
-            self2._lookbehindSize = 0;
-            ++self2.matches;
-            if (pos > -self2._lookbehindSize)
-              self2._cb(true, lookbehind, 0, self2._lookbehindSize + pos, false);
-            else
-              self2._cb(true, void 0, 0, 0, true);
-            return self2._bufPos = pos + needleLen;
-          }
-          pos += occ[ch];
-        }
-        while (pos < 0 && !matchNeedle(self2, data, pos, len - pos))
-          ++pos;
-        if (pos < 0) {
-          const bytesToCutOff = self2._lookbehindSize + pos;
-          if (bytesToCutOff > 0) {
-            self2._cb(false, lookbehind, 0, bytesToCutOff, false);
-          }
-          self2._lookbehindSize -= bytesToCutOff;
-          lookbehind.copy(lookbehind, 0, bytesToCutOff, self2._lookbehindSize);
-          lookbehind.set(data, self2._lookbehindSize);
-          self2._lookbehindSize += len;
-          self2._bufPos = len;
-          return len;
-        }
-        self2._cb(false, lookbehind, 0, self2._lookbehindSize, false);
-        self2._lookbehindSize = 0;
-      }
-      pos += self2._bufPos;
-      const firstNeedleChar = needle[0];
-      while (pos <= end) {
-        const ch = data[pos + lastNeedleCharPos];
-        if (ch === lastNeedleChar && data[pos] === firstNeedleChar && memcmp(needle, 0, data, pos, lastNeedleCharPos)) {
-          ++self2.matches;
-          if (pos > 0)
-            self2._cb(true, data, self2._bufPos, pos, true);
-          else
-            self2._cb(true, void 0, 0, 0, true);
-          return self2._bufPos = pos + needleLen;
-        }
-        pos += occ[ch];
-      }
-      while (pos < len) {
-        if (data[pos] !== firstNeedleChar || !memcmp(data, pos, needle, 0, len - pos)) {
-          ++pos;
-          continue;
-        }
-        data.copy(lookbehind, 0, pos, len);
-        self2._lookbehindSize = len - pos;
-        break;
-      }
-      if (pos > 0)
-        self2._cb(false, data, self2._bufPos, pos < len ? pos : len, true);
-      self2._bufPos = len;
-      return len;
-    }
-    function matchNeedle(self2, data, pos, len) {
-      const lb = self2._lookbehind;
-      const lbSize = self2._lookbehindSize;
-      const needle = self2._needle;
-      for (let i = 0; i < len; ++i, ++pos) {
-        const ch = pos < 0 ? lb[lbSize + pos] : data[pos];
-        if (ch !== needle[i])
-          return false;
-      }
-      return true;
-    }
-    module.exports = SBMH;
-  }
-});
-
-// node_modules/busboy/lib/types/multipart.js
+// node_modules/@fastify/busboy/lib/types/multipart.js
 var require_multipart = __commonJS({
-  "node_modules/busboy/lib/types/multipart.js"(exports, module) {
+  "node_modules/@fastify/busboy/lib/types/multipart.js"(exports, module) {
     "use strict";
-    var { Readable, Writable } = __require("stream");
-    var StreamSearch = require_sbmh();
-    var {
-      basename: basename2,
-      convertToUTF8,
-      getDecoder,
-      parseContentType,
-      parseDisposition
-    } = require_utils2();
-    var BUF_CRLF = Buffer.from("\r\n");
-    var BUF_CR = Buffer.from("\r");
-    var BUF_DASH = Buffer.from("-");
-    function noop() {
-    }
-    var MAX_HEADER_PAIRS = 2e3;
-    var MAX_HEADER_SIZE = 16 * 1024;
-    var HPARSER_NAME = 0;
-    var HPARSER_PRE_OWS = 1;
-    var HPARSER_VALUE = 2;
-    var HeaderParser = class {
-      constructor(cb) {
-        this.header = /* @__PURE__ */ Object.create(null);
-        this.pairCount = 0;
-        this.byteCount = 0;
-        this.state = HPARSER_NAME;
-        this.name = "";
-        this.value = "";
-        this.crlf = 0;
-        this.cb = cb;
-      }
-      reset() {
-        this.header = /* @__PURE__ */ Object.create(null);
-        this.pairCount = 0;
-        this.byteCount = 0;
-        this.state = HPARSER_NAME;
-        this.name = "";
-        this.value = "";
-        this.crlf = 0;
-      }
-      push(chunk, pos, end) {
-        let start = pos;
-        while (pos < end) {
-          switch (this.state) {
-            case HPARSER_NAME: {
-              let done = false;
-              for (; pos < end; ++pos) {
-                if (this.byteCount === MAX_HEADER_SIZE)
-                  return -1;
-                ++this.byteCount;
-                const code3 = chunk[pos];
-                if (TOKEN[code3] !== 1) {
-                  if (code3 !== 58)
-                    return -1;
-                  this.name += chunk.latin1Slice(start, pos);
-                  if (this.name.length === 0)
-                    return -1;
-                  ++pos;
-                  done = true;
-                  this.state = HPARSER_PRE_OWS;
-                  break;
-                }
-              }
-              if (!done) {
-                this.name += chunk.latin1Slice(start, pos);
-                break;
-              }
-            }
-            case HPARSER_PRE_OWS: {
-              let done = false;
-              for (; pos < end; ++pos) {
-                if (this.byteCount === MAX_HEADER_SIZE)
-                  return -1;
-                ++this.byteCount;
-                const code3 = chunk[pos];
-                if (code3 !== 32 && code3 !== 9) {
-                  start = pos;
-                  done = true;
-                  this.state = HPARSER_VALUE;
-                  break;
-                }
-              }
-              if (!done)
-                break;
-            }
-            case HPARSER_VALUE:
-              switch (this.crlf) {
-                case 0:
-                  for (; pos < end; ++pos) {
-                    if (this.byteCount === MAX_HEADER_SIZE)
-                      return -1;
-                    ++this.byteCount;
-                    const code3 = chunk[pos];
-                    if (FIELD_VCHAR[code3] !== 1) {
-                      if (code3 !== 13)
-                        return -1;
-                      ++this.crlf;
-                      break;
-                    }
-                  }
-                  this.value += chunk.latin1Slice(start, pos++);
-                  break;
-                case 1:
-                  if (this.byteCount === MAX_HEADER_SIZE)
-                    return -1;
-                  ++this.byteCount;
-                  if (chunk[pos++] !== 10)
-                    return -1;
-                  ++this.crlf;
-                  break;
-                case 2: {
-                  if (this.byteCount === MAX_HEADER_SIZE)
-                    return -1;
-                  ++this.byteCount;
-                  const code3 = chunk[pos];
-                  if (code3 === 32 || code3 === 9) {
-                    start = pos;
-                    this.crlf = 0;
-                  } else {
-                    if (++this.pairCount < MAX_HEADER_PAIRS) {
-                      this.name = this.name.toLowerCase();
-                      if (this.header[this.name] === void 0)
-                        this.header[this.name] = [this.value];
-                      else
-                        this.header[this.name].push(this.value);
-                    }
-                    if (code3 === 13) {
-                      ++this.crlf;
-                      ++pos;
-                    } else {
-                      start = pos;
-                      this.crlf = 0;
-                      this.state = HPARSER_NAME;
-                      this.name = "";
-                      this.value = "";
-                    }
-                  }
-                  break;
-                }
-                case 3: {
-                  if (this.byteCount === MAX_HEADER_SIZE)
-                    return -1;
-                  ++this.byteCount;
-                  if (chunk[pos++] !== 10)
-                    return -1;
-                  const header = this.header;
-                  this.reset();
-                  this.cb(header);
-                  return pos;
-                }
-              }
-              break;
-          }
+    var { Readable } = __require("node:stream");
+    var { inherits } = __require("node:util");
+    var Dicer = require_Dicer();
+    var parseParams = require_parseParams();
+    var decodeText = require_decodeText();
+    var basename2 = require_basename();
+    var getLimit = require_getLimit();
+    var RE_BOUNDARY = /^boundary$/i;
+    var RE_FIELD = /^form-data$/i;
+    var RE_CHARSET = /^charset$/i;
+    var RE_FILENAME = /^filename$/i;
+    var RE_NAME = /^name$/i;
+    Multipart.detect = /^multipart\/form-data/i;
+    function Multipart(boy, cfg) {
+      let i;
+      let len;
+      const self2 = this;
+      let boundary;
+      const limits = cfg.limits;
+      const isPartAFile = cfg.isPartAFile || ((fieldName, contentType, fileName) => contentType === "application/octet-stream" || fileName !== void 0);
+      const parsedConType = cfg.parsedConType || [];
+      const defCharset = cfg.defCharset || "utf8";
+      const preservePath = cfg.preservePath;
+      const fileOpts = { highWaterMark: cfg.fileHwm };
+      for (i = 0, len = parsedConType.length; i < len; ++i) {
+        if (Array.isArray(parsedConType[i]) && RE_BOUNDARY.test(parsedConType[i][0])) {
+          boundary = parsedConType[i][1];
+          break;
         }
-        return pos;
       }
-    };
-    var FileStream = class extends Readable {
-      constructor(opts, owner) {
-        super(opts);
-        this.truncated = false;
-        this._readcb = null;
-        this.once("end", () => {
-          this._read();
-          if (--owner._fileEndsLeft === 0 && owner._finalcb) {
-            const cb = owner._finalcb;
-            owner._finalcb = null;
-            process.nextTick(cb);
-          }
-        });
+      function checkFinished() {
+        if (nends === 0 && finished && !boy._done) {
+          finished = false;
+          self2.end();
+        }
       }
-      _read(n) {
-        const cb = this._readcb;
-        if (cb) {
-          this._readcb = null;
+      if (typeof boundary !== "string") {
+        throw new Error("Multipart: Boundary not found");
+      }
+      const fieldSizeLimit = getLimit(limits, "fieldSize", 1 * 1024 * 1024);
+      const fileSizeLimit = getLimit(limits, "fileSize", Infinity);
+      const filesLimit = getLimit(limits, "files", Infinity);
+      const fieldsLimit = getLimit(limits, "fields", Infinity);
+      const partsLimit = getLimit(limits, "parts", Infinity);
+      const headerPairsLimit = getLimit(limits, "headerPairs", 2e3);
+      const headerSizeLimit = getLimit(limits, "headerSize", 80 * 1024);
+      let nfiles = 0;
+      let nfields = 0;
+      let nends = 0;
+      let curFile;
+      let curField;
+      let finished = false;
+      this._needDrain = false;
+      this._pause = false;
+      this._cb = void 0;
+      this._nparts = 0;
+      this._boy = boy;
+      const parserCfg = {
+        boundary,
+        maxHeaderPairs: headerPairsLimit,
+        maxHeaderSize: headerSizeLimit,
+        partHwm: fileOpts.highWaterMark,
+        highWaterMark: cfg.highWaterMark
+      };
+      this.parser = new Dicer(parserCfg);
+      this.parser.on("drain", function() {
+        self2._needDrain = false;
+        if (self2._cb && !self2._pause) {
+          const cb = self2._cb;
+          self2._cb = void 0;
           cb();
         }
-      }
-    };
-    var ignoreData = {
-      push: (chunk, pos) => {
-      },
-      destroy: () => {
-      }
-    };
-    function callAndUnsetCb(self2, err) {
-      const cb = self2._writecb;
-      self2._writecb = null;
-      if (err)
-        self2.destroy(err);
-      else if (cb)
-        cb();
-    }
-    function nullDecoder(val, hint) {
-      return val;
-    }
-    var Multipart = class extends Writable {
-      constructor(cfg) {
-        const streamOpts = {
-          autoDestroy: true,
-          emitClose: true,
-          highWaterMark: typeof cfg.highWaterMark === "number" ? cfg.highWaterMark : void 0
-        };
-        super(streamOpts);
-        if (!cfg.conType.params || typeof cfg.conType.params.boundary !== "string")
-          throw new Error("Multipart: Boundary not found");
-        const boundary = cfg.conType.params.boundary;
-        const paramDecoder = typeof cfg.defParamCharset === "string" && cfg.defParamCharset ? getDecoder(cfg.defParamCharset) : nullDecoder;
-        const defCharset = cfg.defCharset || "utf8";
-        const preservePath = cfg.preservePath;
-        const fileOpts = {
-          autoDestroy: true,
-          emitClose: true,
-          highWaterMark: typeof cfg.fileHwm === "number" ? cfg.fileHwm : void 0
-        };
-        const limits = cfg.limits;
-        const fieldSizeLimit = limits && typeof limits.fieldSize === "number" ? limits.fieldSize : 1 * 1024 * 1024;
-        const fileSizeLimit = limits && typeof limits.fileSize === "number" ? limits.fileSize : Infinity;
-        const filesLimit = limits && typeof limits.files === "number" ? limits.files : Infinity;
-        const fieldsLimit = limits && typeof limits.fields === "number" ? limits.fields : Infinity;
-        const partsLimit = limits && typeof limits.parts === "number" ? limits.parts : Infinity;
-        let parts = -1;
-        let fields = 0;
-        let files = 0;
-        let skipPart = false;
-        this._fileEndsLeft = 0;
-        this._fileStream = void 0;
-        this._complete = false;
-        let fileSize = 0;
-        let field;
-        let fieldSize = 0;
-        let partCharset;
-        let partEncoding;
-        let partType;
-        let partName;
-        let partTruncated = false;
-        let hitFilesLimit = false;
-        let hitFieldsLimit = false;
-        this._hparser = null;
-        const hparser = new HeaderParser((header) => {
-          this._hparser = null;
-          skipPart = false;
-          partType = "text/plain";
-          partCharset = defCharset;
-          partEncoding = "7bit";
-          partName = void 0;
-          partTruncated = false;
+      }).on("part", function onPart(part) {
+        if (++self2._nparts > partsLimit) {
+          self2.parser.removeListener("part", onPart);
+          self2.parser.on("part", skipPart);
+          boy.hitPartsLimit = true;
+          boy.emit("partsLimit");
+          return skipPart(part);
+        }
+        if (curField) {
+          const field = curField;
+          field.emit("end");
+          field.removeAllListeners("end");
+        }
+        part.on("header", function(header) {
+          let contype;
+          let fieldname;
+          let parsed;
+          let charset;
+          let encoding;
           let filename;
-          if (!header["content-disposition"]) {
-            skipPart = true;
-            return;
-          }
-          const disp = parseDisposition(
-            header["content-disposition"][0],
-            paramDecoder
-          );
-          if (!disp || disp.type !== "form-data") {
-            skipPart = true;
-            return;
-          }
-          if (disp.params) {
-            if (disp.params.name)
-              partName = disp.params.name;
-            if (disp.params["filename*"])
-              filename = disp.params["filename*"];
-            else if (disp.params.filename)
-              filename = disp.params.filename;
-            if (filename !== void 0 && !preservePath)
-              filename = basename2(filename);
-          }
+          let nsize = 0;
           if (header["content-type"]) {
-            const conType = parseContentType(header["content-type"][0]);
-            if (conType) {
-              partType = `${conType.type}/${conType.subtype}`;
-              if (conType.params && typeof conType.params.charset === "string")
-                partCharset = conType.params.charset.toLowerCase();
+            parsed = parseParams(header["content-type"][0]);
+            if (parsed[0]) {
+              contype = parsed[0].toLowerCase();
+              for (i = 0, len = parsed.length; i < len; ++i) {
+                if (RE_CHARSET.test(parsed[i][0])) {
+                  charset = parsed[i][1].toLowerCase();
+                  break;
+                }
+              }
             }
           }
-          if (header["content-transfer-encoding"])
-            partEncoding = header["content-transfer-encoding"][0].toLowerCase();
-          if (partType === "application/octet-stream" || filename !== void 0) {
-            if (files === filesLimit) {
-              if (!hitFilesLimit) {
-                hitFilesLimit = true;
-                this.emit("filesLimit");
-              }
-              skipPart = true;
-              return;
+          if (contype === void 0) {
+            contype = "text/plain";
+          }
+          if (charset === void 0) {
+            charset = defCharset;
+          }
+          if (header["content-disposition"]) {
+            parsed = parseParams(header["content-disposition"][0]);
+            if (!RE_FIELD.test(parsed[0])) {
+              return skipPart(part);
             }
-            ++files;
-            if (this.listenerCount("file") === 0) {
-              skipPart = true;
-              return;
-            }
-            fileSize = 0;
-            this._fileStream = new FileStream(fileOpts, this);
-            ++this._fileEndsLeft;
-            this.emit(
-              "file",
-              partName,
-              this._fileStream,
-              {
-                filename,
-                encoding: partEncoding,
-                mimeType: partType
+            for (i = 0, len = parsed.length; i < len; ++i) {
+              if (RE_NAME.test(parsed[i][0])) {
+                fieldname = parsed[i][1];
+              } else if (RE_FILENAME.test(parsed[i][0])) {
+                filename = parsed[i][1];
+                if (!preservePath) {
+                  filename = basename2(filename);
+                }
               }
-            );
+            }
           } else {
-            if (fields === fieldsLimit) {
-              if (!hitFieldsLimit) {
-                hitFieldsLimit = true;
-                this.emit("fieldsLimit");
+            return skipPart(part);
+          }
+          if (header["content-transfer-encoding"]) {
+            encoding = header["content-transfer-encoding"][0].toLowerCase();
+          } else {
+            encoding = "7bit";
+          }
+          let onData, onEnd;
+          if (isPartAFile(fieldname, contype, filename)) {
+            if (nfiles === filesLimit) {
+              if (!boy.hitFilesLimit) {
+                boy.hitFilesLimit = true;
+                boy.emit("filesLimit");
               }
-              skipPart = true;
+              return skipPart(part);
+            }
+            ++nfiles;
+            if (!boy._events.file) {
+              self2.parser._ignore();
               return;
             }
-            ++fields;
-            if (this.listenerCount("field") === 0) {
-              skipPart = true;
-              return;
+            ++nends;
+            const file = new FileStream(fileOpts);
+            curFile = file;
+            file.on("end", function() {
+              --nends;
+              self2._pause = false;
+              checkFinished();
+              if (self2._cb && !self2._needDrain) {
+                const cb = self2._cb;
+                self2._cb = void 0;
+                cb();
+              }
+            });
+            file._read = function(n) {
+              if (!self2._pause) {
+                return;
+              }
+              self2._pause = false;
+              if (self2._cb && !self2._needDrain) {
+                const cb = self2._cb;
+                self2._cb = void 0;
+                cb();
+              }
+            };
+            boy.emit("file", fieldname, file, filename, encoding, contype);
+            onData = function(data) {
+              if ((nsize += data.length) > fileSizeLimit) {
+                const extralen = fileSizeLimit - nsize + data.length;
+                if (extralen > 0) {
+                  file.push(data.slice(0, extralen));
+                }
+                file.truncated = true;
+                file.bytesRead = fileSizeLimit;
+                part.removeAllListeners("data");
+                file.emit("limit");
+                return;
+              } else if (!file.push(data)) {
+                self2._pause = true;
+              }
+              file.bytesRead = nsize;
+            };
+            onEnd = function() {
+              curFile = void 0;
+              file.push(null);
+            };
+          } else {
+            if (nfields === fieldsLimit) {
+              if (!boy.hitFieldsLimit) {
+                boy.hitFieldsLimit = true;
+                boy.emit("fieldsLimit");
+              }
+              return skipPart(part);
             }
-            field = [];
-            fieldSize = 0;
+            ++nfields;
+            ++nends;
+            let buffer = "";
+            let truncated = false;
+            curField = part;
+            onData = function(data) {
+              if ((nsize += data.length) > fieldSizeLimit) {
+                const extralen = fieldSizeLimit - (nsize - data.length);
+                buffer += data.toString("binary", 0, extralen);
+                truncated = true;
+                part.removeAllListeners("data");
+              } else {
+                buffer += data.toString("binary");
+              }
+            };
+            onEnd = function() {
+              curField = void 0;
+              if (buffer.length) {
+                buffer = decodeText(buffer, "binary", charset);
+              }
+              boy.emit("field", fieldname, buffer, false, truncated, encoding, contype);
+              --nends;
+              checkFinished();
+            };
+          }
+          part._readableState.sync = false;
+          part.on("data", onData);
+          part.on("end", onEnd);
+        }).on("error", function(err) {
+          if (curFile) {
+            curFile.emit("error", err);
           }
         });
-        let matchPostBoundary = 0;
-        const ssCb = (isMatch, data, start, end, isDataSafe) => {
-          retrydata:
-            while (data) {
-              if (this._hparser !== null) {
-                const ret = this._hparser.push(data, start, end);
-                if (ret === -1) {
-                  this._hparser = null;
-                  hparser.reset();
-                  this.emit("error", new Error("Malformed part header"));
-                  break;
-                }
-                start = ret;
-              }
-              if (start === end)
-                break;
-              if (matchPostBoundary !== 0) {
-                if (matchPostBoundary === 1) {
-                  switch (data[start]) {
-                    case 45:
-                      matchPostBoundary = 2;
-                      ++start;
-                      break;
-                    case 13:
-                      matchPostBoundary = 3;
-                      ++start;
-                      break;
-                    default:
-                      matchPostBoundary = 0;
-                  }
-                  if (start === end)
-                    return;
-                }
-                if (matchPostBoundary === 2) {
-                  matchPostBoundary = 0;
-                  if (data[start] === 45) {
-                    this._complete = true;
-                    this._bparser = ignoreData;
-                    return;
-                  }
-                  const writecb = this._writecb;
-                  this._writecb = noop;
-                  ssCb(false, BUF_DASH, 0, 1, false);
-                  this._writecb = writecb;
-                } else if (matchPostBoundary === 3) {
-                  matchPostBoundary = 0;
-                  if (data[start] === 10) {
-                    ++start;
-                    if (parts >= partsLimit)
-                      break;
-                    this._hparser = hparser;
-                    if (start === end)
-                      break;
-                    continue retrydata;
-                  } else {
-                    const writecb = this._writecb;
-                    this._writecb = noop;
-                    ssCb(false, BUF_CR, 0, 1, false);
-                    this._writecb = writecb;
-                  }
-                }
-              }
-              if (!skipPart) {
-                if (this._fileStream) {
-                  let chunk;
-                  const actualLen = Math.min(end - start, fileSizeLimit - fileSize);
-                  if (!isDataSafe) {
-                    chunk = Buffer.allocUnsafe(actualLen);
-                    data.copy(chunk, 0, start, start + actualLen);
-                  } else {
-                    chunk = data.slice(start, start + actualLen);
-                  }
-                  fileSize += chunk.length;
-                  if (fileSize === fileSizeLimit) {
-                    if (chunk.length > 0)
-                      this._fileStream.push(chunk);
-                    this._fileStream.emit("limit");
-                    this._fileStream.truncated = true;
-                    skipPart = true;
-                  } else if (!this._fileStream.push(chunk)) {
-                    if (this._writecb)
-                      this._fileStream._readcb = this._writecb;
-                    this._writecb = null;
-                  }
-                } else if (field !== void 0) {
-                  let chunk;
-                  const actualLen = Math.min(
-                    end - start,
-                    fieldSizeLimit - fieldSize
-                  );
-                  if (!isDataSafe) {
-                    chunk = Buffer.allocUnsafe(actualLen);
-                    data.copy(chunk, 0, start, start + actualLen);
-                  } else {
-                    chunk = data.slice(start, start + actualLen);
-                  }
-                  fieldSize += actualLen;
-                  field.push(chunk);
-                  if (fieldSize === fieldSizeLimit) {
-                    skipPart = true;
-                    partTruncated = true;
-                  }
-                }
-              }
-              break;
-            }
-          if (isMatch) {
-            matchPostBoundary = 1;
-            if (this._fileStream) {
-              this._fileStream.push(null);
-              this._fileStream = null;
-            } else if (field !== void 0) {
-              let data2;
-              switch (field.length) {
-                case 0:
-                  data2 = "";
-                  break;
-                case 1:
-                  data2 = convertToUTF8(field[0], partCharset, 0);
-                  break;
-                default:
-                  data2 = convertToUTF8(
-                    Buffer.concat(field, fieldSize),
-                    partCharset,
-                    0
-                  );
-              }
-              field = void 0;
-              fieldSize = 0;
-              this.emit(
-                "field",
-                partName,
-                data2,
-                {
-                  nameTruncated: false,
-                  valueTruncated: partTruncated,
-                  encoding: partEncoding,
-                  mimeType: partType
-                }
-              );
-            }
-            if (++parts === partsLimit)
-              this.emit("partsLimit");
-          }
-        };
-        this._bparser = new StreamSearch(`\r
---${boundary}`, ssCb);
-        this._writecb = null;
-        this._finalcb = null;
-        this.write(BUF_CRLF);
-      }
-      static detect(conType) {
-        return conType.type === "multipart" && conType.subtype === "form-data";
-      }
-      _write(chunk, enc, cb) {
-        this._writecb = cb;
-        this._bparser.push(chunk, 0);
-        if (this._writecb)
-          callAndUnsetCb(this);
-      }
-      _destroy(err, cb) {
-        this._hparser = null;
-        this._bparser = ignoreData;
-        if (!err)
-          err = checkEndState(this);
-        const fileStream = this._fileStream;
-        if (fileStream) {
-          this._fileStream = null;
-          fileStream.destroy(err);
-        }
-        cb(err);
-      }
-      _final(cb) {
-        this._bparser.destroy();
-        if (!this._complete)
-          return cb(new Error("Unexpected end of form"));
-        if (this._fileEndsLeft)
-          this._finalcb = finalcb.bind(null, this, cb);
-        else
-          finalcb(this, cb);
+      }).on("error", function(err) {
+        boy.emit("error", err);
+      }).on("finish", function() {
+        finished = true;
+        checkFinished();
+      });
+    }
+    Multipart.prototype.write = function(chunk, cb) {
+      const r = this.parser.write(chunk);
+      if (r && !this._pause) {
+        cb();
+      } else {
+        this._needDrain = !r;
+        this._cb = cb;
       }
     };
-    function finalcb(self2, cb, err) {
-      if (err)
-        return cb(err);
-      err = checkEndState(self2);
-      cb(err);
-    }
-    function checkEndState(self2) {
-      if (self2._hparser)
-        return new Error("Malformed part header");
-      const fileStream = self2._fileStream;
-      if (fileStream) {
-        self2._fileStream = null;
-        fileStream.destroy(new Error("Unexpected end of file"));
+    Multipart.prototype.end = function() {
+      const self2 = this;
+      if (self2.parser.writable) {
+        self2.parser.end();
+      } else if (!self2._boy._done) {
+        process.nextTick(function() {
+          self2._boy._done = true;
+          self2._boy.emit("finish");
+        });
       }
-      if (!self2._complete)
-        return new Error("Unexpected end of form");
+    };
+    function skipPart(part) {
+      part.resume();
     }
-    var TOKEN = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    ];
-    var FIELD_VCHAR = [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ];
+    function FileStream(opts) {
+      Readable.call(this, opts);
+      this.bytesRead = 0;
+      this.truncated = false;
+    }
+    inherits(FileStream, Readable);
+    FileStream.prototype._read = function(n) {
+    };
     module.exports = Multipart;
   }
 });
 
-// node_modules/busboy/lib/types/urlencoded.js
-var require_urlencoded = __commonJS({
-  "node_modules/busboy/lib/types/urlencoded.js"(exports, module) {
+// node_modules/@fastify/busboy/lib/utils/Decoder.js
+var require_Decoder = __commonJS({
+  "node_modules/@fastify/busboy/lib/utils/Decoder.js"(exports, module) {
     "use strict";
-    var { Writable } = __require("stream");
-    var { getDecoder } = require_utils2();
-    var URLEncoded = class extends Writable {
-      constructor(cfg) {
-        const streamOpts = {
-          autoDestroy: true,
-          emitClose: true,
-          highWaterMark: typeof cfg.highWaterMark === "number" ? cfg.highWaterMark : void 0
-        };
-        super(streamOpts);
-        let charset = cfg.defCharset || "utf8";
-        if (cfg.conType.params && typeof cfg.conType.params.charset === "string")
-          charset = cfg.conType.params.charset;
-        this.charset = charset;
-        const limits = cfg.limits;
-        this.fieldSizeLimit = limits && typeof limits.fieldSize === "number" ? limits.fieldSize : 1 * 1024 * 1024;
-        this.fieldsLimit = limits && typeof limits.fields === "number" ? limits.fields : Infinity;
-        this.fieldNameSizeLimit = limits && typeof limits.fieldNameSize === "number" ? limits.fieldNameSize : 100;
-        this._inKey = true;
-        this._keyTrunc = false;
-        this._valTrunc = false;
-        this._bytesKey = 0;
-        this._bytesVal = 0;
-        this._fields = 0;
-        this._key = "";
-        this._val = "";
-        this._byte = -2;
-        this._lastPos = 0;
-        this._encode = 0;
-        this._decoder = getDecoder(charset);
-      }
-      static detect(conType) {
-        return conType.type === "application" && conType.subtype === "x-www-form-urlencoded";
-      }
-      _write(chunk, enc, cb) {
-        if (this._fields >= this.fieldsLimit)
-          return cb();
-        let i = 0;
-        const len = chunk.length;
-        this._lastPos = 0;
-        if (this._byte !== -2) {
-          i = readPctEnc(this, chunk, i, len);
-          if (i === -1)
-            return cb(new Error("Malformed urlencoded form"));
-          if (i >= len)
-            return cb();
-          if (this._inKey)
-            ++this._bytesKey;
-          else
-            ++this._bytesVal;
-        }
-        main:
-          while (i < len) {
-            if (this._inKey) {
-              i = skipKeyBytes(this, chunk, i, len);
-              while (i < len) {
-                switch (chunk[i]) {
-                  case 61:
-                    if (this._lastPos < i)
-                      this._key += chunk.latin1Slice(this._lastPos, i);
-                    this._lastPos = ++i;
-                    this._key = this._decoder(this._key, this._encode);
-                    this._encode = 0;
-                    this._inKey = false;
-                    continue main;
-                  case 38:
-                    if (this._lastPos < i)
-                      this._key += chunk.latin1Slice(this._lastPos, i);
-                    this._lastPos = ++i;
-                    this._key = this._decoder(this._key, this._encode);
-                    this._encode = 0;
-                    if (this._bytesKey > 0) {
-                      this.emit(
-                        "field",
-                        this._key,
-                        "",
-                        {
-                          nameTruncated: this._keyTrunc,
-                          valueTruncated: false,
-                          encoding: this.charset,
-                          mimeType: "text/plain"
-                        }
-                      );
-                    }
-                    this._key = "";
-                    this._val = "";
-                    this._keyTrunc = false;
-                    this._valTrunc = false;
-                    this._bytesKey = 0;
-                    this._bytesVal = 0;
-                    if (++this._fields >= this.fieldsLimit) {
-                      this.emit("fieldsLimit");
-                      return cb();
-                    }
-                    continue;
-                  case 43:
-                    if (this._lastPos < i)
-                      this._key += chunk.latin1Slice(this._lastPos, i);
-                    this._key += " ";
-                    this._lastPos = i + 1;
-                    break;
-                  case 37:
-                    if (this._encode === 0)
-                      this._encode = 1;
-                    if (this._lastPos < i)
-                      this._key += chunk.latin1Slice(this._lastPos, i);
-                    this._lastPos = i + 1;
-                    this._byte = -1;
-                    i = readPctEnc(this, chunk, i + 1, len);
-                    if (i === -1)
-                      return cb(new Error("Malformed urlencoded form"));
-                    if (i >= len)
-                      return cb();
-                    ++this._bytesKey;
-                    i = skipKeyBytes(this, chunk, i, len);
-                    continue;
-                }
-                ++i;
-                ++this._bytesKey;
-                i = skipKeyBytes(this, chunk, i, len);
-              }
-              if (this._lastPos < i)
-                this._key += chunk.latin1Slice(this._lastPos, i);
-            } else {
-              i = skipValBytes(this, chunk, i, len);
-              while (i < len) {
-                switch (chunk[i]) {
-                  case 38:
-                    if (this._lastPos < i)
-                      this._val += chunk.latin1Slice(this._lastPos, i);
-                    this._lastPos = ++i;
-                    this._inKey = true;
-                    this._val = this._decoder(this._val, this._encode);
-                    this._encode = 0;
-                    if (this._bytesKey > 0 || this._bytesVal > 0) {
-                      this.emit(
-                        "field",
-                        this._key,
-                        this._val,
-                        {
-                          nameTruncated: this._keyTrunc,
-                          valueTruncated: this._valTrunc,
-                          encoding: this.charset,
-                          mimeType: "text/plain"
-                        }
-                      );
-                    }
-                    this._key = "";
-                    this._val = "";
-                    this._keyTrunc = false;
-                    this._valTrunc = false;
-                    this._bytesKey = 0;
-                    this._bytesVal = 0;
-                    if (++this._fields >= this.fieldsLimit) {
-                      this.emit("fieldsLimit");
-                      return cb();
-                    }
-                    continue main;
-                  case 43:
-                    if (this._lastPos < i)
-                      this._val += chunk.latin1Slice(this._lastPos, i);
-                    this._val += " ";
-                    this._lastPos = i + 1;
-                    break;
-                  case 37:
-                    if (this._encode === 0)
-                      this._encode = 1;
-                    if (this._lastPos < i)
-                      this._val += chunk.latin1Slice(this._lastPos, i);
-                    this._lastPos = i + 1;
-                    this._byte = -1;
-                    i = readPctEnc(this, chunk, i + 1, len);
-                    if (i === -1)
-                      return cb(new Error("Malformed urlencoded form"));
-                    if (i >= len)
-                      return cb();
-                    ++this._bytesVal;
-                    i = skipValBytes(this, chunk, i, len);
-                    continue;
-                }
-                ++i;
-                ++this._bytesVal;
-                i = skipValBytes(this, chunk, i, len);
-              }
-              if (this._lastPos < i)
-                this._val += chunk.latin1Slice(this._lastPos, i);
-            }
-          }
-        cb();
-      }
-      _final(cb) {
-        if (this._byte !== -2)
-          return cb(new Error("Malformed urlencoded form"));
-        if (!this._inKey || this._bytesKey > 0 || this._bytesVal > 0) {
-          if (this._inKey)
-            this._key = this._decoder(this._key, this._encode);
-          else
-            this._val = this._decoder(this._val, this._encode);
-          this.emit(
-            "field",
-            this._key,
-            this._val,
-            {
-              nameTruncated: this._keyTrunc,
-              valueTruncated: this._valTrunc,
-              encoding: this.charset,
-              mimeType: "text/plain"
-            }
-          );
-        }
-        cb();
-      }
-    };
-    function readPctEnc(self2, chunk, pos, len) {
-      if (pos >= len)
-        return len;
-      if (self2._byte === -1) {
-        const hexUpper = HEX_VALUES[chunk[pos++]];
-        if (hexUpper === -1)
-          return -1;
-        if (hexUpper >= 8)
-          self2._encode = 2;
-        if (pos < len) {
-          const hexLower = HEX_VALUES[chunk[pos++]];
-          if (hexLower === -1)
-            return -1;
-          if (self2._inKey)
-            self2._key += String.fromCharCode((hexUpper << 4) + hexLower);
-          else
-            self2._val += String.fromCharCode((hexUpper << 4) + hexLower);
-          self2._byte = -2;
-          self2._lastPos = pos;
-        } else {
-          self2._byte = hexUpper;
-        }
-      } else {
-        const hexLower = HEX_VALUES[chunk[pos++]];
-        if (hexLower === -1)
-          return -1;
-        if (self2._inKey)
-          self2._key += String.fromCharCode((self2._byte << 4) + hexLower);
-        else
-          self2._val += String.fromCharCode((self2._byte << 4) + hexLower);
-        self2._byte = -2;
-        self2._lastPos = pos;
-      }
-      return pos;
-    }
-    function skipKeyBytes(self2, chunk, pos, len) {
-      if (self2._bytesKey > self2.fieldNameSizeLimit) {
-        if (!self2._keyTrunc) {
-          if (self2._lastPos < pos)
-            self2._key += chunk.latin1Slice(self2._lastPos, pos - 1);
-        }
-        self2._keyTrunc = true;
-        for (; pos < len; ++pos) {
-          const code3 = chunk[pos];
-          if (code3 === 61 || code3 === 38)
-            break;
-          ++self2._bytesKey;
-        }
-        self2._lastPos = pos;
-      }
-      return pos;
-    }
-    function skipValBytes(self2, chunk, pos, len) {
-      if (self2._bytesVal > self2.fieldSizeLimit) {
-        if (!self2._valTrunc) {
-          if (self2._lastPos < pos)
-            self2._val += chunk.latin1Slice(self2._lastPos, pos - 1);
-        }
-        self2._valTrunc = true;
-        for (; pos < len; ++pos) {
-          if (chunk[pos] === 38)
-            break;
-          ++self2._bytesVal;
-        }
-        self2._lastPos = pos;
-      }
-      return pos;
-    }
-    var HEX_VALUES = [
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
+    var RE_PLUS = /\+/g;
+    var HEX = [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
       0,
       1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
     ];
-    module.exports = URLEncoded;
+    function Decoder() {
+      this.buffer = void 0;
+    }
+    Decoder.prototype.write = function(str2) {
+      str2 = str2.replace(RE_PLUS, " ");
+      let res = "";
+      let i = 0;
+      let p = 0;
+      const len = str2.length;
+      for (; i < len; ++i) {
+        if (this.buffer !== void 0) {
+          if (!HEX[str2.charCodeAt(i)]) {
+            res += "%" + this.buffer;
+            this.buffer = void 0;
+            --i;
+          } else {
+            this.buffer += str2[i];
+            ++p;
+            if (this.buffer.length === 2) {
+              res += String.fromCharCode(parseInt(this.buffer, 16));
+              this.buffer = void 0;
+            }
+          }
+        } else if (str2[i] === "%") {
+          if (i > p) {
+            res += str2.substring(p, i);
+            p = i;
+          }
+          this.buffer = "";
+          ++p;
+        }
+      }
+      if (p < len && this.buffer === void 0) {
+        res += str2.substring(p);
+      }
+      return res;
+    };
+    Decoder.prototype.reset = function() {
+      this.buffer = void 0;
+    };
+    module.exports = Decoder;
   }
 });
 
-// node_modules/busboy/lib/index.js
-var require_lib2 = __commonJS({
-  "node_modules/busboy/lib/index.js"(exports, module) {
+// node_modules/@fastify/busboy/lib/types/urlencoded.js
+var require_urlencoded = __commonJS({
+  "node_modules/@fastify/busboy/lib/types/urlencoded.js"(exports, module) {
     "use strict";
-    var { parseContentType } = require_utils2();
-    function getInstance(cfg) {
-      const headers = cfg.headers;
-      const conType = parseContentType(headers["content-type"]);
-      if (!conType)
-        throw new Error("Malformed content type");
-      for (const type2 of TYPES) {
-        const matched = type2.detect(conType);
-        if (!matched)
-          continue;
-        const instanceCfg = {
-          limits: cfg.limits,
-          headers,
-          conType,
-          highWaterMark: void 0,
-          fileHwm: void 0,
-          defCharset: void 0,
-          defParamCharset: void 0,
-          preservePath: false
-        };
-        if (cfg.highWaterMark)
-          instanceCfg.highWaterMark = cfg.highWaterMark;
-        if (cfg.fileHwm)
-          instanceCfg.fileHwm = cfg.fileHwm;
-        instanceCfg.defCharset = cfg.defCharset;
-        instanceCfg.defParamCharset = cfg.defParamCharset;
-        instanceCfg.preservePath = cfg.preservePath;
-        return new type2(instanceCfg);
+    var Decoder = require_Decoder();
+    var decodeText = require_decodeText();
+    var getLimit = require_getLimit();
+    var RE_CHARSET = /^charset$/i;
+    UrlEncoded.detect = /^application\/x-www-form-urlencoded/i;
+    function UrlEncoded(boy, cfg) {
+      const limits = cfg.limits;
+      const parsedConType = cfg.parsedConType;
+      this.boy = boy;
+      this.fieldSizeLimit = getLimit(limits, "fieldSize", 1 * 1024 * 1024);
+      this.fieldNameSizeLimit = getLimit(limits, "fieldNameSize", 100);
+      this.fieldsLimit = getLimit(limits, "fields", Infinity);
+      let charset;
+      for (var i = 0, len = parsedConType.length; i < len; ++i) {
+        if (Array.isArray(parsedConType[i]) && RE_CHARSET.test(parsedConType[i][0])) {
+          charset = parsedConType[i][1].toLowerCase();
+          break;
+        }
       }
-      throw new Error(`Unsupported content type: ${headers["content-type"]}`);
+      if (charset === void 0) {
+        charset = cfg.defCharset || "utf8";
+      }
+      this.decoder = new Decoder();
+      this.charset = charset;
+      this._fields = 0;
+      this._state = "key";
+      this._checkingBytes = true;
+      this._bytesKey = 0;
+      this._bytesVal = 0;
+      this._key = "";
+      this._val = "";
+      this._keyTrunc = false;
+      this._valTrunc = false;
+      this._hitLimit = false;
     }
-    var TYPES = [
-      require_multipart(),
-      require_urlencoded()
-    ].filter(function(typemod) {
-      return typeof typemod.detect === "function";
-    });
-    module.exports = (cfg) => {
-      if (typeof cfg !== "object" || cfg === null)
-        cfg = {};
-      if (typeof cfg.headers !== "object" || cfg.headers === null || typeof cfg.headers["content-type"] !== "string") {
-        throw new Error("Missing Content-Type");
+    UrlEncoded.prototype.write = function(data, cb) {
+      if (this._fields === this.fieldsLimit) {
+        if (!this.boy.hitFieldsLimit) {
+          this.boy.hitFieldsLimit = true;
+          this.boy.emit("fieldsLimit");
+        }
+        return cb();
       }
-      return getInstance(cfg);
+      let idxeq;
+      let idxamp;
+      let i;
+      let p = 0;
+      const len = data.length;
+      while (p < len) {
+        if (this._state === "key") {
+          idxeq = idxamp = void 0;
+          for (i = p; i < len; ++i) {
+            if (!this._checkingBytes) {
+              ++p;
+            }
+            if (data[i] === 61) {
+              idxeq = i;
+              break;
+            } else if (data[i] === 38) {
+              idxamp = i;
+              break;
+            }
+            if (this._checkingBytes && this._bytesKey === this.fieldNameSizeLimit) {
+              this._hitLimit = true;
+              break;
+            } else if (this._checkingBytes) {
+              ++this._bytesKey;
+            }
+          }
+          if (idxeq !== void 0) {
+            if (idxeq > p) {
+              this._key += this.decoder.write(data.toString("binary", p, idxeq));
+            }
+            this._state = "val";
+            this._hitLimit = false;
+            this._checkingBytes = true;
+            this._val = "";
+            this._bytesVal = 0;
+            this._valTrunc = false;
+            this.decoder.reset();
+            p = idxeq + 1;
+          } else if (idxamp !== void 0) {
+            ++this._fields;
+            let key;
+            const keyTrunc = this._keyTrunc;
+            if (idxamp > p) {
+              key = this._key += this.decoder.write(data.toString("binary", p, idxamp));
+            } else {
+              key = this._key;
+            }
+            this._hitLimit = false;
+            this._checkingBytes = true;
+            this._key = "";
+            this._bytesKey = 0;
+            this._keyTrunc = false;
+            this.decoder.reset();
+            if (key.length) {
+              this.boy.emit(
+                "field",
+                decodeText(key, "binary", this.charset),
+                "",
+                keyTrunc,
+                false
+              );
+            }
+            p = idxamp + 1;
+            if (this._fields === this.fieldsLimit) {
+              return cb();
+            }
+          } else if (this._hitLimit) {
+            if (i > p) {
+              this._key += this.decoder.write(data.toString("binary", p, i));
+            }
+            p = i;
+            if ((this._bytesKey = this._key.length) === this.fieldNameSizeLimit) {
+              this._checkingBytes = false;
+              this._keyTrunc = true;
+            }
+          } else {
+            if (p < len) {
+              this._key += this.decoder.write(data.toString("binary", p));
+            }
+            p = len;
+          }
+        } else {
+          idxamp = void 0;
+          for (i = p; i < len; ++i) {
+            if (!this._checkingBytes) {
+              ++p;
+            }
+            if (data[i] === 38) {
+              idxamp = i;
+              break;
+            }
+            if (this._checkingBytes && this._bytesVal === this.fieldSizeLimit) {
+              this._hitLimit = true;
+              break;
+            } else if (this._checkingBytes) {
+              ++this._bytesVal;
+            }
+          }
+          if (idxamp !== void 0) {
+            ++this._fields;
+            if (idxamp > p) {
+              this._val += this.decoder.write(data.toString("binary", p, idxamp));
+            }
+            this.boy.emit(
+              "field",
+              decodeText(this._key, "binary", this.charset),
+              decodeText(this._val, "binary", this.charset),
+              this._keyTrunc,
+              this._valTrunc
+            );
+            this._state = "key";
+            this._hitLimit = false;
+            this._checkingBytes = true;
+            this._key = "";
+            this._bytesKey = 0;
+            this._keyTrunc = false;
+            this.decoder.reset();
+            p = idxamp + 1;
+            if (this._fields === this.fieldsLimit) {
+              return cb();
+            }
+          } else if (this._hitLimit) {
+            if (i > p) {
+              this._val += this.decoder.write(data.toString("binary", p, i));
+            }
+            p = i;
+            if (this._val === "" && this.fieldSizeLimit === 0 || (this._bytesVal = this._val.length) === this.fieldSizeLimit) {
+              this._checkingBytes = false;
+              this._valTrunc = true;
+            }
+          } else {
+            if (p < len) {
+              this._val += this.decoder.write(data.toString("binary", p));
+            }
+            p = len;
+          }
+        }
+      }
+      cb();
     };
+    UrlEncoded.prototype.end = function() {
+      if (this.boy._done) {
+        return;
+      }
+      if (this._state === "key" && this._key.length > 0) {
+        this.boy.emit(
+          "field",
+          decodeText(this._key, "binary", this.charset),
+          "",
+          this._keyTrunc,
+          false
+        );
+      } else if (this._state === "val") {
+        this.boy.emit(
+          "field",
+          decodeText(this._key, "binary", this.charset),
+          decodeText(this._val, "binary", this.charset),
+          this._keyTrunc,
+          this._valTrunc
+        );
+      }
+      this.boy._done = true;
+      this.boy.emit("finish");
+    };
+    module.exports = UrlEncoded;
+  }
+});
+
+// node_modules/@fastify/busboy/lib/main.js
+var require_main = __commonJS({
+  "node_modules/@fastify/busboy/lib/main.js"(exports, module) {
+    "use strict";
+    var WritableStream = __require("node:stream").Writable;
+    var { inherits } = __require("node:util");
+    var Dicer = require_Dicer();
+    var MultipartParser = require_multipart();
+    var UrlencodedParser = require_urlencoded();
+    var parseParams = require_parseParams();
+    function Busboy(opts) {
+      if (!(this instanceof Busboy)) {
+        return new Busboy(opts);
+      }
+      if (typeof opts !== "object") {
+        throw new TypeError("Busboy expected an options-Object.");
+      }
+      if (typeof opts.headers !== "object") {
+        throw new TypeError("Busboy expected an options-Object with headers-attribute.");
+      }
+      if (typeof opts.headers["content-type"] !== "string") {
+        throw new TypeError("Missing Content-Type-header.");
+      }
+      const {
+        headers,
+        ...streamOptions
+      } = opts;
+      this.opts = {
+        autoDestroy: false,
+        ...streamOptions
+      };
+      WritableStream.call(this, this.opts);
+      this._done = false;
+      this._parser = this.getParserByHeaders(headers);
+      this._finished = false;
+    }
+    inherits(Busboy, WritableStream);
+    Busboy.prototype.emit = function(ev) {
+      if (ev === "finish") {
+        if (!this._done) {
+          this._parser?.end();
+          return;
+        } else if (this._finished) {
+          return;
+        }
+        this._finished = true;
+      }
+      WritableStream.prototype.emit.apply(this, arguments);
+    };
+    Busboy.prototype.getParserByHeaders = function(headers) {
+      const parsed = parseParams(headers["content-type"]);
+      const cfg = {
+        defCharset: this.opts.defCharset,
+        fileHwm: this.opts.fileHwm,
+        headers,
+        highWaterMark: this.opts.highWaterMark,
+        isPartAFile: this.opts.isPartAFile,
+        limits: this.opts.limits,
+        parsedConType: parsed,
+        preservePath: this.opts.preservePath
+      };
+      if (MultipartParser.detect.test(parsed[0])) {
+        return new MultipartParser(this, cfg);
+      }
+      if (UrlencodedParser.detect.test(parsed[0])) {
+        return new UrlencodedParser(this, cfg);
+      }
+      throw new Error("Unsupported Content-Type.");
+    };
+    Busboy.prototype._write = function(chunk, encoding, cb) {
+      this._parser.write(chunk, cb);
+    };
+    module.exports = Busboy;
+    module.exports.default = Busboy;
+    module.exports.Busboy = Busboy;
+    module.exports.Dicer = Dicer;
   }
 });
 
@@ -28965,9 +26674,6 @@ var require_global = __commonJS({
       return globalThis[globalOrigin];
     }
     function setGlobalOrigin(newOrigin) {
-      if (newOrigin !== void 0 && typeof newOrigin !== "string" && !(newOrigin instanceof URL)) {
-        throw new Error("Invalid base url");
-      }
       if (newOrigin === void 0) {
         Object.defineProperty(globalThis, globalOrigin, {
           value: void 0,
@@ -29271,9 +26977,22 @@ var require_util3 = __commonJS({
       const metadata = list4.filter((item) => item.algo === strongest);
       for (const item of metadata) {
         const algorithm = item.algo;
-        const expectedValue = item.hash;
-        const actualValue = crypto4.createHash(algorithm).update(bytes).digest("base64");
+        let expectedValue = item.hash;
+        if (expectedValue.endsWith("==")) {
+          expectedValue = expectedValue.slice(0, -2);
+        }
+        let actualValue = crypto4.createHash(algorithm).update(bytes).digest("base64");
+        if (actualValue.endsWith("==")) {
+          actualValue = actualValue.slice(0, -2);
+        }
         if (actualValue === expectedValue) {
+          return true;
+        }
+        let actualBase64URL = crypto4.createHash(algorithm).update(bytes).digest("base64url");
+        if (actualBase64URL.endsWith("==")) {
+          actualBase64URL = actualBase64URL.slice(0, -2);
+        }
+        if (actualBase64URL === expectedValue) {
           return true;
         }
       }
@@ -29386,9 +27105,9 @@ var require_util3 = __commonJS({
       }
       return { value: result, done: false };
     }
-    function fullyReadBody(body, processBody, processBodyError) {
-      const successSteps = (bytes) => queueMicrotask(() => processBody(bytes));
-      const errorSteps = (error2) => queueMicrotask(() => processBodyError(error2));
+    async function fullyReadBody(body, processBody, processBodyError) {
+      const successSteps = processBody;
+      const errorSteps = processBodyError;
       let reader;
       try {
         reader = body.stream.getReader();
@@ -29396,7 +27115,12 @@ var require_util3 = __commonJS({
         errorSteps(e);
         return;
       }
-      readAllBytes(reader, successSteps, errorSteps);
+      try {
+        const result = await readAllBytes(reader);
+        successSteps(result);
+      } catch (e) {
+        errorSteps(e);
+      }
     }
     var ReadableStream = globalThis.ReadableStream;
     function isReadableStreamLike(stream) {
@@ -29427,25 +27151,16 @@ var require_util3 = __commonJS({
       }
       return input;
     }
-    async function readAllBytes(reader, successSteps, failureSteps) {
+    async function readAllBytes(reader) {
       const bytes = [];
       let byteLength = 0;
       while (true) {
-        let done;
-        let chunk;
-        try {
-          ({ done, value: chunk } = await reader.read());
-        } catch (e) {
-          failureSteps(e);
-          return;
-        }
+        const { done, value: chunk } = await reader.read();
         if (done) {
-          successSteps(Buffer.concat(bytes, byteLength));
-          return;
+          return Buffer.concat(bytes, byteLength);
         }
         if (!isUint8Array3(chunk)) {
-          failureSteps(new TypeError("Received non-Uint8Array chunk"));
-          return;
+          throw new TypeError("Received non-Uint8Array chunk");
         }
         bytes.push(chunk);
         byteLength += chunk.length;
@@ -30538,7 +28253,7 @@ var require_formdata = __commonJS({
 var require_body = __commonJS({
   "node_modules/undici/lib/fetch/body.js"(exports, module) {
     "use strict";
-    var Busboy = require_lib2();
+    var Busboy = require_main();
     var util = require_util2();
     var {
       ReadableStreamFrom,
@@ -30773,9 +28488,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             const responseFormData = new FormData();
             let busboy;
             try {
-              busboy = Busboy({
+              busboy = new Busboy({
                 headers,
-                defParamCharset: "utf8"
+                preservePath: true
               });
             } catch (err) {
               throw new DOMException2(`${err}`, "AbortError");
@@ -30783,8 +28498,7 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             busboy.on("field", (name, value) => {
               responseFormData.append(name, value);
             });
-            busboy.on("file", (name, value, info2) => {
-              const { filename, encoding, mimeType } = info2;
+            busboy.on("file", (name, value, filename, encoding, mimeType) => {
               const chunks = [];
               if (encoding === "base64" || encoding.toLowerCase() === "base64") {
                 let base64chunk = "";
@@ -30872,7 +28586,7 @@ Content-Type: ${value.type || "application/octet-stream"}\r
         successSteps(new Uint8Array());
         return promise.promise;
       }
-      fullyReadBody(object[kState].body, successSteps, errorSteps);
+      await fullyReadBody(object[kState].body, successSteps, errorSteps);
       return promise.promise;
     }
     function bodyUnusable(body) {
@@ -30917,6 +28631,7 @@ var require_request = __commonJS({
       NotSupportedError
     } = require_errors2();
     var assert = __require("assert");
+    var { kHTTP2BuildRequest, kHTTP2CopyHeaders, kHTTP1BuildRequest } = require_symbols();
     var util = require_util2();
     var tokenRegExp = /^[\^_`a-zA-Z\-0-9!#$%&'*+.|~]+$/;
     var headerCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
@@ -30938,7 +28653,7 @@ var require_request = __commonJS({
       channels.trailers = { hasSubscribers: false };
       channels.error = { hasSubscribers: false };
     }
-    var Request = class {
+    var Request = class _Request {
       constructor(origin, {
         path: path2,
         method,
@@ -30951,7 +28666,8 @@ var require_request = __commonJS({
         headersTimeout,
         bodyTimeout,
         reset,
-        throwOnError
+        throwOnError,
+        expectContinue
       }, handler) {
         if (typeof path2 !== "string") {
           throw new InvalidArgumentError("path must be a string");
@@ -30976,6 +28692,9 @@ var require_request = __commonJS({
         }
         if (reset != null && typeof reset !== "boolean") {
           throw new InvalidArgumentError("invalid reset");
+        }
+        if (expectContinue != null && typeof expectContinue !== "boolean") {
+          throw new InvalidArgumentError("invalid expectContinue");
         }
         this.headersTimeout = headersTimeout;
         this.bodyTimeout = bodyTimeout;
@@ -31010,6 +28729,7 @@ var require_request = __commonJS({
         this.contentLength = null;
         this.contentType = null;
         this.headers = "";
+        this.expectContinue = expectContinue != null ? expectContinue : false;
         if (Array.isArray(headers)) {
           if (headers.length % 2 !== 0) {
             throw new InvalidArgumentError("headers array must be even");
@@ -31108,12 +28828,53 @@ var require_request = __commonJS({
         this.aborted = true;
         return this[kHandler].onError(error2);
       }
+      // TODO: adjust to support H2
       addHeader(key, value) {
         processHeader(this, key, value);
         return this;
       }
+      static [kHTTP1BuildRequest](origin, opts, handler) {
+        return new _Request(origin, opts, handler);
+      }
+      static [kHTTP2BuildRequest](origin, opts, handler) {
+        const headers = opts.headers;
+        opts = { ...opts, headers: null };
+        const request = new _Request(origin, opts, handler);
+        request.headers = {};
+        if (Array.isArray(headers)) {
+          if (headers.length % 2 !== 0) {
+            throw new InvalidArgumentError("headers array must be even");
+          }
+          for (let i = 0; i < headers.length; i += 2) {
+            processHeader(request, headers[i], headers[i + 1], true);
+          }
+        } else if (headers && typeof headers === "object") {
+          const keys = Object.keys(headers);
+          for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            processHeader(request, key, headers[key], true);
+          }
+        } else if (headers != null) {
+          throw new InvalidArgumentError("headers must be an object or an array");
+        }
+        return request;
+      }
+      static [kHTTP2CopyHeaders](raw) {
+        const rawHeaders = raw.split("\r\n");
+        const headers = {};
+        for (const header of rawHeaders) {
+          const [key, value] = header.split(": ");
+          if (value == null || value.length === 0)
+            continue;
+          if (headers[key])
+            headers[key] += `,${value}`;
+          else
+            headers[key] = value;
+        }
+        return headers;
+      }
     };
-    function processHeaderValue(key, val) {
+    function processHeaderValue(key, val, skipAppend) {
       if (val && typeof val === "object") {
         throw new InvalidArgumentError(`invalid ${key} header`);
       }
@@ -31121,10 +28882,10 @@ var require_request = __commonJS({
       if (headerCharRegex.exec(val) !== null) {
         throw new InvalidArgumentError(`invalid ${key} header`);
       }
-      return `${key}: ${val}\r
+      return skipAppend ? val : `${key}: ${val}\r
 `;
     }
-    function processHeader(request, key, val) {
+    function processHeader(request, key, val, skipAppend = false) {
       if (val && (typeof val === "object" && !Array.isArray(val))) {
         throw new InvalidArgumentError(`invalid ${key} header`);
       } else if (val === void 0) {
@@ -31142,7 +28903,10 @@ var require_request = __commonJS({
         }
       } else if (request.contentType === null && key.length === 12 && key.toLowerCase() === "content-type") {
         request.contentType = val;
-        request.headers += processHeaderValue(key, val);
+        if (skipAppend)
+          request.headers[key] = processHeaderValue(key, val, skipAppend);
+        else
+          request.headers += processHeaderValue(key, val);
       } else if (key.length === 17 && key.toLowerCase() === "transfer-encoding") {
         throw new InvalidArgumentError("invalid transfer-encoding header");
       } else if (key.length === 10 && key.toLowerCase() === "connection") {
@@ -31163,10 +28927,20 @@ var require_request = __commonJS({
       } else {
         if (Array.isArray(val)) {
           for (let i = 0; i < val.length; i++) {
-            request.headers += processHeaderValue(key, val[i]);
+            if (skipAppend) {
+              if (request.headers[key])
+                request.headers[key] += `,${processHeaderValue(key, val[i], skipAppend)}`;
+              else
+                request.headers[key] = processHeaderValue(key, val[i], skipAppend);
+            } else {
+              request.headers += processHeaderValue(key, val[i]);
+            }
           }
         } else {
-          request.headers += processHeaderValue(key, val);
+          if (skipAppend)
+            request.headers[key] = processHeaderValue(key, val, skipAppend);
+          else
+            request.headers += processHeaderValue(key, val);
         }
       }
     }
@@ -31367,7 +29141,7 @@ var require_connect = __commonJS({
     var { InvalidArgumentError, ConnectTimeoutError } = require_errors2();
     var tls;
     var SessionCache;
-    if (global.FinalizationRegistry) {
+    if (global.FinalizationRegistry && !process.env.NODE_V8_COVERAGE) {
       SessionCache = class WeakSessionCache {
         constructor(maxCachedSessions) {
           this._maxCachedSessions = maxCachedSessions;
@@ -31415,13 +29189,14 @@ var require_connect = __commonJS({
         }
       };
     }
-    function buildConnector({ maxCachedSessions, socketPath, timeout, ...opts }) {
+    function buildConnector({ allowH2, maxCachedSessions, socketPath, timeout, ...opts }) {
       if (maxCachedSessions != null && (!Number.isInteger(maxCachedSessions) || maxCachedSessions < 0)) {
         throw new InvalidArgumentError("maxCachedSessions must be a positive integer or zero");
       }
       const options = { path: socketPath, ...opts };
       const sessionCache = new SessionCache(maxCachedSessions == null ? 100 : maxCachedSessions);
       timeout = timeout == null ? 1e4 : timeout;
+      allowH2 = allowH2 != null ? allowH2 : false;
       return function connect({ hostname, host, protocol, port, servername, localAddress, httpSocket }, callback) {
         let socket;
         if (protocol === "https:") {
@@ -31439,6 +29214,8 @@ var require_connect = __commonJS({
             servername,
             session,
             localAddress,
+            // TODO(HTTP/2): Add support for h2c
+            ALPNProtocols: allowH2 ? ["http/1.1", "h2"] : ["http/1.1"],
             socket: httpSocket,
             // upgrade socket connection
             port: port || 443,
@@ -31511,7 +29288,7 @@ var require_connect = __commonJS({
 });
 
 // node_modules/undici/lib/llhttp/utils.js
-var require_utils3 = __commonJS({
+var require_utils2 = __commonJS({
   "node_modules/undici/lib/llhttp/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -31536,7 +29313,7 @@ var require_constants2 = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.SPECIAL_HEADERS = exports.HEADER_STATE = exports.MINOR = exports.MAJOR = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.STRICT_TOKEN = exports.HEX = exports.URL_CHAR = exports.STRICT_URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.FINISH = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = void 0;
-    var utils_1 = require_utils3();
+    var utils_1 = require_utils2();
     var ERROR;
     (function(ERROR2) {
       ERROR2[ERROR2["OK"] = 0] = "OK";
@@ -32033,6 +29810,8 @@ var require_client = __commonJS({
     "use strict";
     var assert = __require("assert");
     var net = __require("net");
+    var http = __require("http");
+    var { pipeline } = __require("stream");
     var util = require_util2();
     var timers = require_timers();
     var Request = require_request();
@@ -32094,8 +29873,34 @@ var require_client = __commonJS({
       kDispatch,
       kInterceptors,
       kLocalAddress,
-      kMaxResponseSize
+      kMaxResponseSize,
+      kHTTPConnVersion,
+      // HTTP2
+      kHost,
+      kHTTP2Session,
+      kHTTP2SessionState,
+      kHTTP2BuildRequest,
+      kHTTP2CopyHeaders,
+      kHTTP1BuildRequest
     } = require_symbols();
+    var http2;
+    try {
+      http2 = __require("http2");
+    } catch {
+      http2 = { constants: {} };
+    }
+    var {
+      constants: {
+        HTTP2_HEADER_AUTHORITY,
+        HTTP2_HEADER_METHOD,
+        HTTP2_HEADER_PATH,
+        HTTP2_HEADER_SCHEME,
+        HTTP2_HEADER_CONTENT_LENGTH,
+        HTTP2_HEADER_EXPECT,
+        HTTP2_HEADER_STATUS
+      }
+    } = http2;
+    var h2ExperimentalWarned = false;
     var FastBuffer = Buffer[Symbol.species];
     var kClosedResolve = Symbol("kClosedResolve");
     var channels = {};
@@ -32142,7 +29947,10 @@ var require_client = __commonJS({
         localAddress,
         maxResponseSize,
         autoSelectFamily,
-        autoSelectFamilyAttemptTimeout
+        autoSelectFamilyAttemptTimeout,
+        // h2
+        allowH2,
+        maxConcurrentStreams
       } = {}) {
         super();
         if (keepAlive !== void 0) {
@@ -32202,10 +30010,17 @@ var require_client = __commonJS({
         if (autoSelectFamilyAttemptTimeout != null && (!Number.isInteger(autoSelectFamilyAttemptTimeout) || autoSelectFamilyAttemptTimeout < -1)) {
           throw new InvalidArgumentError("autoSelectFamilyAttemptTimeout must be a positive number");
         }
+        if (allowH2 != null && typeof allowH2 !== "boolean") {
+          throw new InvalidArgumentError("allowH2 must be a valid boolean value");
+        }
+        if (maxConcurrentStreams != null && (typeof maxConcurrentStreams !== "number" || maxConcurrentStreams < 1)) {
+          throw new InvalidArgumentError("maxConcurrentStreams must be a possitive integer, greater than 0");
+        }
         if (typeof connect2 !== "function") {
           connect2 = buildConnector({
             ...tls,
             maxCachedSessions,
+            allowH2,
             socketPath,
             timeout: connectTimeout,
             ...util.nodeHasAutoSelectFamily && autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
@@ -32217,7 +30032,7 @@ var require_client = __commonJS({
         this[kConnector] = connect2;
         this[kSocket] = null;
         this[kPipelining] = pipelining != null ? pipelining : 1;
-        this[kMaxHeadersSize] = maxHeaderSize || 16384;
+        this[kMaxHeadersSize] = maxHeaderSize || http.maxHeaderSize;
         this[kKeepAliveDefaultTimeout] = keepAliveTimeout == null ? 4e3 : keepAliveTimeout;
         this[kKeepAliveMaxTimeout] = keepAliveMaxTimeout == null ? 6e5 : keepAliveMaxTimeout;
         this[kKeepAliveTimeoutThreshold] = keepAliveTimeoutThreshold == null ? 1e3 : keepAliveTimeoutThreshold;
@@ -32235,6 +30050,16 @@ var require_client = __commonJS({
         this[kMaxRequests] = maxRequestsPerClient;
         this[kClosedResolve] = null;
         this[kMaxResponseSize] = maxResponseSize > -1 ? maxResponseSize : -1;
+        this[kHTTPConnVersion] = "h1";
+        this[kHTTP2Session] = null;
+        this[kHTTP2SessionState] = !allowH2 ? null : {
+          // streams: null, // Fixed queue of streams - For future support of `push`
+          openStreams: 0,
+          // Keep track of them to decide wether or not unref the session
+          maxConcurrentStreams: maxConcurrentStreams != null ? maxConcurrentStreams : 100
+          // Max peerConcurrentStreams for a Node h2 server
+        };
+        this[kHost] = `${this[kUrl].hostname}${this[kUrl].port ? `:${this[kUrl].port}` : ""}`;
         this[kQueue] = [];
         this[kRunningIdx] = 0;
         this[kPendingIdx] = 0;
@@ -32269,7 +30094,7 @@ var require_client = __commonJS({
       }
       [kDispatch](opts, handler) {
         const origin = opts.origin || this[kUrl].origin;
-        const request = new Request(origin, opts, handler);
+        const request = this[kHTTPConnVersion] === "h2" ? Request[kHTTP2BuildRequest](origin, opts, handler) : Request[kHTTP1BuildRequest](origin, opts, handler);
         this[kQueue].push(request);
         if (this[kResuming]) {
         } else if (util.bodyLength(request.body) == null && util.isIterable(request.body)) {
@@ -32306,6 +30131,11 @@ var require_client = __commonJS({
             }
             resolve();
           };
+          if (this[kHTTP2Session] != null) {
+            util.destroy(this[kHTTP2Session], err);
+            this[kHTTP2Session] = null;
+            this[kHTTP2SessionState] = null;
+          }
           if (!this[kSocket]) {
             queueMicrotask(callback);
           } else {
@@ -32315,6 +30145,49 @@ var require_client = __commonJS({
         });
       }
     };
+    function onHttp2SessionError(err) {
+      assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
+      this[kSocket][kError] = err;
+      onError(this[kClient], err);
+    }
+    function onHttp2FrameError(type2, code3, id) {
+      const err = new InformationalError(`HTTP/2: "frameError" received - type ${type2}, code ${code3}`);
+      if (id === 0) {
+        this[kSocket][kError] = err;
+        onError(this[kClient], err);
+      }
+    }
+    function onHttp2SessionEnd() {
+      util.destroy(this, new SocketError("other side closed"));
+      util.destroy(this[kSocket], new SocketError("other side closed"));
+    }
+    function onHTTP2GoAway(code3) {
+      const client = this[kClient];
+      const err = new InformationalError(`HTTP/2: "GOAWAY" frame received with code ${code3}`);
+      client[kSocket] = null;
+      client[kHTTP2Session] = null;
+      if (client.destroyed) {
+        assert(this[kPending] === 0);
+        const requests = client[kQueue].splice(client[kRunningIdx]);
+        for (let i = 0; i < requests.length; i++) {
+          const request = requests[i];
+          errorRequest(this, request, err);
+        }
+      } else if (client[kRunning] > 0) {
+        const request = client[kQueue][client[kRunningIdx]];
+        client[kQueue][client[kRunningIdx]++] = null;
+        errorRequest(client, request, err);
+      }
+      client[kPendingIdx] = client[kRunningIdx];
+      assert(client[kRunning] === 0);
+      client.emit(
+        "disconnect",
+        client[kUrl],
+        [client],
+        err
+      );
+      resume(client);
+    }
     var constants = require_constants2();
     var createRedirectInterceptor = require_redirectInterceptor();
     var EMPTY_BUF = Buffer.alloc(0);
@@ -32760,11 +30633,13 @@ var require_client = __commonJS({
       parser.readMore();
     }
     function onSocketError(err) {
-      const { [kParser]: parser } = this;
+      const { [kClient]: client, [kParser]: parser } = this;
       assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
-      if (err.code === "ECONNRESET" && parser.statusCode && !parser.shouldKeepAlive) {
-        parser.onMessageComplete();
-        return;
+      if (client[kHTTPConnVersion] !== "h2") {
+        if (err.code === "ECONNRESET" && parser.statusCode && !parser.shouldKeepAlive) {
+          parser.onMessageComplete();
+          return;
+        }
       }
       this[kError] = err;
       onError(this[kClient], err);
@@ -32781,20 +30656,24 @@ var require_client = __commonJS({
       }
     }
     function onSocketEnd() {
-      const { [kParser]: parser } = this;
-      if (parser.statusCode && !parser.shouldKeepAlive) {
-        parser.onMessageComplete();
-        return;
+      const { [kParser]: parser, [kClient]: client } = this;
+      if (client[kHTTPConnVersion] !== "h2") {
+        if (parser.statusCode && !parser.shouldKeepAlive) {
+          parser.onMessageComplete();
+          return;
+        }
       }
       util.destroy(this, new SocketError("other side closed", util.getSocketInfo(this)));
     }
     function onSocketClose() {
-      const { [kClient]: client } = this;
-      if (!this[kError] && this[kParser].statusCode && !this[kParser].shouldKeepAlive) {
-        this[kParser].onMessageComplete();
+      const { [kClient]: client, [kParser]: parser } = this;
+      if (client[kHTTPConnVersion] === "h1" && parser) {
+        if (!this[kError] && parser.statusCode && !parser.shouldKeepAlive) {
+          parser.onMessageComplete();
+        }
+        this[kParser].destroy();
+        this[kParser] = null;
       }
-      this[kParser].destroy();
-      this[kParser] = null;
       const err = this[kError] || new SocketError("closed", util.getSocketInfo(this));
       client[kSocket] = null;
       if (client.destroyed) {
@@ -32861,21 +30740,46 @@ var require_client = __commonJS({
           }), new ClientDestroyedError());
           return;
         }
-        if (!llhttpInstance) {
-          llhttpInstance = await llhttpPromise;
-          llhttpPromise = null;
-        }
         client[kConnecting] = false;
         assert(socket);
-        socket[kNoRef] = false;
-        socket[kWriting] = false;
-        socket[kReset] = false;
-        socket[kBlocking] = false;
-        socket[kError] = null;
-        socket[kParser] = new Parser(client, socket, llhttpInstance);
-        socket[kClient] = client;
+        const isH2 = socket.alpnProtocol === "h2";
+        if (isH2) {
+          if (!h2ExperimentalWarned) {
+            h2ExperimentalWarned = true;
+            process.emitWarning("H2 support is experimental, expect them to change at any time.", {
+              code: "UNDICI-H2"
+            });
+          }
+          const session = http2.connect(client[kUrl], {
+            createConnection: () => socket,
+            peerMaxConcurrentStreams: client[kHTTP2SessionState].maxConcurrentStreams
+          });
+          client[kHTTPConnVersion] = "h2";
+          session[kClient] = client;
+          session[kSocket] = socket;
+          session.on("error", onHttp2SessionError);
+          session.on("frameError", onHttp2FrameError);
+          session.on("end", onHttp2SessionEnd);
+          session.on("goaway", onHTTP2GoAway);
+          session.on("close", onSocketClose);
+          session.unref();
+          client[kHTTP2Session] = session;
+          socket[kHTTP2Session] = session;
+        } else {
+          if (!llhttpInstance) {
+            llhttpInstance = await llhttpPromise;
+            llhttpPromise = null;
+          }
+          socket[kNoRef] = false;
+          socket[kWriting] = false;
+          socket[kReset] = false;
+          socket[kBlocking] = false;
+          socket[kParser] = new Parser(client, socket, llhttpInstance);
+        }
         socket[kCounter] = 0;
         socket[kMaxRequests] = client[kMaxRequests];
+        socket[kClient] = client;
+        socket[kError] = null;
         socket.on("error", onSocketError).on("readable", onSocketReadable).on("end", onSocketEnd).on("close", onSocketClose);
         client[kSocket] = socket;
         if (channels.connected.hasSubscribers) {
@@ -32954,7 +30858,7 @@ var require_client = __commonJS({
           return;
         }
         const socket = client[kSocket];
-        if (socket && !socket.destroyed) {
+        if (socket && !socket.destroyed && socket.alpnProtocol !== "h2") {
           if (client[kSize] === 0) {
             if (!socket[kNoRef] && socket.unref) {
               socket.unref();
@@ -33007,7 +30911,7 @@ var require_client = __commonJS({
         if (client[kConnecting]) {
           return;
         }
-        if (!socket) {
+        if (!socket && !client[kHTTP2Session]) {
           connect(client);
           return;
         }
@@ -33045,6 +30949,10 @@ var require_client = __commonJS({
       }
     }
     function write(client, request) {
+      if (client[kHTTPConnVersion] === "h2") {
+        writeH2(client, client[kHTTP2Session], request);
+        return;
+      }
       const { body, method, path: path2, host, upgrade, headers, blocking, reset } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body && typeof body.read === "function") {
@@ -33156,8 +31064,210 @@ upgrade: ${upgrade}\r
       }
       return true;
     }
-    function writeStream({ body, client, request, socket, contentLength, header, expectsPayload }) {
+    function writeH2(client, session, request) {
+      const { body, method, path: path2, host, upgrade, expectContinue, signal, headers: reqHeaders } = request;
+      let headers;
+      if (typeof reqHeaders === "string")
+        headers = Request[kHTTP2CopyHeaders](reqHeaders.trim());
+      else
+        headers = reqHeaders;
+      if (upgrade) {
+        errorRequest(client, request, new Error("Upgrade not supported for H2"));
+        return false;
+      }
+      try {
+        request.onConnect((err) => {
+          if (request.aborted || request.completed) {
+            return;
+          }
+          errorRequest(client, request, err || new RequestAbortedError());
+        });
+      } catch (err) {
+        errorRequest(client, request, err);
+      }
+      if (request.aborted) {
+        return false;
+      }
+      let stream;
+      const h2State = client[kHTTP2SessionState];
+      headers[HTTP2_HEADER_AUTHORITY] = host || client[kHost];
+      headers[HTTP2_HEADER_METHOD] = method;
+      if (method === "CONNECT") {
+        session.ref();
+        stream = session.request(headers, { endStream: false, signal });
+        if (stream.id && !stream.pending) {
+          request.onUpgrade(null, null, stream);
+          ++h2State.openStreams;
+        } else {
+          stream.once("ready", () => {
+            request.onUpgrade(null, null, stream);
+            ++h2State.openStreams;
+          });
+        }
+        stream.once("close", () => {
+          h2State.openStreams -= 1;
+          if (h2State.openStreams === 0)
+            session.unref();
+        });
+        return true;
+      }
+      headers[HTTP2_HEADER_PATH] = path2;
+      headers[HTTP2_HEADER_SCHEME] = "https";
+      const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
+      if (body && typeof body.read === "function") {
+        body.read(0);
+      }
+      let contentLength = util.bodyLength(body);
+      if (contentLength == null) {
+        contentLength = request.contentLength;
+      }
+      if (contentLength === 0 || !expectsPayload) {
+        contentLength = null;
+      }
+      if (request.contentLength != null && request.contentLength !== contentLength) {
+        if (client[kStrictContentLength]) {
+          errorRequest(client, request, new RequestContentLengthMismatchError());
+          return false;
+        }
+        process.emitWarning(new RequestContentLengthMismatchError());
+      }
+      if (contentLength != null) {
+        assert(body, "no body must not have content length");
+        headers[HTTP2_HEADER_CONTENT_LENGTH] = `${contentLength}`;
+      }
+      session.ref();
+      const shouldEndStream = method === "GET" || method === "HEAD";
+      if (expectContinue) {
+        headers[HTTP2_HEADER_EXPECT] = "100-continue";
+        stream = session.request(headers, { endStream: shouldEndStream, signal });
+        stream.once("continue", writeBodyH2);
+      } else {
+        stream = session.request(headers, {
+          endStream: shouldEndStream,
+          signal
+        });
+        writeBodyH2();
+      }
+      ++h2State.openStreams;
+      stream.once("response", (headers2) => {
+        if (request.onHeaders(Number(headers2[HTTP2_HEADER_STATUS]), headers2, stream.resume.bind(stream), "") === false) {
+          stream.pause();
+        }
+      });
+      stream.once("end", () => {
+        request.onComplete([]);
+      });
+      stream.on("data", (chunk) => {
+        if (request.onData(chunk) === false)
+          stream.pause();
+      });
+      stream.once("close", () => {
+        h2State.openStreams -= 1;
+        if (h2State.openStreams === 0)
+          session.unref();
+      });
+      stream.once("error", function(err) {
+        if (client[kHTTP2Session] && !client[kHTTP2Session].destroyed && !this.closed && !this.destroyed) {
+          h2State.streams -= 1;
+          util.destroy(stream, err);
+        }
+      });
+      stream.once("frameError", (type2, code3) => {
+        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type2}, code ${code3}`);
+        errorRequest(client, request, err);
+        if (client[kHTTP2Session] && !client[kHTTP2Session].destroyed && !this.closed && !this.destroyed) {
+          h2State.streams -= 1;
+          util.destroy(stream, err);
+        }
+      });
+      return true;
+      function writeBodyH2() {
+        if (!body) {
+          request.onRequestSent();
+        } else if (util.isBuffer(body)) {
+          assert(contentLength === body.byteLength, "buffer body must have content length");
+          stream.cork();
+          stream.write(body);
+          stream.uncork();
+          stream.end();
+          request.onBodySent(body);
+          request.onRequestSent();
+        } else if (util.isBlobLike(body)) {
+          if (typeof body.stream === "function") {
+            writeIterable({
+              client,
+              request,
+              contentLength,
+              h2stream: stream,
+              expectsPayload,
+              body: body.stream(),
+              socket: client[kSocket],
+              header: ""
+            });
+          } else {
+            writeBlob({
+              body,
+              client,
+              request,
+              contentLength,
+              expectsPayload,
+              h2stream: stream,
+              header: "",
+              socket: client[kSocket]
+            });
+          }
+        } else if (util.isStream(body)) {
+          writeStream({
+            body,
+            client,
+            request,
+            contentLength,
+            expectsPayload,
+            socket: client[kSocket],
+            h2stream: stream,
+            header: ""
+          });
+        } else if (util.isIterable(body)) {
+          writeIterable({
+            body,
+            client,
+            request,
+            contentLength,
+            expectsPayload,
+            header: "",
+            h2stream: stream,
+            socket: client[kSocket]
+          });
+        } else {
+          assert(false);
+        }
+      }
+    }
+    function writeStream({ h2stream, body, client, request, socket, contentLength, header, expectsPayload }) {
       assert(contentLength !== 0 || client[kRunning] === 0, "stream body cannot be pipelined");
+      if (client[kHTTPConnVersion] === "h2") {
+        let onPipeData = function(chunk) {
+          request.onBodySent(chunk);
+        };
+        const pipe = pipeline(
+          body,
+          h2stream,
+          (err) => {
+            if (err) {
+              util.destroy(body, err);
+              util.destroy(h2stream, err);
+            } else {
+              request.onRequestSent();
+            }
+          }
+        );
+        pipe.on("data", onPipeData);
+        pipe.once("end", () => {
+          pipe.removeListener("data", onPipeData);
+          util.destroy(pipe);
+        });
+        return;
+      }
       let finished = false;
       const writer = new AsyncWriter({ socket, request, contentLength, client, expectsPayload, header });
       const onData = function(chunk) {
@@ -33211,19 +31321,26 @@ upgrade: ${upgrade}\r
       }
       socket.on("drain", onDrain).on("error", onFinished);
     }
-    async function writeBlob({ body, client, request, socket, contentLength, header, expectsPayload }) {
+    async function writeBlob({ h2stream, body, client, request, socket, contentLength, header, expectsPayload }) {
       assert(contentLength === body.size, "blob body must have content length");
+      const isH2 = client[kHTTPConnVersion] === "h2";
       try {
         if (contentLength != null && contentLength !== body.size) {
           throw new RequestContentLengthMismatchError();
         }
         const buffer = Buffer.from(await body.arrayBuffer());
-        socket.cork();
-        socket.write(`${header}content-length: ${contentLength}\r
+        if (isH2) {
+          h2stream.cork();
+          h2stream.write(buffer);
+          h2stream.uncork();
+        } else {
+          socket.cork();
+          socket.write(`${header}content-length: ${contentLength}\r
 \r
 `, "latin1");
-        socket.write(buffer);
-        socket.uncork();
+          socket.write(buffer);
+          socket.uncork();
+        }
         request.onBodySent(buffer);
         request.onRequestSent();
         if (!expectsPayload) {
@@ -33231,10 +31348,10 @@ upgrade: ${upgrade}\r
         }
         resume(client);
       } catch (err) {
-        util.destroy(socket, err);
+        util.destroy(isH2 ? h2stream : socket, err);
       }
     }
-    async function writeIterable({ body, client, request, socket, contentLength, header, expectsPayload }) {
+    async function writeIterable({ h2stream, body, client, request, socket, contentLength, header, expectsPayload }) {
       assert(contentLength !== 0 || client[kRunning] === 0, "iterator body cannot be pipelined");
       let callback = null;
       function onDrain() {
@@ -33252,6 +31369,28 @@ upgrade: ${upgrade}\r
           callback = resolve;
         }
       });
+      if (client[kHTTPConnVersion] === "h2") {
+        h2stream.on("close", onDrain).on("drain", onDrain);
+        try {
+          for await (const chunk of body) {
+            if (socket[kError]) {
+              throw socket[kError];
+            }
+            const res = h2stream.write(chunk);
+            request.onBodySent(chunk);
+            if (!res) {
+              await waitForDrain();
+            }
+          }
+        } catch (err) {
+          h2stream.destroy(err);
+        } finally {
+          request.onRequestSent();
+          h2stream.end();
+          h2stream.off("close", onDrain).off("drain", onDrain);
+        }
+        return;
+      }
       socket.on("close", onDrain).on("drain", onDrain);
       const writer = new AsyncWriter({ socket, request, contentLength, client, expectsPayload, header });
       try {
@@ -33667,6 +31806,7 @@ var require_pool = __commonJS({
         socketPath,
         autoSelectFamily,
         autoSelectFamilyAttemptTimeout,
+        allowH2,
         ...options
       } = {}) {
         super();
@@ -33683,6 +31823,7 @@ var require_pool = __commonJS({
           connect = buildConnector({
             ...tls,
             maxCachedSessions,
+            allowH2,
             socketPath,
             timeout: connectTimeout == null ? 1e4 : connectTimeout,
             ...util.nodeHasAutoSelectFamily && autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
@@ -33692,7 +31833,7 @@ var require_pool = __commonJS({
         this[kInterceptors] = options.interceptors && options.interceptors.Pool && Array.isArray(options.interceptors.Pool) ? options.interceptors.Pool : [];
         this[kConnections] = connections || null;
         this[kUrl] = util.parseOrigin(origin);
-        this[kOptions] = { ...util.deepClone(options), connect };
+        this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
       }
@@ -33866,14 +32007,22 @@ var require_dispatcher_weakref = __commonJS({
         this.finalizer = finalizer;
       }
       register(dispatcher, key) {
-        dispatcher.on("disconnect", () => {
-          if (dispatcher[kConnected] === 0 && dispatcher[kSize] === 0) {
-            this.finalizer(key);
-          }
-        });
+        if (dispatcher.on) {
+          dispatcher.on("disconnect", () => {
+            if (dispatcher[kConnected] === 0 && dispatcher[kSize] === 0) {
+              this.finalizer(key);
+            }
+          });
+        }
       }
     };
     module.exports = function() {
+      if (process.env.NODE_V8_COVERAGE) {
+        return {
+          WeakRef: CompatWeakRef,
+          FinalizationRegistry: CompatFinalizer
+        };
+      }
       return {
         WeakRef: global.WeakRef || CompatWeakRef,
         FinalizationRegistry: global.FinalizationRegistry || CompatFinalizer
@@ -34952,8 +33101,8 @@ var require_api_upgrade = __commonJS({
 var require_api_connect = __commonJS({
   "node_modules/undici/lib/api/api-connect.js"(exports, module) {
     "use strict";
-    var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors2();
     var { AsyncResource } = __require("async_hooks");
+    var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors2();
     var util = require_util2();
     var { addSignal, removeSignal } = require_abort_signal();
     var ConnectHandler = class extends AsyncResource {
@@ -34989,7 +33138,10 @@ var require_api_connect = __commonJS({
         const { callback, opaque, context } = this;
         removeSignal(this);
         this.callback = null;
-        const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
+        let headers = rawHeaders;
+        if (headers != null) {
+          headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
+        }
         this.runInAsyncScope(callback, null, null, {
           statusCode,
           headers,
@@ -36457,7 +34609,7 @@ var require_response = __commonJS({
         return responseObject;
       }
       // https://fetch.spec.whatwg.org/#dom-response-json
-      static json(data = void 0, init = {}) {
+      static json(data, init = {}) {
         webidl.argumentLengthCheck(arguments, 1, { header: "Response.json" });
         if (init !== null) {
           init = webidl.converters.ResponseInit(init);
@@ -36693,9 +34845,9 @@ var require_response = __commonJS({
         assert(false);
       }
     }
-    function makeAppropriateNetworkError(fetchParams) {
+    function makeAppropriateNetworkError(fetchParams, err = null) {
       assert(isCancelled(fetchParams));
-      return isAborted(fetchParams) ? makeNetworkError(new DOMException2("The operation was aborted.", "AbortError")) : makeNetworkError("Request was cancelled.");
+      return isAborted(fetchParams) ? makeNetworkError(Object.assign(new DOMException2("The operation was aborted.", "AbortError"), { cause: err })) : makeNetworkError(Object.assign(new DOMException2("Request was cancelled."), { cause: err }));
     }
     function initializeResponse(response, init, body) {
       if (init.status !== null && (init.status < 200 || init.status > 599)) {
@@ -38019,6 +36171,8 @@ var require_fetch = __commonJS({
       }
       if (!sameOrigin(requestCurrentURL(request), locationURL)) {
         request.headersList.delete("authorization");
+        request.headersList.delete("cookie");
+        request.headersList.delete("host");
       }
       if (request.body != null) {
         assert(request.body.source != null);
@@ -38068,7 +36222,7 @@ var require_fetch = __commonJS({
       appendRequestOriginHeader(httpRequest);
       appendFetchMetadata(httpRequest);
       if (!httpRequest.headersList.contains("user-agent")) {
-        httpRequest.headersList.append("user-agent", "undici");
+        httpRequest.headersList.append("user-agent", typeof esbuildDetection === "undefined" ? "undici" : "node");
       }
       if (httpRequest.cache === "default" && (httpRequest.headersList.contains("if-modified-since") || httpRequest.headersList.contains("if-none-match") || httpRequest.headersList.contains("if-unmodified-since") || httpRequest.headersList.contains("if-match") || httpRequest.headersList.contains("if-range"))) {
         httpRequest.cache = "no-store";
@@ -38094,6 +36248,7 @@ var require_fetch = __commonJS({
           httpRequest.headersList.append("accept-encoding", "gzip, deflate");
         }
       }
+      httpRequest.headersList.delete("host");
       if (includeCredentials) {
       }
       if (httpCache == null) {
@@ -38227,7 +36382,7 @@ var require_fetch = __commonJS({
       } catch (err) {
         if (err.name === "AbortError") {
           fetchParams.controller.connection.destroy();
-          return makeAppropriateNetworkError(fetchParams);
+          return makeAppropriateNetworkError(fetchParams, err);
         }
         return makeNetworkError(err);
       }
@@ -38349,15 +36504,28 @@ var require_fetch = __commonJS({
               let codings = [];
               let location = "";
               const headers = new Headers();
-              for (let n = 0; n < headersList.length; n += 2) {
-                const key = headersList[n + 0].toString("latin1");
-                const val = headersList[n + 1].toString("latin1");
-                if (key.toLowerCase() === "content-encoding") {
-                  codings = val.toLowerCase().split(",").map((x) => x.trim()).reverse();
-                } else if (key.toLowerCase() === "location") {
-                  location = val;
+              if (Array.isArray(headersList)) {
+                for (let n = 0; n < headersList.length; n += 2) {
+                  const key = headersList[n + 0].toString("latin1");
+                  const val = headersList[n + 1].toString("latin1");
+                  if (key.toLowerCase() === "content-encoding") {
+                    codings = val.toLowerCase().split(",").map((x) => x.trim());
+                  } else if (key.toLowerCase() === "location") {
+                    location = val;
+                  }
+                  headers.append(key, val);
                 }
-                headers.append(key, val);
+              } else {
+                const keys = Object.keys(headersList);
+                for (const key of keys) {
+                  const val = headersList[key];
+                  if (key.toLowerCase() === "content-encoding") {
+                    codings = val.toLowerCase().split(",").map((x) => x.trim()).reverse();
+                  } else if (key.toLowerCase() === "location") {
+                    location = val;
+                  }
+                  headers.append(key, val);
+                }
               }
               this.body = new Readable({ read: resume });
               const decoders = [];
@@ -39534,11 +37702,7 @@ var require_cache = __commonJS({
         if (innerResponse.body != null) {
           const stream = innerResponse.body.stream;
           const reader = stream.getReader();
-          readAllBytes(
-            reader,
-            (bytes2) => bodyReadPromise.resolve(bytes2),
-            (error2) => bodyReadPromise.reject(error2)
-          );
+          readAllBytes(reader).then(bodyReadPromise.resolve, bodyReadPromise.reject);
         } else {
           bodyReadPromise.resolve(void 0);
         }
@@ -40786,7 +38950,6 @@ var require_util8 = __commonJS({
 var require_connection = __commonJS({
   "node_modules/undici/lib/websocket/connection.js"(exports, module) {
     "use strict";
-    var { randomBytes, createHash } = __require("crypto");
     var diagnosticsChannel = __require("diagnostics_channel");
     var { uid, states } = require_constants4();
     var {
@@ -40806,6 +38969,11 @@ var require_connection = __commonJS({
     channels.open = diagnosticsChannel.channel("undici:websocket:open");
     channels.close = diagnosticsChannel.channel("undici:websocket:close");
     channels.socketError = diagnosticsChannel.channel("undici:websocket:socket_error");
+    var crypto4;
+    try {
+      crypto4 = __require("crypto");
+    } catch {
+    }
     function establishWebSocketConnection(url, protocols, ws, onEstablish, options) {
       const requestURL = url;
       requestURL.protocol = url.protocol === "ws:" ? "http:" : "https:";
@@ -40822,7 +38990,7 @@ var require_connection = __commonJS({
         const headersList = new Headers(options.headers)[kHeadersList];
         request.headersList = headersList;
       }
-      const keyValue = randomBytes(16).toString("base64");
+      const keyValue = crypto4.randomBytes(16).toString("base64");
       request.headersList.append("sec-websocket-key", keyValue);
       request.headersList.append("sec-websocket-version", "13");
       for (const protocol of protocols) {
@@ -40851,7 +39019,7 @@ var require_connection = __commonJS({
             return;
           }
           const secWSAccept = response.headersList.get("Sec-WebSocket-Accept");
-          const digest = createHash("sha1").update(keyValue + uid).digest("base64");
+          const digest = crypto4.createHash("sha1").update(keyValue + uid).digest("base64");
           if (secWSAccept !== digest) {
             failWebsocketConnection(ws, "Incorrect hash received in Sec-WebSocket-Accept header.");
             return;
@@ -40930,15 +39098,19 @@ var require_connection = __commonJS({
 var require_frame = __commonJS({
   "node_modules/undici/lib/websocket/frame.js"(exports, module) {
     "use strict";
-    var { randomBytes } = __require("crypto");
     var { maxUnsigned16Bit } = require_constants4();
+    var crypto4;
+    try {
+      crypto4 = __require("crypto");
+    } catch {
+    }
     var WebsocketFrameSend = class {
       /**
        * @param {Buffer|undefined} data
        */
       constructor(data) {
         this.frameData = data;
-        this.maskKey = randomBytes(4);
+        this.maskKey = crypto4.randomBytes(4);
       }
       createFrame(opcode) {
         const bodyLength = this.frameData?.byteLength ?? 0;
@@ -41222,6 +39394,7 @@ var require_websocket = __commonJS({
     var { webidl } = require_webidl();
     var { DOMException: DOMException2 } = require_constants();
     var { URLSerializer } = require_dataURL();
+    var { getGlobalOrigin } = require_global();
     var { staticPropertyDescriptors, states, opcodes, emptyBuffer } = require_constants4();
     var {
       kWebSocketURL,
@@ -41266,11 +39439,17 @@ var require_websocket = __commonJS({
         const options = webidl.converters["DOMString or sequence<DOMString> or WebSocketInit"](protocols);
         url = webidl.converters.USVString(url);
         protocols = options.protocols;
+        const baseURL = getGlobalOrigin();
         let urlRecord;
         try {
-          urlRecord = new URL(url);
+          urlRecord = new URL(url, baseURL);
         } catch (e) {
           throw new DOMException2(e, "SyntaxError");
+        }
+        if (urlRecord.protocol === "http:") {
+          urlRecord.protocol = "ws:";
+        } else if (urlRecord.protocol === "https:") {
+          urlRecord.protocol = "wss:";
         }
         if (urlRecord.protocol !== "ws:" && urlRecord.protocol !== "wss:") {
           throw new DOMException2(
@@ -41278,7 +39457,7 @@ var require_websocket = __commonJS({
             "SyntaxError"
           );
         }
-        if (urlRecord.hash) {
+        if (urlRecord.hash || urlRecord.href.endsWith("#")) {
           throw new DOMException2("Got fragment", "SyntaxError");
         }
         if (typeof protocols === "string") {
@@ -41290,7 +39469,7 @@ var require_websocket = __commonJS({
         if (protocols.length > 0 && !protocols.every((p) => isValidSubprotocol(p))) {
           throw new DOMException2("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
         }
-        this[kWebSocketURL] = urlRecord;
+        this[kWebSocketURL] = new URL(urlRecord.href);
         this[kController] = establishWebSocketConnection(
           urlRecord,
           protocols,
@@ -41705,7 +39884,9 @@ var require_undici = __commonJS({
         try {
           return await fetchImpl(...arguments);
         } catch (err) {
-          Error.captureStackTrace(err, this);
+          if (typeof err === "object") {
+            Error.captureStackTrace(err, this);
+          }
           throw err;
         }
       };
