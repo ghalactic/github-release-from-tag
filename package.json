@@ -35,7 +35,7 @@
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "jest": "^29.7.0",
-    "jest-extended": "^4.0.0",
+    "jest-extended": "^4.0.2",
     "jest-mock-process": "^2.0.0",
     "jest-puppeteer": "^9.0.1",
     "octokit": "^3.1.1",
