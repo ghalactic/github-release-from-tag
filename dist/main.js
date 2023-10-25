@@ -21990,7 +21990,7 @@ var require_dist_node10 = __commonJS({
       paginatingEndpoints: () => paginatingEndpoints
     });
     module.exports = __toCommonJS2(dist_src_exports);
-    var VERSION = "9.0.0";
+    var VERSION = "9.1.0";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -22149,9 +22149,11 @@ var require_dist_node10 = __commonJS({
       "GET /orgs/{org}/personal-access-tokens",
       "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories",
       "GET /orgs/{org}/projects",
+      "GET /orgs/{org}/properties/values",
       "GET /orgs/{org}/public_members",
       "GET /orgs/{org}/repos",
       "GET /orgs/{org}/rulesets",
+      "GET /orgs/{org}/rulesets/rule-suites",
       "GET /orgs/{org}/secret-scanning/alerts",
       "GET /orgs/{org}/security-advisories",
       "GET /orgs/{org}/teams",
@@ -22243,6 +22245,7 @@ var require_dist_node10 = __commonJS({
       "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
       "GET /repos/{owner}/{repo}/rules/branches/{branch}",
       "GET /repos/{owner}/{repo}/rulesets",
+      "GET /repos/{owner}/{repo}/rulesets/rule-suites",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
       "GET /repos/{owner}/{repo}/security-advisories",
