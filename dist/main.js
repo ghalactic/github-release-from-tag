@@ -21990,7 +21990,7 @@ var require_dist_node10 = __commonJS({
       paginatingEndpoints: () => paginatingEndpoints
     });
     module.exports = __toCommonJS2(dist_src_exports);
-    var VERSION = "9.1.0";
+    var VERSION = "9.1.2";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
