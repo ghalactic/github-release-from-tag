@@ -24,7 +24,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@octokit/types": "^12.0.0",
+    "@octokit/types": "^12.2.0",
     "@types/jest": "^29.5.8",
     "@types/jest-environment-puppeteer": "^5.0.6",
     "@types/js-yaml": "^4.0.9",
