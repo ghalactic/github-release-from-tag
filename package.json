@@ -38,7 +38,7 @@
     "jest-extended": "^4.0.2",
     "jest-mock-process": "^2.0.0",
     "jest-puppeteer": "^9.0.1",
-    "octokit": "^3.1.1",
+    "octokit": "^3.1.2",
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^3.2.4",
     "puppeteer": "^21.5.2",
