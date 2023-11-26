@@ -16004,7 +16004,7 @@ var require_uri_all = __commonJS({
       }
       var URI_PROTOCOL = buildExps(false);
       var IRI_PROTOCOL = buildExps(true);
-      var slicedToArray = function() {
+      var slicedToArray = /* @__PURE__ */ function() {
         function sliceIterator(arr, i) {
           var _arr = [];
           var _n = true;
