@@ -109,7 +109,7 @@ summary:
     it("should append generated release notes to the release body", async () => {
       const expression = `//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`;
 
-      expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty();
+      expect(await page.$$(buildBodyExpression(expression))).not.toBeEmpty();
     });
 
     it("should produce the expected release discussion", () => {

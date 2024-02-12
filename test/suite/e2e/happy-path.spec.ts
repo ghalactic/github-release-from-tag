@@ -190,7 +190,7 @@ paragraph
     `(
       "should produce the expected release body elements ($description)",
       async ({ expression }) => {
-        expect(await page.$x(buildBodyExpression(expression))).not.toBeEmpty();
+        expect(await page.$$(buildBodyExpression(expression))).not.toBeEmpty();
       },
     );
 
