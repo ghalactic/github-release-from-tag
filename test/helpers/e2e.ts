@@ -6,7 +6,7 @@ const { GITHUB_SHA } = process.env;
 export const SETUP_TIMEOUT = 3 * 60 * 1000; // 3 minutes
 
 export function buildBodyExpression(expression: string): string {
-  return `//*[@data-test-selector="body-content"]${expression}`;
+  return `xpath/.//*[@data-test-selector="body-content"]${expression}`;
 }
 
 export function buildBranchName(runId: string, label: string): string {
