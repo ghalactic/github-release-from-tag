@@ -3,6 +3,10 @@ const isGHA = GITHUB_ACTIONS === "true";
 
 const common = {
   setupFilesAfterEnv: ["jest-extended/all"],
+  extensionsToTreatAsEsm: [".ts"],
+  transform: {
+    "^.+\\.[jt]s$": "@swc/jest",
+  },
   transformIgnorePatterns: [
     "signal-exit", // see https://github.com/facebook/jest/issues/9503#issuecomment-708507112
   ],
@@ -19,7 +23,6 @@ const config = {
     {
       ...common,
       displayName: "unit",
-      preset: "es-jest",
       testMatch: ["<rootDir>/test/suite/unit/**/*.spec.*"],
     },
   ],
@@ -36,7 +39,7 @@ if (isGHA) {
   config.projects.push({
     ...common,
     displayName: "e2e",
-    preset: "./jest.preset.e2e.js",
+    preset: "jest-puppeteer",
     testMatch: ["<rootDir>/test/suite/e2e/**/*.spec.*"],
   });
 }
