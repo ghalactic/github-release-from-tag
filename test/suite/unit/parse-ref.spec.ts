@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { parseRef } from "../../../src/ref.js";
 
 const shorthandFixtures = {

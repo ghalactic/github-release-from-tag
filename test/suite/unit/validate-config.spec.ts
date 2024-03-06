@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { validateConfig } from "../../../src/config/validation.js";
 import { isError } from "../../../src/guard.js";
 

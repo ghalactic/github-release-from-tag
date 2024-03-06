@@ -1,17 +1,18 @@
+import { beforeAll, describe, expect, it } from "vitest";
 import {
+  SETUP_TIMEOUT,
   buildBranchName,
   buildTagName,
   buildWorkflow,
-  SETUP_TIMEOUT,
 } from "../../helpers/e2e.js";
 import { readRunId } from "../../helpers/gha.js";
 import {
   AnnotationData,
+  WorkflowRunData,
   createBranchForCi,
   createTag,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
-  WorkflowRunData,
 } from "../../helpers/octokit.js";
 
 describe("End-to-end tests", () => {
@@ -44,10 +45,14 @@ describe("End-to-end tests", () => {
     });
 
     it("should annotate the workflow run with a reason for the failure", () => {
-      expect(annotations).toPartiallyContain({
-        annotation_level: "failure",
-        message: "Unable to create a release from a lightweight tag",
-      });
+      expect(annotations).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            annotation_level: "failure",
+            message: "Unable to create a release from a lightweight tag",
+          }),
+        ]),
+      );
     });
   });
 });

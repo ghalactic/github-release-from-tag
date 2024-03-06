@@ -2,6 +2,7 @@ import { exec } from "@actions/exec";
 import { mkdtemp, rm } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readTagAnnotation } from "../../../src/git.js";
 import { group } from "../../mocks/actions-core.js";
 

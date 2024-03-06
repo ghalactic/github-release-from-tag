@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { validateConfig } from "../../../src/config/validation.js";
 import { createOrUpdateRelease } from "../../../src/release.js";
 import { group, info } from "../../mocks/actions-core.js";

@@ -1,4 +1,6 @@
 import escapeStringRegExp from "escape-string-regexp";
+import { launch } from "puppeteer";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   CONFUSED,
   EYES,
@@ -98,8 +100,6 @@ summary:
         repo,
         release,
       );
-
-      if (release?.html_url != null) await page.goto(release?.html_url);
     }, SETUP_TIMEOUT);
 
     it("should produce a workflow run that concludes in success", () => {
@@ -107,9 +107,17 @@ summary:
     });
 
     it("should append generated release notes to the release body", async () => {
+      expect(release).toBeDefined();
+
+      const browser = await launch();
+      const page = await browser.newPage();
+      await page.goto(release?.html_url);
+
       const expression = `//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`;
 
-      expect(await page.$$(buildBodyExpression(expression))).not.toBeEmpty();
+      expect(await page.$$(buildBodyExpression(expression))).not.toHaveLength(
+        0,
+      );
     });
 
     it("should produce the expected release discussion", () => {

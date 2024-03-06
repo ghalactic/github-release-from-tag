@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { renderReleaseBody } from "../../../src/body.js";
 import { validateConfig } from "../../../src/config/validation.js";
 import { group, info, setOutput } from "../../mocks/actions-core.js";

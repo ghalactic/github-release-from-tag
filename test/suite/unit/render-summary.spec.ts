@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 import { join } from "path";
+import { describe, expect, it } from "vitest";
 import { renderSummary } from "../../../src/summary.js";
 import { ReleaseData, TaggerData } from "../../../src/type/octokit.js";
 

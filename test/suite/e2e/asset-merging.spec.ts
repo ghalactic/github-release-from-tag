@@ -1,17 +1,18 @@
+import { beforeAll, describe, expect, it } from "vitest";
 import { ReleaseData } from "../../../src/type/octokit.js";
 import {
+  SETUP_TIMEOUT,
   buildBranchName,
   buildTagName,
   buildWorkflow,
-  SETUP_TIMEOUT,
 } from "../../helpers/e2e.js";
 import { readRunId } from "../../helpers/gha.js";
 import {
+  WorkflowRunData,
   createBranchForCi,
   createTag,
   getReleaseByTag,
   waitForCompletedTagWorkflowRun,
-  WorkflowRunData,
 } from "../../helpers/octokit.js";
 
 describe("End-to-end tests", () => {
@@ -100,13 +101,17 @@ describe("End-to-end tests", () => {
     `(
       "should produce the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
-        expect(release.assets).toPartiallyContain({
-          state: "uploaded",
-          name,
-          size,
-          content_type: contentType,
-          label,
-        });
+        expect(release.assets).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              state: "uploaded",
+              name,
+              size,
+              content_type: contentType,
+              label,
+            }),
+          ]),
+        );
       },
     );
   });

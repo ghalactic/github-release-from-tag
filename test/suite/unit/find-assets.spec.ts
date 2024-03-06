@@ -1,5 +1,5 @@
-import { mockProcessStdout } from "jest-mock-process";
 import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { findAssets } from "../../../src/asset.js";
 import { WarningFn } from "../../../src/type/actions.js";
 import { info, warning } from "../../mocks/actions-core.js";
@@ -8,16 +8,20 @@ const { chdir, cwd } = process;
 const fixturesPath = join(__dirname, "../../fixture/find-assets");
 
 describe("findAssets()", () => {
-  let mockStdout: ReturnType<typeof mockProcessStdout>, originalCwd: string;
+  let originalCwd: string;
 
   beforeEach(async () => {
-    mockStdout = mockProcessStdout();
+    vi.spyOn(process.stdout, "write").mockImplementation((s, e, cb) => {
+      cb?.();
+
+      return true;
+    });
     originalCwd = cwd();
   });
 
   afterEach(async () => {
     chdir(originalCwd);
-    mockStdout.mockRestore();
+    vi.restoreAllMocks();
   });
 
   it("should find assets when the pattern matches a single file", async () => {

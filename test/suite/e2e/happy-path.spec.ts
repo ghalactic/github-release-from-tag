@@ -1,4 +1,6 @@
 import escapeStringRegExp from "escape-string-regexp";
+import { launch } from "puppeteer";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   CONFUSED,
   EYES,
@@ -145,8 +147,6 @@ paragraph
         release,
       );
 
-      if (release?.html_url != null) await page.goto(release?.html_url);
-
       const outputsPrefix = "outputs.";
       outputs = {};
 
@@ -190,7 +190,15 @@ paragraph
     `(
       "should produce the expected release body elements ($description)",
       async ({ expression }) => {
-        expect(await page.$$(buildBodyExpression(expression))).not.toBeEmpty();
+        expect(release).toBeDefined();
+
+        const browser = await launch();
+        const page = await browser.newPage();
+        await page.goto(release?.html_url);
+
+        expect(await page.$$(buildBodyExpression(expression))).not.toHaveLength(
+          0,
+        );
       },
     );
 
@@ -204,13 +212,17 @@ paragraph
     `(
       "should produce the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
-        expect(release.assets).toPartiallyContain({
-          state: "uploaded",
-          name,
-          size,
-          content_type: contentType,
-          label,
-        });
+        expect(release.assets).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              state: "uploaded",
+              name,
+              size,
+              content_type: contentType,
+              label,
+            }),
+          ]),
+        );
       },
     );
 
@@ -281,7 +293,7 @@ paragraph
           ),
         };
 
-        expect(outputs.assets).toBeString();
+        expect(outputs.assets).toBeTypeOf("string");
         expect(JSON.parse(outputs.assets as string)).toEqual([
           {
             ...commonFields,

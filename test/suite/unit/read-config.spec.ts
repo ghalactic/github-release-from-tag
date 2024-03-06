@@ -1,5 +1,6 @@
 import { dump } from "js-yaml";
 import { join } from "path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readConfig } from "../../../src/config/reading.js";
 import { getInput, group, info } from "../../mocks/actions-core.js";
 
