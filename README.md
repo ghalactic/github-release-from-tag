@@ -102,7 +102,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: refs/tags/${{ github.event.inputs.tag }}
+          ref: refs/tags/${{ inputs.tag }}
       - name: Publish release
         uses: ghalactic/github-release-from-tag@v5
 ```
