@@ -7,6 +7,38 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.1.0] - 2024-03-07
+
+[v5.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.1.0
+
+### Added
+
+- [GitHub Markdown alerts] are now supported in tag annotation bodies.
+
+[github markdown alerts]: https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
+
+> [!TIP]
+> This means you can add alerts like this one to your tag annotation bodies, and
+> they will appear in the published release. To add an alert, use the following
+> syntax:
+>
+> ```markdown
+> > [!NOTE]
+> > Useful information that users should know, even when skimming content.
+>
+> > [!TIP]
+> > Helpful advice for doing things better or more easily.
+>
+> > [!IMPORTANT]
+> > Key information users need to know to achieve their goal.
+>
+> > [!WARNING]
+> > Urgent info that needs immediate user attention to avoid problems.
+>
+> > [!CAUTION]
+> > Advises about risks or negative outcomes of certain actions.
+> ```
+
 ## [v5.0.1] - 2024-03-06
 
 [v5.0.1]: https://github.com/ghalactic/github-release-from-tag/releases/v5.0.1
