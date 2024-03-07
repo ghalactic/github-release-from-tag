@@ -7,6 +7,18 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.1.1] - 2024-03-07
+
+[v5.1.1]: https://github.com/ghalactic/github-release-from-tag/releases/v5.1.1
+
+### Fixed
+
+- Updated example workflow to use the `inputs` context instead of
+  `github.event.inputs`. This is now possible because GitHub [unified their
+  Actions inputs across manual and reusable workflows].
+
+[unified their Actions inputs across manual and reusable workflows]: https://github.blog/changelog/2022-06-10-github-actions-inputs-unified-across-manual-and-reusable-workflows/
+
 ## [v5.1.0] - 2024-03-07
 
 [v5.1.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.1.0
