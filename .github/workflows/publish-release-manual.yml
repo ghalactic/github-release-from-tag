@@ -20,4 +20,4 @@ jobs:
     with:
       discussionCategory: Releases
       useReleaseActionMain: true
-      tag: ${{ github.event.inputs.tag }}
+      tag: ${{ inputs.tag }}
