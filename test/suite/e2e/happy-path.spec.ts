@@ -70,6 +70,9 @@ one
 paragraph
 
 @actions
+
+> [!IMPORTANT]
+> this should be an alert
 `;
 
     const config = `assets:
@@ -186,6 +189,7 @@ paragraph
       ${"markdown heading 2"}  | ${`//h2[normalize-space()='Heading 2']`}
       ${"markdown paragraphs"} | ${`//*[normalize-space()='this should form one paragraph']`}
       ${"mention"}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
+      ${"alert"}               | ${`//*[contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-important ')]/p[not(contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-title '))][normalize-space()='this should be an alert']`}
       ${"release notes"}       | ${`//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`}
     `(
       "should produce the expected release body elements ($description)",

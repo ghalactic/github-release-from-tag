@@ -71293,12 +71293,18 @@ function remarkGfm(options) {
 }
 
 // src/markdown.ts
+var ALERT_PATTERN = /(\[!(?:CAUTION|IMPORTANT|NOTE|TIP|WARNING)])(?!\s*$)(\s*)/gm;
 var SOFT_BREAK_PATTERN = /$[^$]/gms;
 function createProcessor() {
   const createRemark = remark().use(remarkGfm).use(() => {
     return (tree) => {
       visit(tree, "text", (node2) => {
         node2.value = node2.value.replace(SOFT_BREAK_PATTERN, " ");
+      });
+      visit(tree, "blockquote", (node2) => {
+        visit(node2, "text", (node3) => {
+          node3.value = node3.value.replace(ALERT_PATTERN, "$1\n");
+        });
       });
     };
   }).freeze();

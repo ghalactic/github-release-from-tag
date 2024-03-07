@@ -1,17 +1,27 @@
+import { Node } from "mdast";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
 
+const ALERT_PATTERN =
+  /(\[!(?:CAUTION|IMPORTANT|NOTE|TIP|WARNING)])(?!\s*$)(\s*)/gm;
 const SOFT_BREAK_PATTERN = /$[^$]/gms;
 
 export function createProcessor(): (original: string) => Promise<string> {
   const createRemark = remark()
     .use(remarkGfm)
-    // strip soft breaks
     .use(() => {
       return (tree) => {
+        // strip soft breaks
         visit(tree, "text", (node: { value: string }) => {
           node.value = node.value.replace(SOFT_BREAK_PATTERN, " ");
+        });
+
+        // preserve GitHub alerts
+        visit(tree, "blockquote", (node: Node) => {
+          visit(node, "text", (node: { value: string }) => {
+            node.value = node.value.replace(ALERT_PATTERN, "$1\n");
+          });
         });
       };
     })
