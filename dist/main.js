@@ -58971,7 +58971,10 @@ async function modifyReleaseAssets({
     );
     let checksumsResult;
     if (config2.checksum.generateAssets) {
-      checksumsResult = await uploadOrUpdateChecksumAssets(sortedAssets);
+      checksumsResult = await uploadOrUpdateChecksumAssets(
+        existingAssets,
+        sortedAssets
+      );
     } else {
       checksumsResult = true;
     }
@@ -59023,7 +59026,18 @@ async function modifyReleaseAssets({
     );
     return normalized;
   }
-  async function uploadChecksumAsset(name, contentType, data, label) {
+  async function uploadOrUpdateChecksumAsset(existingAssets2, name, contentType, data, label) {
+    const existing = existingAssets2.find((asset) => asset.name === name);
+    if (existing) {
+      info2(
+        `Deleting existing checksum asset ${JSON.stringify(existing.name)} (${existing.id})`
+      );
+      await repos.deleteReleaseAsset({
+        owner,
+        repo,
+        asset_id: existing.id
+      });
+    }
     const { upload_url: url } = release;
     info2(`Uploading checksum asset ${JSON.stringify(name)}`);
     const { data: assetData } = await request({
@@ -59038,17 +59052,19 @@ async function modifyReleaseAssets({
     });
     info2(`Uploaded checksum asset ${JSON.stringify(name)}`);
   }
-  async function uploadOrUpdateChecksumAssets(assets2) {
+  async function uploadOrUpdateChecksumAssets(existingAssets2, assets2) {
     const sha256sumData = renderChecksumAsset("sha256", assets2);
     const jsonData = renderJSONChecksumAsset(assets2);
     const results = await Promise.allSettled([
-      uploadChecksumAsset(
+      uploadOrUpdateChecksumAsset(
+        existingAssets2,
         "checksums.sha256",
         "text/plain",
         sha256sumData,
         "Checksums (sha256sum)"
       ),
-      uploadChecksumAsset(
+      uploadOrUpdateChecksumAsset(
+        existingAssets2,
         "checksums.json",
         "application/json",
         jsonData,
