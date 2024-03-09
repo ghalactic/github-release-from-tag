@@ -660,10 +660,6 @@ affecting how releases are published:
 # Set to true to produce releases in a draft state.
 draft: true
 
-checksum:
-  # Set to false to disable generation of checksum assets for releases.
-  generateAssets: false
-
 # Set to true to append automatically generated release notes to release bodies.
 generateReleaseNotes: true
 
@@ -683,6 +679,10 @@ assets:
     optional: true
     name: custom-name-b.json
     label: Label for file-b.json
+
+checksum:
+  # Set to false to disable generation of checksum assets for releases.
+  generateAssets: false
 
 discussion:
   # The category to use when creating the discussion.
@@ -714,9 +714,6 @@ published:
     # Set to "true" to produce releases in a draft state.
     draft: "true"
 
-    # Set to "false" to disable generation of checksum assets for the release.
-    generateChecksumAssets: "false"
-
     # Set to "true" to append automatically generated release notes to the
     # release body.
     generateReleaseNotes: "true"
@@ -738,6 +735,9 @@ published:
         optional: true
         name: custom-name-b.json
         label: Label for file-b.json
+
+    # Set to "false" to disable generation of checksum assets for the release.
+    generateChecksumAssets: "false"
 
     # Use a custom GitHub token.
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
