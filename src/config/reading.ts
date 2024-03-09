@@ -77,6 +77,13 @@ function getConfigOverrides(
   getInput: GetInputFn,
   base: Config,
 ): ConfigOverrides | undefined {
+  const checksumOverrides: ChecksumOverrides = {};
+
+  const checksumGenerateAssets = getInput("checksumGenerateAssets");
+  if (checksumGenerateAssets) {
+    checksumOverrides.generateAssets = checksumGenerateAssets === "true";
+  }
+
   const discussionOverrides: DiscussionOverrides = {};
 
   const discussionCategory = getInput("discussionCategory");
@@ -103,6 +110,9 @@ function getConfigOverrides(
 
   if (inputAssets.length > 0) {
     overrides.assets = [...base.assets, ...inputAssets];
+  }
+  if (Object.keys(checksumOverrides).length > 0) {
+    overrides.checksum = checksumOverrides;
   }
   if (Object.keys(discussionOverrides).length > 0) {
     overrides.discussion = discussionOverrides;
@@ -228,12 +238,17 @@ function isReleaseReaction(reaction: string): reaction is ReleaseReaction {
 
 type ConfigOverrides = {
   assets?: AssetConfig[];
+  checksum?: ChecksumOverrides;
   discussion?: DiscussionOverrides;
   draft?: boolean;
   generateReleaseNotes?: boolean;
   prerelease?: boolean;
   reactions?: ReleaseReaction[];
   summary?: SummaryOverrides;
+};
+
+type ChecksumOverrides = {
+  generateAssets?: boolean;
 };
 
 type DiscussionOverrides = {

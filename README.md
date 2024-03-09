@@ -601,8 +601,11 @@ affecting how releases are published:
 # Set to true to produce releases in a draft state.
 draft: true
 
-# Set to true to append automatically generated release notes to the release
-# body.
+checksum:
+  # Set to false to disable generation of checksum assets for releases.
+  generateAssets: false
+
+# Set to true to append automatically generated release notes to release bodies.
 generateReleaseNotes: true
 
 # Set to true or false to override the automatic tag name based pre-release
@@ -651,6 +654,9 @@ published:
   with:
     # Set to "true" to produce releases in a draft state.
     draft: "true"
+
+    # Set to "false" to disable generation of checksum assets for the release.
+    generateChecksumAssets: "false"
 
     # Set to "true" to append automatically generated release notes to the
     # release body.

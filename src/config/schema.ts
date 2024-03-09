@@ -16,6 +16,20 @@ export const config = {
       $ref: ASSETS,
       default: [],
     },
+    checksum: {
+      description: "Options for release asset checksums.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        generateAssets: {
+          description:
+            "Set to false to disable generation of checksum assets for releases.",
+          type: "boolean",
+          default: true,
+        },
+      },
+    },
     discussion: {
       description: "Options for creating discussions linked to releases.",
       type: "object",
@@ -50,7 +64,7 @@ export const config = {
     },
     generateReleaseNotes: {
       description:
-        "Set to true to append automatically generated release notes to the release body.",
+        "Set to true to append automatically generated release notes to release bodies.",
       type: "boolean",
       default: false,
     },

@@ -8,6 +8,10 @@ inputs:
       The schema of this value matches the schema for the "assets" config file
       property.
     default: ""
+  checksumGenerateAssets:
+    description: >-
+      Set to "false" to disable generation of checksum assets for the release.
+    default: "" # defaults to the default in the config file (true)
   discussionCategory:
     description: >-
       If specified, a discussion of the specified category is created and linked

@@ -4,6 +4,8 @@ assets:
     optional: true
     name: custom-name-b.json
     label: Label for file-b.json
+checksum:
+  generateAssets: false
 discussion:
   category: category-a
   reactions:

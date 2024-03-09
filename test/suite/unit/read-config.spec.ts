@@ -45,6 +45,9 @@ describe("readConfig()", () => {
           label: "Label for file-b.json",
         },
       ],
+      checksum: {
+        generateAssets: false,
+      },
       discussion: {
         category: "category-a",
         reactions: [
@@ -76,6 +79,9 @@ describe("readConfig()", () => {
 
     const expected = {
       assets: [],
+      checksum: {
+        generateAssets: true,
+      },
       discussion: {
         category: "",
         reactions: [],
@@ -97,6 +103,9 @@ describe("readConfig()", () => {
 
     const expected = {
       assets: [],
+      checksum: {
+        generateAssets: true,
+      },
       discussion: {
         category: "",
         reactions: [],
@@ -125,6 +134,8 @@ describe("readConfig()", () => {
 
     const getInput = (name: string) => {
       switch (name) {
+        case "checksumGenerateAssets":
+          return "true";
         case "discussionCategory":
           return "category-override-a";
         case "discussionReactions":
@@ -147,6 +158,9 @@ describe("readConfig()", () => {
     const actual = await readConfig({ getInput, group, info });
 
     const expected = {
+      checksum: {
+        generateAssets: true,
+      },
       discussion: {
         category: "category-override-a",
         reactions: ["eyes", "+1"],
@@ -157,6 +171,22 @@ describe("readConfig()", () => {
       reactions: ["heart", "hooray", "rocket"],
       summary: {
         enabled: true,
+      },
+    };
+
+    expect(actual).toMatchObject(expected);
+  });
+
+  it("should correctly fill in checksum defaults when using action input overrides", async () => {
+    chdir(join(fixturesPath, "empty"));
+
+    const getInput = (name: string) =>
+      name === "checksumGenerateAssets" ? "false" : "";
+    const actual = await readConfig({ getInput, group, info });
+
+    const expected = {
+      checksum: {
+        generateAssets: false,
       },
     };
 
