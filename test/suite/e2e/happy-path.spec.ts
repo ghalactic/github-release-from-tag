@@ -14,7 +14,7 @@ import {
 } from "../../../src/constant/reaction.js";
 import { getDiscussionNumberByUrl } from "../../../src/discussion.js";
 import { isError } from "../../../src/guard.js";
-import { ReleaseData } from "../../../src/type/octokit.js";
+import { AssetData, ReleaseData } from "../../../src/type/octokit.js";
 import {
   SETUP_TIMEOUT,
   buildBodyExpression,
@@ -24,6 +24,7 @@ import {
 } from "../../helpers/e2e.js";
 import { owner, repo } from "../../helpers/fixture-repo.js";
 import { readRunId } from "../../helpers/gha.js";
+import { sha256Hex } from "../../helpers/hashing.js";
 import {
   AnnotationData,
   ReactionGroupData,
@@ -31,6 +32,7 @@ import {
   createBranchForCi,
   createTag,
   getDiscussionReactionGroupsByRelease,
+  getReleaseAssetContent,
   getReleaseByTag,
   listAnnotationsByWorkflowRun,
   waitForCompletedTagWorkflowRun,
@@ -87,34 +89,37 @@ paragraph
     optional: true
 `;
 
+    const fileA = {
+      path: "assets/text/file-a.txt",
+      content: "file-a\n",
+    };
+    const fileB = {
+      path: "assets/json/file-b.json",
+      content: '{"file-b":true}\n',
+    };
+    const fileC = {
+      // makes a filename like "file-c.2572064453.txt"
+      path: `assets/text/file-c.${Math.floor(Math.random() * 10000000000)}.txt`,
+      content: "file-c\n",
+    };
+    const fileD0 = {
+      path: "assets/json/file-d.0.json",
+      content: '{"file-d":0}\n',
+    };
+    const fileD1 = {
+      path: "assets/json/file-d.1.json",
+      content: '{"file-d":1}\n',
+    };
     const files = [
       {
         path: ".github/github-release-from-tag.yml",
         content: config,
       },
-      {
-        path: "assets/text/file-a.txt",
-        content: "file-a\n",
-      },
-      {
-        path: "assets/json/file-b.json",
-        content: '{"file-b":true}\n',
-      },
-      {
-        // makes a filename like "file-c.2572064453.txt"
-        path: `assets/text/file-c.${Math.floor(
-          Math.random() * 10000000000,
-        )}.txt`,
-        content: "file-c\n",
-      },
-      {
-        path: "assets/json/file-d.0.json",
-        content: '{"file-d":0}\n',
-      },
-      {
-        path: "assets/json/file-d.1.json",
-        content: '{"file-d":1}\n',
-      },
+      fileA,
+      fileB,
+      fileC,
+      fileD0,
+      fileD1,
     ];
 
     // points to a commit history with PRs for generating release notes
@@ -236,6 +241,58 @@ paragraph
           `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`,
         ),
       );
+    });
+
+    it("should produce the expected release asset checksums", async () => {
+      const plainChecksumAsset = release.assets.find(
+        ({ name }) => name === "checksums.sha256",
+      ) as AssetData;
+      const jsonChecksumAsset = release.assets.find(
+        ({ name }) => name === "checksums.json",
+      ) as AssetData;
+
+      expect(plainChecksumAsset).toMatchObject({
+        state: "uploaded",
+        name: "checksums.sha256",
+        content_type: "text/plain",
+        label: "Checksums (sha256sum)",
+      });
+      expect(jsonChecksumAsset).toMatchObject({
+        state: "uploaded",
+        name: "checksums.json",
+        content_type: "application/json",
+        label: "Checksums (JSON)",
+      });
+
+      const plainChecksums = await getReleaseAssetContent(plainChecksumAsset);
+      const jsonChecksums = JSON.parse(
+        await getReleaseAssetContent(jsonChecksumAsset),
+      );
+
+      const fileAChecksum = sha256Hex(fileA.content);
+      const fileBChecksum = sha256Hex(fileB.content);
+      const fileCChecksum = sha256Hex(fileC.content);
+      const fileD0Checksum = sha256Hex(fileD0.content);
+      const fileD1Checksum = sha256Hex(fileD1.content);
+
+      expect(plainChecksums).toBe(
+        [
+          `${fileAChecksum} file-a.txt`,
+          `${fileBChecksum} custom-name-b.json`,
+          `${fileCChecksum} custom-name-c.txt`,
+          `${fileD0Checksum} file-d.0.json`,
+          `${fileD1Checksum} file-d.1.json`,
+        ].join("\n") + "\n",
+      );
+      expect(jsonChecksums).toEqual({
+        sha256: {
+          "file-a.txt": fileAChecksum,
+          "custom-name-b.json": fileBChecksum,
+          "custom-name-c.txt": fileCChecksum,
+          "file-d.0.json": fileD0Checksum,
+          "file-d.1.json": fileD1Checksum,
+        },
+      });
     });
 
     it.each([

@@ -1,7 +1,7 @@
 import { RestEndpointMethodTypes } from "@octokit/action";
 import { Octokit } from "octokit";
 import { getDiscussionNumberByUrl } from "../../src/discussion.js";
-import { ReleaseData } from "../../src/type/octokit.js";
+import { AssetData, ReleaseData } from "../../src/type/octokit.js";
 import { owner, repo } from "./fixture-repo.js";
 import { readEmptyTreeHash } from "./git.js";
 import { sleep } from "./timers.js";
@@ -213,6 +213,25 @@ export async function getReleaseByTag(tag: string): Promise<ReleaseData> {
   }
 
   throw new Error(`Unable to find release for tag ${JSON.stringify(tag)}`);
+}
+
+export async function getReleaseAssetContent({
+  browser_download_url,
+}: AssetData): Promise<string> {
+  const response = await fetch(browser_download_url, {
+    headers: {
+      Accept: "application/octet-stream",
+      Authorization: `token ${process.env.HOMEBREW_GITHUB_API_TOKEN}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to download ${browser_download_url}: ${response.statusText}`,
+    );
+  }
+
+  return await response.text();
 }
 
 export async function listAnnotationsByWorkflowRun(
