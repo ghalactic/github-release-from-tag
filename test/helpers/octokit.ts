@@ -253,7 +253,7 @@ export async function listAnnotationsByWorkflowRun(
  * using query parameters that made sense, restricting the results to completed
  * runs, etc.
  *
- * Unfortunately, GitHub's API starting omitting workflow runs when specifying
+ * Unfortunately, GitHub's API started omitting workflow runs when specifying
  * simple filters like "status=completed" - including workflow runs that
  * definitely matched the filters. No idea why this should be the case. So
  * instead, I was forced to use a unique workflow filename for each test branch,
