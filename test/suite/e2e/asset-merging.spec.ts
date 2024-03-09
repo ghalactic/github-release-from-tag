@@ -37,7 +37,9 @@ describe("End-to-end tests", () => {
 
     const tagAnnotation = "1.0.0";
 
-    const config = `assets:
+    const config = `checksum:
+  generateAssets: false
+assets:
   - path: assets/file-a.txt
     name: custom-name-a.txt
     label: Label for file-a.txt, which will download as custom-name-a.txt
