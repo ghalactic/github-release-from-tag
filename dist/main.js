@@ -58922,6 +58922,7 @@ var import_core = __toESM(require_core(), 1);
 // src/asset.ts
 var import_glob = __toESM(require_glob(), 1);
 var import_mime_types = __toESM(require_mime_types(), 1);
+import { createHash } from "crypto";
 import { readFile, stat } from "fs/promises";
 import { basename } from "path";
 async function modifyReleaseAssets({
@@ -58990,6 +58991,7 @@ async function modifyReleaseAssets({
     const { label, name, path: path2 } = desired;
     const contentType = (0, import_mime_types.lookup)(path2) || "application/octet-stream";
     const data = await readFile(path2);
+    const sha256 = createHash("sha256").update(data).digest("hex");
     info2(
       `Uploading release asset ${JSON.stringify(
         desired.name
@@ -59005,7 +59007,7 @@ async function modifyReleaseAssets({
         "Content-Type": contentType
       }
     });
-    const normalized = normalizeAssetData(assetData);
+    const normalized = normalizeAssetData(assetData, { sha256 });
     info2(
       `Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(
         normalized,
@@ -59128,7 +59130,7 @@ async function logResults(info2, error2, resultAnalysis, messageTemplate) {
     info2(message);
   }
 }
-function normalizeAssetData(data) {
+function normalizeAssetData(data, checksum) {
   const {
     url: apiUrl,
     browser_download_url: downloadUrl,
@@ -59155,7 +59157,8 @@ function normalizeAssetData(data) {
     size,
     downloadCount,
     createdAt,
-    updatedAt
+    updatedAt,
+    checksum
   };
 }
 function compareAsset(a, b) {
@@ -74089,6 +74092,19 @@ var config = {
       $ref: ASSETS2,
       default: []
     },
+    checksum: {
+      description: "Options for release asset checksums.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        generateAssets: {
+          description: "Set to false to disable generation of checksum assets for releases.",
+          type: "boolean",
+          default: true
+        }
+      }
+    },
     discussion: {
       description: "Options for creating discussions linked to releases.",
       type: "object",
@@ -74118,7 +74134,7 @@ var config = {
       default: false
     },
     generateReleaseNotes: {
-      description: "Set to true to append automatically generated release notes to the release body.",
+      description: "Set to true to append automatically generated release notes to release bodies.",
       type: "boolean",
       default: false
     },
@@ -74280,6 +74296,11 @@ async function readConfigFile() {
   return data.toString().trim();
 }
 function getConfigOverrides(getInput2, base) {
+  const checksumOverrides = {};
+  const checksumGenerateAssets = getInput2("checksumGenerateAssets");
+  if (checksumGenerateAssets) {
+    checksumOverrides.generateAssets = checksumGenerateAssets === "true";
+  }
   const discussionOverrides = {};
   const discussionCategory = getInput2("discussionCategory");
   if (discussionCategory)
@@ -74300,6 +74321,9 @@ function getConfigOverrides(getInput2, base) {
   const overrides = {};
   if (inputAssets.length > 0) {
     overrides.assets = [...base.assets, ...inputAssets];
+  }
+  if (Object.keys(checksumOverrides).length > 0) {
+    overrides.checksum = checksumOverrides;
   }
   if (Object.keys(discussionOverrides).length > 0) {
     overrides.discussion = discussionOverrides;

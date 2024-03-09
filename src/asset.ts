@@ -1,4 +1,5 @@
 import { create as createGlob } from "@actions/glob";
+import { createHash } from "crypto";
 import { readFile, stat } from "fs/promises";
 import { lookup } from "mime-types";
 import { basename } from "path";
@@ -107,6 +108,7 @@ export async function modifyReleaseAssets({
     const { label, name, path } = desired;
     const contentType = lookup(path) || "application/octet-stream";
     const data = await readFile(path);
+    const sha256 = createHash("sha256").update(data).digest("hex");
 
     info(
       `Uploading release asset ${JSON.stringify(
@@ -125,7 +127,7 @@ export async function modifyReleaseAssets({
       },
     })) as { data: AssetData };
 
-    const normalized = normalizeAssetData(assetData);
+    const normalized = normalizeAssetData(assetData, { sha256 });
     info(
       `Uploaded release asset ${JSON.stringify(desired.name)}: ${JSON.stringify(
         normalized,
@@ -319,9 +321,17 @@ type NormalizedAsset = {
   downloadCount: AssetData["download_count"];
   createdAt: AssetData["created_at"];
   updatedAt: AssetData["updated_at"];
+  checksum: AssetChecksums;
 };
 
-function normalizeAssetData(data: AssetData): NormalizedAsset {
+type AssetChecksums = {
+  sha256: string;
+};
+
+function normalizeAssetData(
+  data: AssetData,
+  checksum: AssetChecksums,
+): NormalizedAsset {
   const {
     url: apiUrl,
     browser_download_url: downloadUrl,
@@ -350,6 +360,7 @@ function normalizeAssetData(data: AssetData): NormalizedAsset {
     downloadCount,
     createdAt,
     updatedAt,
+    checksum,
   };
 }
 

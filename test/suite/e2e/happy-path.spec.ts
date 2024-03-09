@@ -364,6 +364,9 @@ paragraph
               "Label for file-b.json, which will download as custom-name-b.json",
             contentType: "application/json",
             size: 16,
+            checksum: {
+              sha256: sha256Hex(fileB.content),
+            },
           },
           {
             ...commonFields,
@@ -372,6 +375,9 @@ paragraph
             label: "",
             contentType: "text/plain",
             size: 7,
+            checksum: {
+              sha256: sha256Hex(fileC.content),
+            },
           },
           {
             ...commonFields,
@@ -380,6 +386,9 @@ paragraph
             label: "",
             contentType: "text/plain",
             size: 7,
+            checksum: {
+              sha256: sha256Hex(fileA.content),
+            },
           },
           {
             ...commonFields,
@@ -388,6 +397,9 @@ paragraph
             label: "",
             contentType: "application/json",
             size: 13,
+            checksum: {
+              sha256: sha256Hex(fileD0.content),
+            },
           },
           {
             ...commonFields,
@@ -396,6 +408,9 @@ paragraph
             label: "",
             contentType: "application/json",
             size: 13,
+            checksum: {
+              sha256: sha256Hex(fileD1.content),
+            },
           },
         ]);
       });
