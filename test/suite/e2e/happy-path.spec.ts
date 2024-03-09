@@ -277,18 +277,18 @@ paragraph
 
       expect(plainChecksums).toBe(
         [
-          `${fileAChecksum} file-a.txt`,
-          `${fileBChecksum} custom-name-b.json`,
-          `${fileCChecksum} custom-name-c.txt`,
-          `${fileD0Checksum} file-d.0.json`,
-          `${fileD1Checksum} file-d.1.json`,
+          `${fileBChecksum}  custom-name-b.json`,
+          `${fileCChecksum}  custom-name-c.txt`,
+          `${fileAChecksum}  file-a.txt`,
+          `${fileD0Checksum}  file-d.0.json`,
+          `${fileD1Checksum}  file-d.1.json`,
         ].join("\n") + "\n",
       );
       expect(jsonChecksums).toEqual({
         sha256: {
-          "file-a.txt": fileAChecksum,
           "custom-name-b.json": fileBChecksum,
           "custom-name-c.txt": fileCChecksum,
+          "file-a.txt": fileAChecksum,
           "file-d.0.json": fileD0Checksum,
           "file-d.1.json": fileD1Checksum,
         },
