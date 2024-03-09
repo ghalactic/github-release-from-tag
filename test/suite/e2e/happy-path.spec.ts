@@ -243,7 +243,7 @@ paragraph
       );
     });
 
-    it("should produce the expected release asset checksums", async () => {
+    it("should produce the expected release checksum assets", async () => {
       const plainChecksumAsset = release.assets.find(
         ({ name }) => name === "checksums.sha256",
       ) as AssetData;
