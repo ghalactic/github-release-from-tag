@@ -32,7 +32,7 @@ to when you [publish a GitHub Release manually].
 - [Minimal configuration, or often **zero** configuration](#configuration)
 - [SemVer stability determines **pre-release** status](#release-stability)
 - [**Markdown** support in tag annotation messages](#release-name-and-body)
-- [Asset uploading with support for **labels**](#release-assets)
+- [Asset uploading with support for **labels** and **checksums**](#release-assets)
 - [Automated **release notes** support](#automated-release-notes)
 - [Release **discussion** creation](#release-discussions)
 - [Releases can be created as **drafts**](#draft-releases)
@@ -477,6 +477,65 @@ value for this input is up to you, but any value from a [context] (e.g.
     assets: ${{ steps.listAssets.outputs.assets }}
 ```
 
+#### Checksum assets
+
+By default, this action generates **checksum assets**. When a release has
+associated assets specified, two checksum assets will be generated for the
+release:
+
+- `checksums.sha256` — A plaintext checksum file in [`sha256sum`] format.
+- `checksums.json` — A JSON file containing checksums for each asset.
+
+[`sha256sum`]: https://dashdash.io/1/sha256sum
+
+You can disable this feature via the [configuration file], or via [action
+inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+checksum:
+  generateAssets: false
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v5
+  with:
+    checksumGenerateAssets: "false"
+```
+
+Checksums for each asset are always included in the `assets` [action output],
+even when **checksum asset** generation is disabled.
+
+[action output]: #action-outputs
+
+<details>
+<summary>Example <code>checksums.sha256</code></summary>
+
+```
+3878a1aff7b0769be29e355922a89de794078db863cdc931d01e687168f06443  file-a.txt
+f97a35fc9ddddd6bbfe0244e7608ec342dba9ed18e7227db061997d32133edeb  file-b.zip
+```
+
+</details>
+
+<details>
+<summary>Example <code>checksums.json</code></summary>
+
+```json
+{
+  "sha256": {
+    "file-a.txt": "3878a1aff7b0769be29e355922a89de794078db863cdc931d01e687168f06443",
+    "file-b.zip": "f97a35fc9ddddd6bbfe0244e7608ec342dba9ed18e7227db061997d32133edeb"
+  }
+}
+```
+
+</details>
+
 ### Release discussions
 
 This action supports creating [GitHub Discussions] for releases. You can enable
@@ -784,7 +843,10 @@ assets: |
       "size": 16,
       "downloadCount": 0,
       "createdAt": "2022-06-02T09:37:56Z",
-      "updatedAt": "2022-06-02T09:37:56Z"
+      "updatedAt": "2022-06-02T09:37:56Z",
+      "checksum": {
+        "sha256": "2fef44d096530d162c859b5b4ec0895c308845cad1eebd7ef582c5ebd2dd787d"
+      }
     },
     ...
   ]
