@@ -135,7 +135,8 @@ permissions for the `GITHUB_TOKEN`].
 
 [modifying the permissions for the `github_token`]: https://docs.github.com/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
 
-> **Note:** In February 2023, the default token permissions for new repos
+> [!NOTE]
+> In February 2023, the default token permissions for new repos
 > [changed to be read-only]. If your repo was created before this time, the
 > default token would have been pre-configured with write access.
 
@@ -373,13 +374,20 @@ assets:
       - path: path/to/asset-d
 ```
 
-> **⚠️ Warning:** This action will **overwrite existing release assets** if their
-> names match the assets configured for upload. Assets other than the ones
-> specified in configuration or action inputs will not be modified or removed.
+> [!CAUTION]
+> This action will **overwrite existing release assets** if their names match
+> the assets configured for upload, or if their names match the
+> [checksum assets]. Assets other than these will not be modified or removed.
 
-> **Note:** Unlike other [action inputs], which typically override their
-> equivalent [configuration file] options, assets specified via action inputs
-> are **merged** with those specified in the configuration file.
+[checksum assets]: #checksum-assets
+
+> [!TIP]
+> Unlike other [action inputs], which typically override their equivalent
+> [configuration file] options, assets specified via action inputs are
+> **merged** with those specified in the configuration file.
+
+[action inputs]: #action-inputs
+[configuration file]: #the-configuration-file
 
 Each asset must have a `path` property, which is a file glob pattern supported
 by [`@actions/glob`]. If no matching file is found when the action is run, **the
@@ -640,7 +648,8 @@ summary:
 
 ## Configuration
 
-> **Tip:** Try to use as _little_ configuration as possible. Everything here is
+> [!TIP]
+> Try to use as _little_ configuration as possible. Everything here is
 > **optional**, and **the less configuration the better**.
 
 ### The configuration file
@@ -648,7 +657,8 @@ summary:
 This action supports an **optional** YAML configuration file, with options for
 affecting how releases are published:
 
-> **Note:** These options can also be specified by [action inputs]. A
+> [!TIP]
+> These options can also be specified by [action inputs]. A
 > [JSON Schema definition] is also available.
 
 [action inputs]: #action-inputs
@@ -701,8 +711,9 @@ summary:
 This action supports **optional** inputs for affecting how releases are
 published:
 
-> **Note:** With the exception of `assets`, these inputs take precedence over
-> any equivalent options specified in [the configuration file]. The
+> [!IMPORTANT]
+> With the exception of `assets`, these inputs take precedence over any
+> equivalent options specified in [the configuration file]. The
 > [action metadata file] contains the actual definitions for these inputs.
 
 [the configuration file]: #the-configuration-file
@@ -756,10 +767,10 @@ published:
 
 This action makes a number of outputs available:
 
-> **Note:** The [action metadata file] contains the actual definitions for these
-> outputs. The example below should give you some idea what each output looks
-> like. The outputs aren't actually YAML of course, it's just for explanatory
-> purposes.
+> [!TIP]
+> The [action metadata file] contains the actual definitions for these outputs.
+> The example below should give you some idea what each output looks like. The
+> outputs aren't actually YAML of course, it's just for explanatory purposes.
 
 [action metadata file]: action.yml
 
@@ -869,7 +880,8 @@ need as demonstrated below:
 The `assets` output is a JSON array, and needs to be decoded before its contents
 can be accessed:
 
-> **Note:** The assets are ordered by their `name` property.
+> [!TIP]
+> The assets are ordered by their `name` property.
 
 ```yaml
 - uses: ghalactic/github-release-from-tag@v5
