@@ -114,5 +114,25 @@ describe("End-to-end tests", () => {
         );
       },
     );
+
+    it("should produce no sha256sum release checksum asset", async () => {
+      expect(release.assets).not.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: "checksums.sha256",
+          }),
+        ]),
+      );
+    });
+
+    it("should produce no JSON release checksum asset", async () => {
+      expect(release.assets).not.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: "checksums.json",
+          }),
+        ]),
+      );
+    });
   });
 });
