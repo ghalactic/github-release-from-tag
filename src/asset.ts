@@ -72,10 +72,20 @@ export async function modifyReleaseAssets({
       "{successCount} updated, {failureCount} failed to update",
     );
 
-    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess;
     const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(
       compareAsset,
     );
+
+    let checksumsResult: boolean;
+
+    if (config.checksum.generateAssets) {
+      checksumsResult = await uploadOrUpdateChecksumAssets(sortedAssets);
+    } else {
+      checksumsResult = true;
+    }
+
+    const isSuccess =
+      uploadResult.isSuccess && updateResult.isSuccess && checksumsResult;
 
     return [isSuccess, sortedAssets];
   });
@@ -137,6 +147,54 @@ export async function modifyReleaseAssets({
     );
 
     return normalized;
+  }
+
+  async function uploadChecksumAsset(
+    name: string,
+    contentType: string,
+    data: string,
+    label: string,
+  ): Promise<void> {
+    const { upload_url: url } = release;
+
+    info(`Uploading checksum asset ${JSON.stringify(name)}`);
+
+    const { data: assetData } = (await request({
+      method: "POST",
+      url,
+      name,
+      data,
+      label,
+      headers: {
+        "Content-Type": contentType,
+      },
+    })) as { data: AssetData };
+
+    info(`Uploaded checksum asset ${JSON.stringify(name)}`);
+  }
+
+  async function uploadOrUpdateChecksumAssets(
+    assets: NormalizedAsset[],
+  ): Promise<boolean> {
+    const sha256sumData = renderChecksumAsset("sha256", assets);
+    const jsonData = renderJSONChecksumAsset(assets);
+
+    const results = await Promise.allSettled([
+      uploadChecksumAsset(
+        "checksums.sha256",
+        "text/plain",
+        sha256sumData,
+        "Checksums (sha256sum)",
+      ),
+      uploadChecksumAsset(
+        "checksums.json",
+        "application/json",
+        jsonData,
+        "Checksums (JSON)",
+      ),
+    ]);
+
+    return results.every((result) => result.status === "fulfilled");
   }
 }
 
@@ -249,6 +307,30 @@ function diffAssets(
     toUpdate,
     toUpload,
   };
+}
+
+function renderChecksumAsset(
+  type: keyof AssetChecksums,
+  assets: NormalizedAsset[],
+): string {
+  return (
+    assets.map((asset) => `${asset.checksum[type]}  ${asset.name}`).join("\n") +
+    "\n"
+  );
+}
+
+function renderJSONChecksumAsset(assets: NormalizedAsset[]): string {
+  return (
+    JSON.stringify(
+      {
+        sha256: Object.fromEntries(
+          assets.map((asset) => [asset.name, asset.checksum.sha256]),
+        ),
+      },
+      null,
+      2,
+    ) + "\n"
+  );
 }
 
 type ResultAnalysis = {

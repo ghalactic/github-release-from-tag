@@ -58966,10 +58966,16 @@ async function modifyReleaseAssets({
       updateResult,
       "{successCount} updated, {failureCount} failed to update"
     );
-    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess;
     const sortedAssets = [...uploadResult.assets, ...updateResult.assets].sort(
       compareAsset
     );
+    let checksumsResult;
+    if (config2.checksum.generateAssets) {
+      checksumsResult = await uploadOrUpdateChecksumAssets(sortedAssets);
+    } else {
+      checksumsResult = true;
+    }
+    const isSuccess = uploadResult.isSuccess && updateResult.isSuccess && checksumsResult;
     return [isSuccess, sortedAssets];
   });
   async function deleteAsset(existing) {
@@ -59016,6 +59022,40 @@ async function modifyReleaseAssets({
       )}`
     );
     return normalized;
+  }
+  async function uploadChecksumAsset(name, contentType, data, label) {
+    const { upload_url: url } = release;
+    info2(`Uploading checksum asset ${JSON.stringify(name)}`);
+    const { data: assetData } = await request({
+      method: "POST",
+      url,
+      name,
+      data,
+      label,
+      headers: {
+        "Content-Type": contentType
+      }
+    });
+    info2(`Uploaded checksum asset ${JSON.stringify(name)}`);
+  }
+  async function uploadOrUpdateChecksumAssets(assets2) {
+    const sha256sumData = renderChecksumAsset("sha256", assets2);
+    const jsonData = renderJSONChecksumAsset(assets2);
+    const results = await Promise.allSettled([
+      uploadChecksumAsset(
+        "checksums.sha256",
+        "text/plain",
+        sha256sumData,
+        "Checksums (sha256sum)"
+      ),
+      uploadChecksumAsset(
+        "checksums.json",
+        "application/json",
+        jsonData,
+        "Checksums (JSON)"
+      )
+    ]);
+    return results.every((result) => result.status === "fulfilled");
   }
 }
 async function findAssets(info2, warning2, assets2) {
@@ -59093,6 +59133,20 @@ function diffAssets(existingAssets, desiredAssets) {
     toUpdate,
     toUpload
   };
+}
+function renderChecksumAsset(type2, assets2) {
+  return assets2.map((asset) => `${asset.checksum[type2]}  ${asset.name}`).join("\n") + "\n";
+}
+function renderJSONChecksumAsset(assets2) {
+  return JSON.stringify(
+    {
+      sha256: Object.fromEntries(
+        assets2.map((asset) => [asset.name, asset.checksum.sha256])
+      )
+    },
+    null,
+    2
+  ) + "\n";
 }
 function analyzeResults(results) {
   let isSuccess = true;
@@ -74264,19 +74318,22 @@ async function readConfig({
     }
     const base = parseConfig(yaml);
     const overrides = getConfigOverrides(getInput2, base);
-    let discussion, summary2;
+    let checksum, discussion, summary2;
     if (overrides) {
       info2(`Base configuration: ${JSON.stringify(base, null, 2)}`);
       info2(`Configuration overrides: ${JSON.stringify(overrides, null, 2)}`);
+      checksum = { ...base.checksum, ...overrides.checksum };
       discussion = { ...base.discussion, ...overrides.discussion };
       summary2 = { ...base.summary, ...overrides.summary };
     } else {
+      checksum = base.checksum;
       discussion = base.discussion;
       summary2 = base.summary;
     }
     const effective = {
       ...base,
       ...overrides,
+      checksum,
       discussion,
       summary: summary2
     };

@@ -8,6 +8,7 @@ import { isError, isObject } from "../guard.js";
 import type { GetInputFn, GroupFn, InfoFn } from "../type/actions.js";
 import {
   AssetConfig,
+  ChecksumConfig,
   Config,
   DiscussionConfig,
   SummaryConfig,
@@ -33,15 +34,19 @@ export async function readConfig({
 
     const base = parseConfig(yaml);
     const overrides = getConfigOverrides(getInput, base);
-    let discussion: DiscussionConfig, summary: SummaryConfig;
+    let checksum: ChecksumConfig,
+      discussion: DiscussionConfig,
+      summary: SummaryConfig;
 
     if (overrides) {
       info(`Base configuration: ${JSON.stringify(base, null, 2)}`);
       info(`Configuration overrides: ${JSON.stringify(overrides, null, 2)}`);
 
+      checksum = { ...base.checksum, ...overrides.checksum };
       discussion = { ...base.discussion, ...overrides.discussion };
       summary = { ...base.summary, ...overrides.summary };
     } else {
+      checksum = base.checksum;
       discussion = base.discussion;
       summary = base.summary;
     }
@@ -49,6 +54,7 @@ export async function readConfig({
     const effective: Config = {
       ...base,
       ...overrides,
+      checksum,
       discussion,
       summary,
     };
