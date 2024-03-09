@@ -7,6 +7,21 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.2.0] - 2024-03-09
+
+[v5.2.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.2.0
+
+### Added
+
+- This action now uploads [checksum assets] when a release has assets associated
+  with it. Checksum assets are files that contain the checksums of the other
+  release assets. This feature is enabled by default, but can be disabled via
+  configuration.
+- Asset checksums are now available in the `assets` output. These checksums are
+  always available, even if the checksum assets feature is disabled.
+
+[checksum assets]: https://github.com/ghalactic/github-release-from-tag/tree/v5.2.0#checksum-assets
+
 ## [v5.1.1] - 2024-03-07
 
 [v5.1.1]: https://github.com/ghalactic/github-release-from-tag/releases/v5.1.1
