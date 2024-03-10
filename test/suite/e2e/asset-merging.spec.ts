@@ -15,29 +15,28 @@ import {
   waitForCompletedTagWorkflowRun,
 } from "../../helpers/octokit.js";
 
-describe("End-to-end tests", () => {
-  describe("Asset merging", () => {
-    const label = "asset-merging";
-    const runId = readRunId();
-    const branchName = buildBranchName(runId, label);
-    const tagName = buildTagName("1.0.0", runId, label);
-    const workflow = buildWorkflow(
-      branchName,
+describe("Asset merging", () => {
+  const label = "asset-merging";
+  const runId = readRunId();
+  const branchName = buildBranchName(runId, label);
+  const tagName = buildTagName("1.0.0", runId, label);
+  const workflow = buildWorkflow(
+    branchName,
+    {
+      assets: "${{ steps.listAssets.outputs.assets }}",
+    },
+    [
       {
-        assets: "${{ steps.listAssets.outputs.assets }}",
+        name: "List assets",
+        id: "listAssets",
+        run: `echo "assets=$(cat assets.json)" >> $GITHUB_OUTPUT`,
       },
-      [
-        {
-          name: "List assets",
-          id: "listAssets",
-          run: `echo "assets=$(cat assets.json)" >> $GITHUB_OUTPUT`,
-        },
-      ],
-    );
+    ],
+  );
 
-    const tagAnnotation = "1.0.0";
+  const tagAnnotation = "1.0.0";
 
-    const config = `checksum:
+  const config = `checksum:
   generateAssets: false
 assets:
   - path: assets/file-a.txt
@@ -45,96 +44,95 @@ assets:
     label: Label for file-a.txt, which will download as custom-name-a.txt
 `;
 
-    const files = [
-      {
-        path: ".github/github-release-from-tag.yml",
-        content: config,
-      },
-      {
-        path: "assets.json",
-        content: `${JSON.stringify([
-          {
-            path: "assets/file-b.txt",
-            name: "custom-name-b.txt",
-            label:
-              "Label for file-b.txt, which will download as custom-name-b.txt",
-          },
-        ])}\n`,
-      },
-      {
-        path: "assets/file-a.txt",
-        content: "file-a\n",
-      },
-      {
-        path: "assets/file-b.txt",
-        content: "file-b\n",
-      },
-    ];
-
-    let workflowRun: WorkflowRunData;
-    let release: ReleaseData;
-
-    beforeAll(async () => {
-      const { headSha = "", workflowFileName } = await createBranchForCi(
-        branchName,
-        workflow,
+  const files = [
+    {
+      path: ".github/github-release-from-tag.yml",
+      content: config,
+    },
+    {
+      path: "assets.json",
+      content: `${JSON.stringify([
         {
-          files,
+          path: "assets/file-b.txt",
+          name: "custom-name-b.txt",
+          label:
+            "Label for file-b.txt, which will download as custom-name-b.txt",
         },
-      );
+      ])}\n`,
+    },
+    {
+      path: "assets/file-a.txt",
+      content: "file-a\n",
+    },
+    {
+      path: "assets/file-b.txt",
+      content: "file-b\n",
+    },
+  ];
 
-      await createTag(headSha, tagName, tagAnnotation);
+  let workflowRun: WorkflowRunData;
+  let release: ReleaseData;
 
-      workflowRun = await waitForCompletedTagWorkflowRun(
-        workflowFileName,
-        tagName,
-      );
-      release = await getReleaseByTag(tagName);
-    }, SETUP_TIMEOUT);
-
-    it("produces a workflow run that concludes in success", () => {
-      expect(workflowRun.conclusion).toBe("success");
-    });
-
-    it.each`
-      name                   | size | contentType     | label
-      ${"custom-name-a.txt"} | ${7} | ${"text/plain"} | ${"Label for file-a.txt, which will download as custom-name-a.txt"}
-      ${"custom-name-b.txt"} | ${7} | ${"text/plain"} | ${"Label for file-b.txt, which will download as custom-name-b.txt"}
-    `(
-      "produces the expected release assets ($name)",
-      ({ name, size, contentType, label }) => {
-        expect(release.assets).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              state: "uploaded",
-              name,
-              size,
-              content_type: contentType,
-              label,
-            }),
-          ]),
-        );
+  beforeAll(async () => {
+    const { headSha = "", workflowFileName } = await createBranchForCi(
+      branchName,
+      workflow,
+      {
+        files,
       },
     );
 
-    it("produces no sha256sum release checksum asset", async () => {
-      expect(release.assets).not.toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            name: "checksums.sha256",
-          }),
-        ]),
-      );
-    });
+    await createTag(headSha, tagName, tagAnnotation);
 
-    it("produces no JSON release checksum asset", async () => {
-      expect(release.assets).not.toEqual(
+    workflowRun = await waitForCompletedTagWorkflowRun(
+      workflowFileName,
+      tagName,
+    );
+    release = await getReleaseByTag(tagName);
+  }, SETUP_TIMEOUT);
+
+  it("produces a workflow run that concludes in success", () => {
+    expect(workflowRun.conclusion).toBe("success");
+  });
+
+  it.each`
+    name                   | size | contentType     | label
+    ${"custom-name-a.txt"} | ${7} | ${"text/plain"} | ${"Label for file-a.txt, which will download as custom-name-a.txt"}
+    ${"custom-name-b.txt"} | ${7} | ${"text/plain"} | ${"Label for file-b.txt, which will download as custom-name-b.txt"}
+  `(
+    "produces the expected release assets ($name)",
+    ({ name, size, contentType, label }) => {
+      expect(release.assets).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            name: "checksums.json",
+            state: "uploaded",
+            name,
+            size,
+            content_type: contentType,
+            label,
           }),
         ]),
       );
-    });
+    },
+  );
+
+  it("produces no sha256sum release checksum asset", async () => {
+    expect(release.assets).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "checksums.sha256",
+        }),
+      ]),
+    );
+  });
+
+  it("produces no JSON release checksum asset", async () => {
+    expect(release.assets).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "checksums.json",
+        }),
+      ]),
+    );
   });
 });
