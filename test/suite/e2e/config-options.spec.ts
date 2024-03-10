@@ -102,11 +102,11 @@ summary:
       );
     }, SETUP_TIMEOUT);
 
-    it("should produce a workflow run that concludes in success", () => {
+    it("produces a workflow run that concludes in success", () => {
       expect(workflowRun.conclusion).toBe("success");
     });
 
-    it("should append generated release notes to the release body", async () => {
+    it("appends generated release notes to the release body", async () => {
       expect(release).toBeDefined();
 
       const browser = await launch();
@@ -120,7 +120,7 @@ summary:
       );
     });
 
-    it("should produce the expected release discussion", () => {
+    it("produces the expected release discussion", () => {
       expect(release.discussion_url).toMatch(
         new RegExp(
           `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`,
@@ -135,14 +135,11 @@ summary:
       [HEART],
       [ROCKET],
       [EYES],
-    ] as const)(
-      "should produce the expected release reactions (%s)",
-      (reaction) => {
-        const { reactions: { [reaction]: actual = 0 } = {} } = release;
+    ] as const)("produces the expected release reactions (%s)", (reaction) => {
+      const { reactions: { [reaction]: actual = 0 } = {} } = release;
 
-        expect(actual).toBeGreaterThan(0);
-      },
-    );
+      expect(actual).toBeGreaterThan(0);
+    });
 
     it.each([
       [THUMBS_UP],
@@ -154,7 +151,7 @@ summary:
       [ROCKET],
       [EYES],
     ] as const)(
-      "should produce the expected release discussion reactions (%s)",
+      "produces the expected release discussion reactions (%s)",
       (reaction) => {
         const group = discussionReactionGroups.find(
           (group) => group.content === REACTION_NAMES[reaction],

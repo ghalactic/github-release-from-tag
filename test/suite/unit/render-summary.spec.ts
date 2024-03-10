@@ -9,16 +9,16 @@ const fixturesPath = join(__dirname, "../../fixture/summary");
 
 describe("renderSummary()", () => {
   it.each`
-    label                                               | fixture
-    ${"handle stable releases"}                         | ${"stable"}
-    ${"handle pre-release releases"}                    | ${"pre-release"}
-    ${"handle draft releases"}                          | ${"draft"}
-    ${"handle releases with discussions"}               | ${"with-discussion"}
-    ${"handle releases with empty bodies"}              | ${"empty-body"}
-    ${"handle releases with incomplete tagger details"} | ${"incomplete-tagger"}
-    ${"handle updating existing releases"}              | ${"updated-existing"}
-    ${"handle updating existing draft releases"}        | ${"updated-existing-draft"}
-  `("should $label", async ({ fixture }) => {
+    label                                                | fixture
+    ${"handles stable releases"}                         | ${"stable"}
+    ${"handles pre-release releases"}                    | ${"pre-release"}
+    ${"handles draft releases"}                          | ${"draft"}
+    ${"handles releases with discussions"}               | ${"with-discussion"}
+    ${"handles releases with empty bodies"}              | ${"empty-body"}
+    ${"handles releases with incomplete tagger details"} | ${"incomplete-tagger"}
+    ${"handles updating existing releases"}              | ${"updated-existing"}
+    ${"handles updating existing draft releases"}        | ${"updated-existing-draft"}
+  `("$label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
     const args = load(
       (await readFile(join(fixturePath, "args.yml"))).toString(),

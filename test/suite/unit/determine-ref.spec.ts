@@ -140,7 +140,7 @@ describe("determineRef()", () => {
       chdir(paths.clone);
     });
 
-    it("should determine the ref when an annotatd tag is checked out", async () => {
+    it("determines the ref when an annotated tag is checked out", async () => {
       await execGit(
         "-C",
         paths.clone,
@@ -155,7 +155,7 @@ describe("determineRef()", () => {
       );
     });
 
-    it("should determine the ref when a lightweight tag is checked out", async () => {
+    it("determines the ref when a lightweight tag is checked out", async () => {
       await execGit(
         "-C",
         paths.clone,
@@ -170,7 +170,7 @@ describe("determineRef()", () => {
       );
     });
 
-    it("should determine the ref when a branch is checked out", async () => {
+    it("determines the ref when a branch is checked out", async () => {
       await execGit("-C", paths.clone, "switch", "--quiet", "branch-a");
 
       expect(await determineRef({ group, info, silent })).toEqual(
@@ -184,7 +184,7 @@ describe("determineRef()", () => {
       chdir(paths.main);
     });
 
-    it("should fail to determine the ref", async () => {
+    it("fails to determine the ref", async () => {
       await expect(() =>
         determineRef({ group, info, silent }),
       ).rejects.toThrow();

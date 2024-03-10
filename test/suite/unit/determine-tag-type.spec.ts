@@ -60,7 +60,7 @@ describe("determineTagType()", () => {
       chdir(mainPath);
     });
 
-    it("should determine the tag type for defined tags", async () => {
+    it("determines the tag type for defined tags", async () => {
       expect(await determineTagType({ group, tag: "tag-a", silent })).toEqual([
         true,
         "tag",
@@ -77,7 +77,7 @@ describe("determineTagType()", () => {
       chdir(mainPath);
     });
 
-    it("should fail to determine the tag type", async () => {
+    it("fails to determine the tag type", async () => {
       expect(await determineTagType({ group, tag: "tag-a", silent })).toEqual([
         false,
         "",

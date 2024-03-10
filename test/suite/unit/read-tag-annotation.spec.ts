@@ -59,7 +59,7 @@ describe("readTagAnnotation()", () => {
       chdir(mainPath);
     });
 
-    it("should read the tag subject and body", async () => {
+    it("reads the tag subject and body", async () => {
       expect(await readTagAnnotation({ group, tag: "tag-a", silent })).toEqual([
         true,
         "subject-a subject-b",
@@ -73,7 +73,7 @@ describe("readTagAnnotation()", () => {
       chdir(mainPath);
     });
 
-    it("should fail to read the tag subject and body", async () => {
+    it("fails to read the tag subject and body", async () => {
       expect(await readTagAnnotation({ group, tag: "tag-a", silent })).toEqual([
         false,
         "",

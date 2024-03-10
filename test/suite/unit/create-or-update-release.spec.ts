@@ -35,7 +35,7 @@ describe("createOrUpdateRelease()", () => {
 
   const releaseId = "owner-a.repo-a.tag-a";
 
-  it("should create a new release when no matching release exists", async () => {
+  it("creates a new release when no matching release exists", async () => {
     const repos = createRepos();
 
     const [actual, wasCreated] = await createOrUpdateRelease({
@@ -47,7 +47,7 @@ describe("createOrUpdateRelease()", () => {
     expect(actual).toMatchObject(defaultExpectation);
   });
 
-  it("should update the existing release when a matching release exists", async () => {
+  it("updates the existing release when a matching release exists", async () => {
     const repos = createRepos({
       createReleaseError: createAlreadyExistsError(),
     });
@@ -64,7 +64,7 @@ describe("createOrUpdateRelease()", () => {
     });
   });
 
-  it("should honor the isStable option", async () => {
+  it("honors the isStable option", async () => {
     const repos = createRepos();
 
     const [actual, wasCreated] = await createOrUpdateRelease({
@@ -77,7 +77,7 @@ describe("createOrUpdateRelease()", () => {
     expect(actual).toMatchObject({ ...defaultExpectation, prerelease: true });
   });
 
-  it("should honor the config.draft option", async () => {
+  it("honors the config.draft option", async () => {
     const repos = createRepos();
 
     const config = { ...staticParams.config, draft: true };
@@ -91,8 +91,8 @@ describe("createOrUpdateRelease()", () => {
     expect(actual).toMatchObject({ ...defaultExpectation, draft: true });
   });
 
-  describe("error propagation", () => {
-    it("should propagate errors during release creation", async () => {
+  describe("Error propagation", () => {
+    it("propagates errors during release creation", async () => {
       const error = new Error("error-a");
       const repos = createRepos({
         createReleaseError: error,
@@ -103,7 +103,7 @@ describe("createOrUpdateRelease()", () => {
       ).rejects.toThrow(error);
     });
 
-    it("should propagate errors during reading of existing releases", async () => {
+    it("propagates errors during reading of existing releases", async () => {
       const error = new Error("error-a");
       const repos = createRepos({
         createReleaseError: createAlreadyExistsError(),
@@ -115,7 +115,7 @@ describe("createOrUpdateRelease()", () => {
       ).rejects.toThrow(error);
     });
 
-    it("should propagate errors during updating of existing releases", async () => {
+    it("propagates errors during updating of existing releases", async () => {
       const error = new Error("error-a");
       const repos = createRepos({
         createReleaseError: createAlreadyExistsError(),

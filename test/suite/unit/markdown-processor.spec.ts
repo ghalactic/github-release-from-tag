@@ -10,12 +10,12 @@ describe("Markdown processor", () => {
 
   it.each`
     label                                         | fixture
-    ${"handle GitHub Flavoured Markdown"}         | ${"gfm"}
-    ${"not interfere with GitHub references"}     | ${"github"}
-    ${"strip soft line breaks"}                   | ${"soft-breaks"}
-    ${"tolerate sub-optimal Markdown"}            | ${"tolerance"}
-    ${"process a typical release body correctly"} | ${"typical"}
-  `("should $label", async ({ fixture }) => {
+    ${"handles GitHub Flavoured Markdown"}        | ${"gfm"}
+    ${"doesn't interfere with GitHub references"} | ${"github"}
+    ${"strips soft line breaks"}                  | ${"soft-breaks"}
+    ${"tolerates sub-optimal Markdown"}           | ${"tolerance"}
+    ${"processes a typical release body"}         | ${"typical"}
+  `("$label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
     const input = String(await readFile(join(fixturePath, "input.md")));
     const expected = String(await readFile(join(fixturePath, "expected.md")));

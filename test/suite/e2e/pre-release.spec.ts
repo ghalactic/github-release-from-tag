@@ -42,11 +42,11 @@ describe("End-to-end tests", () => {
       release = await getReleaseByTag(tagName);
     }, SETUP_TIMEOUT);
 
-    it("should produce a workflow run that concludes in success", () => {
+    it("produces a workflow run that concludes in success", () => {
       expect(workflowRun.conclusion).toBe("success");
     });
 
-    it("should produce a pre-release", () => {
+    it("produces a pre-release", () => {
       expect(release.prerelease).toBe(true);
     });
   });

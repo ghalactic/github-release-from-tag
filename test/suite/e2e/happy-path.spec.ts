@@ -172,19 +172,19 @@ paragraph
       }
     }, SETUP_TIMEOUT);
 
-    it("should produce a workflow run that concludes in success", () => {
+    it("produces a workflow run that concludes in success", () => {
       expect(workflowRun.conclusion).toBe("success");
     });
 
-    it("should produce a stable release", () => {
+    it("produces a stable release", () => {
       expect(release.prerelease).toBe(false);
     });
 
-    it("should produce a published release", () => {
+    it("produces a published release", () => {
       expect(release.draft).toBe(false);
     });
 
-    it("should produce the expected release name", () => {
+    it("produces the expected release name", () => {
       expect(release.name).toBe("1.0.0 this should form the release name");
     });
 
@@ -197,7 +197,7 @@ paragraph
       ${"alert"}               | ${`//*[contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-important ')]/p[not(contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-title '))][normalize-space()='this should be an alert']`}
       ${"release notes"}       | ${`//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`}
     `(
-      "should produce the expected release body elements ($description)",
+      "produces the expected release body elements ($description)",
       async ({ expression }) => {
         expect(release).toBeDefined();
 
@@ -219,7 +219,7 @@ paragraph
       ${"file-d.0.json"}      | ${13} | ${"application/json"} | ${""}
       ${"file-d.1.json"}      | ${13} | ${"application/json"} | ${""}
     `(
-      "should produce the expected release assets ($name)",
+      "produces the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
         expect(release.assets).toEqual(
           expect.arrayContaining([
@@ -235,7 +235,7 @@ paragraph
       },
     );
 
-    it("should produce the expected release discussion", () => {
+    it("produces the expected release discussion", () => {
       expect(release.discussion_url).toMatch(
         new RegExp(
           `^https://github.com/${regExpOwner}/${regExpRepo}/discussions/\\d+$`,
@@ -243,7 +243,7 @@ paragraph
       );
     });
 
-    it("should produce the expected release checksum assets", async () => {
+    it("produces the expected release checksum assets", async () => {
       const plainChecksumAsset = release.assets.find(
         ({ name }) => name === "checksums.sha256",
       ) as AssetData;
@@ -302,14 +302,11 @@ paragraph
       [HEART],
       [ROCKET],
       [EYES],
-    ] as const)(
-      "should produce the expected release reactions (%s)",
-      (reaction) => {
-        const { reactions: { [reaction]: actual = 0 } = {} } = release;
+    ] as const)("produces the expected release reactions (%s)", (reaction) => {
+      const { reactions: { [reaction]: actual = 0 } = {} } = release;
 
-        expect(actual).toBeGreaterThan(0);
-      },
-    );
+      expect(actual).toBeGreaterThan(0);
+    });
 
     it.each([
       [THUMBS_UP],
@@ -321,7 +318,7 @@ paragraph
       [ROCKET],
       [EYES],
     ] as const)(
-      "should produce the expected release discussion reactions (%s)",
+      "produces the expected release discussion reactions (%s)",
       (reaction) => {
         const group = discussionReactionGroups.find(
           (group) => group.content === REACTION_NAMES[reaction],
@@ -332,7 +329,7 @@ paragraph
     );
 
     describe("Outputs", () => {
-      it("should produce the correct assets output", () => {
+      it("produces the assets output", () => {
         const downloadUrlPrefix = `https://github.com/${owner}/${repo}/releases/download/${encodeURIComponent(
           tagName,
         )}`;
@@ -415,81 +412,81 @@ paragraph
         ]);
       });
 
-      it("should produce the correct generatedReleaseNotes output", () => {
+      it("produces the generatedReleaseNotes output", () => {
         expect(outputs.generatedReleaseNotes).toContain("Full Changelog");
       });
 
-      it("should produce the correct discussionId output", () => {
+      it("produces the discussionId output", () => {
         expect(outputs.discussionId).toMatch(/^D_/);
       });
 
-      it("should produce the correct discussionNumber output", () => {
+      it("produces the discussionNumber output", () => {
         expect(outputs.discussionNumber).toBe(
           String(getDiscussionNumberByUrl(release.discussion_url ?? "")),
         );
       });
 
-      it("should produce the correct discussionUrl output", () => {
+      it("produces the discussionUrl output", () => {
         expect(outputs.discussionUrl).toBe(release.discussion_url);
       });
 
-      it("should produce the correct releaseBody output", () => {
+      it("produces the releaseBody output", () => {
         expect(outputs.releaseBody).toBe(release.body);
       });
 
-      it("should produce the correct releaseId output", () => {
+      it("produces the releaseId output", () => {
         expect(outputs.releaseId).toBe(String(release.id));
       });
 
-      it("should produce the correct releaseName output", () => {
+      it("produces the releaseName output", () => {
         expect(outputs.releaseName).toBe(release.name);
       });
 
-      it("should produce the correct releaseUploadUrl output", () => {
+      it("produces the releaseUploadUrl output", () => {
         expect(outputs.releaseUploadUrl).toBe(release.upload_url);
       });
 
-      it("should produce the correct releaseUrl output", () => {
+      it("produces the releaseUrl output", () => {
         expect(outputs.releaseUrl).toBe(release.html_url);
       });
 
-      it("should produce the correct releaseWasCreated output", () => {
+      it("produces the releaseWasCreated output", () => {
         expect(outputs.releaseWasCreated).toBe("true");
       });
 
-      it("should produce the correct taggerAvatarUrl output", () => {
+      it("produces the taggerAvatarUrl output", () => {
         expect(outputs.taggerAvatarUrl).toContain(
           "https://avatars.githubusercontent.com/",
         );
       });
 
-      it("should produce the correct taggerLogin output", () => {
+      it("produces the taggerLogin output", () => {
         expect(outputs.taggerLogin).toMatch(/^.+$/);
       });
 
-      it("should produce the correct tagBody output", () => {
+      it("produces the tagBody output", () => {
         expect(outputs.tagBody).toContain("# Heading 1");
       });
 
-      it("should produce the correct tagBodyRendered output", () => {
+      it("produces the tagBodyRendered output", () => {
         expect(outputs.tagBodyRendered).toContain(
           "this should form one paragraph",
         );
       });
 
-      it("should produce the correct tagIsSemVer output", () => {
+      it("produces the tagIsSemVer output", () => {
         expect(outputs.tagIsSemVer).toBe("true");
       });
 
-      it("should produce the correct tagIsStable output", () => {
+      it("produces the tagIsStable output", () => {
         expect(outputs.tagIsStable).toBe("true");
       });
 
-      it("should produce the correct tagName output", () => {
+      it("produces the tagName output", () => {
         expect(outputs.tagName).toBe(tagName);
       });
 
-      it("should produce the correct tagSubject output", () => {
+      it("produces the tagSubject output", () => {
         expect(outputs.tagSubject).toBe(
           "1.0.0 this should form the release name",
         );

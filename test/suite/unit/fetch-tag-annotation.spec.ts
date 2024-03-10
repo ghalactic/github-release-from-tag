@@ -120,7 +120,7 @@ describe("fetchTagAnnotation()", () => {
       chdir(paths.clone);
     });
 
-    it("should fetch the annotated tag from origin", async () => {
+    it("fetches the annotated tag from origin", async () => {
       // first prove that the tag is lightweight
       expect(await getExecGitOutput("cat-file", "-t", "tag-a")).toBe("commit");
 
@@ -208,7 +208,7 @@ describe("fetchTagAnnotation()", () => {
       chdir(paths.clone);
     });
 
-    it("should fail to fetch the annotated tag from origin", async () => {
+    it("fails to fetch the annotated tag from origin", async () => {
       expect(await fetchTagAnnotation({ group, tag: "tag-a", silent })).toBe(
         false,
       );

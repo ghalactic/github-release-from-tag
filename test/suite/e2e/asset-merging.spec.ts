@@ -92,7 +92,7 @@ assets:
       release = await getReleaseByTag(tagName);
     }, SETUP_TIMEOUT);
 
-    it("should produce a workflow run that concludes in success", () => {
+    it("produces a workflow run that concludes in success", () => {
       expect(workflowRun.conclusion).toBe("success");
     });
 
@@ -101,7 +101,7 @@ assets:
       ${"custom-name-a.txt"} | ${7} | ${"text/plain"} | ${"Label for file-a.txt, which will download as custom-name-a.txt"}
       ${"custom-name-b.txt"} | ${7} | ${"text/plain"} | ${"Label for file-b.txt, which will download as custom-name-b.txt"}
     `(
-      "should produce the expected release assets ($name)",
+      "produces the expected release assets ($name)",
       ({ name, size, contentType, label }) => {
         expect(release.assets).toEqual(
           expect.arrayContaining([
@@ -117,7 +117,7 @@ assets:
       },
     );
 
-    it("should produce no sha256sum release checksum asset", async () => {
+    it("produces no sha256sum release checksum asset", async () => {
       expect(release.assets).not.toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -127,7 +127,7 @@ assets:
       );
     });
 
-    it("should produce no JSON release checksum asset", async () => {
+    it("produces no JSON release checksum asset", async () => {
       expect(release.assets).not.toEqual(
         expect.arrayContaining([
           expect.objectContaining({

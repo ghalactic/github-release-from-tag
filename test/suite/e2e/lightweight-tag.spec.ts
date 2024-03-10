@@ -40,11 +40,11 @@ describe("End-to-end tests", () => {
       annotations = await listAnnotationsByWorkflowRun(workflowRun);
     }, SETUP_TIMEOUT);
 
-    it("should produce a workflow run that concludes in failure", () => {
+    it("produces a workflow run that concludes in failure", () => {
       expect(workflowRun.conclusion).toBe("failure");
     });
 
-    it("should annotate the workflow run with a reason for the failure", () => {
+    it("annotates the workflow run with a reason for the failure", () => {
       expect(annotations).toEqual(
         expect.arrayContaining([
           expect.objectContaining({

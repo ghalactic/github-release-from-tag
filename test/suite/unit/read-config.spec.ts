@@ -18,7 +18,7 @@ describe("readConfig()", () => {
     chdir(originalCwd);
   });
 
-  it("should throw an error if the config does not match the schema", async () => {
+  it("throws an error if the config does not match the schema", async () => {
     chdir(join(fixturesPath, "additional-properties"));
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
@@ -26,7 +26,7 @@ describe("readConfig()", () => {
     );
   });
 
-  it("should be able to read comprehensive valid configs", async () => {
+  it("reads comprehensive valid configs", async () => {
     chdir(join(fixturesPath, "comprehensive"));
     const actual = await readConfig({ getInput, group, info });
 
@@ -73,7 +73,7 @@ describe("readConfig()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should return a default config the config file is empty", async () => {
+  it("returns a default config the config file is empty", async () => {
     chdir(join(fixturesPath, "empty"));
     const actual = await readConfig({ getInput, group, info });
 
@@ -97,7 +97,7 @@ describe("readConfig()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should return a default config when no config file exists", async () => {
+  it("returns a default config when no config file exists", async () => {
     chdir(join(fixturesPath, "none"));
     const actual = await readConfig({ getInput, group, info });
 
@@ -121,7 +121,7 @@ describe("readConfig()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should throw an error if the config file contains invalid YAML", async () => {
+  it("throws an error if the config file contains invalid YAML", async () => {
     chdir(join(fixturesPath, "invalid-yaml"));
 
     await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
@@ -129,7 +129,7 @@ describe("readConfig()", () => {
     );
   });
 
-  it("should override config options with actions inputs", async () => {
+  it("overrides config options with actions inputs", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name: string) => {
@@ -177,7 +177,7 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should correctly fill in checksum defaults when using action input overrides", async () => {
+  it("fills in checksum defaults when using action input overrides", async () => {
     chdir(join(fixturesPath, "empty"));
 
     const getInput = (name: string) =>
@@ -193,7 +193,7 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should correctly fill in discussions defaults when using action input overrides", async () => {
+  it("fills in discussions defaults when using action input overrides", async () => {
     chdir(join(fixturesPath, "empty"));
 
     const getInput = (name: string) =>
@@ -210,7 +210,7 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should correctly fill in summary defaults when using action input overrides", async () => {
+  it("fills in summary defaults when using action input overrides", async () => {
     chdir(join(fixturesPath, "empty"));
 
     const getInput = (name: string) =>
@@ -226,7 +226,7 @@ describe("readConfig()", () => {
     expect(actual).toMatchObject(expected);
   });
 
-  it("should append assets specified via the assets action input", async () => {
+  it("appends assets specified via the assets action input", async () => {
     chdir(join(fixturesPath, "comprehensive"));
 
     const getInput = (name: string) => {
@@ -277,7 +277,7 @@ describe("readConfig()", () => {
     expect(actual.assets).toMatchObject(expected);
   });
 
-  it("should throw an error if the assets action input contains invalid YAML", async () => {
+  it("throws an error if the assets action input contains invalid YAML", async () => {
     chdir(join(fixturesPath, "none"));
     const getInput = (name: string) => (name === "assets" ? "{" : "");
 
@@ -286,7 +286,7 @@ describe("readConfig()", () => {
     );
   });
 
-  it("should throw an error if the assets action input does not match the schema", async () => {
+  it("throws an error if the assets action input does not match the schema", async () => {
     chdir(join(fixturesPath, "none"));
     const getInput = (name: string) => (name === "assets" ? "{}" : "");
 
@@ -295,7 +295,7 @@ describe("readConfig()", () => {
     );
   });
 
-  it("should throw an error if the reactions action input contains an invalid reaction", async () => {
+  it("throws an error if the reactions action input contains an invalid reaction", async () => {
     chdir(join(fixturesPath, "none"));
     const getInput = (name: string) =>
       name === "reactions" ? "hooray,not-a-reaction,heart" : "";
@@ -305,7 +305,7 @@ describe("readConfig()", () => {
     );
   });
 
-  it("should throw an error if the discussionReactions action input contains an invalid reaction", async () => {
+  it("throws an error if the discussionReactions action input contains an invalid reaction", async () => {
     chdir(join(fixturesPath, "none"));
     const getInput = (name: string) =>
       name === "discussionReactions" ? "confused,not-a-reaction,-1" : "";

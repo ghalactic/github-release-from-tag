@@ -24,7 +24,7 @@ describe("findAssets()", () => {
     vi.restoreAllMocks();
   });
 
-  it("should find assets when the pattern matches a single file", async () => {
+  it("finds assets when the pattern matches a single file", async () => {
     const fixturePath = join(fixturesPath, "singular");
     chdir(fixturePath);
 
@@ -61,7 +61,7 @@ describe("findAssets()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should apply custom names and labels when the pattern matches a single file", async () => {
+  it("applies custom names and labels when the pattern matches a single file", async () => {
     const fixturePath = join(fixturesPath, "singular");
     chdir(fixturePath);
 
@@ -86,7 +86,7 @@ describe("findAssets()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should find assets when the pattern matches multiple files", async () => {
+  it("finds assets when the pattern matches multiple files", async () => {
     const fixturePath = join(fixturesPath, "multiple");
     chdir(fixturePath);
 
@@ -117,7 +117,7 @@ describe("findAssets()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should not apply custom names or labels when the pattern matches multiple files", async () => {
+  it("doesn't apply custom names or labels when the pattern matches multiple files", async () => {
     const fixturePath = join(fixturesPath, "multiple");
     chdir(fixturePath);
 
@@ -148,7 +148,7 @@ describe("findAssets()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("should warn about duplicate assets", async () => {
+  it("warns about duplicate assets", async () => {
     const fixturePath = join(fixturesPath, "multiple");
     chdir(fixturePath);
 
@@ -184,7 +184,7 @@ describe("findAssets()", () => {
     );
   });
 
-  it("should skip duplicate assets where the names differ only by case", async () => {
+  it("skips duplicate assets where the names differ only by case", async () => {
     const fixturePath = join(fixturesPath, "case-insensitivity");
     chdir(fixturePath);
 
@@ -211,7 +211,7 @@ describe("findAssets()", () => {
     );
   });
 
-  it("should fail when the pattern matches no files", async () => {
+  it("fails when the pattern matches no files", async () => {
     chdir(fixturesPath);
 
     async function actual() {
