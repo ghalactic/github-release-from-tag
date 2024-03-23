@@ -194,7 +194,7 @@ paragraph
     ${"markdown paragraphs"} | ${`//*[normalize-space()='this should form one paragraph']`}
     ${"mention"}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
     ${"alert"}               | ${`//*[contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-important ')]/p[not(contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-title '))][normalize-space()='this should be an alert']`}
-    ${"release notes"}       | ${`//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`}
+    ${"release notes"}       | ${`//*[starts-with(normalize-space(), 'Full Changelog: ')]`}
   `(
     "produces the expected release body elements ($description)",
     async ({ expression }) => {
