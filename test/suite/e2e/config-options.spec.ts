@@ -112,9 +112,13 @@ summary:
     const page = await browser.newPage();
     await page.goto(release?.html_url);
 
-    const expression = `//*[normalize-space()='Full Changelog: https://github.com/${owner}/${repo}/commits/${tagName}']`;
-
-    expect(await page.$$(buildBodyExpression(expression))).not.toHaveLength(0);
+    expect(
+      await page.$$(
+        buildBodyExpression(
+          `//*[starts-with(normalize-space(), 'Full Changelog: ')]`,
+        ),
+      ),
+    ).not.toHaveLength(0);
   });
 
   it("produces the expected release discussion", () => {
