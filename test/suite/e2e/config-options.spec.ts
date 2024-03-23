@@ -1,5 +1,5 @@
 import escapeStringRegExp from "escape-string-regexp";
-import { launch } from "puppeteer";
+import { launch, type Page } from "puppeteer";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   CONFUSED,
@@ -105,22 +105,6 @@ summary:
     expect(workflowRun.conclusion).toBe("success");
   });
 
-  it("appends generated release notes to the release body", async () => {
-    expect(release).toBeDefined();
-
-    const browser = await launch();
-    const page = await browser.newPage();
-    await page.goto(release?.html_url);
-
-    expect(
-      await page.$$(
-        buildBodyExpression(
-          `//*[starts-with(normalize-space(), 'Full Changelog: ')]`,
-        ),
-      ),
-    ).not.toHaveLength(0);
-  });
-
   it("produces the expected release discussion", () => {
     expect(release.discussion_url).toMatch(
       new RegExp(
@@ -157,4 +141,28 @@ summary:
       expect(group?.reactors?.totalCount ?? 0).toBeGreaterThan(0);
     },
   );
+
+  describe("Browser-based tests", () => {
+    let page: Page | undefined;
+
+    beforeAll(async () => {
+      if (!release) return;
+
+      const browser = await launch();
+      page = await browser.newPage();
+      await page.goto(release?.html_url);
+    }, SETUP_TIMEOUT);
+
+    it("appends generated release notes to the release body", async () => {
+      expect(page).toBeDefined();
+
+      expect(
+        await page?.$$(
+          buildBodyExpression(
+            `//*[starts-with(normalize-space(), 'Full Changelog: ')]`,
+          ),
+        ),
+      ).not.toHaveLength(0);
+    });
+  });
 });

@@ -1,5 +1,5 @@
 import escapeStringRegExp from "escape-string-regexp";
-import { launch } from "puppeteer";
+import { launch, type Page } from "puppeteer";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   CONFUSED,
@@ -186,29 +186,6 @@ paragraph
   it("produces the expected release name", () => {
     expect(release.name).toBe("1.0.0 this should form the release name");
   });
-
-  it.each`
-    description              | expression
-    ${"markdown heading 1"}  | ${`//h1[normalize-space()='Heading 1']`}
-    ${"markdown heading 2"}  | ${`//h2[normalize-space()='Heading 2']`}
-    ${"markdown paragraphs"} | ${`//*[normalize-space()='this should form one paragraph']`}
-    ${"mention"}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
-    ${"alert"}               | ${`//*[contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-important ')]/p[not(contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-title '))][normalize-space()='this should be an alert']`}
-    ${"release notes"}       | ${`//*[starts-with(normalize-space(), 'Full Changelog: ')]`}
-  `(
-    "produces the expected release body elements ($description)",
-    async ({ expression }) => {
-      expect(release).toBeDefined();
-
-      const browser = await launch();
-      const page = await browser.newPage();
-      await page.goto(release?.html_url);
-
-      expect(await page.$$(buildBodyExpression(expression))).not.toHaveLength(
-        0,
-      );
-    },
-  );
 
   it.each`
     name                    | size  | contentType           | label
@@ -486,5 +463,36 @@ paragraph
         "1.0.0 this should form the release name",
       );
     });
+  });
+
+  describe("Browser-based tests", () => {
+    let page: Page | undefined;
+
+    beforeAll(async () => {
+      if (!release) return;
+
+      const browser = await launch();
+      page = await browser.newPage();
+      await page.goto(release?.html_url);
+    }, SETUP_TIMEOUT);
+
+    it.each`
+      description              | expression
+      ${"markdown heading 1"}  | ${`//h1[normalize-space()='Heading 1']`}
+      ${"markdown heading 2"}  | ${`//h2[normalize-space()='Heading 2']`}
+      ${"markdown paragraphs"} | ${`//*[normalize-space()='this should form one paragraph']`}
+      ${"mention"}             | ${`//a[@href='https://github.com/actions'][normalize-space()='@actions']`}
+      ${"alert"}               | ${`//*[contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-important ')]/p[not(contains(concat(' ', normalize-space(@class), ' '), ' markdown-alert-title '))][normalize-space()='this should be an alert']`}
+      ${"release notes"}       | ${`//*[starts-with(normalize-space(), 'Full Changelog: ')]`}
+    `(
+      "produces the expected release body elements ($description)",
+      async ({ expression }) => {
+        expect(page).toBeDefined();
+
+        expect(
+          await page?.$$(buildBodyExpression(expression)),
+        ).not.toHaveLength(0);
+      },
+    );
   });
 });
