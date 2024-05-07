@@ -29665,7 +29665,7 @@ var require_scope = __commonJS({
     (function(UsedValueState2) {
       UsedValueState2[UsedValueState2["Started"] = 0] = "Started";
       UsedValueState2[UsedValueState2["Completed"] = 1] = "Completed";
-    })(UsedValueState = exports.UsedValueState || (exports.UsedValueState = {}));
+    })(UsedValueState || (exports.UsedValueState = UsedValueState = {}));
     exports.varKinds = {
       const: new code_1.Name("const"),
       let: new code_1.Name("let"),
@@ -30659,7 +30659,7 @@ var require_util8 = __commonJS({
     (function(Type2) {
       Type2[Type2["Num"] = 0] = "Num";
       Type2[Type2["Str"] = 1] = "Str";
-    })(Type = exports.Type || (exports.Type = {}));
+    })(Type || (exports.Type = Type = {}));
     function getErrorPath(dataProp, dataPropType, jsPropertySyntax) {
       if (dataProp instanceof codegen_1.Name) {
         const isNumber = dataPropType === Type.Num;
@@ -30689,16 +30689,22 @@ var require_names = __commonJS({
     var names = {
       // validation function arguments
       data: new codegen_1.Name("data"),
+      // data passed to validation function
       // args passed from referencing schema
       valCxt: new codegen_1.Name("valCxt"),
+      // validation/data context - should not be used directly, it is destructured to the names below
       instancePath: new codegen_1.Name("instancePath"),
       parentData: new codegen_1.Name("parentData"),
       parentDataProperty: new codegen_1.Name("parentDataProperty"),
       rootData: new codegen_1.Name("rootData"),
+      // root data - same as the data passed to the first/top validation function
       dynamicAnchors: new codegen_1.Name("dynamicAnchors"),
+      // used to support recursiveRef and dynamicRef
       // function scoped variables
       vErrors: new codegen_1.Name("vErrors"),
+      // null or array of validation errors
       errors: new codegen_1.Name("errors"),
+      // counter of validation errors
       this: new codegen_1.Name("this"),
       // "globals"
       self: new codegen_1.Name("self"),
@@ -30786,6 +30792,7 @@ var require_errors2 = __commonJS({
     var E = {
       keyword: new codegen_1.Name("keyword"),
       schemaPath: new codegen_1.Name("schemaPath"),
+      // also used in JTD errors
       params: new codegen_1.Name("params"),
       propertyName: new codegen_1.Name("propertyName"),
       message: new codegen_1.Name("message"),
@@ -30954,7 +30961,7 @@ var require_dataType = __commonJS({
     (function(DataType2) {
       DataType2[DataType2["Correct"] = 0] = "Correct";
       DataType2[DataType2["Wrong"] = 1] = "Wrong";
-    })(DataType = exports.DataType || (exports.DataType = {}));
+    })(DataType || (exports.DataType = DataType = {}));
     function getSchemaTypes(schema2) {
       const types = getJSONTypes(schema2.type);
       const hasNull = types.includes("null");
@@ -31735,15 +31742,15 @@ var require_resolve = __commonJS({
         if (parentJsonPtr === void 0)
           return;
         const fullPath = pathPrefix + jsonPtr;
-        let baseId2 = baseIds[parentJsonPtr];
+        let innerBaseId = baseIds[parentJsonPtr];
         if (typeof sch[schemaId] == "string")
-          baseId2 = addRef.call(this, sch[schemaId]);
+          innerBaseId = addRef.call(this, sch[schemaId]);
         addAnchor.call(this, sch.$anchor);
         addAnchor.call(this, sch.$dynamicAnchor);
-        baseIds[jsonPtr] = baseId2;
+        baseIds[jsonPtr] = innerBaseId;
         function addRef(ref) {
           const _resolve = this.opts.uriResolver.resolve;
-          ref = normalizeId(baseId2 ? _resolve(baseId2, ref) : ref);
+          ref = normalizeId(innerBaseId ? _resolve(innerBaseId, ref) : ref);
           if (schemaRefs.has(ref))
             throw ambiguos(ref);
           schemaRefs.add(ref);
@@ -32381,6 +32388,7 @@ var require_compile = __commonJS({
         parentDataProperty: names_1.default.parentDataProperty,
         dataNames: [names_1.default.data],
         dataPathArr: [codegen_1.nil],
+        // TODO can its length be used as dataLevel if nil is removed?
         dataLevel: 0,
         dataTypes: [],
         definedProperties: /* @__PURE__ */ new Set(),
@@ -34091,9 +34099,9 @@ var require_core2 = __commonJS({
         }
       }
     };
-    exports.default = Ajv2;
     Ajv2.ValidationError = validation_error_1.default;
     Ajv2.MissingRefError = ref_error_1.default;
+    exports.default = Ajv2;
     function checkOptions(checkOpts, options, msg, log = "error") {
       for (const key in checkOpts) {
         const opt = key;
@@ -35917,7 +35925,7 @@ var require_types = __commonJS({
     (function(DiscrError2) {
       DiscrError2["Tag"] = "tag";
       DiscrError2["Mapping"] = "mapping";
-    })(DiscrError = exports.DiscrError || (exports.DiscrError = {}));
+    })(DiscrError || (exports.DiscrError = DiscrError = {}));
   }
 });
 
@@ -36184,7 +36192,7 @@ var require_ajv = __commonJS({
   "node_modules/ajv/dist/ajv.js"(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = void 0;
+    exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = exports.Ajv = void 0;
     var core_1 = require_core2();
     var draft7_1 = require_draft7();
     var discriminator_1 = require_discriminator();
@@ -36210,7 +36218,9 @@ var require_ajv = __commonJS({
         return this.opts.defaultMeta = super.defaultMeta() || (this.getSchema(META_SCHEMA_ID) ? META_SCHEMA_ID : void 0);
       }
     };
+    exports.Ajv = Ajv2;
     module.exports = exports = Ajv2;
+    module.exports.Ajv = Ajv2;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Ajv2;
     var validate_1 = require_validate();
