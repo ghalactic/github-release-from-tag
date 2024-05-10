@@ -28,7 +28,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.3",
     "@types/mime-types": "^2.1.4",
-    "@vitest/coverage-v8": "^1.5.3",
+    "@vitest/coverage-v8": "^1.6.0",
     "esbuild": "^0.20.2",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
@@ -37,6 +37,6 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "puppeteer": "^22.7.1",
     "typescript": "^5.4.5",
-    "vitest": "^1.5.3"
+    "vitest": "^1.6.0"
   }
 }
