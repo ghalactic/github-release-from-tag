@@ -26,7 +26,7 @@
   "devDependencies": {
     "@octokit/types": "^12.6.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/mdast": "^4.0.3",
+    "@types/mdast": "^4.0.4",
     "@types/mime-types": "^2.1.4",
     "@vitest/coverage-v8": "^1.6.0",
     "esbuild": "^0.21.0",
