@@ -12,8 +12,8 @@
     "@actions/core": "^1.10.1",
     "@actions/exec": "^1.1.0",
     "@actions/glob": "^0.4.0",
-    "@octokit/action": "^6.1.0",
-    "@octokit/plugin-retry": "^6.0.1",
+    "@octokit/action": "^7.0.0",
+    "@octokit/plugin-retry": "^7.0.0",
     "ajv": "^8.14.0",
     "js-yaml": "^4.1.0",
     "mdast-util-gfm": "^3.0.0",
@@ -24,7 +24,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@octokit/types": "^12.6.0",
+    "@octokit/types": "^13.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^2.1.4",
@@ -32,7 +32,7 @@
     "esbuild": "^0.21.4",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
-    "octokit": "^3.2.1",
+    "octokit": "^4.0.0",
     "prettier": "^3.3.0",
     "prettier-plugin-organize-imports": "^3.2.4",
     "puppeteer": "^22.10.0",
