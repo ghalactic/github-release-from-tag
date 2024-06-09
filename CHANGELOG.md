@@ -7,6 +7,14 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.2.1] - 2024-06-09
+
+[v5.2.1]: https://github.com/ghalactic/github-release-from-tag/releases/v5.2.1
+
+### Fixed
+
+- Dependency updates.
+
 ## [v5.2.0] - 2024-03-09
 
 [v5.2.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.2.0
