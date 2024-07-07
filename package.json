@@ -29,7 +29,7 @@
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^2.1.4",
     "@vitest/coverage-v8": "^1.6.0",
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.22.0",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "octokit": "^4.0.0",
