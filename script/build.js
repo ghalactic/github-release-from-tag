@@ -17,6 +17,7 @@ const require = await (async () => {
 await build({
   entryPoints: ["src/main.ts"],
   bundle: true,
+  packages: "bundle",
   sourcemap: true,
   platform: "node",
   target: "node20",
