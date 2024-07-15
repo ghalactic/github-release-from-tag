@@ -11,7 +11,8 @@ describe("findAssets()", () => {
   let originalCwd: string;
 
   beforeEach(async () => {
-    vi.spyOn(process.stdout, "write").mockImplementation((s, e, cb) => {
+    vi.spyOn(process.stdout, "write").mockImplementation((...args) => {
+      const cb = args.find((a) => typeof a === "function");
       cb?.();
 
       return true;
