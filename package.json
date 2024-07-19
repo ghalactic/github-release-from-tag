@@ -14,7 +14,7 @@
     "@actions/glob": "^0.4.0",
     "@octokit/action": "^7.0.0",
     "@octokit/plugin-retry": "^7.0.0",
-    "ajv": "^8.16.0",
+    "ajv": "^8.17.1",
     "js-yaml": "^4.1.0",
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.0.0",

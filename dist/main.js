@@ -5629,7 +5629,7 @@ var require_body = __commonJS({
         const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
-        const escape = (str2) => str2.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
+        const escape2 = (str2) => str2.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
         const normalizeLinefeeds = (value) => value.replace(/\r?\n|\r/g, "\r\n");
         const blobParts = [];
         const rn = new Uint8Array([13, 10]);
@@ -5637,14 +5637,14 @@ Content-Disposition: form-data`;
         let hasUnknownSizeValue = false;
         for (const [name, value] of object) {
           if (typeof value === "string") {
-            const chunk2 = textEncoder.encode(prefix + `; name="${escape(normalizeLinefeeds(name))}"\r
+            const chunk2 = textEncoder.encode(prefix + `; name="${escape2(normalizeLinefeeds(name))}"\r
 \r
 ${normalizeLinefeeds(value)}\r
 `);
             blobParts.push(chunk2);
             length += chunk2.byteLength;
           } else {
-            const chunk2 = textEncoder.encode(`${prefix}; name="${escape(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${escape(value.name)}"` : "") + `\r
+            const chunk2 = textEncoder.encode(`${prefix}; name="${escape2(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${escape2(value.name)}"` : "") + `\r
 Content-Type: ${value.type || "application/octet-stream"}\r
 \r
 `);
@@ -32607,1020 +32607,676 @@ var require_data = __commonJS({
   }
 });
 
-// node_modules/uri-js/dist/es5/uri.all.js
-var require_uri_all = __commonJS({
-  "node_modules/uri-js/dist/es5/uri.all.js"(exports, module) {
-    (function(global2, factory) {
-      typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : factory(global2.URI = global2.URI || {});
-    })(exports, function(exports2) {
-      "use strict";
-      function merge3() {
-        for (var _len = arguments.length, sets = Array(_len), _key = 0; _key < _len; _key++) {
-          sets[_key] = arguments[_key];
-        }
-        if (sets.length > 1) {
-          sets[0] = sets[0].slice(0, -1);
-          var xl = sets.length - 1;
-          for (var x = 1; x < xl; ++x) {
-            sets[x] = sets[x].slice(1, -1);
-          }
-          sets[xl] = sets[xl].slice(1);
-          return sets.join("");
-        } else {
-          return sets[0];
-        }
+// node_modules/fast-uri/lib/scopedChars.js
+var require_scopedChars = __commonJS({
+  "node_modules/fast-uri/lib/scopedChars.js"(exports, module) {
+    "use strict";
+    var HEX = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      a: 10,
+      A: 10,
+      b: 11,
+      B: 11,
+      c: 12,
+      C: 12,
+      d: 13,
+      D: 13,
+      e: 14,
+      E: 14,
+      f: 15,
+      F: 15
+    };
+    module.exports = {
+      HEX
+    };
+  }
+});
+
+// node_modules/fast-uri/lib/utils.js
+var require_utils3 = __commonJS({
+  "node_modules/fast-uri/lib/utils.js"(exports, module) {
+    "use strict";
+    var { HEX } = require_scopedChars();
+    function normalizeIPv4(host) {
+      if (findToken(host, ".") < 3) {
+        return { host, isIPV4: false };
       }
-      function subexp(str2) {
-        return "(?:" + str2 + ")";
+      const matches = host.match(/^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/u) || [];
+      const [address] = matches;
+      if (address) {
+        return { host: stripLeadingZeros(address, "."), isIPV4: true };
+      } else {
+        return { host, isIPV4: false };
       }
-      function typeOf(o) {
-        return o === void 0 ? "undefined" : o === null ? "null" : Object.prototype.toString.call(o).split(" ").pop().split("]").shift().toLowerCase();
+    }
+    function stringArrayToHexStripped(input, keepZero = false) {
+      let acc = "";
+      let strip = true;
+      for (const c of input) {
+        if (HEX[c] === void 0) return void 0;
+        if (c !== "0" && strip === true) strip = false;
+        if (!strip) acc += c;
       }
-      function toUpperCase(str2) {
-        return str2.toUpperCase();
-      }
-      function toArray2(obj) {
-        return obj !== void 0 && obj !== null ? obj instanceof Array ? obj : typeof obj.length !== "number" || obj.split || obj.setInterval || obj.call ? [obj] : Array.prototype.slice.call(obj) : [];
-      }
-      function assign(target, source) {
-        var obj = target;
-        if (source) {
-          for (var key in source) {
-            obj[key] = source[key];
-          }
-        }
-        return obj;
-      }
-      function buildExps(isIRI2) {
-        var ALPHA$$ = "[A-Za-z]", CR$ = "[\\x0D]", DIGIT$$ = "[0-9]", DQUOTE$$ = "[\\x22]", HEXDIG$$2 = merge3(DIGIT$$, "[A-Fa-f]"), LF$$ = "[\\x0A]", SP$$ = "[\\x20]", PCT_ENCODED$2 = subexp(subexp("%[EFef]" + HEXDIG$$2 + "%" + HEXDIG$$2 + HEXDIG$$2 + "%" + HEXDIG$$2 + HEXDIG$$2) + "|" + subexp("%[89A-Fa-f]" + HEXDIG$$2 + "%" + HEXDIG$$2 + HEXDIG$$2) + "|" + subexp("%" + HEXDIG$$2 + HEXDIG$$2)), GEN_DELIMS$$ = "[\\:\\/\\?\\#\\[\\]\\@]", SUB_DELIMS$$ = "[\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=]", RESERVED$$ = merge3(GEN_DELIMS$$, SUB_DELIMS$$), UCSCHAR$$ = isIRI2 ? "[\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF]" : "[]", IPRIVATE$$ = isIRI2 ? "[\\uE000-\\uF8FF]" : "[]", UNRESERVED$$2 = merge3(ALPHA$$, DIGIT$$, "[\\-\\.\\_\\~]", UCSCHAR$$), SCHEME$ = subexp(ALPHA$$ + merge3(ALPHA$$, DIGIT$$, "[\\+\\-\\.]") + "*"), USERINFO$ = subexp(subexp(PCT_ENCODED$2 + "|" + merge3(UNRESERVED$$2, SUB_DELIMS$$, "[\\:]")) + "*"), DEC_OCTET$ = subexp(subexp("25[0-5]") + "|" + subexp("2[0-4]" + DIGIT$$) + "|" + subexp("1" + DIGIT$$ + DIGIT$$) + "|" + subexp("[1-9]" + DIGIT$$) + "|" + DIGIT$$), DEC_OCTET_RELAXED$ = subexp(subexp("25[0-5]") + "|" + subexp("2[0-4]" + DIGIT$$) + "|" + subexp("1" + DIGIT$$ + DIGIT$$) + "|" + subexp("0?[1-9]" + DIGIT$$) + "|0?0?" + DIGIT$$), IPV4ADDRESS$ = subexp(DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$ + "\\." + DEC_OCTET_RELAXED$), H16$ = subexp(HEXDIG$$2 + "{1,4}"), LS32$ = subexp(subexp(H16$ + "\\:" + H16$) + "|" + IPV4ADDRESS$), IPV6ADDRESS1$ = subexp(subexp(H16$ + "\\:") + "{6}" + LS32$), IPV6ADDRESS2$ = subexp("\\:\\:" + subexp(H16$ + "\\:") + "{5}" + LS32$), IPV6ADDRESS3$ = subexp(subexp(H16$) + "?\\:\\:" + subexp(H16$ + "\\:") + "{4}" + LS32$), IPV6ADDRESS4$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,1}" + H16$) + "?\\:\\:" + subexp(H16$ + "\\:") + "{3}" + LS32$), IPV6ADDRESS5$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,2}" + H16$) + "?\\:\\:" + subexp(H16$ + "\\:") + "{2}" + LS32$), IPV6ADDRESS6$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,3}" + H16$) + "?\\:\\:" + H16$ + "\\:" + LS32$), IPV6ADDRESS7$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,4}" + H16$) + "?\\:\\:" + LS32$), IPV6ADDRESS8$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,5}" + H16$) + "?\\:\\:" + H16$), IPV6ADDRESS9$ = subexp(subexp(subexp(H16$ + "\\:") + "{0,6}" + H16$) + "?\\:\\:"), IPV6ADDRESS$ = subexp([IPV6ADDRESS1$, IPV6ADDRESS2$, IPV6ADDRESS3$, IPV6ADDRESS4$, IPV6ADDRESS5$, IPV6ADDRESS6$, IPV6ADDRESS7$, IPV6ADDRESS8$, IPV6ADDRESS9$].join("|")), ZONEID$ = subexp(subexp(UNRESERVED$$2 + "|" + PCT_ENCODED$2) + "+"), IPV6ADDRZ$ = subexp(IPV6ADDRESS$ + "\\%25" + ZONEID$), IPV6ADDRZ_RELAXED$ = subexp(IPV6ADDRESS$ + subexp("\\%25|\\%(?!" + HEXDIG$$2 + "{2})") + ZONEID$), IPVFUTURE$ = subexp("[vV]" + HEXDIG$$2 + "+\\." + merge3(UNRESERVED$$2, SUB_DELIMS$$, "[\\:]") + "+"), IP_LITERAL$ = subexp("\\[" + subexp(IPV6ADDRZ_RELAXED$ + "|" + IPV6ADDRESS$ + "|" + IPVFUTURE$) + "\\]"), REG_NAME$ = subexp(subexp(PCT_ENCODED$2 + "|" + merge3(UNRESERVED$$2, SUB_DELIMS$$)) + "*"), HOST$ = subexp(IP_LITERAL$ + "|" + IPV4ADDRESS$ + "(?!" + REG_NAME$ + ")|" + REG_NAME$), PORT$ = subexp(DIGIT$$ + "*"), AUTHORITY$ = subexp(subexp(USERINFO$ + "@") + "?" + HOST$ + subexp("\\:" + PORT$) + "?"), PCHAR$ = subexp(PCT_ENCODED$2 + "|" + merge3(UNRESERVED$$2, SUB_DELIMS$$, "[\\:\\@]")), SEGMENT$ = subexp(PCHAR$ + "*"), SEGMENT_NZ$ = subexp(PCHAR$ + "+"), SEGMENT_NZ_NC$ = subexp(subexp(PCT_ENCODED$2 + "|" + merge3(UNRESERVED$$2, SUB_DELIMS$$, "[\\@]")) + "+"), PATH_ABEMPTY$ = subexp(subexp("\\/" + SEGMENT$) + "*"), PATH_ABSOLUTE$ = subexp("\\/" + subexp(SEGMENT_NZ$ + PATH_ABEMPTY$) + "?"), PATH_NOSCHEME$ = subexp(SEGMENT_NZ_NC$ + PATH_ABEMPTY$), PATH_ROOTLESS$ = subexp(SEGMENT_NZ$ + PATH_ABEMPTY$), PATH_EMPTY$ = "(?!" + PCHAR$ + ")", PATH$ = subexp(PATH_ABEMPTY$ + "|" + PATH_ABSOLUTE$ + "|" + PATH_NOSCHEME$ + "|" + PATH_ROOTLESS$ + "|" + PATH_EMPTY$), QUERY$ = subexp(subexp(PCHAR$ + "|" + merge3("[\\/\\?]", IPRIVATE$$)) + "*"), FRAGMENT$ = subexp(subexp(PCHAR$ + "|[\\/\\?]") + "*"), HIER_PART$ = subexp(subexp("\\/\\/" + AUTHORITY$ + PATH_ABEMPTY$) + "|" + PATH_ABSOLUTE$ + "|" + PATH_ROOTLESS$ + "|" + PATH_EMPTY$), URI$ = subexp(SCHEME$ + "\\:" + HIER_PART$ + subexp("\\?" + QUERY$) + "?" + subexp("\\#" + FRAGMENT$) + "?"), RELATIVE_PART$ = subexp(subexp("\\/\\/" + AUTHORITY$ + PATH_ABEMPTY$) + "|" + PATH_ABSOLUTE$ + "|" + PATH_NOSCHEME$ + "|" + PATH_EMPTY$), RELATIVE$ = subexp(RELATIVE_PART$ + subexp("\\?" + QUERY$) + "?" + subexp("\\#" + FRAGMENT$) + "?"), URI_REFERENCE$ = subexp(URI$ + "|" + RELATIVE$), ABSOLUTE_URI$ = subexp(SCHEME$ + "\\:" + HIER_PART$ + subexp("\\?" + QUERY$) + "?"), GENERIC_REF$ = "^(" + SCHEME$ + ")\\:" + subexp(subexp("\\/\\/(" + subexp("(" + USERINFO$ + ")@") + "?(" + HOST$ + ")" + subexp("\\:(" + PORT$ + ")") + "?)") + "?(" + PATH_ABEMPTY$ + "|" + PATH_ABSOLUTE$ + "|" + PATH_ROOTLESS$ + "|" + PATH_EMPTY$ + ")") + subexp("\\?(" + QUERY$ + ")") + "?" + subexp("\\#(" + FRAGMENT$ + ")") + "?$", RELATIVE_REF$ = "^(){0}" + subexp(subexp("\\/\\/(" + subexp("(" + USERINFO$ + ")@") + "?(" + HOST$ + ")" + subexp("\\:(" + PORT$ + ")") + "?)") + "?(" + PATH_ABEMPTY$ + "|" + PATH_ABSOLUTE$ + "|" + PATH_NOSCHEME$ + "|" + PATH_EMPTY$ + ")") + subexp("\\?(" + QUERY$ + ")") + "?" + subexp("\\#(" + FRAGMENT$ + ")") + "?$", ABSOLUTE_REF$ = "^(" + SCHEME$ + ")\\:" + subexp(subexp("\\/\\/(" + subexp("(" + USERINFO$ + ")@") + "?(" + HOST$ + ")" + subexp("\\:(" + PORT$ + ")") + "?)") + "?(" + PATH_ABEMPTY$ + "|" + PATH_ABSOLUTE$ + "|" + PATH_ROOTLESS$ + "|" + PATH_EMPTY$ + ")") + subexp("\\?(" + QUERY$ + ")") + "?$", SAMEDOC_REF$ = "^" + subexp("\\#(" + FRAGMENT$ + ")") + "?$", AUTHORITY_REF$ = "^" + subexp("(" + USERINFO$ + ")@") + "?(" + HOST$ + ")" + subexp("\\:(" + PORT$ + ")") + "?$";
-        return {
-          NOT_SCHEME: new RegExp(merge3("[^]", ALPHA$$, DIGIT$$, "[\\+\\-\\.]"), "g"),
-          NOT_USERINFO: new RegExp(merge3("[^\\%\\:]", UNRESERVED$$2, SUB_DELIMS$$), "g"),
-          NOT_HOST: new RegExp(merge3("[^\\%\\[\\]\\:]", UNRESERVED$$2, SUB_DELIMS$$), "g"),
-          NOT_PATH: new RegExp(merge3("[^\\%\\/\\:\\@]", UNRESERVED$$2, SUB_DELIMS$$), "g"),
-          NOT_PATH_NOSCHEME: new RegExp(merge3("[^\\%\\/\\@]", UNRESERVED$$2, SUB_DELIMS$$), "g"),
-          NOT_QUERY: new RegExp(merge3("[^\\%]", UNRESERVED$$2, SUB_DELIMS$$, "[\\:\\@\\/\\?]", IPRIVATE$$), "g"),
-          NOT_FRAGMENT: new RegExp(merge3("[^\\%]", UNRESERVED$$2, SUB_DELIMS$$, "[\\:\\@\\/\\?]"), "g"),
-          ESCAPE: new RegExp(merge3("[^]", UNRESERVED$$2, SUB_DELIMS$$), "g"),
-          UNRESERVED: new RegExp(UNRESERVED$$2, "g"),
-          OTHER_CHARS: new RegExp(merge3("[^\\%]", UNRESERVED$$2, RESERVED$$), "g"),
-          PCT_ENCODED: new RegExp(PCT_ENCODED$2, "g"),
-          IPV4ADDRESS: new RegExp("^(" + IPV4ADDRESS$ + ")$"),
-          IPV6ADDRESS: new RegExp("^\\[?(" + IPV6ADDRESS$ + ")" + subexp(subexp("\\%25|\\%(?!" + HEXDIG$$2 + "{2})") + "(" + ZONEID$ + ")") + "?\\]?$")
-          //RFC 6874, with relaxed parsing rules
-        };
-      }
-      var URI_PROTOCOL = buildExps(false);
-      var IRI_PROTOCOL = buildExps(true);
-      var slicedToArray = /* @__PURE__ */ function() {
-        function sliceIterator(arr, i) {
-          var _arr = [];
-          var _n = true;
-          var _d = false;
-          var _e = void 0;
-          try {
-            for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-              _arr.push(_s.value);
-              if (i && _arr.length === i) break;
-            }
-          } catch (err) {
-            _d = true;
-            _e = err;
-          } finally {
-            try {
-              if (!_n && _i["return"]) _i["return"]();
-            } finally {
-              if (_d) throw _e;
-            }
-          }
-          return _arr;
-        }
-        return function(arr, i) {
-          if (Array.isArray(arr)) {
-            return arr;
-          } else if (Symbol.iterator in Object(arr)) {
-            return sliceIterator(arr, i);
-          } else {
-            throw new TypeError("Invalid attempt to destructure non-iterable instance");
-          }
-        };
-      }();
-      var toConsumableArray = function(arr) {
-        if (Array.isArray(arr)) {
-          for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-          return arr2;
-        } else {
-          return Array.from(arr);
-        }
-      };
-      var maxInt = 2147483647;
-      var base = 36;
-      var tMin = 1;
-      var tMax = 26;
-      var skew = 38;
-      var damp = 700;
-      var initialBias = 72;
-      var initialN = 128;
-      var delimiter = "-";
-      var regexPunycode = /^xn--/;
-      var regexNonASCII = /[^\0-\x7E]/;
-      var regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g;
-      var errors = {
-        "overflow": "Overflow: input needs wider integers to process",
-        "not-basic": "Illegal input >= 0x80 (not a basic code point)",
-        "invalid-input": "Invalid input"
-      };
-      var baseMinusTMin = base - tMin;
-      var floor = Math.floor;
-      var stringFromCharCode = String.fromCharCode;
-      function error$1(type2) {
-        throw new RangeError(errors[type2]);
-      }
-      function map6(array, fn) {
-        var result = [];
-        var length = array.length;
-        while (length--) {
-          result[length] = fn(array[length]);
-        }
-        return result;
-      }
-      function mapDomain(string3, fn) {
-        var parts = string3.split("@");
-        var result = "";
-        if (parts.length > 1) {
-          result = parts[0] + "@";
-          string3 = parts[1];
-        }
-        string3 = string3.replace(regexSeparators, ".");
-        var labels = string3.split(".");
-        var encoded = map6(labels, fn).join(".");
-        return result + encoded;
-      }
-      function ucs2decode(string3) {
-        var output = [];
-        var counter = 0;
-        var length = string3.length;
-        while (counter < length) {
-          var value = string3.charCodeAt(counter++);
-          if (value >= 55296 && value <= 56319 && counter < length) {
-            var extra = string3.charCodeAt(counter++);
-            if ((extra & 64512) == 56320) {
-              output.push(((value & 1023) << 10) + (extra & 1023) + 65536);
+      if (keepZero && acc.length === 0) acc = "0";
+      return acc;
+    }
+    function getIPV6(input) {
+      let tokenCount = 0;
+      const output = { error: false, address: "", zone: "" };
+      const address = [];
+      const buffer = [];
+      let isZone = false;
+      let endipv6Encountered = false;
+      let endIpv6 = false;
+      function consume() {
+        if (buffer.length) {
+          if (isZone === false) {
+            const hex = stringArrayToHexStripped(buffer);
+            if (hex !== void 0) {
+              address.push(hex);
             } else {
-              output.push(value);
-              counter--;
+              output.error = true;
+              return false;
             }
-          } else {
-            output.push(value);
           }
+          buffer.length = 0;
         }
-        return output;
+        return true;
       }
-      var ucs2encode = function ucs2encode2(array) {
-        return String.fromCodePoint.apply(String, toConsumableArray(array));
-      };
-      var basicToDigit = function basicToDigit2(codePoint) {
-        if (codePoint - 48 < 10) {
-          return codePoint - 22;
+      for (let i = 0; i < input.length; i++) {
+        const cursor = input[i];
+        if (cursor === "[" || cursor === "]") {
+          continue;
         }
-        if (codePoint - 65 < 26) {
-          return codePoint - 65;
-        }
-        if (codePoint - 97 < 26) {
-          return codePoint - 97;
-        }
-        return base;
-      };
-      var digitToBasic = function digitToBasic2(digit, flag) {
-        return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
-      };
-      var adapt = function adapt2(delta, numPoints, firstTime) {
-        var k = 0;
-        delta = firstTime ? floor(delta / damp) : delta >> 1;
-        delta += floor(delta / numPoints);
-        for (
-          ;
-          /* no initialization */
-          delta > baseMinusTMin * tMax >> 1;
-          k += base
-        ) {
-          delta = floor(delta / baseMinusTMin);
-        }
-        return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
-      };
-      var decode2 = function decode3(input) {
-        var output = [];
-        var inputLength = input.length;
-        var i = 0;
-        var n = initialN;
-        var bias = initialBias;
-        var basic = input.lastIndexOf(delimiter);
-        if (basic < 0) {
-          basic = 0;
-        }
-        for (var j = 0; j < basic; ++j) {
-          if (input.charCodeAt(j) >= 128) {
-            error$1("not-basic");
+        if (cursor === ":") {
+          if (endipv6Encountered === true) {
+            endIpv6 = true;
           }
-          output.push(input.charCodeAt(j));
-        }
-        for (var index2 = basic > 0 ? basic + 1 : 0; index2 < inputLength; ) {
-          var oldi = i;
-          for (
-            var w = 1, k = base;
-            ;
-            /* no condition */
-            k += base
-          ) {
-            if (index2 >= inputLength) {
-              error$1("invalid-input");
-            }
-            var digit = basicToDigit(input.charCodeAt(index2++));
-            if (digit >= base || digit > floor((maxInt - i) / w)) {
-              error$1("overflow");
-            }
-            i += digit * w;
-            var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
-            if (digit < t) {
-              break;
-            }
-            var baseMinusT = base - t;
-            if (w > floor(maxInt / baseMinusT)) {
-              error$1("overflow");
-            }
-            w *= baseMinusT;
+          if (!consume()) {
+            break;
           }
-          var out = output.length + 1;
-          bias = adapt(i - oldi, out, oldi == 0);
-          if (floor(i / out) > maxInt - n) {
-            error$1("overflow");
+          tokenCount++;
+          address.push(":");
+          if (tokenCount > 7) {
+            output.error = true;
+            break;
           }
-          n += floor(i / out);
-          i %= out;
-          output.splice(i++, 0, n);
-        }
-        return String.fromCodePoint.apply(String, output);
-      };
-      var encode = function encode2(input) {
-        var output = [];
-        input = ucs2decode(input);
-        var inputLength = input.length;
-        var n = initialN;
-        var delta = 0;
-        var bias = initialBias;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = void 0;
-        try {
-          for (var _iterator = input[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _currentValue2 = _step.value;
-            if (_currentValue2 < 128) {
-              output.push(stringFromCharCode(_currentValue2));
-            }
+          if (i - 1 >= 0 && input[i - 1] === ":") {
+            endipv6Encountered = true;
           }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
+          continue;
+        } else if (cursor === "%") {
+          if (!consume()) {
+            break;
           }
-        }
-        var basicLength = output.length;
-        var handledCPCount = basicLength;
-        if (basicLength) {
-          output.push(delimiter);
-        }
-        while (handledCPCount < inputLength) {
-          var m = maxInt;
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = void 0;
-          try {
-            for (var _iterator2 = input[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var currentValue = _step2.value;
-              if (currentValue >= n && currentValue < m) {
-                m = currentValue;
-              }
-            }
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
-          }
-          var handledCPCountPlusOne = handledCPCount + 1;
-          if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
-            error$1("overflow");
-          }
-          delta += (m - n) * handledCPCountPlusOne;
-          n = m;
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = void 0;
-          try {
-            for (var _iterator3 = input[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var _currentValue = _step3.value;
-              if (_currentValue < n && ++delta > maxInt) {
-                error$1("overflow");
-              }
-              if (_currentValue == n) {
-                var q = delta;
-                for (
-                  var k = base;
-                  ;
-                  /* no condition */
-                  k += base
-                ) {
-                  var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
-                  if (q < t) {
-                    break;
-                  }
-                  var qMinusT = q - t;
-                  var baseMinusT = base - t;
-                  output.push(stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0)));
-                  q = floor(qMinusT / baseMinusT);
-                }
-                output.push(stringFromCharCode(digitToBasic(q, 0)));
-                bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
-                delta = 0;
-                ++handledCPCount;
-              }
-            }
-          } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
-          }
-          ++delta;
-          ++n;
-        }
-        return output.join("");
-      };
-      var toUnicode = function toUnicode2(input) {
-        return mapDomain(input, function(string3) {
-          return regexPunycode.test(string3) ? decode2(string3.slice(4).toLowerCase()) : string3;
-        });
-      };
-      var toASCII = function toASCII2(input) {
-        return mapDomain(input, function(string3) {
-          return regexNonASCII.test(string3) ? "xn--" + encode(string3) : string3;
-        });
-      };
-      var punycode = {
-        /**
-         * A string representing the current Punycode.js version number.
-         * @memberOf punycode
-         * @type String
-         */
-        "version": "2.1.0",
-        /**
-         * An object of methods to convert from JavaScript's internal character
-         * representation (UCS-2) to Unicode code points, and back.
-         * @see <https://mathiasbynens.be/notes/javascript-encoding>
-         * @memberOf punycode
-         * @type Object
-         */
-        "ucs2": {
-          "decode": ucs2decode,
-          "encode": ucs2encode
-        },
-        "decode": decode2,
-        "encode": encode,
-        "toASCII": toASCII,
-        "toUnicode": toUnicode
-      };
-      var SCHEMES = {};
-      function pctEncChar(chr) {
-        var c = chr.charCodeAt(0);
-        var e = void 0;
-        if (c < 16) e = "%0" + c.toString(16).toUpperCase();
-        else if (c < 128) e = "%" + c.toString(16).toUpperCase();
-        else if (c < 2048) e = "%" + (c >> 6 | 192).toString(16).toUpperCase() + "%" + (c & 63 | 128).toString(16).toUpperCase();
-        else e = "%" + (c >> 12 | 224).toString(16).toUpperCase() + "%" + (c >> 6 & 63 | 128).toString(16).toUpperCase() + "%" + (c & 63 | 128).toString(16).toUpperCase();
-        return e;
-      }
-      function pctDecChars(str2) {
-        var newStr = "";
-        var i = 0;
-        var il = str2.length;
-        while (i < il) {
-          var c = parseInt(str2.substr(i + 1, 2), 16);
-          if (c < 128) {
-            newStr += String.fromCharCode(c);
-            i += 3;
-          } else if (c >= 194 && c < 224) {
-            if (il - i >= 6) {
-              var c2 = parseInt(str2.substr(i + 4, 2), 16);
-              newStr += String.fromCharCode((c & 31) << 6 | c2 & 63);
-            } else {
-              newStr += str2.substr(i, 6);
-            }
-            i += 6;
-          } else if (c >= 224) {
-            if (il - i >= 9) {
-              var _c = parseInt(str2.substr(i + 4, 2), 16);
-              var c3 = parseInt(str2.substr(i + 7, 2), 16);
-              newStr += String.fromCharCode((c & 15) << 12 | (_c & 63) << 6 | c3 & 63);
-            } else {
-              newStr += str2.substr(i, 9);
-            }
-            i += 9;
-          } else {
-            newStr += str2.substr(i, 3);
-            i += 3;
-          }
-        }
-        return newStr;
-      }
-      function _normalizeComponentEncoding(components, protocol) {
-        function decodeUnreserved2(str2) {
-          var decStr = pctDecChars(str2);
-          return !decStr.match(protocol.UNRESERVED) ? str2 : decStr;
-        }
-        if (components.scheme) components.scheme = String(components.scheme).replace(protocol.PCT_ENCODED, decodeUnreserved2).toLowerCase().replace(protocol.NOT_SCHEME, "");
-        if (components.userinfo !== void 0) components.userinfo = String(components.userinfo).replace(protocol.PCT_ENCODED, decodeUnreserved2).replace(protocol.NOT_USERINFO, pctEncChar).replace(protocol.PCT_ENCODED, toUpperCase);
-        if (components.host !== void 0) components.host = String(components.host).replace(protocol.PCT_ENCODED, decodeUnreserved2).toLowerCase().replace(protocol.NOT_HOST, pctEncChar).replace(protocol.PCT_ENCODED, toUpperCase);
-        if (components.path !== void 0) components.path = String(components.path).replace(protocol.PCT_ENCODED, decodeUnreserved2).replace(components.scheme ? protocol.NOT_PATH : protocol.NOT_PATH_NOSCHEME, pctEncChar).replace(protocol.PCT_ENCODED, toUpperCase);
-        if (components.query !== void 0) components.query = String(components.query).replace(protocol.PCT_ENCODED, decodeUnreserved2).replace(protocol.NOT_QUERY, pctEncChar).replace(protocol.PCT_ENCODED, toUpperCase);
-        if (components.fragment !== void 0) components.fragment = String(components.fragment).replace(protocol.PCT_ENCODED, decodeUnreserved2).replace(protocol.NOT_FRAGMENT, pctEncChar).replace(protocol.PCT_ENCODED, toUpperCase);
-        return components;
-      }
-      function _stripLeadingZeros(str2) {
-        return str2.replace(/^0*(.*)/, "$1") || "0";
-      }
-      function _normalizeIPv4(host, protocol) {
-        var matches = host.match(protocol.IPV4ADDRESS) || [];
-        var _matches = slicedToArray(matches, 2), address = _matches[1];
-        if (address) {
-          return address.split(".").map(_stripLeadingZeros).join(".");
+          isZone = true;
         } else {
-          return host;
+          buffer.push(cursor);
+          continue;
         }
       }
-      function _normalizeIPv6(host, protocol) {
-        var matches = host.match(protocol.IPV6ADDRESS) || [];
-        var _matches2 = slicedToArray(matches, 3), address = _matches2[1], zone = _matches2[2];
-        if (address) {
-          var _address$toLowerCase$ = address.toLowerCase().split("::").reverse(), _address$toLowerCase$2 = slicedToArray(_address$toLowerCase$, 2), last = _address$toLowerCase$2[0], first = _address$toLowerCase$2[1];
-          var firstFields = first ? first.split(":").map(_stripLeadingZeros) : [];
-          var lastFields = last.split(":").map(_stripLeadingZeros);
-          var isLastFieldIPv4Address = protocol.IPV4ADDRESS.test(lastFields[lastFields.length - 1]);
-          var fieldCount = isLastFieldIPv4Address ? 7 : 8;
-          var lastFieldsStart = lastFields.length - fieldCount;
-          var fields = Array(fieldCount);
-          for (var x = 0; x < fieldCount; ++x) {
-            fields[x] = firstFields[x] || lastFields[lastFieldsStart + x] || "";
-          }
-          if (isLastFieldIPv4Address) {
-            fields[fieldCount - 1] = _normalizeIPv4(fields[fieldCount - 1], protocol);
-          }
-          var allZeroFields = fields.reduce(function(acc, field, index2) {
-            if (!field || field === "0") {
-              var lastLongest = acc[acc.length - 1];
-              if (lastLongest && lastLongest.index + lastLongest.length === index2) {
-                lastLongest.length++;
-              } else {
-                acc.push({ index: index2, length: 1 });
-              }
-            }
-            return acc;
-          }, []);
-          var longestZeroFields = allZeroFields.sort(function(a, b) {
-            return b.length - a.length;
-          })[0];
-          var newHost = void 0;
-          if (longestZeroFields && longestZeroFields.length > 1) {
-            var newFirst = fields.slice(0, longestZeroFields.index);
-            var newLast = fields.slice(longestZeroFields.index + longestZeroFields.length);
-            newHost = newFirst.join(":") + "::" + newLast.join(":");
-          } else {
-            newHost = fields.join(":");
-          }
-          if (zone) {
-            newHost += "%" + zone;
-          }
-          return newHost;
+      if (buffer.length) {
+        if (isZone) {
+          output.zone = buffer.join("");
+        } else if (endIpv6) {
+          address.push(buffer.join(""));
         } else {
-          return host;
+          address.push(stringArrayToHexStripped(buffer));
         }
       }
-      var URI_PARSE = /^(?:([^:\/?#]+):)?(?:\/\/((?:([^\/?#@]*)@)?(\[[^\/?#\]]+\]|[^\/?#:]*)(?:\:(\d*))?))?([^?#]*)(?:\?([^#]*))?(?:#((?:.|\n|\r)*))?/i;
-      var NO_MATCH_IS_UNDEFINED = "".match(/(){0}/)[1] === void 0;
-      function parse4(uriString) {
-        var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-        var components = {};
-        var protocol = options.iri !== false ? IRI_PROTOCOL : URI_PROTOCOL;
-        if (options.reference === "suffix") uriString = (options.scheme ? options.scheme + ":" : "") + "//" + uriString;
-        var matches = uriString.match(URI_PARSE);
-        if (matches) {
-          if (NO_MATCH_IS_UNDEFINED) {
-            components.scheme = matches[1];
-            components.userinfo = matches[3];
-            components.host = matches[4];
-            components.port = parseInt(matches[5], 10);
-            components.path = matches[6] || "";
-            components.query = matches[7];
-            components.fragment = matches[8];
-            if (isNaN(components.port)) {
-              components.port = matches[5];
-            }
-          } else {
-            components.scheme = matches[1] || void 0;
-            components.userinfo = uriString.indexOf("@") !== -1 ? matches[3] : void 0;
-            components.host = uriString.indexOf("//") !== -1 ? matches[4] : void 0;
-            components.port = parseInt(matches[5], 10);
-            components.path = matches[6] || "";
-            components.query = uriString.indexOf("?") !== -1 ? matches[7] : void 0;
-            components.fragment = uriString.indexOf("#") !== -1 ? matches[8] : void 0;
-            if (isNaN(components.port)) {
-              components.port = uriString.match(/\/\/(?:.|\n)*\:(?:\/|\?|\#|$)/) ? matches[4] : void 0;
-            }
-          }
-          if (components.host) {
-            components.host = _normalizeIPv6(_normalizeIPv4(components.host, protocol), protocol);
-          }
-          if (components.scheme === void 0 && components.userinfo === void 0 && components.host === void 0 && components.port === void 0 && !components.path && components.query === void 0) {
-            components.reference = "same-document";
-          } else if (components.scheme === void 0) {
-            components.reference = "relative";
-          } else if (components.fragment === void 0) {
-            components.reference = "absolute";
-          } else {
-            components.reference = "uri";
-          }
-          if (options.reference && options.reference !== "suffix" && options.reference !== components.reference) {
-            components.error = components.error || "URI is not a " + options.reference + " reference.";
-          }
-          var schemeHandler = SCHEMES[(options.scheme || components.scheme || "").toLowerCase()];
-          if (!options.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
-            if (components.host && (options.domainHost || schemeHandler && schemeHandler.domainHost)) {
-              try {
-                components.host = punycode.toASCII(components.host.replace(protocol.PCT_ENCODED, pctDecChars).toLowerCase());
-              } catch (e) {
-                components.error = components.error || "Host's domain name can not be converted to ASCII via punycode: " + e;
-              }
-            }
-            _normalizeComponentEncoding(components, URI_PROTOCOL);
-          } else {
-            _normalizeComponentEncoding(components, protocol);
-          }
-          if (schemeHandler && schemeHandler.parse) {
-            schemeHandler.parse(components, options);
+      output.address = address.join("");
+      return output;
+    }
+    function normalizeIPv6(host, opts = {}) {
+      if (findToken(host, ":") < 2) {
+        return { host, isIPV6: false };
+      }
+      const ipv6 = getIPV6(host);
+      if (!ipv6.error) {
+        let newHost = ipv6.address;
+        let escapedHost = ipv6.address;
+        if (ipv6.zone) {
+          newHost += "%" + ipv6.zone;
+          escapedHost += "%25" + ipv6.zone;
+        }
+        return { host: newHost, escapedHost, isIPV6: true };
+      } else {
+        return { host, isIPV6: false };
+      }
+    }
+    function stripLeadingZeros(str2, token) {
+      let out = "";
+      let skip = true;
+      const l = str2.length;
+      for (let i = 0; i < l; i++) {
+        const c = str2[i];
+        if (c === "0" && skip) {
+          if (i + 1 <= l && str2[i + 1] === token || i + 1 === l) {
+            out += c;
+            skip = false;
           }
         } else {
-          components.error = components.error || "URI can not be parsed.";
-        }
-        return components;
-      }
-      function _recomposeAuthority(components, options) {
-        var protocol = options.iri !== false ? IRI_PROTOCOL : URI_PROTOCOL;
-        var uriTokens = [];
-        if (components.userinfo !== void 0) {
-          uriTokens.push(components.userinfo);
-          uriTokens.push("@");
-        }
-        if (components.host !== void 0) {
-          uriTokens.push(_normalizeIPv6(_normalizeIPv4(String(components.host), protocol), protocol).replace(protocol.IPV6ADDRESS, function(_, $1, $2) {
-            return "[" + $1 + ($2 ? "%25" + $2 : "") + "]";
-          }));
-        }
-        if (typeof components.port === "number" || typeof components.port === "string") {
-          uriTokens.push(":");
-          uriTokens.push(String(components.port));
-        }
-        return uriTokens.length ? uriTokens.join("") : void 0;
-      }
-      var RDS1 = /^\.\.?\//;
-      var RDS2 = /^\/\.(\/|$)/;
-      var RDS3 = /^\/\.\.(\/|$)/;
-      var RDS5 = /^\/?(?:.|\n)*?(?=\/|$)/;
-      function removeDotSegments(input) {
-        var output = [];
-        while (input.length) {
-          if (input.match(RDS1)) {
-            input = input.replace(RDS1, "");
-          } else if (input.match(RDS2)) {
-            input = input.replace(RDS2, "/");
-          } else if (input.match(RDS3)) {
-            input = input.replace(RDS3, "/");
-            output.pop();
-          } else if (input === "." || input === "..") {
-            input = "";
+          if (c === token) {
+            skip = true;
           } else {
-            var im = input.match(RDS5);
-            if (im) {
-              var s = im[0];
-              input = input.slice(s.length);
-              output.push(s);
-            } else {
-              throw new Error("Unexpected dot segment condition");
-            }
+            skip = false;
           }
+          out += c;
         }
-        return output.join("");
       }
-      function serialize2(components) {
-        var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-        var protocol = options.iri ? IRI_PROTOCOL : URI_PROTOCOL;
-        var uriTokens = [];
-        var schemeHandler = SCHEMES[(options.scheme || components.scheme || "").toLowerCase()];
-        if (schemeHandler && schemeHandler.serialize) schemeHandler.serialize(components, options);
-        if (components.host) {
-          if (protocol.IPV6ADDRESS.test(components.host)) {
-          } else if (options.domainHost || schemeHandler && schemeHandler.domainHost) {
-            try {
-              components.host = !options.iri ? punycode.toASCII(components.host.replace(protocol.PCT_ENCODED, pctDecChars).toLowerCase()) : punycode.toUnicode(components.host);
-            } catch (e) {
-              components.error = components.error || "Host's domain name can not be converted to " + (!options.iri ? "ASCII" : "Unicode") + " via punycode: " + e;
-            }
-          }
-        }
-        _normalizeComponentEncoding(components, protocol);
-        if (options.reference !== "suffix" && components.scheme) {
-          uriTokens.push(components.scheme);
-          uriTokens.push(":");
-        }
-        var authority = _recomposeAuthority(components, options);
-        if (authority !== void 0) {
-          if (options.reference !== "suffix") {
-            uriTokens.push("//");
-          }
-          uriTokens.push(authority);
-          if (components.path && components.path.charAt(0) !== "/") {
-            uriTokens.push("/");
-          }
-        }
-        if (components.path !== void 0) {
-          var s = components.path;
-          if (!options.absolutePath && (!schemeHandler || !schemeHandler.absolutePath)) {
-            s = removeDotSegments(s);
-          }
-          if (authority === void 0) {
-            s = s.replace(/^\/\//, "/%2F");
-          }
-          uriTokens.push(s);
-        }
-        if (components.query !== void 0) {
-          uriTokens.push("?");
-          uriTokens.push(components.query);
-        }
-        if (components.fragment !== void 0) {
-          uriTokens.push("#");
-          uriTokens.push(components.fragment);
-        }
-        return uriTokens.join("");
+      return out;
+    }
+    function findToken(str2, token) {
+      let ind = 0;
+      for (let i = 0; i < str2.length; i++) {
+        if (str2[i] === token) ind++;
       }
-      function resolveComponents(base2, relative) {
-        var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
-        var skipNormalization = arguments[3];
-        var target = {};
-        if (!skipNormalization) {
-          base2 = parse4(serialize2(base2, options), options);
-          relative = parse4(serialize2(relative, options), options);
+      return ind;
+    }
+    var RDS1 = /^\.\.?\//u;
+    var RDS2 = /^\/\.(?:\/|$)/u;
+    var RDS3 = /^\/\.\.(?:\/|$)/u;
+    var RDS5 = /^\/?(?:.|\n)*?(?=\/|$)/u;
+    function removeDotSegments(input) {
+      const output = [];
+      while (input.length) {
+        if (input.match(RDS1)) {
+          input = input.replace(RDS1, "");
+        } else if (input.match(RDS2)) {
+          input = input.replace(RDS2, "/");
+        } else if (input.match(RDS3)) {
+          input = input.replace(RDS3, "/");
+          output.pop();
+        } else if (input === "." || input === "..") {
+          input = "";
+        } else {
+          const im = input.match(RDS5);
+          if (im) {
+            const s = im[0];
+            input = input.slice(s.length);
+            output.push(s);
+          } else {
+            throw new Error("Unexpected dot segment condition");
+          }
         }
-        options = options || {};
-        if (!options.tolerant && relative.scheme) {
-          target.scheme = relative.scheme;
+      }
+      return output.join("");
+    }
+    function normalizeComponentEncoding(components, esc) {
+      const func = esc !== true ? escape : unescape;
+      if (components.scheme !== void 0) {
+        components.scheme = func(components.scheme);
+      }
+      if (components.userinfo !== void 0) {
+        components.userinfo = func(components.userinfo);
+      }
+      if (components.host !== void 0) {
+        components.host = func(components.host);
+      }
+      if (components.path !== void 0) {
+        components.path = func(components.path);
+      }
+      if (components.query !== void 0) {
+        components.query = func(components.query);
+      }
+      if (components.fragment !== void 0) {
+        components.fragment = func(components.fragment);
+      }
+      return components;
+    }
+    function recomposeAuthority(components, options) {
+      const uriTokens = [];
+      if (components.userinfo !== void 0) {
+        uriTokens.push(components.userinfo);
+        uriTokens.push("@");
+      }
+      if (components.host !== void 0) {
+        let host = unescape(components.host);
+        const ipV4res = normalizeIPv4(host);
+        if (ipV4res.isIPV4) {
+          host = ipV4res.host;
+        } else {
+          const ipV6res = normalizeIPv6(ipV4res.host, { isIPV4: false });
+          if (ipV6res.isIPV6 === true) {
+            host = `[${ipV6res.escapedHost}]`;
+          } else {
+            host = components.host;
+          }
+        }
+        uriTokens.push(host);
+      }
+      if (typeof components.port === "number" || typeof components.port === "string") {
+        uriTokens.push(":");
+        uriTokens.push(String(components.port));
+      }
+      return uriTokens.length ? uriTokens.join("") : void 0;
+    }
+    module.exports = {
+      recomposeAuthority,
+      normalizeComponentEncoding,
+      removeDotSegments,
+      normalizeIPv4,
+      normalizeIPv6,
+      stringArrayToHexStripped
+    };
+  }
+});
+
+// node_modules/fast-uri/lib/schemes.js
+var require_schemes = __commonJS({
+  "node_modules/fast-uri/lib/schemes.js"(exports, module) {
+    "use strict";
+    var UUID_REG = /^[\da-f]{8}\b-[\da-f]{4}\b-[\da-f]{4}\b-[\da-f]{4}\b-[\da-f]{12}$/iu;
+    var URN_REG = /([\da-z][\d\-a-z]{0,31}):((?:[\w!$'()*+,\-.:;=@]|%[\da-f]{2})+)/iu;
+    function isSecure(wsComponents) {
+      return typeof wsComponents.secure === "boolean" ? wsComponents.secure : String(wsComponents.scheme).toLowerCase() === "wss";
+    }
+    function httpParse(components) {
+      if (!components.host) {
+        components.error = components.error || "HTTP URIs must have a host.";
+      }
+      return components;
+    }
+    function httpSerialize(components) {
+      const secure = String(components.scheme).toLowerCase() === "https";
+      if (components.port === (secure ? 443 : 80) || components.port === "") {
+        components.port = void 0;
+      }
+      if (!components.path) {
+        components.path = "/";
+      }
+      return components;
+    }
+    function wsParse(wsComponents) {
+      wsComponents.secure = isSecure(wsComponents);
+      wsComponents.resourceName = (wsComponents.path || "/") + (wsComponents.query ? "?" + wsComponents.query : "");
+      wsComponents.path = void 0;
+      wsComponents.query = void 0;
+      return wsComponents;
+    }
+    function wsSerialize(wsComponents) {
+      if (wsComponents.port === (isSecure(wsComponents) ? 443 : 80) || wsComponents.port === "") {
+        wsComponents.port = void 0;
+      }
+      if (typeof wsComponents.secure === "boolean") {
+        wsComponents.scheme = wsComponents.secure ? "wss" : "ws";
+        wsComponents.secure = void 0;
+      }
+      if (wsComponents.resourceName) {
+        const [path2, query] = wsComponents.resourceName.split("?");
+        wsComponents.path = path2 && path2 !== "/" ? path2 : void 0;
+        wsComponents.query = query;
+        wsComponents.resourceName = void 0;
+      }
+      wsComponents.fragment = void 0;
+      return wsComponents;
+    }
+    function urnParse(urnComponents, options) {
+      if (!urnComponents.path) {
+        urnComponents.error = "URN can not be parsed";
+        return urnComponents;
+      }
+      const matches = urnComponents.path.match(URN_REG);
+      if (matches) {
+        const scheme = options.scheme || urnComponents.scheme || "urn";
+        urnComponents.nid = matches[1].toLowerCase();
+        urnComponents.nss = matches[2];
+        const urnScheme = `${scheme}:${options.nid || urnComponents.nid}`;
+        const schemeHandler = SCHEMES[urnScheme];
+        urnComponents.path = void 0;
+        if (schemeHandler) {
+          urnComponents = schemeHandler.parse(urnComponents, options);
+        }
+      } else {
+        urnComponents.error = urnComponents.error || "URN can not be parsed.";
+      }
+      return urnComponents;
+    }
+    function urnSerialize(urnComponents, options) {
+      const scheme = options.scheme || urnComponents.scheme || "urn";
+      const nid = urnComponents.nid.toLowerCase();
+      const urnScheme = `${scheme}:${options.nid || nid}`;
+      const schemeHandler = SCHEMES[urnScheme];
+      if (schemeHandler) {
+        urnComponents = schemeHandler.serialize(urnComponents, options);
+      }
+      const uriComponents = urnComponents;
+      const nss = urnComponents.nss;
+      uriComponents.path = `${nid || options.nid}:${nss}`;
+      options.skipEscape = true;
+      return uriComponents;
+    }
+    function urnuuidParse(urnComponents, options) {
+      const uuidComponents = urnComponents;
+      uuidComponents.uuid = uuidComponents.nss;
+      uuidComponents.nss = void 0;
+      if (!options.tolerant && (!uuidComponents.uuid || !UUID_REG.test(uuidComponents.uuid))) {
+        uuidComponents.error = uuidComponents.error || "UUID is not valid.";
+      }
+      return uuidComponents;
+    }
+    function urnuuidSerialize(uuidComponents) {
+      const urnComponents = uuidComponents;
+      urnComponents.nss = (uuidComponents.uuid || "").toLowerCase();
+      return urnComponents;
+    }
+    var http = {
+      scheme: "http",
+      domainHost: true,
+      parse: httpParse,
+      serialize: httpSerialize
+    };
+    var https = {
+      scheme: "https",
+      domainHost: http.domainHost,
+      parse: httpParse,
+      serialize: httpSerialize
+    };
+    var ws = {
+      scheme: "ws",
+      domainHost: true,
+      parse: wsParse,
+      serialize: wsSerialize
+    };
+    var wss = {
+      scheme: "wss",
+      domainHost: ws.domainHost,
+      parse: ws.parse,
+      serialize: ws.serialize
+    };
+    var urn = {
+      scheme: "urn",
+      parse: urnParse,
+      serialize: urnSerialize,
+      skipNormalize: true
+    };
+    var urnuuid = {
+      scheme: "urn:uuid",
+      parse: urnuuidParse,
+      serialize: urnuuidSerialize,
+      skipNormalize: true
+    };
+    var SCHEMES = {
+      http,
+      https,
+      ws,
+      wss,
+      urn,
+      "urn:uuid": urnuuid
+    };
+    module.exports = SCHEMES;
+  }
+});
+
+// node_modules/fast-uri/index.js
+var require_fast_uri = __commonJS({
+  "node_modules/fast-uri/index.js"(exports, module) {
+    "use strict";
+    var { normalizeIPv6, normalizeIPv4, removeDotSegments, recomposeAuthority, normalizeComponentEncoding } = require_utils3();
+    var SCHEMES = require_schemes();
+    function normalize(uri, options) {
+      if (typeof uri === "string") {
+        uri = serialize2(parse4(uri, options), options);
+      } else if (typeof uri === "object") {
+        uri = parse4(serialize2(uri, options), options);
+      }
+      return uri;
+    }
+    function resolve(baseURI, relativeURI, options) {
+      const schemelessOptions = Object.assign({ scheme: "null" }, options);
+      const resolved = resolveComponents(parse4(baseURI, schemelessOptions), parse4(relativeURI, schemelessOptions), schemelessOptions, true);
+      return serialize2(resolved, { ...schemelessOptions, skipEscape: true });
+    }
+    function resolveComponents(base, relative, options, skipNormalization) {
+      const target = {};
+      if (!skipNormalization) {
+        base = parse4(serialize2(base, options), options);
+        relative = parse4(serialize2(relative, options), options);
+      }
+      options = options || {};
+      if (!options.tolerant && relative.scheme) {
+        target.scheme = relative.scheme;
+        target.userinfo = relative.userinfo;
+        target.host = relative.host;
+        target.port = relative.port;
+        target.path = removeDotSegments(relative.path || "");
+        target.query = relative.query;
+      } else {
+        if (relative.userinfo !== void 0 || relative.host !== void 0 || relative.port !== void 0) {
           target.userinfo = relative.userinfo;
           target.host = relative.host;
           target.port = relative.port;
           target.path = removeDotSegments(relative.path || "");
           target.query = relative.query;
         } else {
-          if (relative.userinfo !== void 0 || relative.host !== void 0 || relative.port !== void 0) {
-            target.userinfo = relative.userinfo;
-            target.host = relative.host;
-            target.port = relative.port;
-            target.path = removeDotSegments(relative.path || "");
-            target.query = relative.query;
-          } else {
-            if (!relative.path) {
-              target.path = base2.path;
-              if (relative.query !== void 0) {
-                target.query = relative.query;
-              } else {
-                target.query = base2.query;
-              }
-            } else {
-              if (relative.path.charAt(0) === "/") {
-                target.path = removeDotSegments(relative.path);
-              } else {
-                if ((base2.userinfo !== void 0 || base2.host !== void 0 || base2.port !== void 0) && !base2.path) {
-                  target.path = "/" + relative.path;
-                } else if (!base2.path) {
-                  target.path = relative.path;
-                } else {
-                  target.path = base2.path.slice(0, base2.path.lastIndexOf("/") + 1) + relative.path;
-                }
-                target.path = removeDotSegments(target.path);
-              }
+          if (!relative.path) {
+            target.path = base.path;
+            if (relative.query !== void 0) {
               target.query = relative.query;
-            }
-            target.userinfo = base2.userinfo;
-            target.host = base2.host;
-            target.port = base2.port;
-          }
-          target.scheme = base2.scheme;
-        }
-        target.fragment = relative.fragment;
-        return target;
-      }
-      function resolve(baseURI, relativeURI, options) {
-        var schemelessOptions = assign({ scheme: "null" }, options);
-        return serialize2(resolveComponents(parse4(baseURI, schemelessOptions), parse4(relativeURI, schemelessOptions), schemelessOptions, true), schemelessOptions);
-      }
-      function normalize(uri, options) {
-        if (typeof uri === "string") {
-          uri = serialize2(parse4(uri, options), options);
-        } else if (typeOf(uri) === "object") {
-          uri = parse4(serialize2(uri, options), options);
-        }
-        return uri;
-      }
-      function equal(uriA, uriB, options) {
-        if (typeof uriA === "string") {
-          uriA = serialize2(parse4(uriA, options), options);
-        } else if (typeOf(uriA) === "object") {
-          uriA = serialize2(uriA, options);
-        }
-        if (typeof uriB === "string") {
-          uriB = serialize2(parse4(uriB, options), options);
-        } else if (typeOf(uriB) === "object") {
-          uriB = serialize2(uriB, options);
-        }
-        return uriA === uriB;
-      }
-      function escapeComponent(str2, options) {
-        return str2 && str2.toString().replace(!options || !options.iri ? URI_PROTOCOL.ESCAPE : IRI_PROTOCOL.ESCAPE, pctEncChar);
-      }
-      function unescapeComponent(str2, options) {
-        return str2 && str2.toString().replace(!options || !options.iri ? URI_PROTOCOL.PCT_ENCODED : IRI_PROTOCOL.PCT_ENCODED, pctDecChars);
-      }
-      var handler2 = {
-        scheme: "http",
-        domainHost: true,
-        parse: function parse5(components, options) {
-          if (!components.host) {
-            components.error = components.error || "HTTP URIs must have a host.";
-          }
-          return components;
-        },
-        serialize: function serialize3(components, options) {
-          var secure = String(components.scheme).toLowerCase() === "https";
-          if (components.port === (secure ? 443 : 80) || components.port === "") {
-            components.port = void 0;
-          }
-          if (!components.path) {
-            components.path = "/";
-          }
-          return components;
-        }
-      };
-      var handler$1 = {
-        scheme: "https",
-        domainHost: handler2.domainHost,
-        parse: handler2.parse,
-        serialize: handler2.serialize
-      };
-      function isSecure(wsComponents) {
-        return typeof wsComponents.secure === "boolean" ? wsComponents.secure : String(wsComponents.scheme).toLowerCase() === "wss";
-      }
-      var handler$2 = {
-        scheme: "ws",
-        domainHost: true,
-        parse: function parse5(components, options) {
-          var wsComponents = components;
-          wsComponents.secure = isSecure(wsComponents);
-          wsComponents.resourceName = (wsComponents.path || "/") + (wsComponents.query ? "?" + wsComponents.query : "");
-          wsComponents.path = void 0;
-          wsComponents.query = void 0;
-          return wsComponents;
-        },
-        serialize: function serialize3(wsComponents, options) {
-          if (wsComponents.port === (isSecure(wsComponents) ? 443 : 80) || wsComponents.port === "") {
-            wsComponents.port = void 0;
-          }
-          if (typeof wsComponents.secure === "boolean") {
-            wsComponents.scheme = wsComponents.secure ? "wss" : "ws";
-            wsComponents.secure = void 0;
-          }
-          if (wsComponents.resourceName) {
-            var _wsComponents$resourc = wsComponents.resourceName.split("?"), _wsComponents$resourc2 = slicedToArray(_wsComponents$resourc, 2), path2 = _wsComponents$resourc2[0], query = _wsComponents$resourc2[1];
-            wsComponents.path = path2 && path2 !== "/" ? path2 : void 0;
-            wsComponents.query = query;
-            wsComponents.resourceName = void 0;
-          }
-          wsComponents.fragment = void 0;
-          return wsComponents;
-        }
-      };
-      var handler$3 = {
-        scheme: "wss",
-        domainHost: handler$2.domainHost,
-        parse: handler$2.parse,
-        serialize: handler$2.serialize
-      };
-      var O = {};
-      var isIRI = true;
-      var UNRESERVED$$ = "[A-Za-z0-9\\-\\.\\_\\~" + (isIRI ? "\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF" : "") + "]";
-      var HEXDIG$$ = "[0-9A-Fa-f]";
-      var PCT_ENCODED$ = subexp(subexp("%[EFef]" + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$) + "|" + subexp("%[89A-Fa-f]" + HEXDIG$$ + "%" + HEXDIG$$ + HEXDIG$$) + "|" + subexp("%" + HEXDIG$$ + HEXDIG$$));
-      var ATEXT$$ = "[A-Za-z0-9\\!\\$\\%\\'\\*\\+\\-\\^\\_\\`\\{\\|\\}\\~]";
-      var QTEXT$$ = "[\\!\\$\\%\\'\\(\\)\\*\\+\\,\\-\\.0-9\\<\\>A-Z\\x5E-\\x7E]";
-      var VCHAR$$ = merge3(QTEXT$$, '[\\"\\\\]');
-      var SOME_DELIMS$$ = "[\\!\\$\\'\\(\\)\\*\\+\\,\\;\\:\\@]";
-      var UNRESERVED = new RegExp(UNRESERVED$$, "g");
-      var PCT_ENCODED = new RegExp(PCT_ENCODED$, "g");
-      var NOT_LOCAL_PART = new RegExp(merge3("[^]", ATEXT$$, "[\\.]", '[\\"]', VCHAR$$), "g");
-      var NOT_HFNAME = new RegExp(merge3("[^]", UNRESERVED$$, SOME_DELIMS$$), "g");
-      var NOT_HFVALUE = NOT_HFNAME;
-      function decodeUnreserved(str2) {
-        var decStr = pctDecChars(str2);
-        return !decStr.match(UNRESERVED) ? str2 : decStr;
-      }
-      var handler$4 = {
-        scheme: "mailto",
-        parse: function parse$$1(components, options) {
-          var mailtoComponents = components;
-          var to = mailtoComponents.to = mailtoComponents.path ? mailtoComponents.path.split(",") : [];
-          mailtoComponents.path = void 0;
-          if (mailtoComponents.query) {
-            var unknownHeaders = false;
-            var headers = {};
-            var hfields = mailtoComponents.query.split("&");
-            for (var x = 0, xl = hfields.length; x < xl; ++x) {
-              var hfield = hfields[x].split("=");
-              switch (hfield[0]) {
-                case "to":
-                  var toAddrs = hfield[1].split(",");
-                  for (var _x = 0, _xl = toAddrs.length; _x < _xl; ++_x) {
-                    to.push(toAddrs[_x]);
-                  }
-                  break;
-                case "subject":
-                  mailtoComponents.subject = unescapeComponent(hfield[1], options);
-                  break;
-                case "body":
-                  mailtoComponents.body = unescapeComponent(hfield[1], options);
-                  break;
-                default:
-                  unknownHeaders = true;
-                  headers[unescapeComponent(hfield[0], options)] = unescapeComponent(hfield[1], options);
-                  break;
-              }
-            }
-            if (unknownHeaders) mailtoComponents.headers = headers;
-          }
-          mailtoComponents.query = void 0;
-          for (var _x2 = 0, _xl2 = to.length; _x2 < _xl2; ++_x2) {
-            var addr = to[_x2].split("@");
-            addr[0] = unescapeComponent(addr[0]);
-            if (!options.unicodeSupport) {
-              try {
-                addr[1] = punycode.toASCII(unescapeComponent(addr[1], options).toLowerCase());
-              } catch (e) {
-                mailtoComponents.error = mailtoComponents.error || "Email address's domain name can not be converted to ASCII via punycode: " + e;
-              }
             } else {
-              addr[1] = unescapeComponent(addr[1], options).toLowerCase();
-            }
-            to[_x2] = addr.join("@");
-          }
-          return mailtoComponents;
-        },
-        serialize: function serialize$$1(mailtoComponents, options) {
-          var components = mailtoComponents;
-          var to = toArray2(mailtoComponents.to);
-          if (to) {
-            for (var x = 0, xl = to.length; x < xl; ++x) {
-              var toAddr = String(to[x]);
-              var atIdx = toAddr.lastIndexOf("@");
-              var localPart = toAddr.slice(0, atIdx).replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_LOCAL_PART, pctEncChar);
-              var domain2 = toAddr.slice(atIdx + 1);
-              try {
-                domain2 = !options.iri ? punycode.toASCII(unescapeComponent(domain2, options).toLowerCase()) : punycode.toUnicode(domain2);
-              } catch (e) {
-                components.error = components.error || "Email address's domain name can not be converted to " + (!options.iri ? "ASCII" : "Unicode") + " via punycode: " + e;
-              }
-              to[x] = localPart + "@" + domain2;
-            }
-            components.path = to.join(",");
-          }
-          var headers = mailtoComponents.headers = mailtoComponents.headers || {};
-          if (mailtoComponents.subject) headers["subject"] = mailtoComponents.subject;
-          if (mailtoComponents.body) headers["body"] = mailtoComponents.body;
-          var fields = [];
-          for (var name in headers) {
-            if (headers[name] !== O[name]) {
-              fields.push(name.replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFNAME, pctEncChar) + "=" + headers[name].replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFVALUE, pctEncChar));
-            }
-          }
-          if (fields.length) {
-            components.query = fields.join("&");
-          }
-          return components;
-        }
-      };
-      var URN_PARSE = /^([^\:]+)\:(.*)/;
-      var handler$5 = {
-        scheme: "urn",
-        parse: function parse$$1(components, options) {
-          var matches = components.path && components.path.match(URN_PARSE);
-          var urnComponents = components;
-          if (matches) {
-            var scheme = options.scheme || urnComponents.scheme || "urn";
-            var nid = matches[1].toLowerCase();
-            var nss = matches[2];
-            var urnScheme = scheme + ":" + (options.nid || nid);
-            var schemeHandler = SCHEMES[urnScheme];
-            urnComponents.nid = nid;
-            urnComponents.nss = nss;
-            urnComponents.path = void 0;
-            if (schemeHandler) {
-              urnComponents = schemeHandler.parse(urnComponents, options);
+              target.query = base.query;
             }
           } else {
-            urnComponents.error = urnComponents.error || "URN can not be parsed.";
+            if (relative.path.charAt(0) === "/") {
+              target.path = removeDotSegments(relative.path);
+            } else {
+              if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
+                target.path = "/" + relative.path;
+              } else if (!base.path) {
+                target.path = relative.path;
+              } else {
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative.path;
+              }
+              target.path = removeDotSegments(target.path);
+            }
+            target.query = relative.query;
           }
-          return urnComponents;
-        },
-        serialize: function serialize$$1(urnComponents, options) {
-          var scheme = options.scheme || urnComponents.scheme || "urn";
-          var nid = urnComponents.nid;
-          var urnScheme = scheme + ":" + (options.nid || nid);
-          var schemeHandler = SCHEMES[urnScheme];
-          if (schemeHandler) {
-            urnComponents = schemeHandler.serialize(urnComponents, options);
-          }
-          var uriComponents = urnComponents;
-          var nss = urnComponents.nss;
-          uriComponents.path = (nid || options.nid) + ":" + nss;
-          return uriComponents;
+          target.userinfo = base.userinfo;
+          target.host = base.host;
+          target.port = base.port;
         }
+        target.scheme = base.scheme;
+      }
+      target.fragment = relative.fragment;
+      return target;
+    }
+    function equal(uriA, uriB, options) {
+      if (typeof uriA === "string") {
+        uriA = unescape(uriA);
+        uriA = serialize2(normalizeComponentEncoding(parse4(uriA, options), true), { ...options, skipEscape: true });
+      } else if (typeof uriA === "object") {
+        uriA = serialize2(normalizeComponentEncoding(uriA, true), { ...options, skipEscape: true });
+      }
+      if (typeof uriB === "string") {
+        uriB = unescape(uriB);
+        uriB = serialize2(normalizeComponentEncoding(parse4(uriB, options), true), { ...options, skipEscape: true });
+      } else if (typeof uriB === "object") {
+        uriB = serialize2(normalizeComponentEncoding(uriB, true), { ...options, skipEscape: true });
+      }
+      return uriA.toLowerCase() === uriB.toLowerCase();
+    }
+    function serialize2(cmpts, opts) {
+      const components = {
+        host: cmpts.host,
+        scheme: cmpts.scheme,
+        userinfo: cmpts.userinfo,
+        port: cmpts.port,
+        path: cmpts.path,
+        query: cmpts.query,
+        nid: cmpts.nid,
+        nss: cmpts.nss,
+        uuid: cmpts.uuid,
+        fragment: cmpts.fragment,
+        reference: cmpts.reference,
+        resourceName: cmpts.resourceName,
+        secure: cmpts.secure,
+        error: ""
       };
-      var UUID = /^[0-9A-Fa-f]{8}(?:\-[0-9A-Fa-f]{4}){3}\-[0-9A-Fa-f]{12}$/;
-      var handler$6 = {
-        scheme: "urn:uuid",
-        parse: function parse5(urnComponents, options) {
-          var uuidComponents = urnComponents;
-          uuidComponents.uuid = uuidComponents.nss;
-          uuidComponents.nss = void 0;
-          if (!options.tolerant && (!uuidComponents.uuid || !uuidComponents.uuid.match(UUID))) {
-            uuidComponents.error = uuidComponents.error || "UUID is not valid.";
+      const options = Object.assign({}, opts);
+      const uriTokens = [];
+      const schemeHandler = SCHEMES[(options.scheme || components.scheme || "").toLowerCase()];
+      if (schemeHandler && schemeHandler.serialize) schemeHandler.serialize(components, options);
+      if (components.path !== void 0) {
+        if (!options.skipEscape) {
+          components.path = escape(components.path);
+          if (components.scheme !== void 0) {
+            components.path = components.path.split("%3A").join(":");
           }
-          return uuidComponents;
-        },
-        serialize: function serialize3(uuidComponents, options) {
-          var urnComponents = uuidComponents;
-          urnComponents.nss = (uuidComponents.uuid || "").toLowerCase();
-          return urnComponents;
+        } else {
+          components.path = unescape(components.path);
         }
+      }
+      if (options.reference !== "suffix" && components.scheme) {
+        uriTokens.push(components.scheme);
+        uriTokens.push(":");
+      }
+      const authority = recomposeAuthority(components, options);
+      if (authority !== void 0) {
+        if (options.reference !== "suffix") {
+          uriTokens.push("//");
+        }
+        uriTokens.push(authority);
+        if (components.path && components.path.charAt(0) !== "/") {
+          uriTokens.push("/");
+        }
+      }
+      if (components.path !== void 0) {
+        let s = components.path;
+        if (!options.absolutePath && (!schemeHandler || !schemeHandler.absolutePath)) {
+          s = removeDotSegments(s);
+        }
+        if (authority === void 0) {
+          s = s.replace(/^\/\//u, "/%2F");
+        }
+        uriTokens.push(s);
+      }
+      if (components.query !== void 0) {
+        uriTokens.push("?");
+        uriTokens.push(components.query);
+      }
+      if (components.fragment !== void 0) {
+        uriTokens.push("#");
+        uriTokens.push(components.fragment);
+      }
+      return uriTokens.join("");
+    }
+    var hexLookUp = Array.from({ length: 127 }, (v, k) => /[^!"$&'()*+,\-.;=_`a-z{}~]/u.test(String.fromCharCode(k)));
+    function nonSimpleDomain(value) {
+      let code3 = 0;
+      for (let i = 0, len = value.length; i < len; ++i) {
+        code3 = value.charCodeAt(i);
+        if (code3 > 126 || hexLookUp[code3]) {
+          return true;
+        }
+      }
+      return false;
+    }
+    var URI_PARSE = /^(?:([^#/:?]+):)?(?:\/\/((?:([^#/?@]*)@)?(\[[^#/?\]]+\]|[^#/:?]*)(?::(\d*))?))?([^#?]*)(?:\?([^#]*))?(?:#((?:.|[\n\r])*))?/u;
+    function parse4(uri, opts) {
+      const options = Object.assign({}, opts);
+      const parsed = {
+        scheme: void 0,
+        userinfo: void 0,
+        host: "",
+        port: void 0,
+        path: "",
+        query: void 0,
+        fragment: void 0
       };
-      SCHEMES[handler2.scheme] = handler2;
-      SCHEMES[handler$1.scheme] = handler$1;
-      SCHEMES[handler$2.scheme] = handler$2;
-      SCHEMES[handler$3.scheme] = handler$3;
-      SCHEMES[handler$4.scheme] = handler$4;
-      SCHEMES[handler$5.scheme] = handler$5;
-      SCHEMES[handler$6.scheme] = handler$6;
-      exports2.SCHEMES = SCHEMES;
-      exports2.pctEncChar = pctEncChar;
-      exports2.pctDecChars = pctDecChars;
-      exports2.parse = parse4;
-      exports2.removeDotSegments = removeDotSegments;
-      exports2.serialize = serialize2;
-      exports2.resolveComponents = resolveComponents;
-      exports2.resolve = resolve;
-      exports2.normalize = normalize;
-      exports2.equal = equal;
-      exports2.escapeComponent = escapeComponent;
-      exports2.unescapeComponent = unescapeComponent;
-      Object.defineProperty(exports2, "__esModule", { value: true });
-    });
+      const gotEncoding = uri.indexOf("%") !== -1;
+      let isIP = false;
+      if (options.reference === "suffix") uri = (options.scheme ? options.scheme + ":" : "") + "//" + uri;
+      const matches = uri.match(URI_PARSE);
+      if (matches) {
+        parsed.scheme = matches[1];
+        parsed.userinfo = matches[3];
+        parsed.host = matches[4];
+        parsed.port = parseInt(matches[5], 10);
+        parsed.path = matches[6] || "";
+        parsed.query = matches[7];
+        parsed.fragment = matches[8];
+        if (isNaN(parsed.port)) {
+          parsed.port = matches[5];
+        }
+        if (parsed.host) {
+          const ipv4result = normalizeIPv4(parsed.host);
+          if (ipv4result.isIPV4 === false) {
+            const ipv6result = normalizeIPv6(ipv4result.host, { isIPV4: false });
+            parsed.host = ipv6result.host.toLowerCase();
+            isIP = ipv6result.isIPV6;
+          } else {
+            parsed.host = ipv4result.host;
+            isIP = true;
+          }
+        }
+        if (parsed.scheme === void 0 && parsed.userinfo === void 0 && parsed.host === void 0 && parsed.port === void 0 && !parsed.path && parsed.query === void 0) {
+          parsed.reference = "same-document";
+        } else if (parsed.scheme === void 0) {
+          parsed.reference = "relative";
+        } else if (parsed.fragment === void 0) {
+          parsed.reference = "absolute";
+        } else {
+          parsed.reference = "uri";
+        }
+        if (options.reference && options.reference !== "suffix" && options.reference !== parsed.reference) {
+          parsed.error = parsed.error || "URI is not a " + options.reference + " reference.";
+        }
+        const schemeHandler = SCHEMES[(options.scheme || parsed.scheme || "").toLowerCase()];
+        if (!options.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
+          if (parsed.host && (options.domainHost || schemeHandler && schemeHandler.domainHost) && isIP === false && nonSimpleDomain(parsed.host)) {
+            try {
+              parsed.host = URL.domainToASCII(parsed.host.toLowerCase());
+            } catch (e) {
+              parsed.error = parsed.error || "Host's domain name can not be converted to ASCII: " + e;
+            }
+          }
+        }
+        if (!schemeHandler || schemeHandler && !schemeHandler.skipNormalize) {
+          if (gotEncoding && parsed.scheme !== void 0) {
+            parsed.scheme = unescape(parsed.scheme);
+          }
+          if (gotEncoding && parsed.userinfo !== void 0) {
+            parsed.userinfo = unescape(parsed.userinfo);
+          }
+          if (gotEncoding && parsed.host !== void 0) {
+            parsed.host = unescape(parsed.host);
+          }
+          if (parsed.path !== void 0 && parsed.path.length) {
+            parsed.path = escape(unescape(parsed.path));
+          }
+          if (parsed.fragment !== void 0 && parsed.fragment.length) {
+            parsed.fragment = encodeURI(decodeURIComponent(parsed.fragment));
+          }
+        }
+        if (schemeHandler && schemeHandler.parse) {
+          schemeHandler.parse(parsed, options);
+        }
+      } else {
+        parsed.error = parsed.error || "URI can not be parsed.";
+      }
+      return parsed;
+    }
+    var fastUri = {
+      SCHEMES,
+      normalize,
+      resolve,
+      resolveComponents,
+      equal,
+      serialize: serialize2,
+      parse: parse4
+    };
+    module.exports = fastUri;
+    module.exports.default = fastUri;
+    module.exports.fastUri = fastUri;
   }
 });
 
@@ -33629,7 +33285,7 @@ var require_uri = __commonJS({
   "node_modules/ajv/dist/runtime/uri.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var uri = require_uri_all();
+    var uri = require_fast_uri();
     uri.code = 'require("ajv/dist/runtime/uri").default';
     exports.default = uri;
   }
@@ -39280,7 +38936,7 @@ var require_timers2 = __commonJS({
 });
 
 // node_modules/@octokit/action/node_modules/undici/lib/llhttp/utils.js
-var require_utils3 = __commonJS({
+var require_utils4 = __commonJS({
   "node_modules/@octokit/action/node_modules/undici/lib/llhttp/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -39305,7 +38961,7 @@ var require_constants7 = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.SPECIAL_HEADERS = exports.HEADER_STATE = exports.MINOR = exports.MAJOR = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.STRICT_TOKEN = exports.HEX = exports.URL_CHAR = exports.STRICT_URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.FINISH = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = void 0;
-    var utils_1 = require_utils3();
+    var utils_1 = require_utils4();
     var ERROR;
     (function(ERROR2) {
       ERROR2[ERROR2["OK"] = 0] = "OK";
@@ -42028,7 +41684,7 @@ var require_body2 = __commonJS({
         const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
-        const escape = (str2) => str2.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
+        const escape2 = (str2) => str2.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
         const normalizeLinefeeds = (value) => value.replace(/\r?\n|\r/g, "\r\n");
         const blobParts = [];
         const rn = new Uint8Array([13, 10]);
@@ -42036,14 +41692,14 @@ Content-Disposition: form-data`;
         let hasUnknownSizeValue = false;
         for (const [name, value] of object) {
           if (typeof value === "string") {
-            const chunk2 = textEncoder.encode(prefix + `; name="${escape(normalizeLinefeeds(name))}"\r
+            const chunk2 = textEncoder.encode(prefix + `; name="${escape2(normalizeLinefeeds(name))}"\r
 \r
 ${normalizeLinefeeds(value)}\r
 `);
             blobParts.push(chunk2);
             length += chunk2.byteLength;
           } else {
-            const chunk2 = textEncoder.encode(`${prefix}; name="${escape(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${escape(value.name)}"` : "") + `\r
+            const chunk2 = textEncoder.encode(`${prefix}; name="${escape2(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${escape2(value.name)}"` : "") + `\r
 Content-Type: ${value.type || "application/octet-stream"}\r
 \r
 `);
@@ -60147,9 +59803,9 @@ function factoryTitle(effects, ok3, nok, type2, markerType, stringType) {
       return atBreak(code3);
     }
     effects.consume(code3);
-    return code3 === 92 ? escape : inside;
+    return code3 === 92 ? escape2 : inside;
   }
-  function escape(code3) {
+  function escape2(code3) {
     if (code3 === marker || code3 === 92) {
       effects.consume(code3);
       return inside;
@@ -75516,9 +75172,6 @@ mime-types/index.js:
    * Copyright(c) 2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
-
-uri-js/dist/es5/uri.all.js:
-  (** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js *)
 
 undici/lib/web/fetch/body.js:
   (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
