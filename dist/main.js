@@ -18984,9 +18984,13 @@ var require_internal_glob_options_helper = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -19000,7 +19004,7 @@ var require_internal_glob_options_helper = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -19013,7 +19017,8 @@ var require_internal_glob_options_helper = __commonJS({
         followSymbolicLinks: true,
         implicitDescendants: true,
         matchDirectories: true,
-        omitBrokenSymbolicLinks: true
+        omitBrokenSymbolicLinks: true,
+        excludeHiddenFiles: false
       };
       if (copy) {
         if (typeof copy.followSymbolicLinks === "boolean") {
@@ -19032,6 +19037,10 @@ var require_internal_glob_options_helper = __commonJS({
           result.omitBrokenSymbolicLinks = copy.omitBrokenSymbolicLinks;
           core2.debug(`omitBrokenSymbolicLinks '${result.omitBrokenSymbolicLinks}'`);
         }
+        if (typeof copy.excludeHiddenFiles === "boolean") {
+          result.excludeHiddenFiles = copy.excludeHiddenFiles;
+          core2.debug(`excludeHiddenFiles '${result.excludeHiddenFiles}'`);
+        }
       }
       return result;
     }
@@ -19045,9 +19054,13 @@ var require_internal_path_helper = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -19061,7 +19074,7 @@ var require_internal_path_helper = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -19087,15 +19100,15 @@ var require_internal_path_helper = __commonJS({
     }
     exports.dirname = dirname;
     function ensureAbsoluteRoot(root2, itemPath) {
-      assert_1.default(root2, `ensureAbsoluteRoot parameter 'root' must not be empty`);
-      assert_1.default(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
+      (0, assert_1.default)(root2, `ensureAbsoluteRoot parameter 'root' must not be empty`);
+      (0, assert_1.default)(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
       if (hasAbsoluteRoot(itemPath)) {
         return itemPath;
       }
       if (IS_WINDOWS) {
         if (itemPath.match(/^[A-Z]:[^\\/]|^[A-Z]:$/i)) {
           let cwd = process.cwd();
-          assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+          (0, assert_1.default)(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
           if (itemPath[0].toUpperCase() === cwd[0].toUpperCase()) {
             if (itemPath.length === 2) {
               return `${itemPath[0]}:\\${cwd.substr(3)}`;
@@ -19110,11 +19123,11 @@ var require_internal_path_helper = __commonJS({
           }
         } else if (normalizeSeparators(itemPath).match(/^\\$|^\\[^\\]/)) {
           const cwd = process.cwd();
-          assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+          (0, assert_1.default)(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
           return `${cwd[0]}:\\${itemPath.substr(1)}`;
         }
       }
-      assert_1.default(hasAbsoluteRoot(root2), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
+      (0, assert_1.default)(hasAbsoluteRoot(root2), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
       if (root2.endsWith("/") || IS_WINDOWS && root2.endsWith("\\")) {
       } else {
         root2 += path2.sep;
@@ -19123,7 +19136,7 @@ var require_internal_path_helper = __commonJS({
     }
     exports.ensureAbsoluteRoot = ensureAbsoluteRoot;
     function hasAbsoluteRoot(itemPath) {
-      assert_1.default(itemPath, `hasAbsoluteRoot parameter 'itemPath' must not be empty`);
+      (0, assert_1.default)(itemPath, `hasAbsoluteRoot parameter 'itemPath' must not be empty`);
       itemPath = normalizeSeparators(itemPath);
       if (IS_WINDOWS) {
         return itemPath.startsWith("\\\\") || /^[A-Z]:\\/i.test(itemPath);
@@ -19132,7 +19145,7 @@ var require_internal_path_helper = __commonJS({
     }
     exports.hasAbsoluteRoot = hasAbsoluteRoot;
     function hasRoot(itemPath) {
-      assert_1.default(itemPath, `isRooted parameter 'itemPath' must not be empty`);
+      (0, assert_1.default)(itemPath, `isRooted parameter 'itemPath' must not be empty`);
       itemPath = normalizeSeparators(itemPath);
       if (IS_WINDOWS) {
         return itemPath.startsWith("\\") || /^[A-Z]:/i.test(itemPath);
@@ -19182,7 +19195,7 @@ var require_internal_match_kind = __commonJS({
       MatchKind2[MatchKind2["Directory"] = 1] = "Directory";
       MatchKind2[MatchKind2["File"] = 2] = "File";
       MatchKind2[MatchKind2["All"] = 3] = "All";
-    })(MatchKind = exports.MatchKind || (exports.MatchKind = {}));
+    })(MatchKind || (exports.MatchKind = MatchKind = {}));
   }
 });
 
@@ -19192,9 +19205,13 @@ var require_internal_pattern_helper = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -19208,7 +19225,7 @@ var require_internal_pattern_helper = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -20064,9 +20081,13 @@ var require_internal_path = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -20080,7 +20101,7 @@ var require_internal_path = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -20102,7 +20123,7 @@ var require_internal_path = __commonJS({
       constructor(itemPath) {
         this.segments = [];
         if (typeof itemPath === "string") {
-          assert_1.default(itemPath, `Parameter 'itemPath' must not be empty`);
+          (0, assert_1.default)(itemPath, `Parameter 'itemPath' must not be empty`);
           itemPath = pathHelper.safeTrimTrailingSeparator(itemPath);
           if (!pathHelper.hasRoot(itemPath)) {
             this.segments = itemPath.split(path2.sep);
@@ -20118,17 +20139,17 @@ var require_internal_path = __commonJS({
             this.segments.unshift(remaining);
           }
         } else {
-          assert_1.default(itemPath.length > 0, `Parameter 'itemPath' must not be an empty array`);
+          (0, assert_1.default)(itemPath.length > 0, `Parameter 'itemPath' must not be an empty array`);
           for (let i = 0; i < itemPath.length; i++) {
             let segment = itemPath[i];
-            assert_1.default(segment, `Parameter 'itemPath' must not contain any empty segments`);
+            (0, assert_1.default)(segment, `Parameter 'itemPath' must not contain any empty segments`);
             segment = pathHelper.normalizeSeparators(itemPath[i]);
             if (i === 0 && pathHelper.hasRoot(segment)) {
               segment = pathHelper.safeTrimTrailingSeparator(segment);
-              assert_1.default(segment === pathHelper.dirname(segment), `Parameter 'itemPath' root segment contains information for multiple segments`);
+              (0, assert_1.default)(segment === pathHelper.dirname(segment), `Parameter 'itemPath' root segment contains information for multiple segments`);
               this.segments.push(segment);
             } else {
-              assert_1.default(!segment.includes(path2.sep), `Parameter 'itemPath' contains unexpected path separators`);
+              (0, assert_1.default)(!segment.includes(path2.sep), `Parameter 'itemPath' contains unexpected path separators`);
               this.segments.push(segment);
             }
           }
@@ -20161,9 +20182,13 @@ var require_internal_pattern = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -20177,7 +20202,7 @@ var require_internal_pattern = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -20203,9 +20228,9 @@ var require_internal_pattern = __commonJS({
           pattern = patternOrNegate.trim();
         } else {
           segments = segments || [];
-          assert_1.default(segments.length, `Parameter 'segments' must not empty`);
+          (0, assert_1.default)(segments.length, `Parameter 'segments' must not empty`);
           const root2 = _Pattern.getLiteral(segments[0]);
-          assert_1.default(root2 && pathHelper.hasAbsoluteRoot(root2), `Parameter 'segments' first element must be a root path`);
+          (0, assert_1.default)(root2 && pathHelper.hasAbsoluteRoot(root2), `Parameter 'segments' first element must be a root path`);
           pattern = new internal_path_1.Path(segments).toString().trim();
           if (patternOrNegate) {
             pattern = `!${pattern}`;
@@ -20272,17 +20297,17 @@ var require_internal_pattern = __commonJS({
        * Normalizes slashes and ensures absolute root
        */
       static fixupPattern(pattern, homedir) {
-        assert_1.default(pattern, "pattern cannot be empty");
+        (0, assert_1.default)(pattern, "pattern cannot be empty");
         const literalSegments = new internal_path_1.Path(pattern).segments.map((x) => _Pattern.getLiteral(x));
-        assert_1.default(literalSegments.every((x, i) => (x !== "." || i === 0) && x !== ".."), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
-        assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
+        (0, assert_1.default)(literalSegments.every((x, i) => (x !== "." || i === 0) && x !== ".."), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
+        (0, assert_1.default)(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
         pattern = pathHelper.normalizeSeparators(pattern);
         if (pattern === "." || pattern.startsWith(`.${path2.sep}`)) {
           pattern = _Pattern.globEscape(process.cwd()) + pattern.substr(1);
         } else if (pattern === "~" || pattern.startsWith(`~${path2.sep}`)) {
           homedir = homedir || os.homedir();
-          assert_1.default(homedir, "Unable to determine HOME directory");
-          assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
+          (0, assert_1.default)(homedir, "Unable to determine HOME directory");
+          (0, assert_1.default)(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
           pattern = _Pattern.globEscape(homedir) + pattern.substr(1);
         } else if (IS_WINDOWS && (pattern.match(/^[A-Z]:$/i) || pattern.match(/^[A-Z]:[^\\]/i))) {
           let root2 = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", pattern.substr(0, 2));
@@ -20378,9 +20403,13 @@ var require_internal_globber = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -20394,7 +20423,7 @@ var require_internal_globber = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -20502,19 +20531,21 @@ var require_internal_globber = __commonJS({
         return this.searchPaths.slice();
       }
       glob() {
-        var e_1, _a;
+        var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
           const result = [];
           try {
-            for (var _b = __asyncValues(this.globGenerator()), _c; _c = yield _b.next(), !_c.done; ) {
-              const itemPath = _c.value;
+            for (var _d = true, _e = __asyncValues(this.globGenerator()), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
+              _c = _f.value;
+              _d = false;
+              const itemPath = _c;
               result.push(itemPath);
             }
           } catch (e_1_1) {
             e_1 = { error: e_1_1 };
           } finally {
             try {
-              if (_c && !_c.done && (_a = _b.return)) yield _a.call(_b);
+              if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
             } finally {
               if (e_1) throw e_1.error;
             }
@@ -20558,6 +20589,9 @@ var require_internal_globber = __commonJS({
               // Broken symlink, or symlink cycle detected, or no longer exists
             );
             if (!stats) {
+              continue;
+            }
+            if (options.excludeHiddenFiles && path2.basename(item.path).match(/^\./)) {
               continue;
             }
             if (stats.isDirectory()) {
@@ -20641,9 +20675,13 @@ var require_internal_hash_files = __commonJS({
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
     } : function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
@@ -20657,7 +20695,7 @@ var require_internal_hash_files = __commonJS({
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
-        for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
       }
       __setModuleDefault(result, mod);
       return result;
@@ -20717,17 +20755,19 @@ var require_internal_hash_files = __commonJS({
     var util = __importStar(__require("util"));
     var path2 = __importStar(__require("path"));
     function hashFiles(globber, currentWorkspace, verbose = false) {
-      var e_1, _a;
-      var _b;
+      var _a, e_1, _b, _c;
+      var _d;
       return __awaiter(this, void 0, void 0, function* () {
         const writeDelegate = verbose ? core2.info : core2.debug;
         let hasMatch = false;
-        const githubWorkspace = currentWorkspace ? currentWorkspace : (_b = process.env["GITHUB_WORKSPACE"]) !== null && _b !== void 0 ? _b : process.cwd();
+        const githubWorkspace = currentWorkspace ? currentWorkspace : (_d = process.env["GITHUB_WORKSPACE"]) !== null && _d !== void 0 ? _d : process.cwd();
         const result = crypto4.createHash("sha256");
         let count = 0;
         try {
-          for (var _c = __asyncValues(globber.globGenerator()), _d; _d = yield _c.next(), !_d.done; ) {
-            const file = _d.value;
+          for (var _e = true, _f = __asyncValues(globber.globGenerator()), _g; _g = yield _f.next(), _a = _g.done, !_a; _e = true) {
+            _c = _g.value;
+            _e = false;
+            const file = _c;
             writeDelegate(file);
             if (!file.startsWith(`${githubWorkspace}${path2.sep}`)) {
               writeDelegate(`Ignore '${file}' since it is not under GITHUB_WORKSPACE.`);
@@ -20750,7 +20790,7 @@ var require_internal_hash_files = __commonJS({
           e_1 = { error: e_1_1 };
         } finally {
           try {
-            if (_d && !_d.done && (_a = _c.return)) yield _a.call(_c);
+            if (!_e && !_a && (_b = _f.return)) yield _b.call(_f);
           } finally {
             if (e_1) throw e_1.error;
           }
@@ -20817,7 +20857,7 @@ var require_glob = __commonJS({
           followSymbolicLinks = options.followSymbolicLinks;
         }
         const globber = yield create(patterns, { followSymbolicLinks });
-        return internal_hash_files_1.hashFiles(globber, currentWorkspace, verbose);
+        return (0, internal_hash_files_1.hashFiles)(globber, currentWorkspace, verbose);
       });
     }
     exports.hashFiles = hashFiles;
