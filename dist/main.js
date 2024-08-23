@@ -2250,6 +2250,7 @@ var require_decodeText = __commonJS({
             return decoders.utf8;
           case "latin1":
           case "ascii":
+          // TODO: Make these a separate, strict decoder?
           case "us-ascii":
           case "iso-8859-1":
           case "iso8859-1":
@@ -2949,6 +2950,7 @@ var require_basename = __commonJS({
       for (var i = path2.length - 1; i >= 0; --i) {
         switch (path2.charCodeAt(i)) {
           case 47:
+          // '/'
           case 92:
             path2 = path2.slice(i + 1);
             return path2 === ".." || path2 === "." ? "" : path2;
@@ -4183,7 +4185,21 @@ var require_util2 = __commonJS({
           return referrerOrigin;
         }
         case "strict-origin":
+        // eslint-disable-line
+        /**
+           * 1. If referrerURL is a potentially trustworthy URL and
+           * request’s current URL is not a potentially trustworthy URL,
+           * then return no referrer.
+           * 2. Return referrerOrigin
+          */
         case "no-referrer-when-downgrade":
+        // eslint-disable-line
+        /**
+         * 1. If referrerURL is a potentially trustworthy URL and
+         * request’s current URL is not a potentially trustworthy URL,
+         * then return no referrer.
+         * 2. Return referrerOrigin
+        */
         default:
           return isNonPotentiallyTrustWorthy ? "no-referrer" : referrerOrigin;
       }
@@ -19747,6 +19763,7 @@ var require_minimatch = __commonJS({
           continue;
         }
         switch (c) {
+          /* istanbul ignore next */
           case "/": {
             return false;
           }
@@ -19754,6 +19771,8 @@ var require_minimatch = __commonJS({
             clearStateChar();
             escaping = true;
             continue;
+          // the various stateChar values
+          // for the "extglob" stuff.
           case "?":
           case "*":
           case "+":
@@ -19814,6 +19833,7 @@ var require_minimatch = __commonJS({
             clearStateChar();
             re += "|";
             continue;
+          // these are mostly the same in regexp and glob
           case "[":
             clearStateChar();
             if (inClass) {
@@ -40549,7 +40569,21 @@ var require_util10 = __commonJS({
           return referrerOrigin;
         }
         case "strict-origin":
+        // eslint-disable-line
+        /**
+           * 1. If referrerURL is a potentially trustworthy URL and
+           * request’s current URL is not a potentially trustworthy URL,
+           * then return no referrer.
+           * 2. Return referrerOrigin
+          */
         case "no-referrer-when-downgrade":
+        // eslint-disable-line
+        /**
+         * 1. If referrerURL is a potentially trustworthy URL and
+         * request’s current URL is not a potentially trustworthy URL,
+         * then return no referrer.
+         * 2. Return referrerOrigin
+        */
         default:
           return isNonPotentiallyTrustWorthy ? "no-referrer" : referrerOrigin;
       }
@@ -62997,6 +63031,7 @@ function configure2(base, extension2) {
         case "extensions": {
           break;
         }
+        /* c8 ignore next 4 */
         case "unsafe": {
           list2(base[key], extension2[key]);
           break;
