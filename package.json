@@ -1,9 +1,6 @@
 {
   "private": true,
   "type": "module",
-  "scripts": {
-    "renovate-post-upgrade": "rm -rf dist && node script/build.js dist/main.js"
-  },
   "engines": {
     "node": "^20",
     "npm": "^10"
