@@ -267,6 +267,48 @@ with Markdown tag annotation bodies:
 
     git tag-md 1.0.0
 
+##### Markdown heading anchors
+
+GitHub doesn't generate [section links] for Markdown headings in release bodies,
+like it does for other Markdown content. This means that you normally can't link
+directly to a heading in a release body, or include links to headings in your
+release body markdown.
+
+[section links]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links
+
+This action solves this issue by generating **heading anchors** for each heading
+in the release body. These anchors work just like the ones generated for most
+Markdown content on GitHub, and can be used to link directly to headings in your
+release body.
+
+For example, if you have a heading in your release body like this:
+
+```markdown
+#### Support for turbo-encabulators
+
+For a number of years now, work has been proceeding in order to bring perfection
+to the crudely conceived idea of a machine that would not only supply inverse
+reactive current for use in unilateral phase detractors, but would also be
+capable of automatically synchronizing cardinal grammeters. Such a machine is
+the Turbo-Encabulator.
+```
+
+Then you can link directly to this heading in your release body like so:
+
+```markdown
+### Added
+
+- Added support for [turbo-encabulators].
+
+[turbo-encabulators]: #support-for-turbo-encabulators
+```
+
+And once the release is published, you can also link directly to the heading in
+the release body from external sources by adding the anchor to the end of the
+release URL, like so:
+
+https://github.com/ghalactic/github-release-from-tag/releases/v5.3.0#markdown-heading-anchors
+
 ##### Markdown line breaks
 
 It's common for tag annotation messages to be "wrapped" at a fixed column width,

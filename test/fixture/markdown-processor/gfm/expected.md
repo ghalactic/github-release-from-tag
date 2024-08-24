@@ -1,6 +1,6 @@
-# GFM
+# <a id="gfm"></a>GFM
 
-## Alerts
+## <a id="alerts"></a>Alerts
 
 > \[!NOTE]
 > Useful information that users should know, even when skimming content.
@@ -17,26 +17,26 @@
 > \[!CAUTION]
 > Advises about risks or negative outcomes of certain actions.
 
-## Autolink literals
+## <a id="autolink-literals"></a>Autolink literals
 
 [www.example.com](http://www.example.com), <https://example.com>, and <contact@example.com>.
 
-## Footnote
+## <a id="footnote"></a>Footnote
 
 A note[^1]
 
 [^1]: Big note.
 
-## Strikethrough
+## <a id="strikethrough"></a>Strikethrough
 
 ~~one~~ or ~~two~~ tildes.
 
-## Table
+## <a id="table"></a>Table
 
 | a | b  |  c |  d  |
 | - | :- | -: | :-: |
 
-## Tasklist
+## <a id="tasklist"></a>Tasklist
 
 * [ ] to do
 * [x] done

@@ -19,13 +19,21 @@ describe("renderReleaseBody()", () => {
 This paragraph should have
 no line breaks.
 
-This should be a separate paragraph.`;
+This should be a separate paragraph.
 
-    const expected = `### This should be a heading
+#### Duplicate heading
+
+#### Duplicate *heading*`;
+
+    const expected = `### <a id="this-should-be-a-heading"></a>This should be a heading
 
 This paragraph should have no line breaks.
 
 This should be a separate paragraph.
+
+#### <a id="duplicate-heading"></a>Duplicate heading
+
+#### <a id="duplicate-heading-1"></a>Duplicate *heading*
 
 <!-- published by action-org/action-repo -->`;
 

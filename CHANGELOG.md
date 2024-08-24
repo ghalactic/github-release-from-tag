@@ -7,6 +7,23 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Added
+
+- [Markdown heading anchors] are now added to release bodies.
+
+[markdown heading anchors]: #markdown-heading-anchors
+
+#### Markdown heading anchors
+
+Anchors are now added to headings in the release body. This makes it possible to
+link directly to a specific section of the release body, either from within the
+release body itself, or externally once the release is created. You would
+probably expect GitHub to do this as a part of its release body rendering, just
+like it does for READMEs, but surprisingly it doesn't. So, now this action will
+do it for you.
+
 ## [v5.2.1] - 2024-06-09
 
 [v5.2.1]: https://github.com/ghalactic/github-release-from-tag/releases/v5.2.1
