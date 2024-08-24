@@ -21,8 +21,9 @@ describe("Markdown processor", () => {
   `("$label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
     const input = String(await readFile(join(fixturePath, "input.md")));
-    const expected = String(await readFile(join(fixturePath, "expected.md")));
 
-    expect(await process(input)).toBe(expected);
+    await expect(await process(input)).toMatchFileSnapshot(
+      join(fixturePath, "expected.md"),
+    );
   });
 });

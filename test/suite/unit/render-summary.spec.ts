@@ -32,10 +32,9 @@ describe("renderSummary()", () => {
     const tagger = load(
       (await readFile(join(fixturePath, "tagger.yml"))).toString(),
     ) as TaggerData;
-    const expected = String(
-      (await readFile(join(fixturePath, "expected.md"))).toString(),
-    );
 
-    expect(renderSummary({ ...args, release, tagger })).toBe(expected);
+    await expect(
+      renderSummary({ ...args, release, tagger }),
+    ).toMatchFileSnapshot(join(fixturePath, "expected.md"));
   });
 });
