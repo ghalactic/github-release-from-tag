@@ -1,11 +1,14 @@
 import { dump } from "js-yaml";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readConfig } from "../../../src/config/reading.js";
 import { getInput, group, info } from "../../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
-const fixturesPath = join(__dirname, "../../fixture/config");
+const fixturesPath = fileURLToPath(
+  new URL("../../fixture/config", import.meta.url),
+);
 
 describe("readConfig()", () => {
   let originalCwd: string;

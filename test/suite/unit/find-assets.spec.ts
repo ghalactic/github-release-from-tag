@@ -1,11 +1,14 @@
 import { join } from "path";
+import { fileURLToPath } from "url";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { findAssets } from "../../../src/asset.js";
 import { WarningFn } from "../../../src/type/actions.js";
 import { info, warning } from "../../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
-const fixturesPath = join(__dirname, "../../fixture/find-assets");
+const fixturesPath = fileURLToPath(
+  new URL("../../fixture/find-assets", import.meta.url),
+);
 
 describe("findAssets()", () => {
   let originalCwd: string;

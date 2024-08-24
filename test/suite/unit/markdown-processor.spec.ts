@@ -1,9 +1,12 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import { describe, expect, it } from "vitest";
 import { createProcessor } from "../../../src/markdown.js";
 
-const fixturesPath = join(__dirname, "../../fixture/markdown-processor");
+const fixturesPath = fileURLToPath(
+  new URL("../../fixture/markdown-processor", import.meta.url),
+);
 
 describe("Markdown processor", () => {
   const process = createProcessor();

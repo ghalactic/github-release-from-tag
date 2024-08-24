@@ -1,11 +1,14 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import { describe, expect, it } from "vitest";
 import { renderSummary } from "../../../src/summary.js";
 import { ReleaseData, TaggerData } from "../../../src/type/octokit.js";
 
-const fixturesPath = join(__dirname, "../../fixture/summary");
+const fixturesPath = fileURLToPath(
+  new URL("../../fixture/summary", import.meta.url),
+);
 
 describe("renderSummary()", () => {
   it.each`
