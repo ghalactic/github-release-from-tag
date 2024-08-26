@@ -18,5 +18,10 @@ export default defineConfig({
         maxForks: isGHA ? 20 : undefined,
       },
     },
+
+    coverage: {
+      include: ["src/**/*.ts"],
+      exclude: ["src/type/**"],
+    },
   },
 });
