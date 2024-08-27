@@ -704,7 +704,7 @@ affecting how releases are published:
 > [JSON Schema definition] is also available.
 
 [action inputs]: #action-inputs
-[json schema definition]: src/config/schema.js
+[json schema definition]: https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json
 
 ```yaml
 # .github/github-release-from-tag.yml
