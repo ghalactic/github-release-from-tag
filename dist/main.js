@@ -70924,8 +70924,8 @@ function isObject2(value) {
 var import_ajv = __toESM(require_ajv(), 1);
 
 // src/constant/schema-id.ts
-var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.schema.json";
-var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.schema.json";
+var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json";
+var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json";
 
 // src/config/schema.ts
 var config = {
