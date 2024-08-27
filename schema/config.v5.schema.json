@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
+  "title": "GitHub Release from Tag (Configuration)",
+  "description": "Configuration for the \"GitHub Release from Tag\" GitHub Action.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "description": "The JSON Schema identifier.",
+      "type": "string",
+      "const": "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json"
+    },
+    "assets": {
+      "$ref": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+      "default": []
+    },
+    "checksum": {
+      "description": "Options for release asset checksums.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "generateAssets": {
+          "description": "Set to false to disable generation of checksum assets for releases.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "discussion": {
+      "description": "Options for creating discussions linked to releases.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "category": {
+          "description": "The category to use when creating the discussion. The value must be a category that already exists in the repository.",
+          "type": "string",
+          "default": ""
+        },
+        "reactions": {
+          "description": "Reactions to create for discussions linked to releases.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "description": "A reaction to create for discussions linked to releases.",
+            "type": "string",
+            "enum": [
+              "+1",
+              "-1",
+              "laugh",
+              "hooray",
+              "confused",
+              "heart",
+              "rocket",
+              "eyes"
+            ]
+          }
+        }
+      }
+    },
+    "draft": {
+      "description": "Set to true to produce releases in a draft state.",
+      "type": "boolean",
+      "default": false
+    },
+    "generateReleaseNotes": {
+      "description": "Set to true to append automatically generated release notes to release bodies.",
+      "type": "boolean",
+      "default": false
+    },
+    "prerelease": {
+      "description": "Set to true or false to override the automatic tag name based pre-release detection.",
+      "type": "boolean"
+    },
+    "reactions": {
+      "description": "Reactions to create for releases.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "description": "A reaction to create for releases.",
+        "type": "string",
+        "enum": ["+1", "laugh", "hooray", "heart", "rocket", "eyes"]
+      }
+    },
+    "summary": {
+      "description": "Options for creating GitHub Actions job summaries.",
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "enabled": {
+          "description": "Set to false to disable GitHub Actions job summary creation.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}
