@@ -70886,7 +70886,7 @@ function isObject2(value) {
 var config_v5_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
-  title: "GitHub Release from Tag (Configuration)",
+  title: "GitHub Release from Tag (configuration)",
   description: 'Configuration for the "GitHub Release from Tag" GitHub Action.',
   type: "object",
   additionalProperties: false,
@@ -70992,7 +70992,7 @@ var import_ajv = __toESM(require_ajv(), 1);
 var assets_v5_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
-  title: "GitHub Release from Tag (Assets)",
+  title: "GitHub Release from Tag (assets)",
   description: "Assets to be associated with releases.",
   type: "array",
   items: {
