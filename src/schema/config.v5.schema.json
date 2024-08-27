@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
   "title": "GitHub Release from Tag (Configuration)",
-  "description": "Configuration for the \"GitHub Release from Tag\" GitHub Action.",
+  "description": "Configuration for the \"GitHub Release from Tag\" GitHub Action. 😉",
   "type": "object",
   "additionalProperties": false,
   "properties": {
