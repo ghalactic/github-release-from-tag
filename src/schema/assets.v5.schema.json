@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+  "title": "GitHub Release from Tag (Assets)",
+  "description": "Assets to be associated with releases.",
+  "type": "array",
+  "items": {
+    "description": "An asset to be associated with releases.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["path"],
+    "properties": {
+      "label": {
+        "description": "The asset label.",
+        "type": "string",
+        "default": ""
+      },
+      "name": {
+        "description": "The asset name. Defaults to the basename of the asset path.",
+        "type": "string",
+        "default": ""
+      },
+      "optional": {
+        "description": "Whether the asset should be ignored if the path file glob pattern does not match any files.",
+        "type": "boolean",
+        "default": false
+      },
+      "path": {
+        "description": "The file path glob pattern used to locate the asset(s). Relative patterns are resolved against the root of the Git repo.",
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
