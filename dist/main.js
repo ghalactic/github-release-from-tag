@@ -70874,44 +70874,6 @@ var safeLoad = renamed("safeLoad", "load");
 var safeLoadAll = renamed("safeLoadAll", "loadAll");
 var safeDump = renamed("safeDump", "dump");
 
-// src/constant/reaction.ts
-var THUMBS_UP = "+1";
-var THUMBS_DOWN = "-1";
-var LAUGH = "laugh";
-var HOORAY = "hooray";
-var CONFUSED = "confused";
-var HEART = "heart";
-var ROCKET = "rocket";
-var EYES = "eyes";
-var DISCUSSION_REACTIONS = [
-  THUMBS_UP,
-  THUMBS_DOWN,
-  LAUGH,
-  HOORAY,
-  CONFUSED,
-  HEART,
-  ROCKET,
-  EYES
-];
-var RELEASE_REACTIONS = [
-  THUMBS_UP,
-  LAUGH,
-  HOORAY,
-  HEART,
-  ROCKET,
-  EYES
-];
-var REACTION_NAMES = {
-  [THUMBS_UP]: "THUMBS_UP",
-  [THUMBS_DOWN]: "THUMBS_DOWN",
-  [LAUGH]: "LAUGH",
-  [HOORAY]: "HOORAY",
-  [CONFUSED]: "CONFUSED",
-  [HEART]: "HEART",
-  [ROCKET]: "ROCKET",
-  [EYES]: "EYES"
-};
-
 // src/guard.ts
 function isError(value) {
   return value instanceof Error;
@@ -70919,50 +70881,6 @@ function isError(value) {
 function isObject2(value) {
   return typeof value === "object" && value != null;
 }
-
-// src/config/validation.ts
-var import_ajv = __toESM(require_ajv(), 1);
-
-// src/constant/schema-id.ts
-var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json";
-var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json";
-
-// src/schema/assets.v5.schema.json
-var assets_v5_schema_default = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
-  title: "GitHub Release from Tag (Assets)",
-  description: "Assets to be associated with releases.",
-  type: "array",
-  items: {
-    description: "An asset to be associated with releases.",
-    type: "object",
-    additionalProperties: false,
-    required: ["path"],
-    properties: {
-      label: {
-        description: "The asset label.",
-        type: "string",
-        default: ""
-      },
-      name: {
-        description: "The asset name. Defaults to the basename of the asset path.",
-        type: "string",
-        default: ""
-      },
-      optional: {
-        description: "Whether the asset should be ignored if the path file glob pattern does not match any files.",
-        type: "boolean",
-        default: false
-      },
-      path: {
-        description: "The file path glob pattern used to locate the asset(s). Relative patterns are resolved against the root of the Git repo.",
-        type: "string",
-        minLength: 1
-      }
-    }
-  }
-};
 
 // src/schema/config.v5.schema.json
 var config_v5_schema_default = {
@@ -71057,6 +70975,50 @@ var config_v5_schema_default = {
           type: "boolean",
           default: true
         }
+      }
+    }
+  }
+};
+
+// src/config/validation.ts
+var import_ajv = __toESM(require_ajv(), 1);
+
+// src/constant/schema-id.ts
+var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json";
+var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json";
+
+// src/schema/assets.v5.schema.json
+var assets_v5_schema_default = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+  title: "GitHub Release from Tag (Assets)",
+  description: "Assets to be associated with releases.",
+  type: "array",
+  items: {
+    description: "An asset to be associated with releases.",
+    type: "object",
+    additionalProperties: false,
+    required: ["path"],
+    properties: {
+      label: {
+        description: "The asset label.",
+        type: "string",
+        default: ""
+      },
+      name: {
+        description: "The asset name. Defaults to the basename of the asset path.",
+        type: "string",
+        default: ""
+      },
+      optional: {
+        description: "Whether the asset should be ignored if the path file glob pattern does not match any files.",
+        type: "boolean",
+        default: false
+      },
+      path: {
+        description: "The file path glob pattern used to locate the asset(s). Relative patterns are resolved against the root of the Git repo.",
+        type: "string",
+        minLength: 1
       }
     }
   }
@@ -71257,7 +71219,8 @@ function parseReleaseReactions(reactionList) {
   return reactions;
 }
 function isDiscussionReaction(reaction) {
-  return DISCUSSION_REACTIONS.includes(reaction);
+  const reactions = config_v5_schema_default.properties.discussion.properties.reactions.items.enum;
+  return reactions.includes(reaction);
 }
 function isFileNotFoundError(value) {
   if (!isObject2(value)) return false;
@@ -71265,7 +71228,8 @@ function isFileNotFoundError(value) {
   return code3 === "ENOENT";
 }
 function isReleaseReaction(reaction) {
-  return RELEASE_REACTIONS.includes(reaction);
+  const reactions = config_v5_schema_default.properties.reactions.items.enum;
+  return reactions.includes(reaction);
 }
 
 // src/git.ts
@@ -74658,6 +74622,26 @@ function isRequestError(value) {
   const data = response?.data;
   return typeof data === "object" && data != null;
 }
+
+// src/constant/reaction.ts
+var THUMBS_UP = "+1";
+var THUMBS_DOWN = "-1";
+var LAUGH = "laugh";
+var HOORAY = "hooray";
+var CONFUSED = "confused";
+var HEART = "heart";
+var ROCKET = "rocket";
+var EYES = "eyes";
+var REACTION_NAMES = {
+  [THUMBS_UP]: "THUMBS_UP",
+  [THUMBS_DOWN]: "THUMBS_DOWN",
+  [LAUGH]: "LAUGH",
+  [HOORAY]: "HOORAY",
+  [CONFUSED]: "CONFUSED",
+  [HEART]: "HEART",
+  [ROCKET]: "ROCKET",
+  [EYES]: "EYES"
+};
 
 // src/discussion.ts
 async function getDiscussionIdByUrl({

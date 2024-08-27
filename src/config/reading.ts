@@ -1,10 +1,7 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
-import {
-  DISCUSSION_REACTIONS,
-  RELEASE_REACTIONS,
-} from "../constant/reaction.js";
 import { isError, isObject } from "../guard.js";
+import configSchema from "../schema/config.v5.schema.json";
 import type { GetInputFn, GroupFn, InfoFn } from "../type/actions.js";
 import {
   AssetConfig,
@@ -227,7 +224,10 @@ function parseReleaseReactions(reactionList: string): ReleaseReaction[] {
 function isDiscussionReaction(
   reaction: string,
 ): reaction is DiscussionReaction {
-  return DISCUSSION_REACTIONS.includes(reaction as DiscussionReaction);
+  const reactions =
+    configSchema.properties.discussion.properties.reactions.items.enum;
+
+  return reactions.includes(reaction as DiscussionReaction);
 }
 
 function isFileNotFoundError(value: unknown): value is { code: "ENOENT" } {
@@ -239,7 +239,9 @@ function isFileNotFoundError(value: unknown): value is { code: "ENOENT" } {
 }
 
 function isReleaseReaction(reaction: string): reaction is ReleaseReaction {
-  return RELEASE_REACTIONS.includes(reaction as ReleaseReaction);
+  const reactions = configSchema.properties.reactions.items.enum;
+
+  return reactions.includes(reaction as ReleaseReaction);
 }
 
 type ConfigOverrides = {

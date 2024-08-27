@@ -1,7 +1,17 @@
-import {
-  DISCUSSION_REACTIONS,
-  RELEASE_REACTIONS,
-} from "../constant/reaction.js";
+export type DiscussionReaction =
+  | "+1"
+  | "-1"
+  | "laugh"
+  | "hooray"
+  | "confused"
+  | "heart"
+  | "rocket"
+  | "eyes";
 
-export type DiscussionReaction = (typeof DISCUSSION_REACTIONS)[number];
-export type ReleaseReaction = (typeof RELEASE_REACTIONS)[number];
+export type ReleaseReaction =
+  | "+1"
+  | "laugh"
+  | "hooray"
+  | "heart"
+  | "rocket"
+  | "eyes";

@@ -7,26 +7,6 @@ export const HEART = "heart";
 export const ROCKET = "rocket";
 export const EYES = "eyes";
 
-export const DISCUSSION_REACTIONS = [
-  THUMBS_UP,
-  THUMBS_DOWN,
-  LAUGH,
-  HOORAY,
-  CONFUSED,
-  HEART,
-  ROCKET,
-  EYES,
-] as const;
-
-export const RELEASE_REACTIONS = [
-  THUMBS_UP,
-  LAUGH,
-  HOORAY,
-  HEART,
-  ROCKET,
-  EYES,
-] as const;
-
 export const REACTION_NAMES = {
   [THUMBS_UP]: "THUMBS_UP",
   [THUMBS_DOWN]: "THUMBS_DOWN",
