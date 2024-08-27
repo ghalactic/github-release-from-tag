@@ -1,5 +1,4 @@
 import ajvModule, { ErrorObject } from "ajv";
-import { ASSETS, CONFIG } from "../constant/schema-id.js";
 import assetsSchema from "../schema/assets.v5.schema.json";
 import configSchema from "../schema/config.v5.schema.json";
 import { AssetConfig, Config } from "../type/config.js";
@@ -14,12 +13,12 @@ const ajv = new Ajv({
 });
 
 export const validateConfig = createValidate<Config>(
-  CONFIG,
+  configSchema.$id,
   "release configuration",
 );
 
 export const validateAssets = createValidate<AssetConfig[]>(
-  ASSETS,
+  assetsSchema.$id,
   "release assets configuration",
 );
 

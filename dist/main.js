@@ -70983,10 +70983,6 @@ var config_v5_schema_default = {
 // src/config/validation.ts
 var import_ajv = __toESM(require_ajv(), 1);
 
-// src/constant/schema-id.ts
-var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json";
-var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json";
-
 // src/schema/assets.v5.schema.json
 var assets_v5_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
@@ -71032,11 +71028,11 @@ var ajv = new Ajv({
   useDefaults: true
 });
 var validateConfig = createValidate(
-  CONFIG,
+  config_v5_schema_default.$id,
   "release configuration"
 );
 var validateAssets = createValidate(
-  ASSETS2,
+  assets_v5_schema_default.$id,
   "release assets configuration"
 );
 var ValidateError = class extends Error {
