@@ -70891,6 +70891,11 @@ var config_v5_schema_default = {
   type: "object",
   additionalProperties: false,
   properties: {
+    $schema: {
+      description: "The JSON Schema identifier.",
+      type: "string",
+      const: "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json"
+    },
     assets: {
       $ref: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
       default: []

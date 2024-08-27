@@ -34,6 +34,8 @@ describe("readConfig()", () => {
     const actual = await readConfig({ getInput, group, info });
 
     const expected = {
+      $schema:
+        "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
       assets: [
         {
           path: "assets/text/file-a.txt",
