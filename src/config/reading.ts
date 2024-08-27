@@ -151,7 +151,7 @@ function parseConfig(yaml: string | undefined): Config {
     );
   }
 
-  return validateConfig(parsed);
+  return validateConfig(parsed == null ? {} : parsed);
 }
 
 function parseAssets(getInput: GetInputFn): AssetConfig[] {

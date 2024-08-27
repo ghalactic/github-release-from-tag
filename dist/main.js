@@ -71171,7 +71171,7 @@ function parseConfig(yaml) {
       `Parsing of release configuration failed with ${message}. Provided value: ${original}`
     );
   }
-  return validateConfig(parsed);
+  return validateConfig(parsed == null ? {} : parsed);
 }
 function parseAssets(getInput2) {
   const yaml = getInput2("assets");
