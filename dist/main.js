@@ -55750,7 +55750,7 @@ import { createHash } from "crypto";
 import { readFile, stat } from "fs/promises";
 import { basename } from "path";
 async function modifyReleaseAssets({
-  config: config2,
+  config,
   error: error2,
   group: group2,
   info: info2,
@@ -55762,7 +55762,7 @@ async function modifyReleaseAssets({
   warning: warning2
 }) {
   const existingAssets = release.assets;
-  const desiredAssets = await findAssets(info2, warning2, config2.assets);
+  const desiredAssets = await findAssets(info2, warning2, config.assets);
   if (existingAssets.length < 1 && desiredAssets.length < 1) {
     info2("No release assets to modify");
     return [true, []];
@@ -55794,7 +55794,7 @@ async function modifyReleaseAssets({
       compareAsset
     );
     let checksumsResult;
-    if (config2.checksum.generateAssets) {
+    if (config.checksum.generateAssets) {
       checksumsResult = await uploadOrUpdateChecksumAssets(
         existingAssets,
         sortedAssets
@@ -55876,9 +55876,9 @@ async function modifyReleaseAssets({
     });
     info2(`Uploaded checksum asset ${JSON.stringify(name)}`);
   }
-  async function uploadOrUpdateChecksumAssets(existingAssets2, assets2) {
-    const sha256sumData = renderChecksumAsset("sha256", assets2);
-    const jsonData = renderJSONChecksumAsset(assets2);
+  async function uploadOrUpdateChecksumAssets(existingAssets2, assets) {
+    const sha256sumData = renderChecksumAsset("sha256", assets);
+    const jsonData = renderJSONChecksumAsset(assets);
     const results = await Promise.allSettled([
       uploadOrUpdateChecksumAsset(
         existingAssets2,
@@ -55898,9 +55898,9 @@ async function modifyReleaseAssets({
     return results.every((result) => result.status === "fulfilled");
   }
 }
-async function findAssets(info2, warning2, assets2) {
+async function findAssets(info2, warning2, assets) {
   const found = [];
-  for (const asset of assets2) found.push(...await findAsset(info2, asset));
+  for (const asset of assets) found.push(...await findAsset(info2, asset));
   const seen = /* @__PURE__ */ new Set();
   return found.filter(({ name }) => {
     const lowercaseName = name.toLowerCase();
@@ -55918,12 +55918,12 @@ async function findAssets(info2, warning2, assets2) {
 async function findAsset(info2, asset) {
   const { path: pattern, optional: isOptional } = asset;
   const globber = await (0, import_glob.create)(pattern);
-  const assets2 = [];
+  const assets = [];
   for await (const path3 of globber.globGenerator()) {
     const stats = await stat(path3);
-    if (!stats.isDirectory()) assets2.push({ path: path3 });
+    if (!stats.isDirectory()) assets.push({ path: path3 });
   }
-  if (assets2.length < 1) {
+  if (assets.length < 1) {
     const quotedPattern = JSON.stringify(pattern);
     if (isOptional) {
       info2(
@@ -55935,8 +55935,8 @@ async function findAsset(info2, asset) {
       `No release assets found for mandatory asset with path glob pattern ${quotedPattern}`
     );
   }
-  if (assets2.length > 1) return assets2.map(normalizeAssetConfig);
-  const [{ path: path2 }] = assets2;
+  if (assets.length > 1) return assets.map(normalizeAssetConfig);
+  const [{ path: path2 }] = assets;
   const { name, label, optional } = asset;
   return [normalizeAssetConfig({ label, name, path: path2, optional })];
 }
@@ -55971,14 +55971,14 @@ function diffAssets(existingAssets, desiredAssets) {
     toUpload
   };
 }
-function renderChecksumAsset(type2, assets2) {
-  return assets2.map((asset) => `${asset.checksum[type2]}  ${asset.name}`).join("\n") + "\n";
+function renderChecksumAsset(type2, assets) {
+  return assets.map((asset) => `${asset.checksum[type2]}  ${asset.name}`).join("\n") + "\n";
 }
-function renderJSONChecksumAsset(assets2) {
+function renderJSONChecksumAsset(assets) {
   return JSON.stringify(
     {
       sha256: Object.fromEntries(
-        assets2.map((asset) => [asset.name, asset.checksum.sha256])
+        assets.map((asset) => [asset.name, asset.checksum.sha256])
       )
     },
     null,
@@ -55988,13 +55988,13 @@ function renderJSONChecksumAsset(assets2) {
 function analyzeResults(results) {
   let isSuccess = true;
   let successCount = 0;
-  const assets2 = [];
+  const assets = [];
   let failureCount = 0;
   const failureReasons = [];
   for (const result of results) {
     if (result.status === "fulfilled") {
       ++successCount;
-      assets2.push(result.value);
+      assets.push(result.value);
     } else {
       isSuccess = false;
       ++failureCount;
@@ -56004,7 +56004,7 @@ function analyzeResults(results) {
   return {
     isSuccess,
     successCount,
-    assets: assets2,
+    assets,
     failureCount,
     failureReasons
   };
@@ -62309,7 +62309,7 @@ function fromMarkdown(value, encoding, options) {
   );
 }
 function compiler(options) {
-  const config2 = {
+  const config = {
     transforms: [],
     canContainEols: ["emphasis", "fragment", "heading", "paragraph", "strong"],
     enter: {
@@ -62406,7 +62406,7 @@ function compiler(options) {
       thematicBreak: closer()
     }
   };
-  configure(config2, (options || {}).mdastExtensions || []);
+  configure(config, (options || {}).mdastExtensions || []);
   const data = {};
   return compile;
   function compile(events) {
@@ -62417,7 +62417,7 @@ function compiler(options) {
     const context = {
       stack: [tree],
       tokenStack: [],
-      config: config2,
+      config,
       enter,
       exit: exit3,
       buffer,
@@ -62438,7 +62438,7 @@ function compiler(options) {
     }
     index2 = -1;
     while (++index2 < events.length) {
-      const handler2 = config2[events[index2][0]];
+      const handler2 = config[events[index2][0]];
       if (own3.call(handler2, events[index2][1].type)) {
         handler2[events[index2][1].type].call(
           Object.assign(
@@ -62473,8 +62473,8 @@ function compiler(options) {
       )
     };
     index2 = -1;
-    while (++index2 < config2.transforms.length) {
-      tree = config2.transforms[index2](tree) || tree;
+    while (++index2 < config.transforms.length) {
+      tree = config.transforms[index2](tree) || tree;
     }
     return tree;
   }
@@ -62724,7 +62724,7 @@ function compiler(options) {
       this.data.atHardBreak = void 0;
       return;
     }
-    if (!this.data.setextHeadingSlurpLineEnding && config2.canContainEols.includes(context.type)) {
+    if (!this.data.setextHeadingSlurpLineEnding && config.canContainEols.includes(context.type)) {
       onenterdata.call(this, token);
       onexitdata.call(this, token);
     }
@@ -64430,8 +64430,8 @@ function indentLines(value, map6) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/safe.js
-function safe(state, input, config2) {
-  const value = (config2.before || "") + (input || "") + (config2.after || "");
+function safe(state, input, config) {
+  const value = (config.before || "") + (input || "") + (config.after || "");
   const positions = [];
   const result = [];
   const infos = {};
@@ -64461,8 +64461,8 @@ function safe(state, input, config2) {
     }
   }
   positions.sort(numerical);
-  let start = config2.before ? config2.before.length : 0;
-  const end = value.length - (config2.after ? config2.after.length : 0);
+  let start = config.before ? config.before.length : 0;
+  const end = value.length - (config.after ? config.after.length : 0);
   index2 = -1;
   while (++index2 < positions.length) {
     const position2 = positions[index2];
@@ -64476,7 +64476,7 @@ function safe(state, input, config2) {
       result.push(escapeBackslashes(value.slice(start, position2), "\\"));
     }
     start = position2;
-    if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config2.encode || !config2.encode.includes(value.charAt(position2)))) {
+    if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config.encode || !config.encode.includes(value.charAt(position2)))) {
       result.push("\\");
     } else {
       result.push(
@@ -64485,7 +64485,7 @@ function safe(state, input, config2) {
       start++;
     }
   }
-  result.push(escapeBackslashes(value.slice(start, end), config2.after));
+  result.push(escapeBackslashes(value.slice(start, end), config.after));
   return result.join("");
 }
 function numerical(a, b) {
@@ -64514,8 +64514,8 @@ function escapeBackslashes(value, after) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/track.js
-function track(config2) {
-  const options = config2 || {};
+function track(config) {
+  const options = config || {};
   const now = options.now || {};
   let lineShift = options.lineShift || 0;
   let line = now.line || 1;
@@ -64607,8 +64607,8 @@ function containerPhrasingBound(parent, info2) {
 function containerFlowBound(parent, info2) {
   return containerFlow(parent, this, info2);
 }
-function safeBound(value, config2) {
-  return safe(this, value, config2);
+function safeBound(value, config) {
+  return safe(this, value, config);
 }
 
 // node_modules/remark-stringify/lib/index.js
@@ -68242,7 +68242,7 @@ function createProcessor() {
 
 // src/body.ts
 async function renderReleaseBody({
-  config: config2,
+  config,
   env,
   group: group2,
   info: info2,
@@ -68267,7 +68267,7 @@ async function renderReleaseBody({
     setOutput2(TAG_BODY_RENDERED, renderedTagBody);
     parts.push(renderedTagBody);
   }
-  if (config2.generateReleaseNotes) {
+  if (config.generateReleaseNotes) {
     const releaseNotes = await group2(
       "Rendering automatically generated release notes",
       async () => {
@@ -70927,97 +70927,10 @@ var import_ajv = __toESM(require_ajv(), 1);
 var CONFIG = "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json";
 var ASSETS2 = "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json";
 
-// src/config/schema.ts
-var config = {
+// src/schema/assets.v5.schema.json
+var assets_v5_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  $id: CONFIG,
-  title: "GitHub Release from Tag (Configuration)",
-  description: 'Configuration for the "GitHub Release from Tag" GitHub Action.',
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    assets: {
-      $ref: ASSETS2,
-      default: []
-    },
-    checksum: {
-      description: "Options for release asset checksums.",
-      type: "object",
-      additionalProperties: false,
-      default: {},
-      properties: {
-        generateAssets: {
-          description: "Set to false to disable generation of checksum assets for releases.",
-          type: "boolean",
-          default: true
-        }
-      }
-    },
-    discussion: {
-      description: "Options for creating discussions linked to releases.",
-      type: "object",
-      additionalProperties: false,
-      default: {},
-      properties: {
-        category: {
-          description: "The category to use when creating the discussion. The value must be a category that already exists in the repository.",
-          type: "string",
-          default: ""
-        },
-        reactions: {
-          description: "Reactions to create for discussions linked to releases.",
-          type: "array",
-          default: [],
-          items: {
-            description: "A reaction to create for discussions linked to releases.",
-            type: "string",
-            enum: DISCUSSION_REACTIONS
-          }
-        }
-      }
-    },
-    draft: {
-      description: "Set to true to produce releases in a draft state.",
-      type: "boolean",
-      default: false
-    },
-    generateReleaseNotes: {
-      description: "Set to true to append automatically generated release notes to release bodies.",
-      type: "boolean",
-      default: false
-    },
-    prerelease: {
-      description: "Set to true or false to override the automatic tag name based pre-release detection.",
-      type: "boolean"
-    },
-    reactions: {
-      description: "Reactions to create for releases.",
-      type: "array",
-      default: [],
-      items: {
-        description: "A reaction to create for releases.",
-        type: "string",
-        enum: RELEASE_REACTIONS
-      }
-    },
-    summary: {
-      description: "Options for creating GitHub Actions job summaries.",
-      type: "object",
-      additionalProperties: false,
-      default: {},
-      properties: {
-        enabled: {
-          description: "Set to false to disable GitHub Actions job summary creation.",
-          type: "boolean",
-          default: true
-        }
-      }
-    }
-  }
-};
-var assets = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  $id: ASSETS2,
+  $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
   title: "GitHub Release from Tag (Assets)",
   description: "Assets to be associated with releases.",
   type: "array",
@@ -71051,10 +70964,108 @@ var assets = {
   }
 };
 
+// src/schema/config.v5.schema.json
+var config_v5_schema_default = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  $id: "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
+  title: "GitHub Release from Tag (Configuration)",
+  description: 'Configuration for the "GitHub Release from Tag" GitHub Action.',
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    assets: {
+      $ref: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+      default: []
+    },
+    checksum: {
+      description: "Options for release asset checksums.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        generateAssets: {
+          description: "Set to false to disable generation of checksum assets for releases.",
+          type: "boolean",
+          default: true
+        }
+      }
+    },
+    discussion: {
+      description: "Options for creating discussions linked to releases.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        category: {
+          description: "The category to use when creating the discussion. The value must be a category that already exists in the repository.",
+          type: "string",
+          default: ""
+        },
+        reactions: {
+          description: "Reactions to create for discussions linked to releases.",
+          type: "array",
+          default: [],
+          items: {
+            description: "A reaction to create for discussions linked to releases.",
+            type: "string",
+            enum: [
+              "+1",
+              "-1",
+              "laugh",
+              "hooray",
+              "confused",
+              "heart",
+              "rocket",
+              "eyes"
+            ]
+          }
+        }
+      }
+    },
+    draft: {
+      description: "Set to true to produce releases in a draft state.",
+      type: "boolean",
+      default: false
+    },
+    generateReleaseNotes: {
+      description: "Set to true to append automatically generated release notes to release bodies.",
+      type: "boolean",
+      default: false
+    },
+    prerelease: {
+      description: "Set to true or false to override the automatic tag name based pre-release detection.",
+      type: "boolean"
+    },
+    reactions: {
+      description: "Reactions to create for releases.",
+      type: "array",
+      default: [],
+      items: {
+        description: "A reaction to create for releases.",
+        type: "string",
+        enum: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"]
+      }
+    },
+    summary: {
+      description: "Options for creating GitHub Actions job summaries.",
+      type: "object",
+      additionalProperties: false,
+      default: {},
+      properties: {
+        enabled: {
+          description: "Set to false to disable GitHub Actions job summary creation.",
+          type: "boolean",
+          default: true
+        }
+      }
+    }
+  }
+};
+
 // src/config/validation.ts
 var Ajv = import_ajv.default.default;
 var ajv = new Ajv({
-  schemas: [assets, config],
+  schemas: [assets_v5_schema_default, config_v5_schema_default],
   allErrors: true,
   useDefaults: true
 });
@@ -74686,7 +74697,7 @@ function getDiscussionNumberByUrl(url) {
 
 // src/reaction.ts
 async function createDiscussionReactions({
-  config: config2,
+  config,
   graphql: graphql3,
   group: group2,
   info: info2,
@@ -74695,7 +74706,7 @@ async function createDiscussionReactions({
   repo,
   setOutput: setOutput2
 }) {
-  if (config2.discussion.reactions.length < 1) {
+  if (config.discussion.reactions.length < 1) {
     info2("No release discussion reactions to create");
     return;
   }
@@ -74711,7 +74722,7 @@ async function createDiscussionReactions({
       setOutput: setOutput2,
       url: release.discussion_url ?? ""
     });
-    await Promise.all(config2.discussion.reactions.map(createReaction));
+    await Promise.all(config.discussion.reactions.map(createReaction));
     async function createReaction(content3) {
       const query = `
         mutation createDiscussionReaction ($discussionId: ID!, $content: ReactionContent!) {
@@ -74730,7 +74741,7 @@ async function createDiscussionReactions({
   });
 }
 async function createReleaseReactions({
-  config: config2,
+  config,
   group: group2,
   info: info2,
   owner,
@@ -74738,12 +74749,12 @@ async function createReleaseReactions({
   release,
   repo
 }) {
-  if (config2.reactions.length < 1) {
+  if (config.reactions.length < 1) {
     info2("No release reactions to create");
     return;
   }
   await group2("Creating release reactions", async () => {
-    await Promise.all(config2.reactions.map(createReaction));
+    await Promise.all(config.reactions.map(createReaction));
     async function createReaction(content3) {
       await reactions.createForRelease({
         owner,
@@ -74809,7 +74820,7 @@ function parseRef(ref) {
 
 // src/release.ts
 async function createOrUpdateRelease({
-  config: config2,
+  config,
   group: group2,
   info: info2,
   isStable,
@@ -74826,9 +74837,9 @@ async function createOrUpdateRelease({
     tag_name: tag,
     name: tagSubject,
     body: releaseBody,
-    draft: config2.draft,
-    prerelease: config2.prerelease ?? !isStable,
-    discussion_category_name: config2.discussion.category || void 0
+    draft: config.draft,
+    prerelease: config.prerelease ?? !isStable,
+    discussion_category_name: config.discussion.category || void 0
   };
   const createdRelease = await group2(
     "Attempting to create a release",
@@ -75152,7 +75163,7 @@ main().catch((error2) => {
   (0, import_core2.setFailed)(stack ?? "unknown cause");
 });
 async function main() {
-  const config2 = await readConfig({ getInput: import_core2.getInput, group: import_core2.group, info: import_core2.info });
+  const config = await readConfig({ getInput: import_core2.getInput, group: import_core2.group, info: import_core2.info });
   const { env } = process;
   const { GITHUB_REPOSITORY = "" } = env;
   const [owner, repo] = GITHUB_REPOSITORY.split("/");
@@ -75186,11 +75197,11 @@ async function main() {
   }
   const tagSemVerLabel = isSemVer ? "SemVer" : "Non-Semver";
   const tagStabilityLabel = isStable ? "stable release" : "pre-release";
-  if (typeof config2.prerelease === "boolean") {
+  if (typeof config.prerelease === "boolean") {
     (0, import_core2.info)(
-      `Release has been explicitly configured to be a ${config2.prerelease ? "pre-release" : "stable release"}`
+      `Release has been explicitly configured to be a ${config.prerelease ? "pre-release" : "stable release"}`
     );
-    if (isStable === config2.prerelease) {
+    if (isStable === config.prerelease) {
       (0, import_core2.info)(
         `Normally, ${tagSemVerLabel} tag would have been treated as a ${tagStabilityLabel}`
       );
@@ -75216,7 +75227,7 @@ async function main() {
     (0, import_core2.setOutput)(TAGGER_LOGIN, tagger.login);
   }
   const releaseBody = await renderReleaseBody({
-    config: config2,
+    config,
     env,
     group: import_core2.group,
     info: import_core2.info,
@@ -75229,7 +75240,7 @@ async function main() {
   });
   (0, import_core2.setOutput)(RELEASE_BODY, releaseBody);
   const [release, wasCreated] = await createOrUpdateRelease({
-    config: config2,
+    config,
     group: import_core2.group,
     info: import_core2.info,
     isStable,
@@ -75246,8 +75257,8 @@ async function main() {
   (0, import_core2.setOutput)(RELEASE_URL, release.html_url);
   (0, import_core2.setOutput)(RELEASE_WAS_CREATED, wasCreated ? "true" : "");
   (0, import_core2.info)(`${wasCreated ? "Created" : "Updated"} ${release.html_url}`);
-  const [assetResult, assets2] = await modifyReleaseAssets({
-    config: config2,
+  const [assetResult, assets] = await modifyReleaseAssets({
+    config,
     error: import_core2.error,
     group: import_core2.group,
     info: import_core2.info,
@@ -75259,9 +75270,9 @@ async function main() {
     warning: import_core2.warning
   });
   if (!assetResult) (0, import_core2.setFailed)("Unable to modify release assets");
-  (0, import_core2.setOutput)(ASSETS, JSON.stringify(assets2));
+  (0, import_core2.setOutput)(ASSETS, JSON.stringify(assets));
   await createReleaseReactions({
-    config: config2,
+    config,
     group: import_core2.group,
     info: import_core2.info,
     owner,
@@ -75270,7 +75281,7 @@ async function main() {
     repo
   });
   await createDiscussionReactions({
-    config: config2,
+    config,
     graphql: graphql3,
     group: import_core2.group,
     info: import_core2.info,
@@ -75279,7 +75290,7 @@ async function main() {
     repo,
     setOutput: import_core2.setOutput
   });
-  if (config2.summary.enabled) {
+  if (config.summary.enabled) {
     const tagHtmlUrl = await getTagHtmlUrl({ repos, owner, repo, tag });
     await import_core2.summary.addRaw(renderSummary({ release, tagger, tagHtmlUrl, wasCreated })).write();
   }

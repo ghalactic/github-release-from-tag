@@ -1,7 +1,8 @@
 import ajvModule, { ErrorObject } from "ajv";
 import { ASSETS, CONFIG } from "../constant/schema-id.js";
+import assetsSchema from "../schema/assets.v5.schema.json";
+import configSchema from "../schema/config.v5.schema.json";
 import { AssetConfig, Config } from "../type/config.js";
-import { assets as assetsSchema, config as configSchema } from "./schema.js";
 
 // see https://github.com/ajv-validator/ajv/issues/2132
 const Ajv = ajvModule.default;
