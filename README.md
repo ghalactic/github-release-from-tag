@@ -709,6 +709,9 @@ affecting how releases are published:
 ```yaml
 # .github/github-release-from-tag.yml
 
+# Get completion and validation when using the YAML extension for VS Code.
+# yaml-language-server: $schema=https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json
+
 # Set to true to produce releases in a draft state.
 draft: true
 

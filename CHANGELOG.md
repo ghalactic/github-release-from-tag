@@ -7,6 +7,55 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## [v5.4.0] - 2024-08-27
+
+[v5.4.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.4.0
+
+### Added
+
+- Added [config file schema support].
+
+[config file schema support]: #config-file-schema-support
+
+#### Config file schema support
+
+The configuration schema is now published at:
+https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json
+
+Your editor might be able to use this schema to provide autocompletion and
+validation for your configuration file. For example, if you're using the [YAML
+extension for Visual Studio Code], you can add the following header to your
+configuration file to enable schema support:
+
+[yaml extension for visual studio code]: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
+
+```yaml
+# yaml-language-server: $schema=https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json
+assets:
+  - path: assets/text/file-a.txt
+  - path: assets/json/file-b.json
+    optional: true
+    name: custom-name-b.json
+    label: Label for file-b.json
+```
+
+In case your editor supports using a `$schema` property directly in the YAML
+file, the schema has been relaxed to allow this as well:
+
+```yaml
+$schema: https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json
+assets:
+  - path: assets/text/file-a.txt
+  - path: assets/json/file-b.json
+    optional: true
+    name: custom-name-b.json
+    label: Label for file-b.json
+```
+
+### Fixed
+
+- Fixed parsing of empty configuration files with comments.
+
 ## [v5.3.0] - 2024-08-24
 
 [v5.3.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.3.0
