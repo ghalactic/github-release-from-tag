@@ -148,7 +148,7 @@ summary:
     beforeAll(async () => {
       if (!release) return;
 
-      const browser = await launch();
+      const browser = await launch({ args: ["--no-sandbox"] });
       page = await browser.newPage();
       await page.goto(release?.html_url);
     }, SETUP_TIMEOUT);
