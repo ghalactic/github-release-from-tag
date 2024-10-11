@@ -191,6 +191,7 @@ var require_file_command = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
+    var crypto = __importStar(__require("crypto"));
     var fs = __importStar(__require("fs"));
     var os = __importStar(__require("os"));
     var utils_1 = require_utils();
@@ -3630,11 +3631,11 @@ var require_util2 = __commonJS({
     var assert = __require("assert");
     var { isUint8Array: isUint8Array3 } = __require("util/types");
     var supportedHashes = [];
-    var crypto2;
+    var crypto;
     try {
-      crypto2 = __require("crypto");
+      crypto = __require("crypto");
       const possibleRelevantHashes = ["sha256", "sha384", "sha512"];
-      supportedHashes = crypto2.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
+      supportedHashes = crypto.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
     } catch {
     }
     function responseURL(response) {
@@ -3911,7 +3912,7 @@ var require_util2 = __commonJS({
       }
     }
     function bytesMatch(bytes, metadataList) {
-      if (crypto2 === void 0) {
+      if (crypto === void 0) {
         return true;
       }
       const parsedMetadata = parseMetadata(metadataList);
@@ -3926,7 +3927,7 @@ var require_util2 = __commonJS({
       for (const item of metadata) {
         const algorithm = item.algo;
         const expectedValue = item.hash;
-        let actualValue = crypto2.createHash(algorithm).update(bytes).digest("base64");
+        let actualValue = crypto.createHash(algorithm).update(bytes).digest("base64");
         if (actualValue[actualValue.length - 1] === "=") {
           if (actualValue[actualValue.length - 2] === "=") {
             actualValue = actualValue.slice(0, -2);
@@ -16318,9 +16319,9 @@ var require_connection = __commonJS({
     channels.open = diagnosticsChannel.channel("undici:websocket:open");
     channels.close = diagnosticsChannel.channel("undici:websocket:close");
     channels.socketError = diagnosticsChannel.channel("undici:websocket:socket_error");
-    var crypto2;
+    var crypto;
     try {
-      crypto2 = __require("crypto");
+      crypto = __require("crypto");
     } catch {
     }
     function establishWebSocketConnection(url, protocols, ws, onEstablish, options) {
@@ -16339,7 +16340,7 @@ var require_connection = __commonJS({
         const headersList = new Headers(options.headers)[kHeadersList];
         request2.headersList = headersList;
       }
-      const keyValue = crypto2.randomBytes(16).toString("base64");
+      const keyValue = crypto.randomBytes(16).toString("base64");
       request2.headersList.append("sec-websocket-key", keyValue);
       request2.headersList.append("sec-websocket-version", "13");
       for (const protocol of protocols) {
@@ -16368,7 +16369,7 @@ var require_connection = __commonJS({
             return;
           }
           const secWSAccept = response.headersList.get("Sec-WebSocket-Accept");
-          const digest = crypto2.createHash("sha1").update(keyValue + uid).digest("base64");
+          const digest = crypto.createHash("sha1").update(keyValue + uid).digest("base64");
           if (secWSAccept !== digest) {
             failWebsocketConnection(ws, "Incorrect hash received in Sec-WebSocket-Accept header.");
             return;
@@ -16448,9 +16449,9 @@ var require_frame = __commonJS({
   "node_modules/undici/lib/websocket/frame.js"(exports, module) {
     "use strict";
     var { maxUnsigned16Bit } = require_constants5();
-    var crypto2;
+    var crypto;
     try {
-      crypto2 = __require("crypto");
+      crypto = __require("crypto");
     } catch {
     }
     var WebsocketFrameSend = class {
@@ -16459,7 +16460,7 @@ var require_frame = __commonJS({
        */
       constructor(data) {
         this.frameData = data;
-        this.maskKey = crypto2.randomBytes(4);
+        this.maskKey = crypto.randomBytes(4);
       }
       createFrame(opcode) {
         const bodyLength = this.frameData?.byteLength ?? 0;
@@ -21578,7 +21579,7 @@ var require_internal_hash_files = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.hashFiles = void 0;
-    var crypto2 = __importStar(__require("crypto"));
+    var crypto = __importStar(__require("crypto"));
     var core2 = __importStar(require_core());
     var fs = __importStar(__require("fs"));
     var stream = __importStar(__require("stream"));
@@ -21591,7 +21592,7 @@ var require_internal_hash_files = __commonJS({
         const writeDelegate = verbose ? core2.info : core2.debug;
         let hasMatch = false;
         const githubWorkspace = currentWorkspace ? currentWorkspace : (_d = process.env["GITHUB_WORKSPACE"]) !== null && _d !== void 0 ? _d : process.cwd();
-        const result = crypto2.createHash("sha256");
+        const result = crypto.createHash("sha256");
         let count = 0;
         try {
           for (var _e = true, _f = __asyncValues(globber.globGenerator()), _g; _g = yield _f.next(), _a = _g.done, !_a; _e = true) {
@@ -21607,7 +21608,7 @@ var require_internal_hash_files = __commonJS({
               writeDelegate(`Skip directory '${file}'.`);
               continue;
             }
-            const hash = crypto2.createHash("sha256");
+            const hash = crypto.createHash("sha256");
             const pipeline = util.promisify(stream.pipeline);
             yield pipeline(fs.createReadStream(file), hash);
             result.write(hash.digest());
@@ -40147,11 +40148,11 @@ var require_util10 = __commonJS({
     var { isUint8Array: isUint8Array3 } = __require("node:util/types");
     var { webidl } = require_webidl2();
     var supportedHashes = [];
-    var crypto2;
+    var crypto;
     try {
-      crypto2 = __require("node:crypto");
+      crypto = __require("node:crypto");
       const possibleRelevantHashes = ["sha256", "sha384", "sha512"];
-      supportedHashes = crypto2.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
+      supportedHashes = crypto.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
     } catch {
     }
     function responseURL(response) {
@@ -40424,7 +40425,7 @@ var require_util10 = __commonJS({
       }
     }
     function bytesMatch(bytes, metadataList) {
-      if (crypto2 === void 0) {
+      if (crypto === void 0) {
         return true;
       }
       const parsedMetadata = parseMetadata(metadataList);
@@ -40439,7 +40440,7 @@ var require_util10 = __commonJS({
       for (const item of metadata) {
         const algorithm = item.algo;
         const expectedValue = item.hash;
-        let actualValue = crypto2.createHash(algorithm).update(bytes).digest("base64");
+        let actualValue = crypto.createHash(algorithm).update(bytes).digest("base64");
         if (actualValue[actualValue.length - 1] === "=") {
           if (actualValue[actualValue.length - 2] === "=") {
             actualValue = actualValue.slice(0, -2);
@@ -52437,13 +52438,13 @@ var require_frame2 = __commonJS({
     "use strict";
     var { maxUnsigned16Bit } = require_constants10();
     var BUFFER_SIZE = 16386;
-    var crypto2;
+    var crypto;
     var buffer = null;
     var bufIdx = BUFFER_SIZE;
     try {
-      crypto2 = __require("node:crypto");
+      crypto = __require("node:crypto");
     } catch {
-      crypto2 = {
+      crypto = {
         // not full compatibility, but minimum.
         randomFillSync: function randomFillSync(buffer2, _offset, _size) {
           for (let i = 0; i < buffer2.length; ++i) {
@@ -52456,7 +52457,7 @@ var require_frame2 = __commonJS({
     function generateMask() {
       if (bufIdx === BUFFER_SIZE) {
         bufIdx = 0;
-        crypto2.randomFillSync(buffer ??= Buffer.allocUnsafe(BUFFER_SIZE), 0, BUFFER_SIZE);
+        crypto.randomFillSync(buffer ??= Buffer.allocUnsafe(BUFFER_SIZE), 0, BUFFER_SIZE);
       }
       return [buffer[bufIdx++], buffer[bufIdx++], buffer[bufIdx++], buffer[bufIdx++]];
     }
@@ -52528,9 +52529,9 @@ var require_connection2 = __commonJS({
     var { Headers, getHeadersList } = require_headers2();
     var { getDecodeSplit } = require_util10();
     var { WebsocketFrameSend } = require_frame2();
-    var crypto2;
+    var crypto;
     try {
-      crypto2 = __require("node:crypto");
+      crypto = __require("node:crypto");
     } catch {
     }
     function establishWebSocketConnection(url, protocols, client, ws, onEstablish, options) {
@@ -52550,7 +52551,7 @@ var require_connection2 = __commonJS({
         const headersList = getHeadersList(new Headers(options.headers));
         request2.headersList = headersList;
       }
-      const keyValue = crypto2.randomBytes(16).toString("base64");
+      const keyValue = crypto.randomBytes(16).toString("base64");
       request2.headersList.append("sec-websocket-key", keyValue);
       request2.headersList.append("sec-websocket-version", "13");
       for (const protocol of protocols) {
@@ -52580,7 +52581,7 @@ var require_connection2 = __commonJS({
             return;
           }
           const secWSAccept = response.headersList.get("Sec-WebSocket-Accept");
-          const digest = crypto2.createHash("sha1").update(keyValue + uid).digest("base64");
+          const digest = crypto.createHash("sha1").update(keyValue + uid).digest("base64");
           if (secWSAccept !== digest) {
             failWebsocketConnection(ws, "Incorrect hash received in Sec-WebSocket-Accept header.");
             return;
