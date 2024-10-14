@@ -5,6 +5,8 @@ const isGHA = GITHUB_ACTIONS === "true";
 
 export default defineConfig({
   test: {
+    watch: false,
+
     include: [
       "test/suite/unit/**/*.spec.ts",
       // only run E2E tests on GitHub Actions
