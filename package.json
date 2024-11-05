@@ -15,7 +15,7 @@
     "github-slugger": "^2.0.0",
     "js-yaml": "^4.1.0",
     "mdast-util-gfm": "^3.0.0",
-    "mdast-util-to-markdown": "^2.0.0",
+    "mdast-util-to-markdown": "^2.1.1",
     "mdast-util-to-string": "^4.0.0",
     "mime-types": "^2.1.35",
     "remark": "^15.0.1",
