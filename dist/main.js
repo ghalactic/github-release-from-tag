@@ -63138,23 +63138,88 @@ function checkEmphasis(state) {
   return marker;
 }
 
+// node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
+function encodeCharacterReference(code3) {
+  return "&#x" + code3.toString(16).toUpperCase() + ";";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/encode-info.js
+function encodeInfo(outside, inside, marker) {
+  const outsideKind = classifyCharacter(outside);
+  const insideKind = classifyCharacter(inside);
+  if (outsideKind === void 0) {
+    return insideKind === void 0 ? (
+      // Letter inside:
+      // we have to encode *both* letters for `_` as it is looser.
+      // it already forms for `*` (and GFMs `~`).
+      marker === "_" ? { inside: true, outside: true } : { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (letter, whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: encode outer (letter)
+      { inside: false, outside: true }
+    );
+  }
+  if (outsideKind === 1) {
+    return insideKind === void 0 ? (
+      // Letter inside: already forms.
+      { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: already forms.
+      { inside: false, outside: false }
+    );
+  }
+  return insideKind === void 0 ? (
+    // Letter inside: already forms.
+    { inside: false, outside: false }
+  ) : insideKind === 1 ? (
+    // Whitespace inside: encode inner (whitespace).
+    { inside: true, outside: false }
+  ) : (
+    // Punctuation inside: already forms.
+    { inside: false, outside: false }
+  );
+}
+
 // node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
 emphasis.peek = emphasisPeek;
 function emphasis(node2, _, state, info2) {
   const marker = checkEmphasis(state);
   const exit3 = state.enter("emphasis");
   const tracker = state.createTracker(info2);
-  let value = tracker.move(marker);
-  value += tracker.move(
+  const before = tracker.move(marker);
+  let between2 = tracker.move(
     state.containerPhrasing(node2, {
-      before: value,
       after: marker,
+      before,
       ...tracker.current()
     })
   );
-  value += tracker.move(marker);
+  const betweenHead = between2.charCodeAt(0);
+  const open = encodeInfo(
+    info2.before.charCodeAt(info2.before.length - 1),
+    betweenHead,
+    marker
+  );
+  if (open.inside) {
+    between2 = encodeCharacterReference(betweenHead) + between2.slice(1);
+  }
+  const betweenTail = between2.charCodeAt(between2.length - 1);
+  const close = encodeInfo(info2.after.charCodeAt(0), betweenTail, marker);
+  if (close.inside) {
+    between2 = between2.slice(0, -1) + encodeCharacterReference(betweenTail);
+  }
+  const after = tracker.move(marker);
   exit3();
-  return value;
+  state.attentionEncodeSurroundingInfo = {
+    after: close.outside,
+    before: open.outside
+  };
+  return before + between2 + after;
 }
 function emphasisPeek(_, _1, state) {
   return state.options.emphasis || "*";
@@ -63401,7 +63466,7 @@ function heading(node2, _, state, info2) {
     ...tracker.current()
   });
   if (/^[\t ]/.test(value)) {
-    value = "&#x" + value.charCodeAt(0).toString(16).toUpperCase() + ";" + value.slice(1);
+    value = encodeCharacterReference(value.charCodeAt(0)) + value.slice(1);
   }
   value = value ? sequence + " " + value : sequence;
   if (state.options.closeAtx) {
@@ -63858,8 +63923,8 @@ function root(node2, _, state, info2) {
   const hasPhrasing = node2.children.some(function(d) {
     return phrasing(d);
   });
-  const fn = hasPhrasing ? state.containerPhrasing : state.containerFlow;
-  return fn.call(state, node2, info2);
+  const container = hasPhrasing ? state.containerPhrasing : state.containerFlow;
+  return container.call(state, node2, info2);
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/check-strong.js
@@ -63879,17 +63944,35 @@ function strong(node2, _, state, info2) {
   const marker = checkStrong(state);
   const exit3 = state.enter("strong");
   const tracker = state.createTracker(info2);
-  let value = tracker.move(marker + marker);
-  value += tracker.move(
+  const before = tracker.move(marker + marker);
+  let between2 = tracker.move(
     state.containerPhrasing(node2, {
-      before: value,
       after: marker,
+      before,
       ...tracker.current()
     })
   );
-  value += tracker.move(marker + marker);
+  const betweenHead = between2.charCodeAt(0);
+  const open = encodeInfo(
+    info2.before.charCodeAt(info2.before.length - 1),
+    betweenHead,
+    marker
+  );
+  if (open.inside) {
+    between2 = encodeCharacterReference(betweenHead) + between2.slice(1);
+  }
+  const betweenTail = between2.charCodeAt(between2.length - 1);
+  const close = encodeInfo(info2.after.charCodeAt(0), betweenTail, marker);
+  if (close.inside) {
+    between2 = between2.slice(0, -1) + encodeCharacterReference(betweenTail);
+  }
+  const after = tracker.move(marker + marker);
   exit3();
-  return value;
+  state.attentionEncodeSurroundingInfo = {
+    after: close.outside,
+    before: open.outside
+  };
+  return before + between2 + after;
 }
 function strongPeek(_, _1, state) {
   return state.options.strong || "*";
@@ -64118,6 +64201,7 @@ function containerPhrasing(parent, state, info2) {
   const results = [];
   let index2 = -1;
   let before = info2.before;
+  let encodeAfter;
   indexStack.push(-1);
   let tracker = state.createTracker(info2);
   while (++index2 < children.length) {
@@ -64144,16 +64228,26 @@ function containerPhrasing(parent, state, info2) {
       tracker = state.createTracker(info2);
       tracker.move(results.join(""));
     }
-    results.push(
-      tracker.move(
-        state.handle(child, parent, state, {
-          ...tracker.current(),
-          before,
-          after
-        })
-      )
-    );
-    before = results[results.length - 1].slice(-1);
+    let value = state.handle(child, parent, state, {
+      ...tracker.current(),
+      after,
+      before
+    });
+    if (encodeAfter && encodeAfter === value.slice(0, 1)) {
+      value = encodeCharacterReference(encodeAfter.charCodeAt(0)) + value.slice(1);
+    }
+    const encodingInfo = state.attentionEncodeSurroundingInfo;
+    state.attentionEncodeSurroundingInfo = void 0;
+    encodeAfter = void 0;
+    if (encodingInfo) {
+      if (encodingInfo.before && before === results[results.length - 1].slice(-1)) {
+        results[results.length - 1] = results[results.length - 1].slice(0, -1) + encodeCharacterReference(before.charCodeAt(0));
+      }
+      if (encodingInfo.after) encodeAfter = after;
+    }
+    tracker.move(value);
+    results.push(value);
+    before = value.slice(-1);
   }
   indexStack.pop();
   return results.join("");
@@ -64278,9 +64372,7 @@ function safe(state, input, config) {
     if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config.encode || !config.encode.includes(value.charAt(position2)))) {
       result.push("\\");
     } else {
-      result.push(
-        "&#x" + value.charCodeAt(position2).toString(16).toUpperCase() + ";"
-      );
+      result.push(encodeCharacterReference(value.charCodeAt(position2)));
       start++;
     }
   }
@@ -64337,28 +64429,29 @@ function track(config) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/index.js
-function toMarkdown(tree, options = {}) {
+function toMarkdown(tree, options) {
+  const settings = options || {};
   const state = {
-    enter,
-    indentLines,
     associationId: association,
     containerPhrasing: containerPhrasingBound,
     containerFlow: containerFlowBound,
     createTracker: track,
     compilePattern,
-    safe: safeBound,
-    stack: [],
-    unsafe: [...unsafe],
-    join: [...join],
+    enter,
     // @ts-expect-error: GFM / frontmatter are typed in `mdast` but not defined
     // here.
     handlers: { ...handle },
-    options: {},
-    indexStack: [],
     // @ts-expect-error: add `handle` in a second.
-    handle: void 0
+    handle: void 0,
+    indentLines,
+    indexStack: [],
+    join: [...join],
+    options: {},
+    safe: safeBound,
+    stack: [],
+    unsafe: [...unsafe]
   };
-  configure2(state, options);
+  configure2(state, settings);
   if (state.options.tightDefinitions) {
     state.join.push(joinDefinition);
   }
