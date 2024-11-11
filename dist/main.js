@@ -64240,7 +64240,7 @@ function containerPhrasing(parent, state, info2) {
     state.attentionEncodeSurroundingInfo = void 0;
     encodeAfter = void 0;
     if (encodingInfo) {
-      if (encodingInfo.before && before === results[results.length - 1].slice(-1)) {
+      if (results.length > 0 && encodingInfo.before && before === results[results.length - 1].slice(-1)) {
         results[results.length - 1] = results[results.length - 1].slice(0, -1) + encodeCharacterReference(before.charCodeAt(0));
       }
       if (encodingInfo.after) encodeAfter = after;
