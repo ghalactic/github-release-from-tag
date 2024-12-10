@@ -1,6 +1,6 @@
 import ajvModule, { ErrorObject } from "ajv";
-import assetsSchema from "../schema/assets.v5.schema.json";
-import configSchema from "../schema/config.v5.schema.json";
+import assetsSchema from "../schema/assets.v5.schema.json" with { type: "json" };
+import configSchema from "../schema/config.v5.schema.json" with { type: "json" };
 import { AssetConfig, Config } from "../type/config.js";
 
 // see https://github.com/ajv-validator/ajv/issues/2132
