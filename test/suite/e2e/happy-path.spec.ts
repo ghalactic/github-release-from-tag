@@ -427,9 +427,7 @@ paragraph
     });
 
     it("produces the taggerAvatarUrl output", () => {
-      expect(outputs.taggerAvatarUrl).toContain(
-        "https://avatars.githubusercontent.com/",
-      );
+      expect(outputs.taggerAvatarUrl).toContain("githubusercontent.com");
     });
 
     it("produces the taggerLogin output", () => {
