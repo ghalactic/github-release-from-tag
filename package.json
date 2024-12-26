@@ -35,7 +35,7 @@
     "octokit": "^4.0.0",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
-    "puppeteer": "^23.11.0",
+    "puppeteer": "^23.11.1",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
