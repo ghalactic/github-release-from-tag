@@ -32,7 +32,7 @@
     "esbuild": "^0.24.2",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
-    "octokit": "^4.0.0",
+    "octokit": "^4.0.3",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "puppeteer": "^23.11.1",
