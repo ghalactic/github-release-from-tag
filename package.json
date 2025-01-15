@@ -23,7 +23,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@octokit/types": "^13.6.2",
+    "@octokit/types": "^13.7.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^2.1.4",
@@ -32,7 +32,7 @@
     "esbuild": "^0.24.2",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
-    "octokit": "^4.0.3",
+    "octokit": "^4.1.0",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "puppeteer": "^23.11.1",
