@@ -68186,7 +68186,7 @@ function gfm(options) {
 var emptyOptions2 = {};
 function remarkGfm(options) {
   const self2 = (
-    /** @type {Processor} */
+    /** @type {Processor<Root>} */
     this
   );
   const settings = options || emptyOptions2;
