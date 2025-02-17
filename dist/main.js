@@ -66827,7 +66827,7 @@ function gfmToMarkdown(options) {
   return {
     extensions: [
       gfmAutolinkLiteralToMarkdown(),
-      gfmFootnoteToMarkdown(),
+      gfmFootnoteToMarkdown(options),
       gfmStrikethroughToMarkdown(),
       gfmTableToMarkdown(options),
       gfmTaskListItemToMarkdown()
