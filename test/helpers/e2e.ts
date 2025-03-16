@@ -34,7 +34,7 @@ export function buildWorkflow(
       env: {
         PUBLISH_RELEASE_OUTPUT: `\${{ toJSON(steps.publishRelease.outputs.${name}) }}`,
       },
-      run: `echo ::notice title=outputs.${name}::$PUBLISH_RELEASE_OUTPUT`,
+      run: `echo ::notice title=outputs.${name}::outputs.${name}=$PUBLISH_RELEASE_OUTPUT`,
     });
   }
 

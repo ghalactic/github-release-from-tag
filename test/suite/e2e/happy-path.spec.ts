@@ -154,19 +154,22 @@ paragraph
       release,
     );
 
-    const outputsPrefix = "outputs.";
     outputs = {};
 
-    for (const { title, message } of annotations) {
-      if (!title?.startsWith(outputsPrefix)) continue;
+    for (const { message } of annotations) {
+      if (!message) continue;
+
+      const match = message.match(/^outputs\.(\w+)=(.*)$/);
+
+      if (!match) continue;
+
+      const [, name, value] = match;
 
       try {
-        outputs[title.substring(outputsPrefix.length)] = JSON.parse(
-          message ?? "null",
-        );
+        outputs[name] = JSON.parse(value);
       } catch (error) {
         const message = isError(error) ? error.message : "unknown cause";
-        throw new Error(`Unable to parse ${title}: ${message}`);
+        throw new Error(`Unable to parse ${name} output: ${message}`);
       }
     }
   }, SETUP_TIMEOUT);
