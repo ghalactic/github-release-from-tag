@@ -42812,7 +42812,8 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             }
           }
         }
-        const chunk = textEncoder.encode(`--${boundary}--`);
+        const chunk = textEncoder.encode(`--${boundary}--\r
+`);
         blobParts.push(chunk);
         length += chunk.byteLength;
         if (hasUnknownSizeValue) {
@@ -73606,13 +73607,14 @@ function withCustomRequest(customRequest) {
 }
 
 // node_modules/@octokit/auth-token/dist-bundle/index.js
-var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
-var REGEX_IS_INSTALLATION = /^ghs_/;
-var REGEX_IS_USER_TO_SERVER = /^ghu_/;
+var b64url = "(?:[a-zA-Z0-9_-]+)";
+var sep = "\\.";
+var jwtRE = new RegExp(`^${b64url}${sep}${b64url}${sep}${b64url}$`);
+var isJWT = jwtRE.test.bind(jwtRE);
 async function auth(token) {
-  const isApp = token.split(/\./).length === 3;
-  const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
-  const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
+  const isApp = isJWT(token);
+  const isInstallation = token.startsWith("v1.") || token.startsWith("ghs_");
+  const isUserToServer = token.startsWith("ghu_");
   const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
   return {
     type: "token",
@@ -73650,7 +73652,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 };
 
 // node_modules/@octokit/core/dist-src/version.js
-var VERSION4 = "6.1.5";
+var VERSION4 = "7.0.2";
 
 // node_modules/@octokit/core/dist-src/index.js
 var noop = () => {
@@ -73908,10 +73910,10 @@ function paginateRest(octokit) {
 }
 paginateRest.VERSION = VERSION5;
 
-// node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/version.js
-var VERSION6 = "14.0.0";
+// node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/version.js
+var VERSION6 = "16.0.0";
 
-// node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/generated/endpoints.js
+// node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/generated/endpoints.js
 var Endpoints = {
   actions: {
     addCustomLabelsToSelfHostedRunnerForOrg: [
@@ -74383,6 +74385,9 @@ var Endpoints = {
     getGithubBillingUsageReportOrg: [
       "GET /organizations/{org}/settings/billing/usage"
     ],
+    getGithubBillingUsageReportUser: [
+      "GET /users/{username}/settings/billing/usage"
+    ],
     getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
     getGithubPackagesBillingUser: [
       "GET /users/{username}/settings/billing/packages"
@@ -74681,6 +74686,7 @@ var Endpoints = {
     ],
     listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"]
   },
+  credentials: { revoke: ["POST /credentials/revoke"] },
   dependabot: {
     addSelectedRepoToOrgSecret: [
       "PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"
@@ -76012,7 +76018,7 @@ var Endpoints = {
 };
 var endpoints_default = Endpoints;
 
-// node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/endpoints-to-methods.js
+// node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/endpoints-to-methods.js
 var endpointMethodsMap = /* @__PURE__ */ new Map();
 for (const [scope, endpoints] of Object.entries(endpoints_default)) {
   for (const [methodName, endpoint2] of Object.entries(endpoints)) {
@@ -76135,7 +76141,7 @@ function decorate(octokit, scope, methodName, defaults, decorations) {
   return Object.assign(withDecorations, requestWithDefaults);
 }
 
-// node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/index.js
+// node_modules/@octokit/action/node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/index.js
 function restEndpointMethods(octokit) {
   const api = endpointsToMethods(octokit);
   return {
