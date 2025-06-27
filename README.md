@@ -59,6 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      discussions: write # (for release discussion creation)
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -98,6 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      discussions: write # (for release discussion creation)
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -606,6 +608,19 @@ discussion:
 - uses: ghalactic/github-release-from-tag@v5
   with:
     discussionCategory: Announcements
+```
+
+> [!IMPORTANT]
+> Release discussion creation also requires you to grant **write** access to
+> **discussions** to the [GitHub token] used to manage releases:
+
+[GitHub token]: #github-token
+
+```yaml
+# In your workflow:
+permissions:
+  contents: write
+  discussions: write # required for release discussion creation
 ```
 
 When enabled, discussions will automatically be created and linked to each
