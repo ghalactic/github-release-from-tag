@@ -34,7 +34,7 @@
     "file-url": "^4.0.0",
     "octokit": "^5.0.3",
     "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-organize-imports": "^4.2.0",
     "puppeteer": "^24.14.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
