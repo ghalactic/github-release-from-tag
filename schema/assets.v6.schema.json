@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v6.schema.json",
   "title": "GitHub Release from Tag (assets)",
   "description": "Assets to be associated with releases.",
   "type": "array",

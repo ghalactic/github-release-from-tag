@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
+  "$id": "https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json",
   "title": "GitHub Release from Tag (configuration)",
   "description": "Configuration for the \"GitHub Release from Tag\" GitHub Action.",
   "type": "object",
@@ -9,10 +9,10 @@
     "$schema": {
       "description": "The JSON Schema identifier.",
       "type": "string",
-      "const": "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json"
+      "const": "https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json"
     },
     "assets": {
-      "$ref": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+      "$ref": "https://ghalactic.github.io/github-release-from-tag/schema/assets.v6.schema.json",
       "default": []
     },
     "checksum": {
