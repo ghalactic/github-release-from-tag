@@ -125,5 +125,5 @@ branding:
   icon: tag
   color: green
 runs:
-  using: node20
+  using: node24
   main: dist/main.js

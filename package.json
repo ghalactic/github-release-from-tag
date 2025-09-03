@@ -2,8 +2,8 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^20",
-    "npm": "^10"
+    "node": "^24",
+    "npm": "^11"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
@@ -27,7 +27,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^3.0.1",
-    "@types/node": "^22.18.0",
+    "@types/node": "^24.3.0",
     "@vitest/coverage-v8": "^3.2.4",
     "esbuild": "^0.25.9",
     "escape-string-regexp": "^5.0.0",
@@ -35,7 +35,7 @@
     "octokit": "^5.0.3",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
-    "puppeteer": "^24.17.0",
+    "puppeteer": "^24.18.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }

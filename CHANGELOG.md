@@ -7,6 +7,14 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Changed
+
+- This action now runs on the `node24` runner instead of `node20`. If you are
+  using this action on GitHub Enterprise Server, you will need to ensure your
+  runners support `node24` before upgrading to this version.
+
 ## [v5.4.0] - 2024-08-27
 
 [v5.4.0]: https://github.com/ghalactic/github-release-from-tag/releases/v5.4.0
