@@ -35,7 +35,7 @@ describe("readConfig()", () => {
 
     const expected = {
       $schema:
-        "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
+        "https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json",
       assets: [
         {
           path: "assets/text/file-a.txt",

@@ -72426,10 +72426,10 @@ function isObject2(value) {
   return typeof value === "object" && value != null;
 }
 
-// src/schema/config.v5.schema.json
-var config_v5_schema_default = {
+// src/schema/config.v6.schema.json
+var config_v6_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json",
+  $id: "https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json",
   title: "GitHub Release from Tag (configuration)",
   description: 'Configuration for the "GitHub Release from Tag" GitHub Action.',
   type: "object",
@@ -72438,10 +72438,10 @@ var config_v5_schema_default = {
     $schema: {
       description: "The JSON Schema identifier.",
       type: "string",
-      const: "https://ghalactic.github.io/github-release-from-tag/schema/config.v5.schema.json"
+      const: "https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json"
     },
     assets: {
-      $ref: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+      $ref: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v6.schema.json",
       default: []
     },
     checksum: {
@@ -72532,10 +72532,10 @@ var config_v5_schema_default = {
 // src/config/validation.ts
 var import_ajv = __toESM(require_ajv(), 1);
 
-// src/schema/assets.v5.schema.json
-var assets_v5_schema_default = {
+// src/schema/assets.v6.schema.json
+var assets_v6_schema_default = {
   $schema: "http://json-schema.org/draft-07/schema#",
-  $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v5.schema.json",
+  $id: "https://ghalactic.github.io/github-release-from-tag/schema/assets.v6.schema.json",
   title: "GitHub Release from Tag (assets)",
   description: "Assets to be associated with releases.",
   type: "array",
@@ -72572,16 +72572,16 @@ var assets_v5_schema_default = {
 // src/config/validation.ts
 var Ajv = import_ajv.default.default;
 var ajv = new Ajv({
-  schemas: [assets_v5_schema_default, config_v5_schema_default],
+  schemas: [assets_v6_schema_default, config_v6_schema_default],
   allErrors: true,
   useDefaults: true
 });
 var validateConfig = createValidate(
-  config_v5_schema_default.$id,
+  config_v6_schema_default.$id,
   "release configuration"
 );
 var validateAssets = createValidate(
-  assets_v5_schema_default.$id,
+  assets_v6_schema_default.$id,
   "release assets configuration"
 );
 var ValidateError = class extends Error {
@@ -72764,7 +72764,7 @@ function parseReleaseReactions(reactionList) {
   return reactions;
 }
 function isDiscussionReaction(reaction) {
-  const reactions = config_v5_schema_default.properties.discussion.properties.reactions.items.enum;
+  const reactions = config_v6_schema_default.properties.discussion.properties.reactions.items.enum;
   return reactions.includes(reaction);
 }
 function isFileNotFoundError(value) {
@@ -72773,7 +72773,7 @@ function isFileNotFoundError(value) {
   return code3 === "ENOENT";
 }
 function isReleaseReaction(reaction) {
-  const reactions = config_v5_schema_default.properties.reactions.items.enum;
+  const reactions = config_v6_schema_default.properties.reactions.items.enum;
   return reactions.includes(reaction);
 }
 

@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 import { load } from "js-yaml";
 import { isError, isObject } from "../guard.js";
-import configSchema from "../schema/config.v5.schema.json" with { type: "json" };
+import configSchema from "../schema/config.v6.schema.json" with { type: "json" };
 import type { GetInputFn, GroupFn, InfoFn } from "../type/actions.js";
 import {
   AssetConfig,
