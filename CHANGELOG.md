@@ -7,7 +7,7 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
-## Unreleased
+## [v6.0.0] - 2025-09-03
 
 ### Changed
 
