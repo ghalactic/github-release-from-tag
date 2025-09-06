@@ -429,6 +429,22 @@ paragraph
       expect(outputs.releaseWasCreated).toBe("true");
     });
 
+    it("produces the releaseIsLatest output", () => {
+      expect(outputs.releaseIsLatest).toMatch(/^(true)?$/); // "true" or ""
+    });
+
+    it("produces the latestReleaseId output", () => {
+      expect(outputs.latestReleaseId).toMatch(/^\d+$/);
+    });
+
+    it("produces the latestReleaseName output", () => {
+      expect(outputs.latestReleaseName).toBeTypeOf("string");
+    });
+
+    it("produces the latestReleaseUrl output", () => {
+      expect(outputs.latestReleaseUrl).toContain("github.com");
+    });
+
     it("produces the taggerAvatarUrl output", () => {
       expect(outputs.taggerAvatarUrl).toContain("githubusercontent.com");
     });

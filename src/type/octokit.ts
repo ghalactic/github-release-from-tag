@@ -9,4 +9,8 @@ export type AssetData = ReposTypes["getReleaseAsset"]["response"]["data"];
 export type ReleaseData = ReposTypes["getRelease"]["response"]["data"];
 export type TaggerData = { avatarUrl: string; login: string };
 
+export type MakeLatestValue = NonNullable<
+  ReposTypes["createRelease"]["parameters"]["make_latest"]
+>;
+
 type ReposTypes = RestEndpointMethodTypes["repos"];
