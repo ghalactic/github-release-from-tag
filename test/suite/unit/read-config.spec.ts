@@ -3,6 +3,11 @@ import { join } from "path";
 import { fileURLToPath } from "url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readConfig } from "../../../src/config/reading.js";
+import {
+  IF_NEW,
+  NEVER,
+  SEMVER,
+} from "../../../src/constant/make-latest-strategy.js";
 import { getInput, group, info } from "../../mocks/actions-core.js";
 
 const { chdir, cwd } = process;
@@ -68,6 +73,7 @@ describe("readConfig()", () => {
       },
       draft: true,
       generateReleaseNotes: true,
+      makeLatest: SEMVER,
       prerelease: false,
       reactions: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
       summary: {
@@ -93,6 +99,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: IF_NEW,
       reactions: [],
       summary: {
         enabled: true,
@@ -117,6 +124,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: IF_NEW,
       reactions: [],
       summary: {
         enabled: true,
@@ -149,6 +157,8 @@ describe("readConfig()", () => {
           return "false";
         case "generateReleaseNotes":
           return "false";
+        case "makeLatest":
+          return "never";
         case "prerelease":
           return "true";
         case "reactions":
@@ -172,6 +182,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: NEVER,
       prerelease: true,
       reactions: ["heart", "hooray", "rocket"],
       summary: {
@@ -280,6 +291,16 @@ describe("readConfig()", () => {
     ];
 
     expect(actual.assets).toMatchObject(expected);
+  });
+
+  it("throws an error if the makeLatest action input contains an invalid strategy", async () => {
+    chdir(join(fixturesPath, "none"));
+    const getInput = (name: string) =>
+      name === "makeLatest" ? "invalid-strategy" : "";
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      'Validation of makeLatest action input failed. Invalid strategy "invalid-strategy".',
+    );
   });
 
   it("throws an error if the assets action input contains invalid YAML", async () => {

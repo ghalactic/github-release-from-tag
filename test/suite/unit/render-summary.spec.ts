@@ -23,18 +23,40 @@ describe("renderSummary()", () => {
     ${"handles updating existing draft releases"}        | ${"updated-existing-draft"}
   `("$label", async ({ fixture }) => {
     const fixturePath = join(fixturesPath, fixture);
-    const args = load(
-      (await readFile(join(fixturePath, "args.yml"))).toString(),
-    ) as Parameters<typeof renderSummary>[0];
+    const argsPath = join(fixturePath, "args.yml");
+    const releasePath = join(fixturePath, "release.yml");
+    const latestReleasePath = join(fixturePath, "latest-release.yml");
+    const taggerPath = join(fixturePath, "tagger.yml");
+    const args = load((await readFile(argsPath)).toString()) as Parameters<
+      typeof renderSummary
+    >[0];
     const release = load(
-      (await readFile(join(fixturePath, "release.yml"))).toString(),
+      (await readFile(releasePath)).toString(),
     ) as ReleaseData;
-    const tagger = load(
-      (await readFile(join(fixturePath, "tagger.yml"))).toString(),
-    ) as TaggerData;
+    const tagger = load((await readFile(taggerPath)).toString()) as TaggerData;
+
+    let latestRelease: ReleaseData | undefined;
+
+    if (args.isLatest) {
+      latestRelease = release;
+    } else {
+      try {
+        latestRelease = load(
+          (await readFile(latestReleasePath)).toString(),
+        ) as ReleaseData;
+      } catch (error) {
+        if (
+          !(error instanceof Error) ||
+          !("code" in error) ||
+          error.code !== "ENOENT"
+        ) {
+          throw error;
+        }
+      }
+    }
 
     await expect(
-      renderSummary({ ...args, release, tagger }),
+      renderSummary({ ...args, release, tagger, latestRelease }),
     ).toMatchFileSnapshot(join(fixturePath, "expected.md"));
   });
 });

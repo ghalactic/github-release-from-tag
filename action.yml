@@ -33,6 +33,11 @@ inputs:
       Set to "true" to append automatically generated release notes to the
       release body.
     default: "" # defaults to the default in the config file (false)
+  makeLatest:
+    description: >-
+      Strategy for setting the published release as the repo's latest release.
+      Valid values are "if-new", "semver", "legacy", "always", and "never".
+    default: "" # defaults to the default in the config file ("if-new")
   prerelease:
     description: >-
       Set to "true" or "false" to override the automatic tag name based

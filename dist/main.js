@@ -57222,6 +57222,131 @@ var require_light = __commonJS({
   }
 });
 
+// node_modules/compare-versions/lib/umd/index.js
+var require_umd = __commonJS({
+  "node_modules/compare-versions/lib/umd/index.js"(exports, module) {
+    (function(global2, factory) {
+      typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.compareVersions = {}));
+    })(exports, (function(exports2) {
+      "use strict";
+      const semver = /^[v^~<>=]*?(\d+)(?:\.([x*]|\d+)(?:\.([x*]|\d+)(?:\.([x*]|\d+))?(?:-([\da-z\-]+(?:\.[\da-z\-]+)*))?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
+      const validateAndParse = (version) => {
+        if (typeof version !== "string") {
+          throw new TypeError("Invalid argument expected string");
+        }
+        const match = version.match(semver);
+        if (!match) {
+          throw new Error(`Invalid argument not valid semver ('${version}' received)`);
+        }
+        match.shift();
+        return match;
+      };
+      const isWildcard = (s) => s === "*" || s === "x" || s === "X";
+      const tryParse = (v) => {
+        const n = parseInt(v, 10);
+        return isNaN(n) ? v : n;
+      };
+      const forceType = (a, b) => typeof a !== typeof b ? [String(a), String(b)] : [a, b];
+      const compareStrings = (a, b) => {
+        if (isWildcard(a) || isWildcard(b))
+          return 0;
+        const [ap, bp] = forceType(tryParse(a), tryParse(b));
+        if (ap > bp)
+          return 1;
+        if (ap < bp)
+          return -1;
+        return 0;
+      };
+      const compareSegments = (a, b) => {
+        for (let i = 0; i < Math.max(a.length, b.length); i++) {
+          const r = compareStrings(a[i] || "0", b[i] || "0");
+          if (r !== 0)
+            return r;
+        }
+        return 0;
+      };
+      const compareVersions2 = (v1, v2) => {
+        const n1 = validateAndParse(v1);
+        const n2 = validateAndParse(v2);
+        const p1 = n1.pop();
+        const p2 = n2.pop();
+        const r = compareSegments(n1, n2);
+        if (r !== 0)
+          return r;
+        if (p1 && p2) {
+          return compareSegments(p1.split("."), p2.split("."));
+        } else if (p1 || p2) {
+          return p1 ? -1 : 1;
+        }
+        return 0;
+      };
+      const compare = (v1, v2, operator) => {
+        assertValidOperator(operator);
+        const res = compareVersions2(v1, v2);
+        return operatorResMap[operator].includes(res);
+      };
+      const operatorResMap = {
+        ">": [1],
+        ">=": [0, 1],
+        "=": [0],
+        "<=": [-1, 0],
+        "<": [-1],
+        "!=": [-1, 1]
+      };
+      const allowedOperators = Object.keys(operatorResMap);
+      const assertValidOperator = (op) => {
+        if (typeof op !== "string") {
+          throw new TypeError(`Invalid operator type, expected string but got ${typeof op}`);
+        }
+        if (allowedOperators.indexOf(op) === -1) {
+          throw new Error(`Invalid operator, expected one of ${allowedOperators.join("|")}`);
+        }
+      };
+      const satisfies = (version, range) => {
+        range = range.replace(/([><=]+)\s+/g, "$1");
+        if (range.includes("||")) {
+          return range.split("||").some((r4) => satisfies(version, r4));
+        } else if (range.includes(" - ")) {
+          const [a, b] = range.split(" - ", 2);
+          return satisfies(version, `>=${a} <=${b}`);
+        } else if (range.includes(" ")) {
+          return range.trim().replace(/\s{2,}/g, " ").split(" ").every((r4) => satisfies(version, r4));
+        }
+        const m = range.match(/^([<>=~^]+)/);
+        const op = m ? m[1] : "=";
+        if (op !== "^" && op !== "~")
+          return compare(version, range, op);
+        const [v1, v2, v3, , vp] = validateAndParse(version);
+        const [r1, r2, r3, , rp] = validateAndParse(range);
+        const v = [v1, v2, v3];
+        const r = [r1, r2 !== null && r2 !== void 0 ? r2 : "x", r3 !== null && r3 !== void 0 ? r3 : "x"];
+        if (rp) {
+          if (!vp)
+            return false;
+          if (compareSegments(v, r) !== 0)
+            return false;
+          if (compareSegments(vp.split("."), rp.split(".")) === -1)
+            return false;
+        }
+        const nonZero = r.findIndex((v4) => v4 !== "0") + 1;
+        const i = op === "~" ? 2 : nonZero > 1 ? nonZero : 1;
+        if (compareSegments(v.slice(0, i), r.slice(0, i)) !== 0)
+          return false;
+        if (compareSegments(v.slice(i), r.slice(i)) === -1)
+          return false;
+        return true;
+      };
+      const validate = (version) => typeof version === "string" && /^[v\d]/.test(version) && semver.test(version);
+      const validateStrict = (version) => typeof version === "string" && /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/.test(version);
+      exports2.compare = compare;
+      exports2.compareVersions = compareVersions2;
+      exports2.satisfies = satisfies;
+      exports2.validate = validate;
+      exports2.validateStrict = validateStrict;
+    }));
+  }
+});
+
 // src/main.ts
 var import_core2 = __toESM(require_core(), 1);
 
@@ -57543,20 +57668,24 @@ var DISCUSSION_ID = "discussionId";
 var DISCUSSION_NUMBER = "discussionNumber";
 var DISCUSSION_URL = "discussionUrl";
 var GENERATED_RELEASE_NOTES = "generatedReleaseNotes";
+var LATEST_RELEASE_ID = "latestReleaseId";
+var LATEST_RELEASE_NAME = "latestReleaseName";
+var LATEST_RELEASE_URL = "latestReleaseUrl";
 var RELEASE_BODY = "releaseBody";
 var RELEASE_ID = "releaseId";
+var RELEASE_IS_LATEST = "releaseIsLatest";
 var RELEASE_NAME = "releaseName";
 var RELEASE_UPLOAD_URL = "releaseUploadUrl";
 var RELEASE_URL = "releaseUrl";
 var RELEASE_WAS_CREATED = "releaseWasCreated";
 var TAG_BODY = "tagBody";
 var TAG_BODY_RENDERED = "tagBodyRendered";
-var TAGGER_AVATAR_URL = "taggerAvatarUrl";
-var TAGGER_LOGIN = "taggerLogin";
 var TAG_IS_SEM_VER = "tagIsSemVer";
 var TAG_IS_STABLE = "tagIsStable";
 var TAG_NAME = "tagName";
 var TAG_SUBJECT = "tagSubject";
+var TAGGER_AVATAR_URL = "taggerAvatarUrl";
+var TAGGER_LOGIN = "taggerLogin";
 
 // node_modules/github-slugger/regex.js
 var regex = /[\0-\x1F!-,\.\/:-@\[-\^`\{-\xA9\xAB-\xB4\xB6-\xB9\xBB-\xBF\xD7\xF7\u02C2-\u02C5\u02D2-\u02DF\u02E5-\u02EB\u02ED\u02EF-\u02FF\u0375\u0378\u0379\u037E\u0380-\u0385\u0387\u038B\u038D\u03A2\u03F6\u0482\u0530\u0557\u0558\u055A-\u055F\u0589-\u0590\u05BE\u05C0\u05C3\u05C6\u05C8-\u05CF\u05EB-\u05EE\u05F3-\u060F\u061B-\u061F\u066A-\u066D\u06D4\u06DD\u06DE\u06E9\u06FD\u06FE\u0700-\u070F\u074B\u074C\u07B2-\u07BF\u07F6-\u07F9\u07FB\u07FC\u07FE\u07FF\u082E-\u083F\u085C-\u085F\u086B-\u089F\u08B5\u08C8-\u08D2\u08E2\u0964\u0965\u0970\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09F2-\u09FB\u09FD\u09FF\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF0-\u0AF8\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B54\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B70\u0B72-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BF0-\u0BFF\u0C0D\u0C11\u0C29\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5B-\u0C5F\u0C64\u0C65\u0C70-\u0C7F\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0CFF\u0D0D\u0D11\u0D45\u0D49\u0D4F-\u0D53\u0D58-\u0D5E\u0D64\u0D65\u0D70-\u0D79\u0D80\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DE5\u0DF0\u0DF1\u0DF4-\u0E00\u0E3B-\u0E3F\u0E4F\u0E5A-\u0E80\u0E83\u0E85\u0E8B\u0EA4\u0EA6\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F01-\u0F17\u0F1A-\u0F1F\u0F2A-\u0F34\u0F36\u0F38\u0F3A-\u0F3D\u0F48\u0F6D-\u0F70\u0F85\u0F98\u0FBD-\u0FC5\u0FC7-\u0FFF\u104A-\u104F\u109E\u109F\u10C6\u10C8-\u10CC\u10CE\u10CF\u10FB\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u1360-\u137F\u1390-\u139F\u13F6\u13F7\u13FE-\u1400\u166D\u166E\u1680\u169B-\u169F\u16EB-\u16ED\u16F9-\u16FF\u170D\u1715-\u171F\u1735-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17D4-\u17D6\u17D8-\u17DB\u17DE\u17DF\u17EA-\u180A\u180E\u180F\u181A-\u181F\u1879-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191F\u192C-\u192F\u193C-\u1945\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DA-\u19FF\u1A1C-\u1A1F\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1AA6\u1AA8-\u1AAF\u1AC1-\u1AFF\u1B4C-\u1B4F\u1B5A-\u1B6A\u1B74-\u1B7F\u1BF4-\u1BFF\u1C38-\u1C3F\u1C4A-\u1C4C\u1C7E\u1C7F\u1C89-\u1C8F\u1CBB\u1CBC\u1CC0-\u1CCF\u1CD3\u1CFB-\u1CFF\u1DFA\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FBD\u1FBF-\u1FC1\u1FC5\u1FCD-\u1FCF\u1FD4\u1FD5\u1FDC-\u1FDF\u1FED-\u1FF1\u1FF5\u1FFD-\u203E\u2041-\u2053\u2055-\u2070\u2072-\u207E\u2080-\u208F\u209D-\u20CF\u20F1-\u2101\u2103-\u2106\u2108\u2109\u2114\u2116-\u2118\u211E-\u2123\u2125\u2127\u2129\u212E\u213A\u213B\u2140-\u2144\u214A-\u214D\u214F-\u215F\u2189-\u24B5\u24EA-\u2BFF\u2C2F\u2C5F\u2CE5-\u2CEA\u2CF4-\u2CFF\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D70-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E00-\u2E2E\u2E30-\u3004\u3008-\u3020\u3030\u3036\u3037\u303D-\u3040\u3097\u3098\u309B\u309C\u30A0\u30FB\u3100-\u3104\u3130\u318F-\u319F\u31C0-\u31EF\u3200-\u33FF\u4DC0-\u4DFF\u9FFD-\u9FFF\uA48D-\uA4CF\uA4FE\uA4FF\uA60D-\uA60F\uA62C-\uA63F\uA673\uA67E\uA6F2-\uA716\uA720\uA721\uA789\uA78A\uA7C0\uA7C1\uA7CB-\uA7F4\uA828-\uA82B\uA82D-\uA83F\uA874-\uA87F\uA8C6-\uA8CF\uA8DA-\uA8DF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA954-\uA95F\uA97D-\uA97F\uA9C1-\uA9CE\uA9DA-\uA9DF\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A-\uAA5F\uAA77-\uAA79\uAAC3-\uAADA\uAADE\uAADF\uAAF0\uAAF1\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F\uAB5B\uAB6A-\uAB6F\uABEB\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uE000-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB29\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBB2-\uFBD2\uFD3E-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFC-\uFDFF\uFE10-\uFE1F\uFE30-\uFE32\uFE35-\uFE4C\uFE50-\uFE6F\uFE75\uFEFD-\uFF0F\uFF1A-\uFF20\uFF3B-\uFF3E\uFF40\uFF5B-\uFF65\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFFF]|\uD800[\uDC0C\uDC27\uDC3B\uDC3E\uDC4E\uDC4F\uDC5E-\uDC7F\uDCFB-\uDD3F\uDD75-\uDDFC\uDDFE-\uDE7F\uDE9D-\uDE9F\uDED1-\uDEDF\uDEE1-\uDEFF\uDF20-\uDF2C\uDF4B-\uDF4F\uDF7B-\uDF7F\uDF9E\uDF9F\uDFC4-\uDFC7\uDFD0\uDFD6-\uDFFF]|\uD801[\uDC9E\uDC9F\uDCAA-\uDCAF\uDCD4-\uDCD7\uDCFC-\uDCFF\uDD28-\uDD2F\uDD64-\uDDFF\uDF37-\uDF3F\uDF56-\uDF5F\uDF68-\uDFFF]|\uD802[\uDC06\uDC07\uDC09\uDC36\uDC39-\uDC3B\uDC3D\uDC3E\uDC56-\uDC5F\uDC77-\uDC7F\uDC9F-\uDCDF\uDCF3\uDCF6-\uDCFF\uDD16-\uDD1F\uDD3A-\uDD7F\uDDB8-\uDDBD\uDDC0-\uDDFF\uDE04\uDE07-\uDE0B\uDE14\uDE18\uDE36\uDE37\uDE3B-\uDE3E\uDE40-\uDE5F\uDE7D-\uDE7F\uDE9D-\uDEBF\uDEC8\uDEE7-\uDEFF\uDF36-\uDF3F\uDF56-\uDF5F\uDF73-\uDF7F\uDF92-\uDFFF]|\uD803[\uDC49-\uDC7F\uDCB3-\uDCBF\uDCF3-\uDCFF\uDD28-\uDD2F\uDD3A-\uDE7F\uDEAA\uDEAD-\uDEAF\uDEB2-\uDEFF\uDF1D-\uDF26\uDF28-\uDF2F\uDF51-\uDFAF\uDFC5-\uDFDF\uDFF7-\uDFFF]|\uD804[\uDC47-\uDC65\uDC70-\uDC7E\uDCBB-\uDCCF\uDCE9-\uDCEF\uDCFA-\uDCFF\uDD35\uDD40-\uDD43\uDD48-\uDD4F\uDD74\uDD75\uDD77-\uDD7F\uDDC5-\uDDC8\uDDCD\uDDDB\uDDDD-\uDDFF\uDE12\uDE38-\uDE3D\uDE3F-\uDE7F\uDE87\uDE89\uDE8E\uDE9E\uDEA9-\uDEAF\uDEEB-\uDEEF\uDEFA-\uDEFF\uDF04\uDF0D\uDF0E\uDF11\uDF12\uDF29\uDF31\uDF34\uDF3A\uDF45\uDF46\uDF49\uDF4A\uDF4E\uDF4F\uDF51-\uDF56\uDF58-\uDF5C\uDF64\uDF65\uDF6D-\uDF6F\uDF75-\uDFFF]|\uD805[\uDC4B-\uDC4F\uDC5A-\uDC5D\uDC62-\uDC7F\uDCC6\uDCC8-\uDCCF\uDCDA-\uDD7F\uDDB6\uDDB7\uDDC1-\uDDD7\uDDDE-\uDDFF\uDE41-\uDE43\uDE45-\uDE4F\uDE5A-\uDE7F\uDEB9-\uDEBF\uDECA-\uDEFF\uDF1B\uDF1C\uDF2C-\uDF2F\uDF3A-\uDFFF]|\uD806[\uDC3B-\uDC9F\uDCEA-\uDCFE\uDD07\uDD08\uDD0A\uDD0B\uDD14\uDD17\uDD36\uDD39\uDD3A\uDD44-\uDD4F\uDD5A-\uDD9F\uDDA8\uDDA9\uDDD8\uDDD9\uDDE2\uDDE5-\uDDFF\uDE3F-\uDE46\uDE48-\uDE4F\uDE9A-\uDE9C\uDE9E-\uDEBF\uDEF9-\uDFFF]|\uD807[\uDC09\uDC37\uDC41-\uDC4F\uDC5A-\uDC71\uDC90\uDC91\uDCA8\uDCB7-\uDCFF\uDD07\uDD0A\uDD37-\uDD39\uDD3B\uDD3E\uDD48-\uDD4F\uDD5A-\uDD5F\uDD66\uDD69\uDD8F\uDD92\uDD99-\uDD9F\uDDAA-\uDEDF\uDEF7-\uDFAF\uDFB1-\uDFFF]|\uD808[\uDF9A-\uDFFF]|\uD809[\uDC6F-\uDC7F\uDD44-\uDFFF]|[\uD80A\uD80B\uD80E-\uD810\uD812-\uD819\uD824-\uD82B\uD82D\uD82E\uD830-\uD833\uD837\uD839\uD83D\uD83F\uD87B-\uD87D\uD87F\uD885-\uDB3F\uDB41-\uDBFF][\uDC00-\uDFFF]|\uD80D[\uDC2F-\uDFFF]|\uD811[\uDE47-\uDFFF]|\uD81A[\uDE39-\uDE3F\uDE5F\uDE6A-\uDECF\uDEEE\uDEEF\uDEF5-\uDEFF\uDF37-\uDF3F\uDF44-\uDF4F\uDF5A-\uDF62\uDF78-\uDF7C\uDF90-\uDFFF]|\uD81B[\uDC00-\uDE3F\uDE80-\uDEFF\uDF4B-\uDF4E\uDF88-\uDF8E\uDFA0-\uDFDF\uDFE2\uDFE5-\uDFEF\uDFF2-\uDFFF]|\uD821[\uDFF8-\uDFFF]|\uD823[\uDCD6-\uDCFF\uDD09-\uDFFF]|\uD82C[\uDD1F-\uDD4F\uDD53-\uDD63\uDD68-\uDD6F\uDEFC-\uDFFF]|\uD82F[\uDC6B-\uDC6F\uDC7D-\uDC7F\uDC89-\uDC8F\uDC9A-\uDC9C\uDC9F-\uDFFF]|\uD834[\uDC00-\uDD64\uDD6A-\uDD6C\uDD73-\uDD7A\uDD83\uDD84\uDD8C-\uDDA9\uDDAE-\uDE41\uDE45-\uDFFF]|\uD835[\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDEC1\uDEDB\uDEFB\uDF15\uDF35\uDF4F\uDF6F\uDF89\uDFA9\uDFC3\uDFCC\uDFCD]|\uD836[\uDC00-\uDDFF\uDE37-\uDE3A\uDE6D-\uDE74\uDE76-\uDE83\uDE85-\uDE9A\uDEA0\uDEB0-\uDFFF]|\uD838[\uDC07\uDC19\uDC1A\uDC22\uDC25\uDC2B-\uDCFF\uDD2D-\uDD2F\uDD3E\uDD3F\uDD4A-\uDD4D\uDD4F-\uDEBF\uDEFA-\uDFFF]|\uD83A[\uDCC5-\uDCCF\uDCD7-\uDCFF\uDD4C-\uDD4F\uDD5A-\uDFFF]|\uD83B[\uDC00-\uDDFF\uDE04\uDE20\uDE23\uDE25\uDE26\uDE28\uDE33\uDE38\uDE3A\uDE3C-\uDE41\uDE43-\uDE46\uDE48\uDE4A\uDE4C\uDE50\uDE53\uDE55\uDE56\uDE58\uDE5A\uDE5C\uDE5E\uDE60\uDE63\uDE65\uDE66\uDE6B\uDE73\uDE78\uDE7D\uDE7F\uDE8A\uDE9C-\uDEA0\uDEA4\uDEAA\uDEBC-\uDFFF]|\uD83C[\uDC00-\uDD2F\uDD4A-\uDD4F\uDD6A-\uDD6F\uDD8A-\uDFFF]|\uD83E[\uDC00-\uDFEF\uDFFA-\uDFFF]|\uD869[\uDEDE-\uDEFF]|\uD86D[\uDF35-\uDF3F]|\uD86E[\uDC1E\uDC1F]|\uD873[\uDEA2-\uDEAF]|\uD87A[\uDFE1-\uDFFF]|\uD87E[\uDE1E-\uDFFF]|\uD884[\uDF4B-\uDFFF]|\uDB40[\uDC00-\uDCFF\uDDF0-\uDFFF]/g;
@@ -72499,6 +72628,12 @@ var config_v6_schema_default = {
       type: "boolean",
       default: false
     },
+    makeLatest: {
+      description: "Strategy for setting the published release as the repo's latest release.",
+      type: "string",
+      enum: ["if-new", "semver", "legacy", "always", "never"],
+      default: "if-new"
+    },
     prerelease: {
       description: "Set to true or false to override the automatic tag name based pre-release detection.",
       type: "boolean"
@@ -72680,6 +72815,7 @@ function getConfigOverrides(getInput2, base) {
   const inputAssets = parseAssets(getInput2);
   const draft = getInput2("draft");
   const generateReleaseNotes = getInput2("generateReleaseNotes");
+  const makeLatest = getInput2("makeLatest");
   const prerelease = getInput2("prerelease");
   const reactions = getInput2("reactions");
   const overrides = {};
@@ -72699,6 +72835,7 @@ function getConfigOverrides(getInput2, base) {
   if (generateReleaseNotes) {
     overrides.generateReleaseNotes = generateReleaseNotes === "true";
   }
+  if (makeLatest) overrides.makeLatest = parseMakeLatest(makeLatest);
   if (prerelease) overrides.prerelease = prerelease === "true";
   if (reactions) overrides.reactions = parseReleaseReactions(reactions);
   return Object.keys(overrides).length > 0 ? overrides : void 0;
@@ -72736,6 +72873,16 @@ function parseAssets(getInput2) {
     if (!isError(error2)) throw error2;
     throw new Error(`Validation of assets action input failed: ${error2.stack}`);
   }
+}
+function parseMakeLatest(strategy) {
+  if (isMakeLatestStrategy(strategy)) return strategy;
+  const quotedStrategy = JSON.stringify(strategy);
+  throw new Error(
+    `Validation of makeLatest action input failed. Invalid strategy ${quotedStrategy}.`
+  );
+}
+function isMakeLatestStrategy(value) {
+  return config_v6_schema_default.properties.makeLatest.enum.includes(value);
 }
 function parseDiscussionReactions(reactionList) {
   const reactions = [];
@@ -76465,9 +76612,20 @@ async function createReleaseReactions({
   });
 }
 
+// src/semver.ts
+var SEMVER_PATTERN = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+function parseSemVer(version) {
+  const match = version.match(SEMVER_PATTERN);
+  if (!match) return void 0;
+  const [, major, minor, patch, preRelease, build] = match;
+  return { major, minor, patch, preRelease, build };
+}
+function isStableSemVer(version) {
+  return version.major !== "0" && version.preRelease == null;
+}
+
 // src/ref.ts
 var SHORTHAND_PATTERN = /^v?([1-9]\d*)(\.\d+)?$/;
-var SEMVER_PATTERN = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
 function parseRef(ref) {
   const tagMatch = ref.match(/^refs\/tags\/(.*)$/);
   if (tagMatch == null) {
@@ -76491,20 +76649,12 @@ function parseRef(ref) {
       tag
     };
   }
-  const semVerMatch = SEMVER_PATTERN.exec(tag);
-  if (semVerMatch != null) {
-    const [
-      ,
-      /*full*/
-      major,
-      ,
-      ,
-      prerelease
-    ] = semVerMatch;
+  const semVer = parseSemVer(tag);
+  if (semVer) {
     return {
       isTag: true,
       isSemVer: true,
-      isStable: major !== "0" && prerelease == null,
+      isStable: isStableSemVer(semVer),
       tag
     };
   }
@@ -76517,17 +76667,129 @@ function parseRef(ref) {
 }
 
 // src/release.ts
-async function createOrUpdateRelease({
+var import_compare_versions = __toESM(require_umd(), 1);
+
+// src/constant/make-latest-strategy.ts
+var IF_NEW = "if-new";
+var LEGACY = "legacy";
+var ALWAYS = "always";
+var NEVER = "never";
+
+// src/release.ts
+async function determineMakeLatest({
   config,
   group: group2,
   info: info2,
-  isStable,
+  isPreRelease,
+  owner,
+  repo,
+  repos,
+  tag
+}) {
+  return group2(
+    "Determining whether this release should be the latest",
+    async () => {
+      if (isPreRelease) {
+        info2("This is a pre-release, which can't be set as the latest");
+        return ["false", "false"];
+      }
+      if (config.draft) {
+        info2("This is a draft release, which can't be set as the latest");
+        return ["false", "false"];
+      }
+      if (config.makeLatest === IF_NEW) {
+        info2(
+          "This release will be set as the latest only if it's newly created"
+        );
+        return ["true", "false"];
+      }
+      if (config.makeLatest === ALWAYS) {
+        info2("This release will be set as the latest");
+        return ["true", "true"];
+      }
+      if (config.makeLatest === NEVER) {
+        info2("This release will not be set as the latest");
+        return ["false", "false"];
+      }
+      if (config.makeLatest === LEGACY) {
+        info2("Deferring to GitHub's legacy behavior");
+        return ["legacy", "legacy"];
+      }
+      const tagSemVer = parseSemVer(tag);
+      if (!tagSemVer) {
+        info2(`The tag ${JSON.stringify(tag)} is not valid SemVer`);
+        info2("This release will not be set as the latest");
+        return ["false", "false"];
+      }
+      info2(`The tag ${JSON.stringify(tag)} is valid SemVer`);
+      const latestRelease = await getLatestRelease(repos, owner, repo);
+      if (!latestRelease) {
+        info2("No current latest release found");
+        info2("This release will be set as the latest");
+        return ["true", "true"];
+      }
+      info2(`The current latest release is ${latestRelease.html_url}`);
+      const currentTag = latestRelease.tag_name;
+      const currentTagSemVer = parseSemVer(currentTag);
+      if (!currentTagSemVer) {
+        info2(
+          `The current latest release tag ${JSON.stringify(currentTag)} is not valid SemVer`
+        );
+        info2("This release will be set as the latest");
+        return ["true", "true"];
+      }
+      if (isStableSemVer(tagSemVer) && !isStableSemVer(currentTagSemVer)) {
+        info2(
+          `The tag ${JSON.stringify(tag)} is a stable SemVer version, and the current latest release tag ${JSON.stringify(currentTag)} is an unstable SemVer version`
+        );
+        info2("This release will be set as the latest");
+        return ["true", "true"];
+      }
+      if (!isStableSemVer(tagSemVer) && isStableSemVer(currentTagSemVer)) {
+        info2(
+          `The tag ${JSON.stringify(tag)} is an unstable SemVer version, and the current latest release tag ${JSON.stringify(currentTag)} is a stable SemVer version`
+        );
+        info2("This release will not be set as the latest");
+        return ["false", "false"];
+      }
+      const comparison = (0, import_compare_versions.compareVersions)(tag, currentTag);
+      if (comparison === 0) {
+        info2(
+          `The tag ${JSON.stringify(tag)} has equal SemVer precedence to the current latest release tag ${JSON.stringify(currentTag)}`
+        );
+        info2(
+          "This release will be set as the latest only if it's newly created"
+        );
+        return ["true", "false"];
+      }
+      if (comparison > 0) {
+        info2(
+          `The tag ${JSON.stringify(tag)} has higher SemVer precedence than the current latest release tag ${JSON.stringify(currentTag)}`
+        );
+        info2("This release will be set as the latest");
+        return ["true", "true"];
+      }
+      info2(
+        `The tag ${JSON.stringify(tag)} has lower SemVer precedence than the current latest release tag ${JSON.stringify(currentTag)}`
+      );
+      info2("This release will not be set as the latest");
+      return ["false", "false"];
+    }
+  );
+}
+async function createOrUpdateRelease({
+  config,
+  createMakeLatest,
+  group: group2,
+  info: info2,
+  isPreRelease,
   owner,
   releaseBody,
   repo,
   repos,
   tag,
-  tagSubject
+  tagSubject,
+  updateMakeLatest
 }) {
   const params = {
     owner,
@@ -76536,14 +76798,17 @@ async function createOrUpdateRelease({
     name: tagSubject,
     body: releaseBody,
     draft: config.draft,
-    prerelease: config.prerelease ?? !isStable,
+    prerelease: isPreRelease,
     discussion_category_name: config.discussion.category || void 0
   };
   const createdRelease = await group2(
     "Attempting to create a release",
     async () => {
       try {
-        const { data } = await repos.createRelease(params);
+        const { data } = await repos.createRelease({
+          ...params,
+          make_latest: createMakeLatest
+        });
         info2(JSON.stringify(data, null, 2));
         return data;
       } catch (error2) {
@@ -76573,7 +76838,8 @@ async function createOrUpdateRelease({
     async () => {
       const { data } = await repos.updateRelease({
         ...params,
-        release_id: existingRelease.id
+        release_id: existingRelease.id,
+        make_latest: updateMakeLatest
       });
       info2(JSON.stringify(data, null, 2));
       return data;
@@ -76581,10 +76847,63 @@ async function createOrUpdateRelease({
   );
   return [updatedRelease, false];
 }
+async function compareLatestRelease({
+  group: group2,
+  info: info2,
+  owner,
+  release,
+  repo,
+  repos,
+  setOutput: setOutput2
+}) {
+  const [latestRelease, isLatest] = await group2(
+    "Checking the latest release after publishing",
+    async () => {
+      const latestRelease2 = await getLatestRelease(repos, owner, repo);
+      let isLatest2;
+      if (latestRelease2) {
+        isLatest2 = latestRelease2.id === release.id;
+        info2(
+          isLatest2 ? "The published release is the latest" : `The current latest release is ${latestRelease2.html_url}`
+        );
+        setOutput2(LATEST_RELEASE_ID, String(latestRelease2.id));
+        setOutput2(LATEST_RELEASE_NAME, latestRelease2.name ?? "");
+        setOutput2(LATEST_RELEASE_URL, latestRelease2.html_url);
+        setOutput2(RELEASE_IS_LATEST, isLatest2 ? "true" : "");
+      } else {
+        isLatest2 = false;
+        info2("There is no current latest release");
+        setOutput2(LATEST_RELEASE_ID, "");
+        setOutput2(LATEST_RELEASE_NAME, "");
+        setOutput2(LATEST_RELEASE_URL, "");
+        setOutput2(RELEASE_IS_LATEST, "");
+      }
+      return [latestRelease2, isLatest2];
+    }
+  );
+  return [latestRelease, isLatest];
+}
+async function getLatestRelease(repos, owner, repo) {
+  try {
+    const { data: latestRelease } = await repos.getLatestRelease({
+      owner,
+      repo
+    });
+    return latestRelease;
+  } catch (error2) {
+    if (!isRequestError(error2) || // Octokit types are wrong, status is actually a string
+    String(error2.response.data.status) !== "404") {
+      throw error2;
+    }
+    return void 0;
+  }
+}
 
 // src/summary.ts
 var BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 function renderSummary({
+  isLatest,
+  latestRelease,
   release,
   tagger,
   tagHtmlUrl,
@@ -76606,7 +76925,8 @@ function renderSummary({
       ]
     },
     {
-      extensions: [gfmToMarkdown()]
+      extensions: [gfmToMarkdown()],
+      emphasis: "_"
     }
   );
   return rendered.replace(BODY_TOKEN, body);
@@ -76681,6 +77001,12 @@ function renderSummary({
           type: "text",
           value: "Stability"
         }
+      ],
+      [
+        {
+          type: "text",
+          value: "Latest"
+        }
       ]
     ];
     const cells = [
@@ -76703,7 +77029,22 @@ function renderSummary({
           type: "text",
           value: prerelease ? "\u26A0\uFE0F Pre-release" : "\u2705 Stable"
         }
-      ]
+      ],
+      latestRelease ? [
+        ...isLatest ? [{ type: "text", value: "\u2705 " }] : [],
+        {
+          type: "linkReference",
+          identifier: "latest-release-url",
+          label: "latest-release-url",
+          referenceType: "full",
+          children: [
+            {
+              type: "text",
+              value: latestRelease.name ?? latestRelease.tag_name
+            }
+          ]
+        }
+      ] : [{ type: "emphasis", children: [{ type: "text", value: "(none)" }] }]
     ];
     if (discussion_url) {
       headings.push([
@@ -76747,6 +77088,15 @@ function renderSummary({
         identifier: "discussion-url",
         label: "discussion-url",
         url: discussion_url,
+        title: null
+      });
+    }
+    if (latestRelease) {
+      definitions.push({
+        type: "definition",
+        identifier: "latest-release-url",
+        label: "latest-release-url",
+        url: latestRelease.html_url,
         title: null
       });
     }
@@ -76893,6 +77243,7 @@ async function main() {
     (0, import_core2.setFailed)("Unable to create a release from a lightweight tag");
     return;
   }
+  const isPreRelease = config.prerelease ?? !isStable;
   const tagSemVerLabel = isSemVer ? "SemVer" : "Non-Semver";
   const tagStabilityLabel = isStable ? "stable release" : "pre-release";
   if (typeof config.prerelease === "boolean") {
@@ -76937,17 +77288,29 @@ async function main() {
     tagBody
   });
   (0, import_core2.setOutput)(RELEASE_BODY, releaseBody);
-  const [release, wasCreated] = await createOrUpdateRelease({
+  const [createMakeLatest, updateMakeLatest] = await determineMakeLatest({
     config,
     group: import_core2.group,
     info: import_core2.info,
-    isStable,
+    isPreRelease,
+    owner,
+    repo,
+    repos,
+    tag
+  });
+  const [release, wasCreated] = await createOrUpdateRelease({
+    config,
+    createMakeLatest,
+    group: import_core2.group,
+    info: import_core2.info,
+    isPreRelease,
     owner,
     releaseBody,
     repo,
     repos,
     tag,
-    tagSubject
+    tagSubject,
+    updateMakeLatest
   });
   (0, import_core2.setOutput)(RELEASE_ID, release.id);
   (0, import_core2.setOutput)(RELEASE_NAME, release.name);
@@ -76988,9 +77351,27 @@ async function main() {
     repo,
     setOutput: import_core2.setOutput
   });
+  const [latestRelease, isLatest] = await compareLatestRelease({
+    group: import_core2.group,
+    info: import_core2.info,
+    owner,
+    release,
+    repo,
+    repos,
+    setOutput: import_core2.setOutput
+  });
   if (config.summary.enabled) {
     const tagHtmlUrl = await getTagHtmlUrl({ repos, owner, repo, tag });
-    await import_core2.summary.addRaw(renderSummary({ release, tagger, tagHtmlUrl, wasCreated })).write();
+    await import_core2.summary.addRaw(
+      renderSummary({
+        isLatest,
+        latestRelease,
+        release,
+        tagger,
+        tagHtmlUrl,
+        wasCreated
+      })
+    ).write();
   }
 }
 /*! Bundled license information:

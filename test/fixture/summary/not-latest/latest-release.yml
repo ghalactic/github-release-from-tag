@@ -1,0 +1,7 @@
+body: This is another _release_ 🎉
+discussion_url: ""
+draft: false
+html_url: https://github.com/owner-a/repo-a/releases/tag/release-b
+name: name-b
+prerelease: false
+tag_name: tag-name-b

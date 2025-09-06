@@ -14,11 +14,15 @@ import { ReleaseData, TaggerData } from "./type/octokit.js";
 const BODY_TOKEN = "{{GITHUB_RELEASE_ACTION_BODY}}";
 
 export function renderSummary({
+  isLatest,
+  latestRelease,
   release,
   tagger,
   tagHtmlUrl,
   wasCreated,
 }: {
+  isLatest: boolean;
+  latestRelease?: ReleaseData;
   release: ReleaseData;
   tagger?: TaggerData;
   tagHtmlUrl: string;
@@ -42,6 +46,7 @@ export function renderSummary({
     },
     {
       extensions: [gfmToMarkdown()],
+      emphasis: "_",
     },
   );
 
@@ -124,6 +129,12 @@ export function renderSummary({
           value: "Stability",
         },
       ],
+      [
+        {
+          type: "text",
+          value: "Latest",
+        },
+      ],
     ];
 
     const cells: PhrasingContent[][] = [
@@ -147,6 +158,23 @@ export function renderSummary({
           value: prerelease ? "⚠️ Pre-release" : "✅ Stable",
         },
       ],
+      latestRelease
+        ? [
+            ...(isLatest ? ([{ type: "text", value: "✅ " }] as const) : []),
+            {
+              type: "linkReference",
+              identifier: "latest-release-url",
+              label: "latest-release-url",
+              referenceType: "full",
+              children: [
+                {
+                  type: "text",
+                  value: latestRelease.name ?? latestRelease.tag_name,
+                },
+              ],
+            },
+          ]
+        : [{ type: "emphasis", children: [{ type: "text", value: "(none)" }] }],
     ];
 
     if (discussion_url) {
@@ -197,6 +225,16 @@ export function renderSummary({
         identifier: "discussion-url",
         label: "discussion-url",
         url: discussion_url,
+        title: null,
+      });
+    }
+
+    if (latestRelease) {
+      definitions.push({
+        type: "definition",
+        identifier: "latest-release-url",
+        label: "latest-release-url",
+        url: latestRelease.html_url,
         title: null,
       });
     }

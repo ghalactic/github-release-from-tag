@@ -1,4 +1,5 @@
 import { dump } from "js-yaml";
+import { NEVER } from "../../src/constant/make-latest-strategy.js";
 import * as outputs from "../../src/constant/output.js";
 
 const { GITHUB_SHA } = process.env;
@@ -23,7 +24,7 @@ export function buildTagName(
 
 export function buildWorkflow(
   branchName: string,
-  publishOptions: unknown = {},
+  publishOptions: object = {},
   preSteps: unknown[] = [],
 ): string {
   const exposeSteps = [];
@@ -64,7 +65,10 @@ export function buildWorkflow(
           {
             name: "Publish release",
             uses: `ghalactic/github-release-from-tag@${GITHUB_SHA || "main"}`,
-            with: publishOptions,
+            with: {
+              makeLatest: NEVER,
+              ...publishOptions,
+            },
             id: "publishRelease",
           },
 

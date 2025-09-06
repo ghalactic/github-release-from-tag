@@ -31,6 +31,7 @@ to when you [publish a GitHub Release manually].
 
 - [Minimal configuration, or often **zero** configuration](#configuration)
 - [SemVer stability determines **pre-release** status](#release-stability)
+- [**Latest release** management](#latest-release-management)
 - [**Markdown** support in tag annotation messages](#release-name-and-body)
 - [Asset uploading with support for **labels** and **checksums**](#release-assets)
 - [Automated **release notes** support](#automated-release-notes)
@@ -57,6 +58,7 @@ jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
+    concurrency: publish-release
     permissions:
       contents: write
       discussions: write # (for release discussion creation)
@@ -97,6 +99,7 @@ jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
+    concurrency: publish-release
     permissions:
       contents: write
       discussions: write # (for release discussion creation)
@@ -197,6 +200,148 @@ prerelease: true # or false
 | `0` / `v0`                           | no         | pre-release       |
 | `0.1` / `v0.1`                       | no         | pre-release       |
 | `something-else`                     | no         | pre-release       |
+
+### Latest release management
+
+This action can automatically or manually set published releases as the [latest
+release] for the repo. There are several strategies that can be [configured] for
+determining whether the published release should be set as the latest release.
+
+[latest release]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases#linking-to-the-latest-release
+[configured]: #configuration
+
+> [!TIP]
+> Draft releases and pre-releases can't be set as the latest release for a repo.
+> Regardless of what strategy is configured, this action will not attempt to set
+> a draft or pre-release as the latest release.
+
+#### Setting newly created releases as latest
+
+This strategy will set any newly created, non-draft, stable release as the
+latest release. Updated releases will not have their latest status changed. This
+matches GitHub's default behavior.
+
+This is the **default strategy**, but you can explicitly enable this strategy
+via the [configuration file], or via [action inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+makeLatest: if-new
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v6
+  with:
+    makeLatest: if-new
+```
+
+#### SemVer-based latest releases
+
+This strategy will set the published release as the latest release if it makes
+sense according to the [SemVer] specification. In other words:
+
+[semver]: https://semver.org/
+
+- If the published release tag is _not_ a valid SemVer version, the published
+  release will **never** be set as the latest release.
+- If the published latest release tag _is_ a valid SemVer version, and the
+  current latest release tag is _not_ a valid SemVer version, the published
+  release will **always** be set as the latest release.
+- If both the published release tag and the current latest release tag are valid
+  SemVer versions, the published release will be set as the latest release if:
+  - The published release tag is a _stable_ SemVer version, and the current
+    latest release tag is an _unstable_ SemVer version; OR
+  - The published release tag has the _same_ SemVer stability as the current
+    latest release tag, but a higher [SemVer precedence].
+
+[semver precedence]: https://semver.org/#spec-item-11
+
+You can enable this strategy via the [configuration file], or via [action
+inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+makeLatest: semver
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v6
+  with:
+    makeLatest: semver
+```
+
+> [!CAUTION]
+> Using this strategy can cause race conditions if multiple release workflows
+> run at the same time. It's recommended to set a [concurrency group] on your
+> release publishing workflows or jobs to mitigate this.
+
+[concurrency group]: https://docs.github.com/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+
+#### Legacy GitHub latest release management
+
+This strategy defers to GitHub's legacy behavior for determining the latest
+release. In GitHub's own words, this strategy:
+
+> "...specifies that the latest release should be determined based on the
+> release creation date and higher semantic version"
+>
+> (From the [Create a release] REST API endpoint documentation)
+
+[create a release]: https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
+
+You can enable this strategy via the [configuration file], or via [action
+inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+makeLatest: legacy
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v6
+  with:
+    makeLatest: legacy
+```
+
+#### Explicit setting latest releases
+
+You can explicitly [configure] whether the published release should be set as
+the latest release via the [configuration file], or via [action inputs]:
+
+[configure]: #configuration
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+makeLatest: always # or never
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v6
+  with:
+    makeLatest: always # or never
+```
+
+> [!CAUTION]
+> Specifying `makeLatest: always` will cause even **updated** releases to be set
+> as the latest release. This can be useful in advanced scenarios when
+> configured via a dynamic [action input], but is usually undesirable otherwise.
+
+[action input]: #action-inputs
 
 ### Draft releases
 
@@ -733,6 +878,9 @@ draft: true
 # Set to true to append automatically generated release notes to release bodies.
 generateReleaseNotes: true
 
+# Strategy for setting the published release as the repo's latest release.
+makeLatest: semver
+
 # Set to true or false to override the automatic tag name based pre-release
 # detection.
 prerelease: false
@@ -788,6 +936,9 @@ published:
     # Set to "true" to append automatically generated release notes to the
     # release body.
     generateReleaseNotes: "true"
+
+    # Strategy for setting the published release as the repo's latest release.
+    makeLatest: semver
 
     # Set to "true" or "false" to override the automatic tag name based
     # pre-release detection.
@@ -855,6 +1006,18 @@ releaseBody: |
   This is the first _stable_ release 🎉
 
   ## What's Changed ...
+
+# Contains "true" if the release is the latest release after publishing.
+releaseIsLatest: "true"
+
+# The ID of the latest release.
+latestReleaseId: "68429422"
+
+# The URL of the latest release.
+latestReleaseUrl: https://github.com/owner/repo/releases/tag/1.0.0
+
+# The name of the latest release.
+latestReleaseName: 1.0.0 Leopard Venom 🐆
 
 # The avatar URL of the GitHub user who created the tag.
 taggerAvatarUrl: https://avatars.githubusercontent.com/u/100152?u=2d625417e12ad2b9cf55a3897e9a36b1bc145133&v=4

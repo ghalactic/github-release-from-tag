@@ -25,8 +25,27 @@ export function createAlreadyExistsError(): AlreadyExistsError {
   ]);
 }
 
+class NotFoundError extends Error {
+  public response: {
+    data: {
+      status: number;
+    };
+  };
+
+  constructor(message: string) {
+    super(message);
+
+    this.response = { data: { status: 404 } };
+  }
+}
+
+export function createNotFoundError(): NotFoundError {
+  return new NotFoundError("Not found");
+}
+
 type CreateReposParameters = {
   createReleaseError?: Error;
+  getLatestReleaseError?: Error;
   getReleaseByTagError?: Error;
   updateReleaseError?: Error;
 };
@@ -38,6 +57,9 @@ type GenerateReleaseNotesParameters =
   OctokitRepos["generateReleaseNotes"]["parameters"];
 type GenerateReleaseNotesResponse =
   OctokitRepos["generateReleaseNotes"]["response"];
+type GetLatestReleaseParameters =
+  OctokitRepos["getLatestRelease"]["parameters"];
+type GetLatestReleaseResponse = OctokitRepos["getLatestRelease"]["response"];
 type GetReleaseByTagParameters = OctokitRepos["getReleaseByTag"]["parameters"];
 type GetReleaseByTagResponse = OctokitRepos["getReleaseByTag"]["response"];
 type UpdateReleaseParameters = OctokitRepos["updateRelease"]["parameters"];
@@ -45,6 +67,7 @@ type UpdateReleaseResponse = OctokitRepos["updateRelease"]["response"];
 
 export function createRepos({
   createReleaseError,
+  getLatestReleaseError,
   getReleaseByTagError,
   updateReleaseError,
 }: CreateReposParameters = {}): ReposApi {
@@ -71,6 +94,17 @@ export function createRepos({
           ),
         },
       } as unknown as GenerateReleaseNotesResponse;
+    },
+
+    async getLatestRelease({
+      owner,
+      repo,
+    }: GetLatestReleaseParameters): Promise<GetLatestReleaseResponse> {
+      if (getLatestReleaseError) throw getLatestReleaseError;
+
+      return {
+        data: { id: `${owner}.${repo}.latest` },
+      } as unknown as GetLatestReleaseResponse;
     },
 
     async getReleaseByTag({

@@ -7,6 +7,34 @@ Versioning].
 [keep a changelog]: https://keepachangelog.com/
 [semantic versioning]: https://semver.org/
 
+## Unreleased
+
+### Added
+
+- Added [latest release management].
+
+[latest release management]: #latest-release-management
+
+#### Latest release management
+
+This action can now manage when published releases are set as the [latest
+release] for the repo.
+
+[latest release]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases#linking-to-the-latest-release
+
+By default, releases created by this action will be marked as the latest release
+if they are newly created, non-draft, stable releases. Other strategies for when
+to set the latest release can be configured via the `makeLatest` action input or
+configuration option. Strategies include:
+
+- `if-new`: Set the release as latest if it is newly created. This is the
+  default strategy.
+- `semver`: Set the release as latest if it's a SemVer version greater than the
+  current latest release.
+- `legacy`: Defer to GitHub's legacy behavior for choosing latest releases.
+- `always`: Always set the release as latest, even if it's not newly created.
+- `never`: Never set the release as latest.
+
 ## [v6.0.1] - 2025-09-03
 
 [v6.0.1]: https://github.com/ghalactic/github-release-from-tag/releases/v6.0.1
