@@ -72499,6 +72499,11 @@ var config_v6_schema_default = {
       type: "boolean",
       default: false
     },
+    makeLatest: {
+      description: `How to determine whether the release should be set as the latest release. This setting has no effect if the release is a draft or pre-release. Set to true or false to control the behavior explicitly, or "legacy" to use GitHub's legacy behavior which is "based on the release creation date and higher semantic version".`,
+      enum: [true, false, "legacy"],
+      default: true
+    },
     prerelease: {
       description: "Set to true or false to override the automatic tag name based pre-release detection.",
       type: "boolean"

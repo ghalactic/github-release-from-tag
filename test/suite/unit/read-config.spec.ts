@@ -68,6 +68,7 @@ describe("readConfig()", () => {
       },
       draft: true,
       generateReleaseNotes: true,
+      makeLatest: "legacy",
       prerelease: false,
       reactions: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
       summary: {
@@ -93,6 +94,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: true,
       reactions: [],
       summary: {
         enabled: true,
@@ -117,6 +119,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: true,
       reactions: [],
       summary: {
         enabled: true,

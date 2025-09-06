@@ -31,6 +31,7 @@ to when you [publish a GitHub Release manually].
 
 - [Minimal configuration, or often **zero** configuration](#configuration)
 - [SemVer stability determines **pre-release** status](#release-stability)
+- [Automated **latest release** management](#latest-release-management)
 - [**Markdown** support in tag annotation messages](#release-name-and-body)
 - [Asset uploading with support for **labels** and **checksums**](#release-assets)
 - [Automated **release notes** support](#automated-release-notes)
@@ -197,6 +198,59 @@ prerelease: true # or false
 | `0` / `v0`                           | no         | pre-release       |
 | `0.1` / `v0.1`                       | no         | pre-release       |
 | `something-else`                     | no         | pre-release       |
+
+### Latest release management
+
+This action can automatically or manually set published releases as the [latest
+release] for the repo. There are several strategies that can be [configured] for
+determining whether the published release should be set as the latest release.
+
+[latest release]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases#linking-to-the-latest-release
+[configured]: #configuration
+
+By default, this action will use [SemVer-based latest releases].
+
+[semver-based latest releases]: #semver-based-latest-releases
+
+> [!NOTE]
+> Draft releases and pre-releases can't be set as the latest release for a repo.
+> Regardless of what strategy is used to determine the latest release, this
+> action will not attempt to set a draft or pre-release as the latest release.
+
+#### SemVer-based latest releases
+
+> [!TIP]
+> This is the **default** strategy used by this action.
+
+When using this strategy, the action will set the published release as the
+latest release if all of the following conditions are met:
+
+- The release is not a draft or pre-release.
+- The tag name is a valid SemVer version.
+- The tag name's SemVer version is the latest version when compared to all other
+  non-draft, stable releases that are also valid SemVer versions.
+
+You can explicitly enable this strategy via the [configuration file], or via
+[action inputs]:
+
+[configuration file]: #the-configuration-file
+[action inputs]: #action-inputs
+
+```yaml
+# In .github/github-release-from-tag.yml:
+makeLatest: semver
+```
+
+```yaml
+# In your workflow:
+- uses: ghalactic/github-release-from-tag@v6
+  with:
+    makeLatest: semver
+```
+
+#### Explicit latest releases
+
+TODO
 
 ### Draft releases
 
@@ -788,6 +842,9 @@ published:
     # Set to "true" to append automatically generated release notes to the
     # release body.
     generateReleaseNotes: "true"
+
+    # TODO
+    makeLatest: semver
 
     # Set to "true" or "false" to override the automatic tag name based
     # pre-release detection.

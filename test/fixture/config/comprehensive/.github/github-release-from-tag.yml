@@ -21,6 +21,7 @@ discussion:
     - eyes
 draft: true
 generateReleaseNotes: true
+makeLatest: "legacy"
 prerelease: false
 reactions:
   - "+1"
