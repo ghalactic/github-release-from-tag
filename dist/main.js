@@ -76592,7 +76592,7 @@ function renderSummary({
 }) {
   const { discussion_url, draft, html_url, prerelease, tag_name } = release;
   const body = release.body ?? "";
-  const name = release.name ?? "";
+  const name = release.name ?? tag_name;
   const hasTagger = tagger?.avatarUrl && tagger?.login;
   const rendered = toMarkdown(
     {
