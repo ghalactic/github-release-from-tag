@@ -44,6 +44,7 @@ describe("readTagAnnotation()", () => {
         mainPath,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-a",
       );
@@ -51,6 +52,7 @@ describe("readTagAnnotation()", () => {
         "-C",
         mainPath,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=subject-a\nsubject-b\n\nbody-a\nbody-b",
         "tag-a",

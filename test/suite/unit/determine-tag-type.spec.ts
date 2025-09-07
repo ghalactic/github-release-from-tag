@@ -44,6 +44,7 @@ describe("determineTagType()", () => {
         mainPath,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-a",
       );
@@ -51,6 +52,7 @@ describe("determineTagType()", () => {
         "-C",
         mainPath,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=tag-message-a",
         "tag-a",

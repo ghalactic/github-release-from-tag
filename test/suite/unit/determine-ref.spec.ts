@@ -64,6 +64,7 @@ describe("determineRef()", () => {
         paths.origin,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-a",
       );
@@ -74,6 +75,7 @@ describe("determineRef()", () => {
         paths.origin,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-b",
       );
@@ -81,6 +83,7 @@ describe("determineRef()", () => {
         "-C",
         paths.origin,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=tag-message-a",
         "tag-a",
@@ -90,6 +93,7 @@ describe("determineRef()", () => {
         paths.origin,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-c",
       );
@@ -97,6 +101,7 @@ describe("determineRef()", () => {
         "-C",
         paths.origin,
         "tag",
+        "--no-sign",
         "--annotate",
         "--message=tag-message-b",
         "tag-b",

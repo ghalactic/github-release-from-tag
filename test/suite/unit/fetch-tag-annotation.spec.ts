@@ -66,6 +66,7 @@ describe("fetchTagAnnotation()", () => {
         paths.origin,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-a",
       );
@@ -172,6 +173,7 @@ describe("fetchTagAnnotation()", () => {
         paths.origin,
         "commit",
         "--quiet",
+        "--no-gpg-sign",
         "--allow-empty",
         "--message=commit-message-a",
       );
