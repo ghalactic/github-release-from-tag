@@ -76873,7 +76873,7 @@ async function main() {
   const ref = await determineRef({ group: import_core2.group, info: import_core2.info });
   const { isTag, isSemVer, isStable, tag } = parseRef(ref);
   if (!isTag) {
-    (0, import_core2.setFailed)("Cannot create a release from a non-tag");
+    (0, import_core2.setFailed)("Can't create a release from a non-tag");
     return;
   }
   (0, import_core2.info)(`Detected tag ${JSON.stringify(tag)}`);

@@ -69,7 +69,7 @@ async function main(): Promise<void> {
   const { isTag, isSemVer, isStable, tag } = parseRef(ref);
 
   if (!isTag) {
-    setFailed("Cannot create a release from a non-tag");
+    setFailed("Can't create a release from a non-tag");
 
     return;
   }

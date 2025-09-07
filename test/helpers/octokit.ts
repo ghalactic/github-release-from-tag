@@ -195,7 +195,7 @@ export async function getDiscussionReactionGroupsByRelease(
 
 /**
  * Yet another function that has to do everything the hard way because of
- * GitHub's API. Unfortunately, you cannot look up a draft release by tag, so
+ * GitHub's API. Unfortunately, you can't look up a draft release by tag, so
  * this function must list all releases, and find the release manually.
  */
 export async function getReleaseByTag(tag: string): Promise<ReleaseData> {
