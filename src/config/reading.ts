@@ -224,10 +224,9 @@ function parseReleaseReactions(reactionList: string): ReleaseReaction[] {
 function isDiscussionReaction(
   reaction: string,
 ): reaction is DiscussionReaction {
-  const reactions =
-    configSchema.properties.discussion.properties.reactions.items.enum;
-
-  return reactions.includes(reaction as DiscussionReaction);
+  return configSchema.properties.discussion.properties.reactions.items.enum.includes(
+    reaction,
+  );
 }
 
 function isFileNotFoundError(value: unknown): value is { code: "ENOENT" } {
@@ -239,9 +238,7 @@ function isFileNotFoundError(value: unknown): value is { code: "ENOENT" } {
 }
 
 function isReleaseReaction(reaction: string): reaction is ReleaseReaction {
-  const reactions = configSchema.properties.reactions.items.enum;
-
-  return reactions.includes(reaction as ReleaseReaction);
+  return configSchema.properties.reactions.items.enum.includes(reaction);
 }
 
 type ConfigOverrides = {

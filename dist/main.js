@@ -72764,8 +72764,9 @@ function parseReleaseReactions(reactionList) {
   return reactions;
 }
 function isDiscussionReaction(reaction) {
-  const reactions = config_v6_schema_default.properties.discussion.properties.reactions.items.enum;
-  return reactions.includes(reaction);
+  return config_v6_schema_default.properties.discussion.properties.reactions.items.enum.includes(
+    reaction
+  );
 }
 function isFileNotFoundError(value) {
   if (!isObject2(value)) return false;
@@ -72773,8 +72774,7 @@ function isFileNotFoundError(value) {
   return code3 === "ENOENT";
 }
 function isReleaseReaction(reaction) {
-  const reactions = config_v6_schema_default.properties.reactions.items.enum;
-  return reactions.includes(reaction);
+  return config_v6_schema_default.properties.reactions.items.enum.includes(reaction);
 }
 
 // src/git.ts
