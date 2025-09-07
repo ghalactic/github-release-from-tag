@@ -70,6 +70,12 @@
       "type": "boolean",
       "default": false
     },
+    "makeLatest": {
+      "description": "Strategy for setting the published release as the repo's latest release.",
+      "type": "string",
+      "enum": ["if-new", "semver", "legacy", "always", "never"],
+      "default": "if-new"
+    },
     "prerelease": {
       "description": "Set to true or false to override the automatic tag name based pre-release detection.",
       "type": "boolean"

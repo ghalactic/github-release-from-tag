@@ -1,16 +1,10 @@
+import { SEMVER_PATTERN } from "./semver.js";
+
 /**
  * Specifically targets typical GitHub Actions style major and minor version
  * tags (e.g. "v1", "v2", "v1.2", "v2.3").
  */
 const SHORTHAND_PATTERN = /^v?([1-9]\d*)(\.\d+)?$/;
-
-/**
- * Taken directly from https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
- *
- * Modified to allow for a "v" prefix
- */
-const SEMVER_PATTERN =
-  /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
 
 type ParsedTagRef = {
   isTag: true;
@@ -49,7 +43,7 @@ export function parseRef(ref: string): ParsedTagRef | ParsedNonTagRef {
     };
   }
 
-  const semVerMatch = SEMVER_PATTERN.exec(tag);
+  const semVerMatch = tag.match(SEMVER_PATTERN);
 
   if (semVerMatch != null) {
     const [, /*full*/ major /*minor*/ /*patch*/, , , prerelease] = semVerMatch;
