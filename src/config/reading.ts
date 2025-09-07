@@ -183,9 +183,7 @@ function parseAssets(getInput: GetInputFn): AssetConfig[] {
   }
 }
 
-function parseDiscussionReactions(
-  reactionList: string,
-): DiscussionReaction[] {
+function parseDiscussionReactions(reactionList: string): DiscussionReaction[] {
   const reactions: DiscussionReaction[] = [];
 
   for (const reaction of reactionList.split(",")) {
