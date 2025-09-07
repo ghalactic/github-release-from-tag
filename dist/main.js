@@ -72672,7 +72672,7 @@ function getConfigOverrides(getInput2, base) {
   if (discussionCategory) discussionOverrides.category = discussionCategory;
   const discussionReactions = getInput2("discussionReactions");
   if (discussionReactions) {
-    discussionOverrides.reactions = parseInputDiscussionReactions(discussionReactions);
+    discussionOverrides.reactions = parseDiscussionReactions(discussionReactions);
   }
   const summaryOverrides = {};
   const summaryEnabled = getInput2("summaryEnabled");
@@ -72737,7 +72737,7 @@ function parseAssets(getInput2) {
     throw new Error(`Validation of assets action input failed: ${error2.stack}`);
   }
 }
-function parseInputDiscussionReactions(reactionList) {
+function parseDiscussionReactions(reactionList) {
   const reactions = [];
   for (const reaction of reactionList.split(",")) {
     if (!isDiscussionReaction(reaction)) {

@@ -95,7 +95,7 @@ function getConfigOverrides(
   const discussionReactions = getInput("discussionReactions");
   if (discussionReactions) {
     discussionOverrides.reactions =
-      parseInputDiscussionReactions(discussionReactions);
+      parseDiscussionReactions(discussionReactions);
   }
 
   const summaryOverrides: SummaryOverrides = {};
@@ -183,7 +183,7 @@ function parseAssets(getInput: GetInputFn): AssetConfig[] {
   }
 }
 
-function parseInputDiscussionReactions(
+function parseDiscussionReactions(
   reactionList: string,
 ): DiscussionReaction[] {
   const reactions: DiscussionReaction[] = [];
