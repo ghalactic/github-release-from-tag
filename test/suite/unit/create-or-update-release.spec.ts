@@ -13,15 +13,17 @@ describe("createOrUpdateRelease()", () => {
       discussion: {},
       draft: false,
     }),
+    createMakeLatest: "true",
     group,
     info,
+    isPreRelease: false,
     owner: "owner-a",
-    repo: "repo-a",
     releaseBody: "release-body-a",
+    repo: "repo-a",
     tag: "tag-a",
     tagSubject: "tag-subject-a",
-    isStable: true,
-  };
+    updateMakeLatest: "false",
+  } as const;
 
   const defaultExpectation = {
     owner: "owner-a",
@@ -44,7 +46,10 @@ describe("createOrUpdateRelease()", () => {
     });
 
     expect(wasCreated).toBe(true);
-    expect(actual).toMatchObject(defaultExpectation);
+    expect(actual).toMatchObject({
+      ...defaultExpectation,
+      make_latest: "true",
+    });
   });
 
   it("updates the existing release when a matching release exists", async () => {
@@ -61,16 +66,17 @@ describe("createOrUpdateRelease()", () => {
     expect(actual).toMatchObject({
       ...defaultExpectation,
       release_id: releaseId,
+      make_latest: "false",
     });
   });
 
-  it("honors the isStable option", async () => {
+  it("honors the isPreRelease option", async () => {
     const repos = createRepos();
 
     const [actual, wasCreated] = await createOrUpdateRelease({
       ...staticParams,
       repos,
-      isStable: false,
+      isPreRelease: true,
     });
 
     expect(wasCreated).toBe(true);

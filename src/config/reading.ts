@@ -10,6 +10,7 @@ import {
   DiscussionConfig,
   SummaryConfig,
 } from "../type/config.js";
+import type { MakeLatestStrategy } from "../type/make-latest-strategy.js";
 import { DiscussionReaction, ReleaseReaction } from "../type/reaction.js";
 import { validateAssets, validateConfig } from "./validation.js";
 
@@ -106,6 +107,7 @@ function getConfigOverrides(
   const inputAssets = parseAssets(getInput);
   const draft = getInput("draft");
   const generateReleaseNotes = getInput("generateReleaseNotes");
+  const makeLatest = getInput("makeLatest");
   const prerelease = getInput("prerelease");
   const reactions = getInput("reactions");
 
@@ -127,6 +129,7 @@ function getConfigOverrides(
   if (generateReleaseNotes) {
     overrides.generateReleaseNotes = generateReleaseNotes === "true";
   }
+  if (makeLatest) overrides.makeLatest = parseMakeLatest(makeLatest);
   if (prerelease) overrides.prerelease = prerelease === "true";
   if (reactions) overrides.reactions = parseReleaseReactions(reactions);
 
@@ -181,6 +184,20 @@ function parseAssets(getInput: GetInputFn): AssetConfig[] {
 
     throw new Error(`Validation of assets action input failed: ${error.stack}`);
   }
+}
+
+function parseMakeLatest(strategy: string): MakeLatestStrategy {
+  if (isMakeLatestStrategy(strategy)) return strategy;
+
+  const quotedStrategy = JSON.stringify(strategy);
+
+  throw new Error(
+    `Validation of makeLatest action input failed. Invalid strategy ${quotedStrategy}.`,
+  );
+}
+
+function isMakeLatestStrategy(value: string): value is MakeLatestStrategy {
+  return configSchema.properties.makeLatest.enum.includes(value);
 }
 
 function parseDiscussionReactions(reactionList: string): DiscussionReaction[] {
@@ -245,6 +262,7 @@ type ConfigOverrides = {
   discussion?: DiscussionOverrides;
   draft?: boolean;
   generateReleaseNotes?: boolean;
+  makeLatest?: MakeLatestStrategy;
   prerelease?: boolean;
   reactions?: ReleaseReaction[];
   summary?: SummaryOverrides;

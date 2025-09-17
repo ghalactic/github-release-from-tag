@@ -41,7 +41,11 @@ import {
   createReleaseReactions,
 } from "./reaction.js";
 import { parseRef } from "./ref.js";
-import { createOrUpdateRelease } from "./release.js";
+import {
+  compareLatestRelease,
+  createOrUpdateRelease,
+  determineMakeLatest,
+} from "./release.js";
 import { renderSummary } from "./summary.js";
 import { getTagHtmlUrl, getTagger } from "./tags.js";
 
@@ -100,6 +104,7 @@ async function main(): Promise<void> {
     return;
   }
 
+  const isPreRelease = config.prerelease ?? !isStable;
   const tagSemVerLabel = isSemVer ? "SemVer" : "Non-Semver";
   const tagStabilityLabel = isStable ? "stable release" : "pre-release";
 
@@ -159,17 +164,30 @@ async function main(): Promise<void> {
 
   setOutput(RELEASE_BODY, releaseBody);
 
-  const [release, wasCreated] = await createOrUpdateRelease({
+  const [createMakeLatest, updateMakeLatest] = await determineMakeLatest({
     config,
     group,
     info,
-    isStable,
+    isPreRelease,
+    owner,
+    repo,
+    repos,
+    tag,
+  });
+
+  const [release, wasCreated] = await createOrUpdateRelease({
+    config,
+    createMakeLatest,
+    group,
+    info,
+    isPreRelease,
     owner,
     releaseBody,
     repo,
     repos,
     tag,
     tagSubject,
+    updateMakeLatest,
   });
 
   setOutput(RELEASE_ID, release.id);
@@ -218,11 +236,30 @@ async function main(): Promise<void> {
     setOutput,
   });
 
+  const [latestRelease, isLatest] = await compareLatestRelease({
+    group,
+    info,
+    owner,
+    release,
+    repo,
+    repos,
+    setOutput,
+  });
+
   if (config.summary.enabled) {
     const tagHtmlUrl = await getTagHtmlUrl({ repos, owner, repo, tag });
 
     await summary
-      .addRaw(renderSummary({ release, tagger, tagHtmlUrl, wasCreated }))
+      .addRaw(
+        renderSummary({
+          isLatest,
+          latestRelease,
+          release,
+          tagger,
+          tagHtmlUrl,
+          wasCreated,
+        }),
+      )
       .write();
   }
 }
