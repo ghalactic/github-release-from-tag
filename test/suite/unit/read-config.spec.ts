@@ -68,6 +68,7 @@ describe("readConfig()", () => {
       },
       draft: true,
       generateReleaseNotes: true,
+      makeLatest: "semver",
       prerelease: false,
       reactions: ["+1", "laugh", "hooray", "heart", "rocket", "eyes"],
       summary: {
@@ -93,6 +94,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: "if-new",
       reactions: [],
       summary: {
         enabled: true,
@@ -117,6 +119,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: "if-new",
       reactions: [],
       summary: {
         enabled: true,
@@ -149,6 +152,8 @@ describe("readConfig()", () => {
           return "false";
         case "generateReleaseNotes":
           return "false";
+        case "makeLatest":
+          return "never";
         case "prerelease":
           return "true";
         case "reactions":
@@ -172,6 +177,7 @@ describe("readConfig()", () => {
       },
       draft: false,
       generateReleaseNotes: false,
+      makeLatest: "never",
       prerelease: true,
       reactions: ["heart", "hooray", "rocket"],
       summary: {
@@ -280,6 +286,16 @@ describe("readConfig()", () => {
     ];
 
     expect(actual.assets).toMatchObject(expected);
+  });
+
+  it("throws an error if the makeLatest action input contains an invalid strategy", async () => {
+    chdir(join(fixturesPath, "none"));
+    const getInput = (name: string) =>
+      name === "makeLatest" ? "invalid-strategy" : "";
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      'Validation of makeLatest action input failed. Invalid strategy "invalid-strategy".',
+    );
   });
 
   it("throws an error if the assets action input contains invalid YAML", async () => {

@@ -3,9 +3,9 @@
 | <img alt="@login-a" src="https://avatars.githubusercontent.com/u/123456" width="32"> | Tagged by @login-a |
 | ------------------------------------------------------------------------------------ | ------------------ |
 
-| Tag                     | Stability |
-| :---------------------- | :-------- |
-| [`tag-name-a`][tag-url] | ✅ Stable  |
+| Tag                     | Stability | Latest   |
+| :---------------------- | :-------- | :------- |
+| [`tag-name-a`][tag-url] | ✅ Stable  | _(none)_ |
 
 <details><summary><strong>Release body</strong></summary>
 
