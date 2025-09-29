@@ -9,12 +9,16 @@ Versioning].
 
 ## [v6.0.1] - 2025-09-03
 
+[v6.0.1]: https://github.com/ghalactic/github-release-from-tag/releases/v6.0.1
+
 ### Fixed
 
 - Bumped schema version numbers to match the major version number.
 - Updated examples in the docs to refer to the latest version.
 
 ## [v6.0.0] - 2025-09-03
+
+[v6.0.0]: https://github.com/ghalactic/github-release-from-tag/releases/v6.0.0
 
 ### Changed
 
