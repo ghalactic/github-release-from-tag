@@ -14,12 +14,8 @@ export default defineConfig({
     ],
 
     pool: "forks",
-    poolOptions: {
-      forks: {
-        // allow all E2E tests to run in parallel, since they are mostly idle
-        maxForks: isGHA ? 20 : undefined,
-      },
-    },
+    // allow all E2E tests to run in parallel, since they are mostly idle
+    maxWorkers: isGHA ? 20 : undefined,
 
     coverage: {
       include: ["src/**/*.ts"],
