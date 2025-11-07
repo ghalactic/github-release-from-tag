@@ -73509,7 +73509,7 @@ var RequestError = class extends Error {
 };
 
 // node_modules/@octokit/request/dist-bundle/index.js
-var VERSION2 = "10.0.5";
+var VERSION2 = "10.0.6";
 var defaults_default = {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
@@ -73835,7 +73835,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 };
 
 // node_modules/@octokit/core/dist-src/version.js
-var VERSION4 = "7.0.5";
+var VERSION4 = "7.0.6";
 
 // node_modules/@octokit/core/dist-src/index.js
 var noop = () => {
