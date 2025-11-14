@@ -29,7 +29,7 @@
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^3.0.1",
     "@types/node": "^24.10.0",
-    "@vitest/coverage-v8": "^4.0.7",
+    "@vitest/coverage-v8": "^4.0.8",
     "esbuild": "^0.25.12",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
@@ -38,6 +38,6 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "puppeteer": "^24.29.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.7"
+    "vitest": "^4.0.8"
   }
 }
