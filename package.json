@@ -14,7 +14,7 @@
     "ajv": "^8.17.1",
     "compare-versions": "^6.1.1",
     "github-slugger": "^2.0.0",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "mdast-util-gfm": "^3.1.0",
     "mdast-util-to-markdown": "^2.1.2",
     "mdast-util-to-string": "^4.0.0",
