@@ -31242,7 +31242,7 @@ var require_extend = __commonJS({
       }
       return typeof key === "undefined" || hasOwn.call(obj, key);
     };
-    var setProperty = function setProperty2(target, options) {
+    var setProperty2 = function setProperty3(target, options) {
       if (defineProperty && options.name === "__proto__") {
         defineProperty(target, options.name, {
           enumerable: true,
@@ -31292,9 +31292,9 @@ var require_extend = __commonJS({
                 } else {
                   clone = src && isPlainObject4(src) ? src : {};
                 }
-                setProperty(target, { name, newValue: extend4(deep, clone, copy) });
+                setProperty2(target, { name, newValue: extend4(deep, clone, copy) });
               } else if (typeof copy !== "undefined") {
-                setProperty(target, { name, newValue: copy });
+                setProperty2(target, { name, newValue: copy });
               }
             }
           }
@@ -75203,6 +75203,18 @@ function charFromCodepoint(c) {
     (c - 65536 & 1023) + 56320
   );
 }
+function setProperty(object, key, value) {
+  if (key === "__proto__") {
+    Object.defineProperty(object, key, {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value
+    });
+  } else {
+    object[key] = value;
+  }
+}
 var simpleEscapeCheck = new Array(256);
 var simpleEscapeMap = new Array(256);
 for (i = 0; i < 256; i++) {
@@ -75322,7 +75334,7 @@ function mergeMappings(state, destination, source, overridableKeys) {
   for (index2 = 0, quantity = sourceKeys.length; index2 < quantity; index2 += 1) {
     key = sourceKeys[index2];
     if (!_hasOwnProperty$1.call(destination, key)) {
-      destination[key] = source[key];
+      setProperty(destination, key, source[key]);
       overridableKeys[key] = true;
     }
   }
@@ -75362,16 +75374,7 @@ function storeMappingPair(state, _result, overridableKeys, keyTag, keyNode, valu
       state.position = startPos || state.position;
       throwError(state, "duplicated mapping key");
     }
-    if (keyNode === "__proto__") {
-      Object.defineProperty(_result, keyNode, {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        value: valueNode
-      });
-    } else {
-      _result[keyNode] = valueNode;
-    }
+    setProperty(_result, keyNode, valueNode);
     delete overridableKeys[keyNode];
   }
   return _result;
@@ -81963,7 +81966,7 @@ mime-types/index.js:
    *)
 
 js-yaml/dist/js-yaml.mjs:
-  (*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT *)
+  (*! js-yaml 4.1.1 https://github.com/nodeca/js-yaml @license MIT *)
 
 @octokit/action/dist-bundle/index.js:
   (* v8 ignore next -- @preserve *)
