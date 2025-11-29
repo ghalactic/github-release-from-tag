@@ -31091,6 +31091,10 @@ var require_mimeScore = __commonJS({
       application: 1,
       // prefer font/woff over application/font-woff
       font: 2,
+      // prefer video/mp4 over audio/mp4 over application/mp4
+      // See https://www.rfc-editor.org/rfc/rfc4337.html#section-2
+      audio: 2,
+      video: 3,
       default: 0
     };
     module.exports = function mimeScore(mimeType, source = "default") {
