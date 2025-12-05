@@ -34,7 +34,7 @@
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "octokit": "^5.0.5",
-    "prettier": "^3.7.1",
+    "prettier": "^3.7.2",
     "prettier-plugin-organize-imports": "^4.3.0",
     "puppeteer": "^24.31.0",
     "typescript": "^5.9.3",
