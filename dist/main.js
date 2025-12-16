@@ -18551,9 +18551,9 @@ var require_path_utils = __commonJS({
   }
 });
 
-// node_modules/@actions/core/node_modules/@actions/io/lib/io-util.js
+// node_modules/@actions/io/lib/io-util.js
 var require_io_util = __commonJS({
-  "node_modules/@actions/core/node_modules/@actions/io/lib/io-util.js"(exports) {
+  "node_modules/@actions/io/lib/io-util.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -18748,9 +18748,9 @@ var require_io_util = __commonJS({
   }
 });
 
-// node_modules/@actions/core/node_modules/@actions/io/lib/io.js
+// node_modules/@actions/io/lib/io.js
 var require_io = __commonJS({
-  "node_modules/@actions/core/node_modules/@actions/io/lib/io.js"(exports) {
+  "node_modules/@actions/io/lib/io.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -19009,9 +19009,9 @@ var require_io = __commonJS({
   }
 });
 
-// node_modules/@actions/core/node_modules/@actions/exec/lib/toolrunner.js
+// node_modules/@actions/exec/lib/toolrunner.js
 var require_toolrunner = __commonJS({
-  "node_modules/@actions/core/node_modules/@actions/exec/lib/toolrunner.js"(exports) {
+  "node_modules/@actions/exec/lib/toolrunner.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -19507,9 +19507,9 @@ var require_toolrunner = __commonJS({
   }
 });
 
-// node_modules/@actions/core/node_modules/@actions/exec/lib/exec.js
+// node_modules/@actions/exec/lib/exec.js
 var require_exec = __commonJS({
-  "node_modules/@actions/core/node_modules/@actions/exec/lib/exec.js"(exports) {
+  "node_modules/@actions/exec/lib/exec.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -21424,9 +21424,9 @@ var require_path_utils2 = __commonJS({
   }
 });
 
-// node_modules/@actions/io/lib/io-util.js
+// node_modules/@actions/glob/node_modules/@actions/io/lib/io-util.js
 var require_io_util2 = __commonJS({
-  "node_modules/@actions/io/lib/io-util.js"(exports) {
+  "node_modules/@actions/glob/node_modules/@actions/io/lib/io-util.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -21597,9 +21597,9 @@ var require_io_util2 = __commonJS({
   }
 });
 
-// node_modules/@actions/io/lib/io.js
+// node_modules/@actions/glob/node_modules/@actions/io/lib/io.js
 var require_io2 = __commonJS({
-  "node_modules/@actions/io/lib/io.js"(exports) {
+  "node_modules/@actions/glob/node_modules/@actions/io/lib/io.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -21845,9 +21845,9 @@ var require_io2 = __commonJS({
   }
 });
 
-// node_modules/@actions/exec/lib/toolrunner.js
+// node_modules/@actions/glob/node_modules/@actions/exec/lib/toolrunner.js
 var require_toolrunner2 = __commonJS({
-  "node_modules/@actions/exec/lib/toolrunner.js"(exports) {
+  "node_modules/@actions/glob/node_modules/@actions/exec/lib/toolrunner.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -22329,9 +22329,9 @@ var require_toolrunner2 = __commonJS({
   }
 });
 
-// node_modules/@actions/exec/lib/exec.js
+// node_modules/@actions/glob/node_modules/@actions/exec/lib/exec.js
 var require_exec2 = __commonJS({
-  "node_modules/@actions/exec/lib/exec.js"(exports) {
+  "node_modules/@actions/glob/node_modules/@actions/exec/lib/exec.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -80268,7 +80268,7 @@ function isReleaseReaction(reaction) {
 }
 
 // src/git.ts
-var import_exec = __toESM(require_exec2(), 1);
+var import_exec = __toESM(require_exec(), 1);
 async function configureGit({
   env,
   group: group2,
