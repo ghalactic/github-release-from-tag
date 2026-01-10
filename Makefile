@@ -1,5 +1,4 @@
-CI_VERIFY_GENERATED_FILES := true
-GENERATED_FILES += dist/main.js
+GENERATED_FILES += dist/main.js dist/main.js.map
 JS_TSC_TYPECHECK_SKIP_LIB := true
 
 -include .makefiles/Makefile
@@ -17,5 +16,5 @@ precommit:: verify-generated
 
 ################################################################################
 
-dist/main.js: artifacts/link-dependencies.touch $(JS_SOURCE_FILES)
-	node script/build.js dist/main.js
+dist/main.js dist/main.js.map: script/build.js artifacts/link-dependencies.touch $(JS_SOURCE_FILES)
+	node "$<" "$@"
