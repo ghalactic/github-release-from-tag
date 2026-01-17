@@ -17505,7 +17505,7 @@ var require_lib = __commonJS({
         this._maxRetries = 1;
         this._keepAlive = false;
         this._disposed = false;
-        this.userAgent = userAgent2;
+        this.userAgent = this._getUserAgentWithOrchestrationId(userAgent2);
         this.handlers = handlers || [];
         this.requestOptions = requestOptions;
         if (requestOptions) {
@@ -17929,6 +17929,15 @@ var require_lib = __commonJS({
           });
         }
         return proxyAgent;
+      }
+      _getUserAgentWithOrchestrationId(userAgent2) {
+        const baseUserAgent = userAgent2 || "actions/http-client";
+        const orchId = process.env["ACTIONS_ORCHESTRATION_ID"];
+        if (orchId) {
+          const sanitizedId = orchId.replace(/[^a-z0-9_.-]/gi, "_");
+          return `${baseUserAgent} actions_orchestration_id/${sanitizedId}`;
+        }
+        return baseUserAgent;
       }
       _performExponentialBackoff(retryNumber) {
         return __awaiter(this, void 0, void 0, function* () {
