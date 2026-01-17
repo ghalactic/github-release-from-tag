@@ -64,7 +64,7 @@ jobs:
       discussions: write # (for release discussion creation)
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Publish release
         uses: ghalactic/github-release-from-tag@v6
 ```
@@ -105,7 +105,7 @@ jobs:
       discussions: write # (for release discussion creation)
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           ref: refs/tags/${{ inputs.tag }}
       - name: Publish release

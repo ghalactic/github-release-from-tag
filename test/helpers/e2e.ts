@@ -57,7 +57,7 @@ export function buildWorkflow(
         steps: [
           {
             name: "Checkout",
-            uses: "actions/checkout@v3",
+            uses: "actions/checkout@v6",
           },
 
           ...preSteps,
