@@ -28,7 +28,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^3.0.1",
-    "@types/node": "^24.10.8",
+    "@types/node": "^24.10.9",
     "@vitest/coverage-v8": "^4.0.17",
     "esbuild": "^0.27.2",
     "escape-string-regexp": "^5.0.0",
