@@ -30,7 +30,7 @@
     "@types/mime-types": "^3.0.1",
     "@types/node": "^24.10.11",
     "@vitest/coverage-v8": "^4.0.18",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.27.3",
     "escape-string-regexp": "^5.0.0",
     "file-url": "^4.0.0",
     "octokit": "^5.0.5",
