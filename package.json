@@ -11,7 +11,7 @@
     "@actions/glob": "^0.6.0",
     "@octokit/action": "^8.0.4",
     "@octokit/plugin-retry": "^8.0.3",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "compare-versions": "^6.1.1",
     "github-slugger": "^2.0.0",
     "js-yaml": "^4.1.1",
