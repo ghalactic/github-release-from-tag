@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://ghalactic.github.io/provision-github-tokens/schema/requester.v1.schema.json
+
+tokens:
+  ci-fixtures:
+    as: ci
+    account: ghalactic-fixtures
+    repos:
+      - github-release-from-tag-ci
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      discussions: read
+
+provision:
+  secrets:
+    FIXTURES_GITHUB_TOKEN:
+      token: ci-fixtures
+      github:
+        repo:
+          actions: true
