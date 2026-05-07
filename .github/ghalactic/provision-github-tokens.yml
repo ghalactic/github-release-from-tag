@@ -11,6 +11,7 @@ tokens:
       checks: read
       contents: write
       discussions: read
+      workflows: write
 
 provision:
   secrets:
