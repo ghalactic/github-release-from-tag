@@ -84,31 +84,6 @@ describe("readConfig()", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("returns a default config the config file is empty", async () => {
-    chdir(join(fixturesPath, "empty"));
-    const actual = await readConfig({ getInput, group, info });
-
-    const expected = {
-      assets: [],
-      checksum: {
-        generateAssets: true,
-      },
-      discussion: {
-        category: "",
-        reactions: [],
-      },
-      draft: false,
-      generateReleaseNotes: false,
-      makeLatest: IF_NEW,
-      reactions: [],
-      summary: {
-        enabled: true,
-      },
-    };
-
-    expect(actual).toEqual(expected);
-  });
-
   it("returns a default config when no config file exists", async () => {
     chdir(join(fixturesPath, "none"));
     const actual = await readConfig({ getInput, group, info });
@@ -132,6 +107,14 @@ describe("readConfig()", () => {
     };
 
     expect(actual).toEqual(expected);
+  });
+
+  it("throws when the config file is empty", async () => {
+    chdir(join(fixturesPath, "empty"));
+
+    await expect(() => readConfig({ getInput, group, info })).rejects.toThrow(
+      "Parsing of release configuration failed",
+    );
   });
 
   it("throws an error if the config file contains invalid YAML", async () => {
@@ -194,7 +177,7 @@ describe("readConfig()", () => {
   });
 
   it("fills in checksum defaults when using action input overrides", async () => {
-    chdir(join(fixturesPath, "empty"));
+    chdir(join(fixturesPath, "empty-object"));
 
     const getInput = (name: string) =>
       name === "checksumGenerateAssets" ? "false" : "";
@@ -210,7 +193,7 @@ describe("readConfig()", () => {
   });
 
   it("fills in discussions defaults when using action input overrides", async () => {
-    chdir(join(fixturesPath, "empty"));
+    chdir(join(fixturesPath, "empty-object"));
 
     const getInput = (name: string) =>
       name === "discussionReactions" ? "eyes,+1" : "";
@@ -227,7 +210,7 @@ describe("readConfig()", () => {
   });
 
   it("fills in summary defaults when using action input overrides", async () => {
-    chdir(join(fixturesPath, "empty"));
+    chdir(join(fixturesPath, "empty-object"));
 
     const getInput = (name: string) =>
       name === "summaryEnabled" ? "false" : "";

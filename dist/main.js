@@ -77343,10 +77343,13 @@ async function readConfig({
 }) {
   return group2("Reading release configuration", async () => {
     const yaml = await readConfigFile();
+    let base;
     if (typeof yaml === "undefined") {
       info2("No configuration found at .github/github-release-from-tag.yml");
+      base = validateConfig({});
+    } else {
+      base = parseConfig(yaml);
     }
-    const base = parseConfig(yaml);
     const overrides = getConfigOverrides(getInput2, base);
     let checksum, discussion, summary2;
     if (overrides) {
@@ -77426,10 +77429,8 @@ function getConfigOverrides(getInput2, base) {
   return Object.keys(overrides).length > 0 ? overrides : void 0;
 }
 function parseConfig(yaml) {
-  if (!yaml) return validateConfig({});
-  let parsed;
   try {
-    parsed = load(yaml);
+    return validateConfig(load(yaml));
   } catch (error2) {
     const message = isError(error2) ? JSON.stringify(error2.message) : "unknown cause";
     const original = JSON.stringify(yaml);
@@ -77437,7 +77438,6 @@ function parseConfig(yaml) {
       `Parsing of release configuration failed with ${message}. Provided value: ${original}`
     );
   }
-  return validateConfig(parsed == null ? {} : parsed);
 }
 function parseAssets(getInput2) {
   const yaml = getInput2("assets");
