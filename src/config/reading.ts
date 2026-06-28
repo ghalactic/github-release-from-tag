@@ -26,11 +26,15 @@ export async function readConfig({
   return group("Reading release configuration", async () => {
     const yaml = await readConfigFile();
 
+    let base: Config;
+
     if (typeof yaml === "undefined") {
       info("No configuration found at .github/github-release-from-tag.yml");
+      base = validateConfig({});
+    } else {
+      base = parseConfig(yaml);
     }
 
-    const base = parseConfig(yaml);
     const overrides = getConfigOverrides(getInput, base);
     let checksum: ChecksumConfig,
       discussion: DiscussionConfig,
@@ -136,13 +140,9 @@ function getConfigOverrides(
   return Object.keys(overrides).length > 0 ? overrides : undefined;
 }
 
-function parseConfig(yaml: string | undefined): Config {
-  if (!yaml) return validateConfig({});
-
-  let parsed;
-
+function parseConfig(yaml: string): Config {
   try {
-    parsed = load(yaml);
+    return validateConfig(load(yaml));
   } catch (error) {
     const message = isError(error)
       ? JSON.stringify(error.message)
@@ -153,8 +153,6 @@ function parseConfig(yaml: string | undefined): Config {
       `Parsing of release configuration failed with ${message}. Provided value: ${original}`,
     );
   }
-
-  return validateConfig(parsed == null ? {} : parsed);
 }
 
 function parseAssets(getInput: GetInputFn): AssetConfig[] {
