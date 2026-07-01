@@ -74968,6 +74968,7 @@ function defineScalarTag(tagName, options) {
   };
 }
 function defineSequenceTag(tagName, options) {
+  const carrierIsResult = options.finalize === void 0;
   return {
     tagName,
     nodeKind: "sequence",
@@ -74975,12 +74976,15 @@ function defineSequenceTag(tagName, options) {
     matchByTagPrefix: options.matchByTagPrefix ?? false,
     create: options.create,
     addItem: options.addItem,
+    finalize: options.finalize ?? ((carrier) => carrier),
+    carrierIsResult,
     identify: options.identify ?? null,
     represent: options.represent ?? ((data) => data),
     representTagName: options.representTagName ?? null
   };
 }
 function defineMappingTag(tagName, options) {
+  const carrierIsResult = options.finalize === void 0;
   return {
     tagName,
     nodeKind: "mapping",
@@ -74991,6 +74995,8 @@ function defineMappingTag(tagName, options) {
     has: options.has,
     keys: options.keys,
     get: options.get,
+    finalize: options.finalize ?? ((carrier) => carrier),
+    carrierIsResult,
     identify: options.identify ?? null,
     represent: options.represent ?? ((data) => data),
     representTagName: options.representTagName ?? null
@@ -76034,6 +76040,14 @@ function eventPosition$1(event) {
 function throwError$1(state, message) {
   throwErrorAt(state.source, state.position, message, state.filename);
 }
+function finalizeCollection(state, position2, tag, carrier) {
+  try {
+    return tag.finalize(carrier);
+  } catch (error2) {
+    if (error2 instanceof YAMLException) throw error2;
+    throwErrorAt(state.source, position2, error2 instanceof Error ? error2.message : String(error2), state.filename);
+  }
+}
 function lookupTag(exact, prefix, tagName) {
   const exactTag = exact[tagName];
   if (exactTag) return exactTag;
@@ -76066,8 +76080,9 @@ function constructScalar(state, event) {
     const collectionTagDef = lookupTag(state.schema.exact.mapping, state.schema.prefix.mapping, tagName) ?? lookupTag(state.schema.exact.sequence, state.schema.prefix.sequence, tagName);
     if (collectionTagDef) {
       if (source !== "") throwError$1(state, `cannot resolve a node with !<${tagName}> explicit tag`);
+      const carrier = collectionTagDef.create(tagName);
       return {
-        value: collectionTagDef.create(tagName),
+        value: collectionTagDef.carrierIsResult ? carrier : finalizeCollection(state, state.position, collectionTagDef, carrier),
         tag: collectionTagDef
       };
     }
@@ -76153,11 +76168,17 @@ function addValue(state, value, tag) {
     frame.hasKey = true;
   }
 }
-function storeAnchor(state, event, value, tag) {
-  if (event.anchorStart !== NO_RANGE$2) state.anchors.set(state.source.slice(event.anchorStart, event.anchorEnd), {
-    value,
-    tag
-  });
+function storeAnchor(state, event, value, tag, isValueFinal) {
+  if (event.anchorStart !== NO_RANGE$2) {
+    const anchor = {
+      value,
+      tag,
+      isValueFinal
+    };
+    state.anchors.set(state.source.slice(event.anchorStart, event.anchorEnd), anchor);
+    return anchor;
+  }
+  return null;
 }
 function constructFromEvents(events2, options) {
   const state = {
@@ -76188,14 +76209,14 @@ function constructFromEvents(events2, options) {
         break;
       case 4: {
         const { value, tag } = constructScalar(state, event);
-        storeAnchor(state, event, value, tag);
+        storeAnchor(state, event, value, tag, true);
         addValue(state, value, tag);
         break;
       }
       case 2: {
         const definition3 = collectionTag(state, event, state.schema.exact.sequence, state.schema.prefix.sequence, "tag:yaml.org,2002:seq", "sequence");
         const value = definition3.tag.create(definition3.tagName);
-        storeAnchor(state, event, value, definition3.tag);
+        const anchor = storeAnchor(state, event, value, definition3.tag, definition3.tag.carrierIsResult);
         const parent = state.frames[state.frames.length - 1];
         const merge2 = parent !== void 0 && parent.kind === "mapping" && parent.hasKey && parent.key === MERGE_KEY;
         state.frames.push({
@@ -76203,6 +76224,7 @@ function constructFromEvents(events2, options) {
           position: state.position,
           value,
           tag: definition3.tag,
+          anchor,
           index: 0,
           merge: merge2
         });
@@ -76211,12 +76233,13 @@ function constructFromEvents(events2, options) {
       case 3: {
         const definition3 = collectionTag(state, event, state.schema.exact.mapping, state.schema.prefix.mapping, "tag:yaml.org,2002:map", "mapping");
         const value = definition3.tag.create(definition3.tagName);
-        storeAnchor(state, event, value, definition3.tag);
+        const anchor = storeAnchor(state, event, value, definition3.tag, definition3.tag.carrierIsResult);
         state.frames.push({
           kind: "mapping",
           position: state.position,
           value,
           tag: definition3.tag,
+          anchor,
           key: void 0,
           keyPosition: state.position,
           hasKey: false,
@@ -76228,13 +76251,21 @@ function constructFromEvents(events2, options) {
         const name = state.source.slice(event.anchorStart, event.anchorEnd);
         const anchor = state.anchors.get(name);
         if (!anchor) throwError$1(state, `unidentified alias "${name}"`);
+        if (!anchor.isValueFinal) throwError$1(state, `recursive alias "${name}" is not supported for tag ${anchor.tag.tagName} because it uses finalize()`);
         addValue(state, anchor.value, anchor.tag);
         break;
       }
       case 6: {
         const frame = state.frames.pop();
         if (frame.kind === "document") state.documents.push(frame.value);
-        else addValue(state, frame.value, frame.tag);
+        else {
+          const value = frame.tag.carrierIsResult ? frame.value : finalizeCollection(state, frame.position, frame.tag, frame.value);
+          if (frame.anchor) {
+            frame.anchor.value = value;
+            frame.anchor.isValueFinal = true;
+          }
+          addValue(state, value, frame.tag);
+        }
         break;
       }
     }
@@ -77106,7 +77137,8 @@ var DEFAULT_PRESENTER_OPTIONS = {
   flowSkipCommaSpace: false,
   flowSkipColonSpace: false,
   quoteFlowKeys: false,
-  quoteStyle: "auto",
+  quoteStyle: "single",
+  forceQuotes: false,
   tagBeforeAnchor: false
 };
 var DEFAULT_DUMP_SCHEMA = YAML11_SCHEMA.withTags({
@@ -82176,7 +82208,7 @@ mime-types/index.js:
    *)
 
 js-yaml/dist/js-yaml.mjs:
-  (*! js-yaml 5.0.0 https://github.com/nodeca/js-yaml @license MIT *)
+  (*! js-yaml 5.1.0 https://github.com/nodeca/js-yaml @license MIT *)
 
 @octokit/action/dist-bundle/index.js:
   (* v8 ignore next -- @preserve *)
