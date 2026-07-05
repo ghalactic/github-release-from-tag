@@ -81949,17 +81949,13 @@ function renderSummary({
             children: heading2
           }))
         },
-        ...rows.map(
-          (row) => ({
-            type: "tableRow",
-            children: row.map(
-              (children) => ({
-                type: "tableCell",
-                children
-              })
-            )
-          })
-        )
+        ...rows.map((row) => ({
+          type: "tableRow",
+          children: row.map((children) => ({
+            type: "tableCell",
+            children
+          }))
+        }))
       ]
     };
   }

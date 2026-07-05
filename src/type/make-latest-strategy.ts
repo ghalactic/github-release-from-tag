@@ -1,6 +1,2 @@
 export type MakeLatestStrategy =
-  | "if-new"
-  | "semver"
-  | "legacy"
-  | "always"
-  | "never";
+  "if-new" | "semver" | "legacy" | "always" | "never";
