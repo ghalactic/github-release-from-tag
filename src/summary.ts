@@ -292,17 +292,13 @@ export function renderSummary({
             children: heading,
           })),
         },
-        ...rows.map(
-          (row): TableRow => ({
-            type: "tableRow",
-            children: row.map(
-              (children): TableCell => ({
-                type: "tableCell",
-                children,
-              }),
-            ),
-          }),
-        ),
+        ...rows.map((row): TableRow => ({
+          type: "tableRow",
+          children: row.map((children): TableCell => ({
+            type: "tableCell",
+            children,
+          })),
+        })),
       ],
     };
   }
