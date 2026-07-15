@@ -37,7 +37,7 @@
     "prettier": "^3.9.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "puppeteer": "^25.3.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.0",
     "vitest": "^4.1.10"
   }
 }
