@@ -24,7 +24,7 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "@octokit/types": "^17.0.0",
+    "@octokit/types": "^18.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mdast": "^4.0.4",
     "@types/mime-types": "^3.0.1",
