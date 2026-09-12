@@ -6,6 +6,7 @@ const isGHA = GITHUB_ACTIONS === "true";
 export default defineConfig({
   test: {
     watch: false,
+    attachmentsDir: "artifacts/vitest/attachments",
 
     include: [
       "test/suite/unit/**/*.spec.ts",
