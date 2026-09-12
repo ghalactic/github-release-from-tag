@@ -1,7 +1,7 @@
 # GitHub Release from Tag
 
 A [GitHub Action] that creates [GitHub Releases] from your Git tags. Does what
-you _probably wish_ GitHub would just do without the need to use GitHub Actions.
+you _probably want_ GitHub to do without the need for GitHub Actions.
 
 [github action]: https://docs.github.com/actions
 [github releases]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases
@@ -13,30 +13,28 @@ you _probably wish_ GitHub would just do without the need to use GitHub Actions.
 
 ## Overview
 
-This action creates releases by sourcing the release data from the place where
-it makes the most sense to keep it — your Git tags. By harnessing [SemVer] to
-determine pre-release status, and [Markdown] for formatting, your GitHub
-Releases become a natural extension of your Git tags.
+This action creates releases from your Git tags — the best place to keep release
+data. It uses [SemVer] for pre-release status and [Markdown] for format. Your
+GitHub Releases become a natural part of your Git tags.
 
 [semver]: https://semver.org/
 [markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
 
-In addition, this action has been designed to feel like it _could_ be a
-first-party GitHub feature. Its feature set closely mirrors what you have access
-to when you [publish a GitHub Release manually].
+Also, this action aims to feel like a first-party GitHub feature. Its features
+closely mirror what you get when you [publish a GitHub Release manually].
 
 [publish a github release manually]: https://docs.github.com/repositories/releasing-projects-on-github/managing-releases-in-a-repository#creating-a-release
 
 ## Features
 
-- [Minimal configuration, or often **zero** configuration](#configuration)
+- [Minimal config, or often **zero** config](#configuration)
 - [SemVer stability determines **pre-release** status](#release-stability)
 - [**Latest release** management](#latest-release-management)
 - [**Markdown** support in tag annotation messages](#release-name-and-body)
 - [Asset uploading with support for **labels** and **checksums**](#release-assets)
 - [Automated **release notes** support](#automated-release-notes)
 - [Release **discussion** creation](#release-discussions)
-- [Releases can be created as **drafts**](#draft-releases)
+- [Create releases as **drafts**](#draft-releases)
 - [Creation of initial **🚀 reactions ❤️** to promote engagement](#reactions)
 - [Creation of **job summaries** for the Actions run summary page](#job-summaries)
 - [Works with GitHub Enterprise Server (GHES)](#github-enterprise-server-support)
@@ -45,7 +43,7 @@ to when you [publish a GitHub Release manually].
 
 ### Workflow for tag creation
 
-Most of the time you will want tag pushes to trigger release publishing:
+Most of the time, you want tag pushes to trigger release publishing:
 
 ```yaml
 # .github/workflows/publish-release.yml
@@ -82,9 +80,9 @@ step inside a multi-purpose workflow, so that it only runs on tag pushes:
 
 ### Workflow for manual runs
 
-You may also want to be able to manually publish releases for a specific tag.
-This allows you to remedy failed publish attempts, or publish tags that were
-created before automated release publishing was set up:
+You may also want to manually publish releases for a specific tag, to remedy
+failed publish attempts or publish tags that you created before setting
+up automated release publishing:
 
 ```yaml
 # .github/workflows/publish-release-manual.yml
@@ -114,9 +112,8 @@ jobs:
 
 ### GitHub token
 
-By default, this action uses [automatic token authentication] to obtain the
-token used to manage releases. If for some reason you want to supply a different
-token, you can do so via [action inputs]:
+By default, this action uses [automatic token authentication] to get the token
+for managing releases. To use a different token, pass one via [action inputs]:
 
 [automatic token authentication]: https://docs.github.com/actions/security-guides/automatic-token-authentication
 [action inputs]: #action-inputs
@@ -128,29 +125,34 @@ token, you can do so via [action inputs]:
     token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 ```
 
-The token requires the following permissions:
+The token needs these permissions:
 
-- **Write** access to **repository contents**, in order to create releases.
-- **Write** access to **discussions**, in order to create [release discussions].
+- **Write** access to **repository contents**, to create releases.
+- **Write** access to **discussions**, to create [release discussions].
 
 [release discussions]: #release-discussions
 
-For information on how to grant these permissions, see [Modifying the
-permissions for the `GITHUB_TOKEN`].
+To learn how to grant these permissions, see [Modifying the permissions for the
+`GITHUB_TOKEN`].
 
 [modifying the permissions for the `github_token`]: https://docs.github.com/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
 
 > [!NOTE]
+
+<!-- vale Ghalactic.Passive = NO -->
+
 > In February 2023, the default token permissions for new repos
-> [changed to be read-only]. If your repo was created before this time, the
-> default token would have been pre-configured with write access.
+> [changed to be read-only]. If your repo predates the change, the default
+> token has write access pre-configured.
+
+<!-- vale Ghalactic.Passive = YES -->
 
 [changed to be read-only]: https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
 
 ### Release stability
 
-This action uses [SemVer] rules to determine whether a tag should be published
-as a **pre-release**, or a **stable release**. The decision is made as follows:
+This action uses [SemVer] rules to check whether a tag gets a **pre-release** or
+a **stable release**:
 
 - If the tag name is a **"stable"** SemVer version, it's considered a **stable
   release**.
@@ -161,15 +163,15 @@ as a **pre-release**, or a **stable release**. The decision is made as follows:
 
 [semver]: https://semver.org/
 
-The standard SemVer rules are relaxed a bit to allow for tag names with a `v`
-prefix (e.g. `v1.2.3`), as well as major/minor version tag names (e.g. `v1`,
-`v1.2`) as per [GitHub's recommendations for action versioning].
+This action eases the SemVer rules a bit to allow tag names with a `v` prefix
+(for example `v1.2.3`), as well as major/minor version tag names (for example
+`v1`, `v1.2`) per [GitHub's tips for action versioning].
 
-[github's recommendations for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
+[github's tips for action versioning]: https://github.com/actions/toolkit/blob/%40actions/core%401.1.0/docs/action-versioning.md#recommendations
 
-It's also possible to [configure] an override for this behavior, and force a
-release to be published as either a **pre-release** or **stable release**. This
-can be done via the [configuration file], or via [action inputs]:
+You can also [configure] an override for this. Force a release to publish as
+either a **pre-release** or **stable release** via the [configuration file] or
+[action inputs]:
 
 [configure]: #configuration
 [configuration file]: #the-configuration-file
@@ -203,26 +205,26 @@ prerelease: true # or false
 
 ### Latest release management
 
-This action can automatically or manually set published releases as the [latest
-release] for the repo. There are several strategies that can be [configured] for
-determining whether the published release should be set as the latest release.
+You can set published releases as the [latest release] for the repo. Several
+[configurable][configure] strategies help you choose whether to mark a release
+as the latest.
 
 [latest release]: https://docs.github.com/repositories/releasing-projects-on-github/about-releases#linking-to-the-latest-release
 [configured]: #configuration
 
 > [!TIP]
-> Draft releases and pre-releases can't be set as the latest release for a repo.
-> Regardless of what strategy is configured, this action will not attempt to set
-> a draft or pre-release as the latest release.
+> You can't set drafts and pre-releases as the latest release for a repo. No
+> matter the strategy, this action doesn't try to set a draft or pre-release as
+> the latest.
 
-#### Setting newly created releases as latest
+#### Set newly created releases as latest
 
-This strategy will set any newly created, non-draft, stable release as the
-latest release. Updated releases will not have their latest status changed. This
-matches GitHub's default behavior.
+Under the default strategy, any newly created, non-draft, stable release becomes
+the latest release. Updated releases don't have their latest status changed.
+The behavior matches GitHub's default.
 
-This is the **default strategy**, but you can explicitly enable this strategy
-via the [configuration file], or via [action inputs]:
+This is the **default strategy**, but you can turn it on via the [configuration
+file] or [action inputs]:
 
 [configuration file]: #the-configuration-file
 [action inputs]: #action-inputs
@@ -241,22 +243,20 @@ makeLatest: if-new
 
 #### SemVer-based latest releases
 
-This strategy will set the published release as the latest release if it makes
-sense according to the [SemVer] specification. In other words:
+The SemVer strategy sets the release as the latest when it makes sense based on
+the [SemVer] spec. In other words:
 
 [semver]: https://semver.org/
 
-- If the published release tag is _not_ a valid SemVer version, the published
-  release will **never** be set as the latest release.
-- If the published latest release tag _is_ a valid SemVer version, and the
-  current latest release tag is _not_ a valid SemVer version, the published
-  release will **always** be set as the latest release.
-- If both the published release tag and the current latest release tag are valid
-  SemVer versions, the published release will be set as the latest release if:
-  - The published release tag is a _stable_ SemVer version, and the current
-    latest release tag is an _unstable_ SemVer version; OR
-  - The published release tag has the _same_ SemVer stability as the current
-    latest release tag, but a higher [SemVer precedence].
+- If the release tag is _not_ a valid SemVer version, the action **never** sets
+  it as the latest.
+- If the release tag _is_ a valid SemVer version but the current latest tag is
+  _not_, the action **always** sets the release as the latest.
+- If both tags are valid SemVer versions, the action sets the release as the
+  latest if:
+  - The release tag is _stable_, and the current latest tag is _unstable_; OR
+  - The release tag has the _same_ stability as the current latest tag, but
+    higher [SemVer precedence].
 
 [semver precedence]: https://semver.org/#spec-item-11
 
@@ -280,20 +280,24 @@ makeLatest: semver
 
 > [!CAUTION]
 > Using this strategy can cause race conditions if multiple release workflows
-> run at the same time. It's recommended to set a [concurrency group] on your
-> release publishing workflows or jobs to mitigate this.
+> run at the same time. Set a [concurrency group] on your release publishing
+> workflows or jobs to avoid this.
 
 [concurrency group]: https://docs.github.com/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
 
 #### Legacy GitHub latest release management
 
-This strategy defers to GitHub's legacy behavior for determining the latest
-release. In GitHub's own words, this strategy:
+This strategy uses GitHub's legacy behavior for finding the latest release. In
+GitHub's own words:
+
+<!-- vale Ghalactic.Passive = NO -->
 
 > "...specifies that the latest release should be determined based on the
 > release creation date and higher semantic version"
 >
 > (From the [Create a release] REST API endpoint documentation)
+
+<!-- vale Ghalactic.Passive = YES -->
 
 [create a release]: https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
 
@@ -317,8 +321,8 @@ makeLatest: legacy
 
 #### Explicit setting latest releases
 
-You can explicitly [configure] whether the published release should be set as
-the latest release via the [configuration file], or via [action inputs]:
+You can [configure] whether to set the release as the latest release via the
+[configuration file] or [action inputs]:
 
 [configure]: #configuration
 [configuration file]: #the-configuration-file
@@ -337,17 +341,17 @@ makeLatest: always # or never
 ```
 
 > [!CAUTION]
-> Specifying `makeLatest: always` will cause even **updated** releases to be set
-> as the latest release. This can be useful in advanced scenarios when
-> configured via a dynamic [action input], but is usually undesirable otherwise.
+> Specifying `makeLatest: always` causes even **updated** releases to become
+> the latest release. It can help in advanced use cases with a dynamic
+> [action input], but is usually not what you want.
 
 [action input]: #action-inputs
 
 ### Draft releases
 
-This action can be [configured] to create draft releases. These draft releases
-can then be published manually at some later time via GitHub. You can enable
-this feature via the [configuration file], or via [action inputs]:
+You can [configure] this action to create draft releases. You can then publish
+them by hand later via GitHub. Turn on this feature via the [configuration
+file] or [action inputs]:
 
 [configured]: #configuration
 [configuration file]: #the-configuration-file
@@ -367,18 +371,17 @@ draft: true
 
 ### Release name and body
 
-This action generates a release **name** and **body** from your **tag annotation
-message**. Git already breaks your tag annotation messages into two parts that
-line up with each part of a GitHub release:
+This action makes a release **name** and **body** from your **tag message**.
+Git already splits your tag messages into two parts that line up with each part
+of a GitHub release:
 
-- The tag annotation **subject** becomes the release **name**.
-- The tag annotation **body** is rendered as [Markdown], and used as the release
-  **body**.
+- The tag **subject** becomes the release **name**.
+- The tag **body** renders as [Markdown], and becomes the release **body**.
 
 [markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
 
-The tag annotation "subject" is just the first **paragraph** of the message. The
-"body" is everything that follows:
+The tag "subject" is the first **paragraph** of the message. The "body" is all
+that follows:
 
     This is part of the subject.
     This is also considered part of the subject.
@@ -390,43 +393,41 @@ The tag annotation "subject" is just the first **paragraph** of the message. The
 
 #### Markdown support
 
-For the most part, [Markdown] "just works" how you would expect. You can write
-Markdown in the "body" portion of your tag annotations, and it will be rendered
-in the body of the releases published by this action.
+For the most part, [Markdown] works how you expect. You can write Markdown in
+the "body" portion of your tag messages, and it renders in the body of the
+releases that this action publishes.
 
 [markdown]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github
 
 ##### Markdown headings in tag annotation messages
 
-When authoring tag annotation messages, you might run into the issue that
-Markdown **headings** are lines that start with a `#` character, which Git
-interprets as a **comment**. You can get around this limitation by using the
-following Git command to create the tag:
+When writing tag messages, you might find that Markdown **headings** start with
+a `#` character, which Git reads as a **comment**. Work around this with the
+following Git command:
 
     git tag --annotate --cleanup=whitespace --edit --message "" 1.0.0
 
-You might want to add a **Git alias** to make it easier to remember the command:
+You might want to add a **Git alias** to make the command easier to remember:
 
     git config --global alias.tag-md 'tag --annotate --cleanup=whitespace --edit --message ""'
 
-With the above alias configured, you can then use `git tag-md` to create tags
-with Markdown tag annotation bodies:
+After configuring the alias, you can then use `git tag-md` to create tags
+with Markdown tag bodies:
 
     git tag-md 1.0.0
 
 ##### Markdown heading anchors
 
-GitHub doesn't generate [section links] for Markdown headings in release bodies,
-like it does for other Markdown content. This means that you normally can't link
-directly to a heading in a release body, or include links to headings in your
+GitHub doesn't make [section links] for Markdown headings in release bodies,
+like it does for other Markdown content. You normally can't link
+to a heading in a release body, or include links to headings in your
 release body markdown.
 
 [section links]: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links
 
-This action solves this issue by generating **heading anchors** for each heading
-in the release body. These anchors work just like the ones generated for most
-Markdown content on GitHub, and can be used to link directly to headings in your
-release body.
+This action fixes this by making **heading anchors** for each heading in the
+release body. These anchors work like the ones that GitHub makes for most
+Markdown content, and let you link to headings in your release body.
 
 For example, if you have a heading in your release body like this:
 
@@ -450,7 +451,7 @@ Then you can link directly to this heading in your release body like so:
 [turbo-encabulators]: #support-for-turbo-encabulators
 ```
 
-And once the release is published, you can also link directly to the heading in
+Once you publish the release, you can also link directly to the heading in
 the release body from external sources by adding the anchor to the end of the
 release URL, like so:
 
@@ -458,29 +459,26 @@ https://github.com/ghalactic/github-release-from-tag/releases/v5.3.0#markdown-he
 
 ##### Markdown line breaks
 
-It's common for tag annotation messages to be "wrapped" at a fixed column width,
-for readability when viewed as plain text:
+It's common for tag messages to be "wrapped" at a fixed column width, for
+reading ease as plain text:
 
     1.0.0
 
     This provides an example of a Git tag annotation body that has been
     "hard wrapped". This is a very common practice.
 
-If we were to copy the body from the tag annotation message above directly into
-the GitHub release, the line breaks would be interpreted as explicit line breaks
-in the final HTML, like so:
+Copying the body from the earlier tag message into the GitHub release means
+GitHub reads the line breaks as hard line breaks in the HTML, like so:
 
 > This provides an example of a Git tag annotation body that has been\
 > "hard wrapped". This is a very common practice.
 
-Most people would probably consider this an undesirable result, and would rather
-that the above two lines be combined into a single line in the resulting HTML,
-similar to how GitHub behaves when rendering `README.md` files.
+Most people find this bad, and prefer that the two lines merge into one line in
+the output HTML. GitHub behaves this way when it renders `README.md` files.
 
-To avoid this issue, line breaks that are not followed by another line break
-(also known as "soft" line breaks) are transformed into spaces before they are
-used in GitHub release bodies. Meaning the above tag annotation body would be
-rendered like so:
+To avoid this, line breaks not next to another line break (also known as "soft"
+line breaks) turn into spaces before they're used in release bodies. The earlier
+tag body then renders like so:
 
 [github's api]: https://docs.github.com/rest/markdown#render-a-markdown-document
 
@@ -490,8 +488,7 @@ rendered like so:
 ### Automated release notes
 
 This action supports GitHub's [automatically generated release notes] feature.
-You can enable this feature via the [configuration file], or via [action
-inputs]:
+Enable it via the [configuration file], or via [action inputs]:
 
 [automatically generated release notes]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes
 [configuration file]: #the-configuration-file
@@ -509,15 +506,17 @@ generateReleaseNotes: true
     generateReleaseNotes: "true"
 ```
 
-When enabled, automated release notes will be generated and appended to each
-release body. The release notes are based off of **pull requests**, and can be
-[configured to customize how they are generated].
+When enabled, the action makes release notes and appends them to each release
+body. The notes draw from **pull requests**, and you can [configure how they're
+generated].
 
-[configured to customize how they are generated]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuring-automatically-generated-release-notes
+[configure how they're generated]: https://docs.github.com/repositories/releasing-projects-on-github/automatically-generated-release-notes#configuring-automatically-generated-release-notes
 
 <details>
 <summary><strong>Example automated release notes</strong></summary>
 <br>
+
+<!-- vale Ghalactic.HeadingSentenceCase = NO -->
 
 > ## What's Changed
 >
@@ -534,16 +533,18 @@ release body. The release notes are based off of **pull requests**, and can be
 >
 > **Full Changelog**: https://github.com/owner/repo/commits/1.0.0
 
+<!-- vale Ghalactic.HeadingSentenceCase = YES -->
+
 [@ezzatron]: https://github.com/ezzatron
 
 </details>
 
 ### Release assets
 
-This action supports uploading **release assets** — files that are associated
-with a release, and made available for download from GitHub. Release assets
-**must exist before this action is run**, and can be specified via the
-[configuration file], or via [action inputs]:
+This action supports uploading **release assets** — files linked to a release
+and ready to download from GitHub. Release assets **must exist before running
+the action**, and you can list them via the [configuration file] or via [action
+inputs]:
 
 [configuration file]: #the-configuration-file
 
@@ -564,34 +565,34 @@ assets:
 ```
 
 > [!CAUTION]
-> This action will **overwrite existing release assets** if their names match
+> This action **overwrites existing release assets** if their names match
 > the assets configured for upload, or if their names match the
-> [checksum assets]. Assets other than these will not be modified or removed.
+> [checksum assets]. The action won't modify or remove other assets.
 
 [checksum assets]: #checksum-assets
 
 > [!TIP]
-> Unlike other [action inputs], which typically override their equivalent
-> [configuration file] options, assets specified via action inputs are
-> **merged** with those specified in the configuration file.
+> Unlike other [action inputs], which tend to override their matching
+> [configuration file] options, assets from action inputs **merge** with those
+> in the config file.
 
 [action inputs]: #action-inputs
 [configuration file]: #the-configuration-file
 
-Each asset must have a `path` property, which is a file glob pattern supported
-by [`@actions/glob`]. If no matching file is found when the action is run, **the
-workflow step will fail** (unless the asset is [configured to be optional]).
+Each asset must have a `path` — a file glob that [`@actions/glob`] supports. If
+no match exists when the action runs, **the step fails** (unless the asset is
+[configured to be optional]).
 
 [`@actions/glob`]: https://github.com/actions/toolkit/tree/main/packages/glob
 [configured to be optional]: #optional-release-assets
 
-If **multiple files** match the `path` glob pattern, each file will be uploaded
-individually. **This action does not handle archiving multiple assets for you.**
-If you want to upload a `.zip` (or similar) file composed of multiple files, you
-must build the archive yourself prior to running this action.
+If **multiple files** match the `path` glob, the action uploads each file on its
+own. **The action doesn't archive multiple assets for you.** If you want to
+upload a `.zip` (or similar) file made of multiple files, build the archive
+yourself first.
 
-If **a single file** matches the `path` glob pattern, you can additionally
-specify a custom `name` and/or `label` for the asset:
+If **a single file** matches the `path` glob, you can also set a custom `name`
+and/or `label` for the asset:
 
 ```yaml
 # In .github/github-release-from-tag.yml:
@@ -625,16 +626,14 @@ assets:
       }]
 ```
 
-The `name` property overrides the file name that will be used when the file is
-uploaded (and hence the filename seen by users who download the asset). The
-`label` property is a text field that gets used by GitHub when viewing a
-release's assets.
+The `name` property sets the file name used when the action uploads the file.
+The `label` property is a text field that GitHub shows when viewing a release's
+assets.
 
 #### Optional release assets
 
-Assets can be made "optional" — that is, they will simply be skipped if the
-`path` file glob pattern does not match any files. You can enable this behavior
-by setting the `optional` property to `true`:
+You can make assets "optional" — the action skips them if the `path` glob
+doesn't match any files. Set `optional` to `true` to turn this on:
 
 ```yaml
 # In .github/github-release-from-tag.yml:
@@ -655,10 +654,10 @@ assets:
 
 #### Dynamic release assets
 
-If you need to dynamically specify a list of assets to upload, you can use the
-`assets` [action input] with generated JSON (or YAML). How you generate the
-value for this input is up to you, but any value from a [context] (e.g.
-[an output from another step]) can be used, for example:
+If you need to set a list of assets to upload at runtime, use the `assets`
+[action input] with JSON (or YAML). How you make the value for this input is up
+to you, but any value from a [context] (for example [an output from another
+step]) works:
 
 [action input]: #action-inputs
 [context]: https://docs.github.com/actions/learn-github-actions/contexts
@@ -676,17 +675,15 @@ value for this input is up to you, but any value from a [context] (e.g.
 
 #### Checksum assets
 
-By default, this action generates **checksum assets**. When a release has
-associated assets specified, two checksum assets will be generated for the
-release:
+By default, this action makes **checksum assets**. When a release has linked
+assets, the action makes two checksum assets for the release:
 
 - `checksums.sha256` — A plaintext checksum file in [`sha256sum`] format.
-- `checksums.json` — A JSON file containing checksums for each asset.
+- `checksums.json` — A JSON file with checksums for each asset.
 
 [`sha256sum`]: https://dashdash.io/1/sha256sum
 
-You can disable this feature via the [configuration file], or via [action
-inputs]:
+You can disable this feature via the [configuration file] or [action inputs]:
 
 [configuration file]: #the-configuration-file
 [action inputs]: #action-inputs
@@ -704,8 +701,8 @@ checksum:
     checksumGenerateAssets: "false"
 ```
 
-Checksums for each asset are always included in the `assets` [action output],
-even when **checksum asset** generation is disabled.
+The `assets` [action output] always has checksums for each asset, even when you
+disable **checksum asset** creation.
 
 [action output]: #action-outputs
 
@@ -735,8 +732,8 @@ f97a35fc9ddddd6bbfe0244e7608ec342dba9ed18e7227db061997d32133edeb  file-b.zip
 
 ### Release discussions
 
-This action supports creating [GitHub Discussions] for releases. You can enable
-this feature via the [configuration file], or via [action inputs]:
+This action supports creating [GitHub Discussions] for releases. Enable this
+feature via the [configuration file], or via [action inputs]:
 
 [github discussions]: https://docs.github.com/discussions
 [configuration file]: #the-configuration-file
@@ -756,7 +753,7 @@ discussion:
 ```
 
 > [!IMPORTANT]
-> Release discussion creation also requires you to grant **write** access to
+> Release discussion creation also needs you to grant **write** access to
 > **discussions** to the [GitHub token] used to manage releases:
 
 [GitHub token]: #github-token
@@ -768,20 +765,18 @@ permissions:
   discussions: write # required for release discussion creation
 ```
 
-When enabled, discussions will automatically be created and linked to each
-published release. The discussion **title** and **body** will match the release
-**name** and **body**. The specified discussion category **must already exist**
-in the repo.
+When enabled, the action creates discussions and links them to each published
+release. The discussion **title** and **body** match the release **name** and
+**body**. The named discussion category **must already exist** in the repo.
 
 ### Reactions
 
-In order to promote engagement with your releases, this action can create
-**reactions** like 👍, 😄, 🎉, ❤️, 🚀, and 👀.
+To promote engagement with your releases, this action can create **reactions**
+like 👍, 😄, 🎉, ❤️, 🚀, and 👀.
 
-A typical user is more likely to add their own reaction if they can simply click
-on an existing one — rather than be the first one to add a particular reaction,
-which takes more effort. You can enable this feature via the [configuration
-file], or via [action inputs]:
+A typical user is more likely to add their own reaction if they can click on an
+existing one — rather than be the first to add one, which takes more effort. You
+can enable this feature via the [configuration file], or via [action inputs]:
 
 [configuration file]: #the-configuration-file
 [action inputs]: #action-inputs
@@ -798,9 +793,8 @@ reactions: ["+1", laugh, hooray, heart, rocket, eyes]
     reactions: +1,laugh,hooray,heart,rocket,eyes
 ```
 
-If you've enabled [release discussion creation], reactions can also be created
-for release discussions (which support a couple of additional reactions like 👎
-and 😕):
+If you've enabled [release discussion creation], you can also create reactions
+for release discussions (which support a couple more reactions like 👎 and 😕):
 
 ```yaml
 # In .github/github-release-from-tag.yml:
@@ -821,8 +815,8 @@ discussion:
 
 ### Job summaries
 
-When a release is created or updated, a summary containing useful information
-and links will be displayed on the Actions run summary page:
+When the action creates or updates a release, a summary with useful links
+appears on the Actions run summary page:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/assets/images/release-summary-dark.svg">
@@ -851,16 +845,16 @@ summary:
 ## Configuration
 
 > [!TIP]
-> Try to use as _little_ configuration as possible. Everything here is
-> **optional**, and **the less configuration the better**.
+> Try to use as _little_ config as possible. Everything here is **optional**,
+> and **the less config the better**.
 
 ### The configuration file
 
-This action supports an **optional** YAML configuration file, with options for
-affecting how releases are published:
+This action supports an **optional** YAML config file, with options for how you
+publish releases:
 
 > [!TIP]
-> These options can also be specified by [action inputs]. A
+> You can also specify these options by [action inputs]. A
 > [JSON Schema definition] is also available.
 
 [action inputs]: #action-inputs
@@ -916,13 +910,12 @@ summary:
 
 ### Action inputs
 
-This action supports **optional** inputs for affecting how releases are
-published:
+This action supports **optional** inputs for how you publish releases:
 
 > [!IMPORTANT]
 > With the exception of `assets`, these inputs take precedence over any
-> equivalent options specified in [the configuration file]. The
-> [action metadata file] contains the actual definitions for these inputs.
+> matching options in [the configuration file]. The [action metadata file]
+> has the actual definitions for these inputs.
 
 [the configuration file]: #the-configuration-file
 [action metadata file]: action.yml
@@ -980,8 +973,8 @@ This action makes a number of outputs available:
 
 > [!TIP]
 > The [action metadata file] contains the actual definitions for these outputs.
-> The example below should give you some idea what each output looks like. The
-> outputs aren't actually YAML of course, it's just for explanatory purposes.
+> The following example should give you some idea what each output looks like.
+> The outputs aren't actually YAML of course, it's for explanatory purposes.
 
 [action metadata file]: action.yml
 
@@ -1086,11 +1079,11 @@ assets: |
   ]
 ```
 
-### Using action outputs
+### Use action outputs
 
-Action outputs can be used to integrate with other steps in a workflow. Simply
-add an `id` to the step that uses this action, and reference the output you
-need as demonstrated below:
+Action outputs let you link with other steps in a workflow. Add an `id` to the
+step that uses this action, and use the output you need as shown in the
+following example:
 
 ```yaml
 - uses: ghalactic/github-release-from-tag@v6
@@ -1100,11 +1093,11 @@ need as demonstrated below:
   run: echo Released to $RELEASE_URL
 ```
 
-The `assets` output is a JSON array, and needs to be decoded before its contents
-can be accessed:
+The `assets` output is a JSON array. You need to decode it before you can access
+its contents:
 
 > [!TIP]
-> The assets are ordered by their `name` property.
+> The assets sort by their `name` property.
 
 ```yaml
 - uses: ghalactic/github-release-from-tag@v6
@@ -1116,8 +1109,8 @@ can be accessed:
 
 ## GitHub Enterprise Server support
 
-This action works with [GitHub Enterprise Server (GHES)]. Depending on how your
-enterprise is configured, you may have to work with an administrator to either:
+This action works with [GitHub Enterprise Server (GHES)]. Based on your setup,
+you may have to work with an admin to either:
 
 - [Use GitHub Connect to allow access to the action]; or
 - [Manually sync the action to your enterprise].
@@ -1128,12 +1121,11 @@ enterprise is configured, you may have to work with an administrator to either:
 
 ### GitHub Enterprise Server version feature support
 
-Feature support on GitHub Enterprise Server often lags behind other versions of
-GitHub. This action may not work correctly if you try to use features on an
-enterprise that does not have support for those features.
+Feature support on GHES often lags behind other GitHub versions. The action may
+not work right if you use features your instance doesn't support.
 
-Here are some key features that can be used by this action, and which version of
-GitHub Enterprise Server introduced support:
+The following table shows key features the action uses, and which GHES version
+added support:
 
 | Feature                                                     | 3.1 | 3.2 | 3.3 | 3.4 | 3.5 | 3.6 |
 | :---------------------------------------------------------- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -1149,18 +1141,28 @@ GitHub Enterprise Server introduced support:
 
 ## FAQ
 
+<!-- vale Ghalactic.HeadingEndPunctuation = NO -->
+
 ### What format should I use for my release body?
 
-I recommend following [Keep a Changelog]. When it's time to release, just grab
+<!-- vale Ghalactic.HeadingEndPunctuation = YES -->
+
+I recommend following [Keep a Changelog]. When it's time to release, grab
 the content from the **Unreleased** section and paste it into your tag
 annotation message.
 
 [keep a changelog]: https://keepachangelog.com/
 
+<!-- vale Ghalactic.HeadingEndPunctuation = NO -->
+<!-- vale Ghalactic.Please = NO -->
+
 ### Does this action work with [Semantic Release] / [Release Please]?
+
+<!-- vale Ghalactic.HeadingEndPunctuation = YES -->
+<!-- vale Ghalactic.Please = YES -->
 
 [semantic release]: https://semantic-release.gitbook.io/
 [release please]: https://github.com/googleapis/release-please
 
-Technically yes, but it's not recommended. These tools have their own solutions
-for publishing GitHub releases which are better suited.
+Technically yes, but it's not recommended. These tools have their own,
+better-suited solutions for publishing GitHub releases.
