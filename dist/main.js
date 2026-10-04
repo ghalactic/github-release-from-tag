@@ -598,10 +598,10 @@ var require_errors = __commonJS({
     };
     var kHTTPParserError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_HTTP_PARSER");
     var HTTPParserError = class extends Error {
-      constructor(message, code3, data) {
+      constructor(message, code4, data) {
         super(message);
         this.name = "HTTPParserError";
-        this.code = code3 ? `HPE_${code3}` : void 0;
+        this.code = code4 ? `HPE_${code4}` : void 0;
         this.data = data ? data.toString() : void 0;
       }
       static [Symbol.hasInstance](instance) {
@@ -624,12 +624,12 @@ var require_errors = __commonJS({
     };
     var kRequestRetryError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_REQ_RETRY");
     var RequestRetryError = class extends UndiciError {
-      constructor(message, code3, { headers, data }) {
+      constructor(message, code4, { headers, data }) {
         super(message);
         this.name = "RequestRetryError";
         this.message = message || "Request retry error";
         this.code = "UND_ERR_REQ_RETRY";
-        this.statusCode = code3;
+        this.statusCode = code4;
         this.data = data;
         this.headers = headers;
       }
@@ -640,12 +640,12 @@ var require_errors = __commonJS({
     };
     var kResponseError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_RESPONSE");
     var ResponseError = class extends UndiciError {
-      constructor(message, code3, { headers, data }) {
+      constructor(message, code4, { headers, data }) {
         super(message);
         this.name = "ResponseError";
         this.message = message || "Response error";
         this.code = "UND_ERR_RESPONSE";
-        this.statusCode = code3;
+        this.statusCode = code4;
         this.data = data;
         this.headers = headers;
       }
@@ -839,8 +839,8 @@ var require_tree = __commonJS({
         if (index2 === void 0 || index2 >= key.length) {
           throw new TypeError("Unreachable");
         }
-        const code3 = this.code = key.charCodeAt(index2);
-        if (code3 > 127) {
+        const code4 = this.code = key.charCodeAt(index2);
+        if (code4 > 127) {
           throw new TypeError("key must be ascii string");
         }
         if (key.length !== ++index2) {
@@ -861,11 +861,11 @@ var require_tree = __commonJS({
         let index2 = 0;
         let node2 = this;
         while (true) {
-          const code3 = key.charCodeAt(index2);
-          if (code3 > 127) {
+          const code4 = key.charCodeAt(index2);
+          if (code4 > 127) {
             throw new TypeError("key must be ascii string");
           }
-          if (node2.code === code3) {
+          if (node2.code === code4) {
             if (length === ++index2) {
               node2.value = value;
               break;
@@ -875,7 +875,7 @@ var require_tree = __commonJS({
               node2.middle = new _TstNode(key, value, index2);
               break;
             }
-          } else if (node2.code < code3) {
+          } else if (node2.code < code4) {
             if (node2.left !== null) {
               node2 = node2.left;
             } else {
@@ -899,19 +899,19 @@ var require_tree = __commonJS({
         let index2 = 0;
         let node2 = this;
         while (node2 !== null && index2 < keylength) {
-          let code3 = key[index2];
-          if (code3 <= 90 && code3 >= 65) {
-            code3 |= 32;
+          let code4 = key[index2];
+          if (code4 <= 90 && code4 >= 65) {
+            code4 |= 32;
           }
           while (node2 !== null) {
-            if (code3 === node2.code) {
+            if (code4 === node2.code) {
               if (keylength === ++index2) {
                 return node2;
               }
               node2 = node2.middle;
               break;
             }
-            node2 = node2.code < code3 ? node2.left : node2.right;
+            node2 = node2.code < code4 ? node2.left : node2.right;
           }
         }
         return null;
@@ -1618,11 +1618,11 @@ var require_diagnostics = __commonJS({
         websocketDebuglog("connection opened %s%s", address, port ? `:${port}` : "");
       });
       diagnosticsChannel.channel("undici:websocket:close").subscribe((evt) => {
-        const { websocket, code: code3, reason } = evt;
+        const { websocket, code: code4, reason } = evt;
         websocketDebuglog(
           "closed connection to %s - %s %s",
           websocket.url,
-          code3,
+          code4,
           reason
         );
       });
@@ -4022,9 +4022,9 @@ var require_util2 = __commonJS({
     }
     function isValidEncodedURL(url) {
       for (let i = 0; i < url.length; ++i) {
-        const code3 = url.charCodeAt(i);
-        if (code3 > 126 || // Non-US-ASCII + DEL
-        code3 < 32) {
+        const code4 = url.charCodeAt(i);
+        if (code4 > 126 || // Non-US-ASCII + DEL
+        code4 < 32) {
           return false;
         }
       }
@@ -4615,8 +4615,8 @@ var require_util2 = __commonJS({
       }
       const rangeStart = collectASequenceOfCodePoints(
         (char) => {
-          const code3 = char.charCodeAt(0);
-          return code3 >= 48 && code3 <= 57;
+          const code4 = char.charCodeAt(0);
+          return code4 >= 48 && code4 <= 57;
         },
         data,
         position2
@@ -4642,8 +4642,8 @@ var require_util2 = __commonJS({
       }
       const rangeEnd = collectASequenceOfCodePoints(
         (char) => {
-          const code3 = char.charCodeAt(0);
-          return code3 >= 48 && code3 <= 57;
+          const code4 = char.charCodeAt(0);
+          return code4 >= 48 && code4 <= 57;
         },
         data,
         position2
@@ -5220,12 +5220,12 @@ var require_formdata_parser = __commonJS({
               return "failure";
             }
             if (bufferStartsWith(input, filenameBuffer, position2)) {
-              let check = position2.position + filenameBuffer.length;
-              if (input[check] === 42) {
+              let check2 = position2.position + filenameBuffer.length;
+              if (input[check2] === 42) {
                 position2.position += 1;
-                check += 1;
+                check2 += 1;
               }
-              if (input[check] !== 61 || input[check + 1] !== 34) {
+              if (input[check2] !== 61 || input[check2 + 1] !== 34) {
                 return "failure";
               }
               position2.position += 12;
@@ -6821,9 +6821,9 @@ var require_client_h2 = __commonJS({
       this[kSocket][kError] = err;
       this[kClient][kOnError](err);
     }
-    function onHttp2FrameError(type, code3, id) {
+    function onHttp2FrameError(type, code4, id) {
       if (id === 0) {
-        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code3}`);
+        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code4}`);
         this[kSocket][kError] = err;
         this[kClient][kOnError](err);
       }
@@ -6833,8 +6833,8 @@ var require_client_h2 = __commonJS({
       this.destroy(err);
       util.destroy(this[kSocket], err);
     }
-    function onHTTP2GoAway(code3) {
-      const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${code3}`, util.getSocketInfo(this));
+    function onHTTP2GoAway(code4) {
+      const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${code4}`, util.getSocketInfo(this));
       const client = this[kClient];
       client[kSocket] = null;
       client[kHTTPContext] = null;
@@ -7009,8 +7009,8 @@ var require_client_h2 = __commonJS({
       stream.once("error", function(err) {
         abort(err);
       });
-      stream.once("frameError", (type, code3) => {
-        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code3}`));
+      stream.once("frameError", (type, code4) => {
+        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code4}`));
       });
       return true;
       function writeBodyH2() {
@@ -8913,7 +8913,7 @@ var require_retry_handler = __commonJS({
         if (this.handler.onBodySent) return this.handler.onBodySent(chunk);
       }
       static [kRetryHandlerDefaultRetry](err, { state, opts }, cb) {
-        const { statusCode, code: code3, headers } = err;
+        const { statusCode, code: code4, headers } = err;
         const { method, retryOptions } = opts;
         const {
           maxRetries,
@@ -8925,7 +8925,7 @@ var require_retry_handler = __commonJS({
           methods
         } = retryOptions;
         const { counter } = state;
-        if (code3 && code3 !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code3)) {
+        if (code4 && code4 !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code4)) {
           cb(err);
           return;
         }
@@ -11647,8 +11647,8 @@ var require_headers = __commonJS({
     var util = __require("node:util");
     var kHeadersMap = /* @__PURE__ */ Symbol("headers map");
     var kHeadersSortedMap = /* @__PURE__ */ Symbol("headers map sorted");
-    function isHTTPWhiteSpaceCharCode(code3) {
-      return code3 === 10 || code3 === 13 || code3 === 9 || code3 === 32;
+    function isHTTPWhiteSpaceCharCode(code4) {
+      return code4 === 10 || code4 === 13 || code4 === 9 || code4 === 32;
     }
     function headerValueNormalize(potentialValue) {
       let i = 0;
@@ -15805,8 +15805,8 @@ var require_util6 = __commonJS({
     "use strict";
     function isCTLExcludingHtab(value) {
       for (let i = 0; i < value.length; ++i) {
-        const code3 = value.charCodeAt(i);
-        if (code3 >= 0 && code3 <= 8 || code3 >= 10 && code3 <= 31 || code3 === 127) {
+        const code4 = value.charCodeAt(i);
+        if (code4 >= 0 && code4 <= 8 || code4 >= 10 && code4 <= 31 || code4 === 127) {
           return true;
         }
       }
@@ -15814,26 +15814,26 @@ var require_util6 = __commonJS({
     }
     function validateCookieName(name) {
       for (let i = 0; i < name.length; ++i) {
-        const code3 = name.charCodeAt(i);
-        if (code3 < 33 || // exclude CTLs (0-31), SP and HT
-        code3 > 126 || // exclude non-ascii and DEL
-        code3 === 34 || // "
-        code3 === 40 || // (
-        code3 === 41 || // )
-        code3 === 60 || // <
-        code3 === 62 || // >
-        code3 === 64 || // @
-        code3 === 44 || // ,
-        code3 === 59 || // ;
-        code3 === 58 || // :
-        code3 === 92 || // \
-        code3 === 47 || // /
-        code3 === 91 || // [
-        code3 === 93 || // ]
-        code3 === 63 || // ?
-        code3 === 61 || // =
-        code3 === 123 || // {
-        code3 === 125) {
+        const code4 = name.charCodeAt(i);
+        if (code4 < 33 || // exclude CTLs (0-31), SP and HT
+        code4 > 126 || // exclude non-ascii and DEL
+        code4 === 34 || // "
+        code4 === 40 || // (
+        code4 === 41 || // )
+        code4 === 60 || // <
+        code4 === 62 || // >
+        code4 === 64 || // @
+        code4 === 44 || // ,
+        code4 === 59 || // ;
+        code4 === 58 || // :
+        code4 === 92 || // \
+        code4 === 47 || // /
+        code4 === 91 || // [
+        code4 === 93 || // ]
+        code4 === 63 || // ?
+        code4 === 61 || // =
+        code4 === 123 || // {
+        code4 === 125) {
           throw new Error("Invalid cookie name");
         }
       }
@@ -15849,23 +15849,23 @@ var require_util6 = __commonJS({
         ++i;
       }
       while (i < len) {
-        const code3 = value.charCodeAt(i++);
-        if (code3 < 33 || // exclude CTLs (0-31)
-        code3 > 126 || // non-ascii and DEL (127)
-        code3 === 34 || // "
-        code3 === 44 || // ,
-        code3 === 59 || // ;
-        code3 === 92) {
+        const code4 = value.charCodeAt(i++);
+        if (code4 < 33 || // exclude CTLs (0-31)
+        code4 > 126 || // non-ascii and DEL (127)
+        code4 === 34 || // "
+        code4 === 44 || // ,
+        code4 === 59 || // ;
+        code4 === 92) {
           throw new Error("Invalid cookie value");
         }
       }
     }
     function validateCookiePath(path10) {
       for (let i = 0; i < path10.length; ++i) {
-        const code3 = path10.charCodeAt(i);
-        if (code3 < 32 || // exclude CTLs (0-31)
-        code3 === 127 || // DEL
-        code3 === 59) {
+        const code4 = path10.charCodeAt(i);
+        if (code4 < 32 || // exclude CTLs (0-31)
+        code4 === 127 || // DEL
+        code4 === 59) {
           throw new Error("Invalid cookie path");
         }
       }
@@ -16151,7 +16151,7 @@ var require_cookies = __commonJS({
       if (!cookies) {
         return [];
       }
-      return cookies.map((pair) => parseSetCookie(pair));
+      return cookies.map((pair2) => parseSetCookie(pair2));
     }
     function setCookie(headers, cookie) {
       webidl.argumentLengthCheck(arguments, 2, "setCookie");
@@ -16638,37 +16638,37 @@ var require_util7 = __commonJS({
         return false;
       }
       for (let i = 0; i < protocol.length; ++i) {
-        const code3 = protocol.charCodeAt(i);
-        if (code3 < 33 || // CTL, contains SP (0x20) and HT (0x09)
-        code3 > 126 || code3 === 34 || // "
-        code3 === 40 || // (
-        code3 === 41 || // )
-        code3 === 44 || // ,
-        code3 === 47 || // /
-        code3 === 58 || // :
-        code3 === 59 || // ;
-        code3 === 60 || // <
-        code3 === 61 || // =
-        code3 === 62 || // >
-        code3 === 63 || // ?
-        code3 === 64 || // @
-        code3 === 91 || // [
-        code3 === 92 || // \
-        code3 === 93 || // ]
-        code3 === 123 || // {
-        code3 === 125) {
+        const code4 = protocol.charCodeAt(i);
+        if (code4 < 33 || // CTL, contains SP (0x20) and HT (0x09)
+        code4 > 126 || code4 === 34 || // "
+        code4 === 40 || // (
+        code4 === 41 || // )
+        code4 === 44 || // ,
+        code4 === 47 || // /
+        code4 === 58 || // :
+        code4 === 59 || // ;
+        code4 === 60 || // <
+        code4 === 61 || // =
+        code4 === 62 || // >
+        code4 === 63 || // ?
+        code4 === 64 || // @
+        code4 === 91 || // [
+        code4 === 92 || // \
+        code4 === 93 || // ]
+        code4 === 123 || // {
+        code4 === 125) {
           return false;
         }
       }
       return true;
     }
-    function isValidStatusCode(code3) {
-      if (code3 >= 1e3 && code3 < 1015) {
-        return code3 !== 1004 && // reserved
-        code3 !== 1005 && // "MUST NOT be set as a status code"
-        code3 !== 1006;
+    function isValidStatusCode(code4) {
+      if (code4 >= 1e3 && code4 < 1015) {
+        return code4 !== 1004 && // reserved
+        code4 !== 1005 && // "MUST NOT be set as a status code"
+        code4 !== 1006;
       }
-      return code3 >= 3e3 && code3 <= 4999;
+      return code4 >= 3e3 && code4 <= 4999;
     }
     function failWebsocketConnection(ws, reason) {
       const { [kController]: controller, [kResponse]: response } = ws;
@@ -16699,8 +16699,8 @@ var require_util7 = __commonJS({
       const position2 = { position: 0 };
       const extensionList = /* @__PURE__ */ new Map();
       while (position2.position < extensions.length) {
-        const pair = collectASequenceOfCodePointsFast(";", extensions, position2);
-        const [name, value = ""] = pair.split("=");
+        const pair2 = collectASequenceOfCodePointsFast(";", extensions, position2);
+        const [name, value = ""] = pair2.split("=");
         extensionList.set(
           removeHTTPWhitespace(name, true, false),
           removeHTTPWhitespace(value, false, true)
@@ -16933,7 +16933,7 @@ var require_connection = __commonJS({
       });
       return controller;
     }
-    function closeWebSocketConnection(ws, code3, reason, reasonByteLength) {
+    function closeWebSocketConnection(ws, code4, reason, reasonByteLength) {
       if (isClosing(ws) || isClosed(ws)) {
       } else if (!isEstablished(ws)) {
         failWebsocketConnection(ws, "Connection was closed before it was established.");
@@ -16941,12 +16941,12 @@ var require_connection = __commonJS({
       } else if (ws[kSentClose] === sentCloseFrameState.NOT_SENT) {
         ws[kSentClose] = sentCloseFrameState.PROCESSING;
         const frame = new WebsocketFrameSend();
-        if (code3 !== void 0 && reason === void 0) {
+        if (code4 !== void 0 && reason === void 0) {
           frame.frameData = Buffer.allocUnsafe(2);
-          frame.frameData.writeUInt16BE(code3, 0);
-        } else if (code3 !== void 0 && reason !== void 0) {
+          frame.frameData.writeUInt16BE(code4, 0);
+        } else if (code4 !== void 0 && reason !== void 0) {
           frame.frameData = Buffer.allocUnsafe(2 + reasonByteLength);
-          frame.frameData.writeUInt16BE(code3, 0);
+          frame.frameData.writeUInt16BE(code4, 0);
           frame.frameData.write(reason, 2, "utf-8");
         } else {
           frame.frameData = emptyBuffer;
@@ -16971,25 +16971,25 @@ var require_connection = __commonJS({
       response.socket.off("close", onSocketClose);
       response.socket.off("error", onSocketError);
       const wasClean = ws[kSentClose] === sentCloseFrameState.SENT && ws[kReceivedClose];
-      let code3 = 1005;
+      let code4 = 1005;
       let reason = "";
       const result = ws[kByteParser].closingInfo;
       if (result && !result.error) {
-        code3 = result.code ?? 1005;
+        code4 = result.code ?? 1005;
         reason = result.reason;
       } else if (!ws[kReceivedClose]) {
-        code3 = 1006;
+        code4 = 1006;
       }
       ws[kReadyState] = states.CLOSED;
       fireEvent("close", ws, (type, init) => new CloseEvent(type, init), {
         wasClean,
-        code: code3,
+        code: code4,
         reason
       });
       if (channels.close.hasSubscribers) {
         channels.close.publish({
           websocket: ws,
-          code: code3,
+          code: code4,
           reason
         });
       }
@@ -17285,11 +17285,11 @@ var require_receiver = __commonJS({
       }
       parseCloseBody(data) {
         assert4(data.length !== 1);
-        let code3;
+        let code4;
         if (data.length >= 2) {
-          code3 = data.readUInt16BE(0);
+          code4 = data.readUInt16BE(0);
         }
-        if (code3 !== void 0 && !isValidStatusCode(code3)) {
+        if (code4 !== void 0 && !isValidStatusCode(code4)) {
           return { code: 1002, reason: "Invalid status code", error: true };
         }
         let reason = data.subarray(2);
@@ -17301,7 +17301,7 @@ var require_receiver = __commonJS({
         } catch {
           return { code: 1007, reason: "Invalid UTF-8", error: true };
         }
-        return { code: code3, reason, error: false };
+        return { code: code4, reason, error: false };
       }
       /**
        * Parses control frames.
@@ -17316,8 +17316,8 @@ var require_receiver = __commonJS({
           }
           this.#info.closeInfo = this.parseCloseBody(body);
           if (this.#info.closeInfo.error) {
-            const { code: code3, reason } = this.#info.closeInfo;
-            closeWebSocketConnection(this.ws, code3, reason, reason.length);
+            const { code: code4, reason } = this.#info.closeInfo;
+            closeWebSocketConnection(this.ws, code4, reason, reason.length);
             failWebsocketConnection(this.ws, reason);
             return false;
           }
@@ -17555,17 +17555,17 @@ var require_websocket = __commonJS({
        * @param {number|undefined} code
        * @param {string|undefined} reason
        */
-      close(code3 = void 0, reason = void 0) {
+      close(code4 = void 0, reason = void 0) {
         webidl.brandCheck(this, _WebSocket);
         const prefix = "WebSocket.close";
-        if (code3 !== void 0) {
-          code3 = webidl.converters["unsigned short"](code3, prefix, "code", { clamp: true });
+        if (code4 !== void 0) {
+          code4 = webidl.converters["unsigned short"](code4, prefix, "code", { clamp: true });
         }
         if (reason !== void 0) {
           reason = webidl.converters.USVString(reason, prefix, "reason");
         }
-        if (code3 !== void 0) {
-          if (code3 !== 1e3 && (code3 < 3e3 || code3 > 4999)) {
+        if (code4 !== void 0) {
+          if (code4 !== 1e3 && (code4 < 3e3 || code4 > 4999)) {
             throw new DOMException("invalid code", "InvalidAccessError");
           }
         }
@@ -17579,7 +17579,7 @@ var require_websocket = __commonJS({
             );
           }
         }
-        closeWebSocketConnection(this, code3, reason, reasonByteLength);
+        closeWebSocketConnection(this, code4, reason, reasonByteLength);
       }
       /**
        * @see https://websockets.spec.whatwg.org/#dom-websocket-send
@@ -17819,15 +17819,15 @@ var require_websocket = __commonJS({
     }
     function onParserError(err) {
       let message;
-      let code3;
+      let code4;
       if (err instanceof CloseEvent) {
         message = err.reason;
-        code3 = err.code;
+        code4 = err.code;
       } else {
         message = err.message;
       }
       fireEvent("error", this, () => new ErrorEvent("error", { error: err, message }));
-      closeWebSocketConnection(this, code3);
+      closeWebSocketConnection(this, code4);
     }
     module.exports = {
       WebSocket
@@ -28156,9 +28156,9 @@ var require_code = __commonJS({
     };
     exports.Name = Name;
     var _Code = class extends _CodeOrName {
-      constructor(code3) {
+      constructor(code4) {
         super();
-        this._items = typeof code3 === "string" ? [code3] : code3;
+        this._items = typeof code4 === "string" ? [code4] : code4;
       }
       toString() {
         return this.str;
@@ -28185,13 +28185,13 @@ var require_code = __commonJS({
     exports._Code = _Code;
     exports.nil = new _Code("");
     function _(strs, ...args) {
-      const code3 = [strs[0]];
+      const code4 = [strs[0]];
       let i = 0;
       while (i < args.length) {
-        addCodeArg(code3, args[i]);
-        code3.push(strs[++i]);
+        addCodeArg(code4, args[i]);
+        code4.push(strs[++i]);
       }
-      return new _Code(code3);
+      return new _Code(code4);
     }
     exports._ = _;
     var plus = new _Code("+");
@@ -28207,13 +28207,13 @@ var require_code = __commonJS({
       return new _Code(expr);
     }
     exports.str = str;
-    function addCodeArg(code3, arg) {
+    function addCodeArg(code4, arg) {
       if (arg instanceof _Code)
-        code3.push(...arg._items);
+        code4.push(...arg._items);
       else if (arg instanceof Name)
-        code3.push(arg);
+        code4.push(arg);
       else
-        code3.push(interpolate(arg));
+        code4.push(interpolate(arg));
     }
     exports.addCodeArg = addCodeArg;
     function optimize(expr) {
@@ -28397,7 +28397,7 @@ var require_scope = __commonJS({
         }, usedValues, getCode);
       }
       _reduceValues(values, valueCode, usedValues = {}, getCode) {
-        let code3 = code_1.nil;
+        let code4 = code_1.nil;
         for (const prefix in values) {
           const vs = values[prefix];
           if (!vs)
@@ -28410,16 +28410,16 @@ var require_scope = __commonJS({
             let c = valueCode(name);
             if (c) {
               const def = this.opts.es5 ? exports.varKinds.var : exports.varKinds.const;
-              code3 = (0, code_1._)`${code3}${def} ${name} = ${c};${this.opts._n}`;
+              code4 = (0, code_1._)`${code4}${def} ${name} = ${c};${this.opts._n}`;
             } else if (c = getCode === null || getCode === void 0 ? void 0 : getCode(name)) {
-              code3 = (0, code_1._)`${code3}${c}${this.opts._n}`;
+              code4 = (0, code_1._)`${code4}${c}${this.opts._n}`;
             } else {
               throw new ValueError(name);
             }
             nameSet.set(name, UsedValueState.Completed);
           });
         }
-        return code3;
+        return code4;
       }
     };
     exports.ValueScope = ValueScope;
@@ -28579,9 +28579,9 @@ var require_codegen = __commonJS({
       }
     };
     var AnyCode = class extends Node {
-      constructor(code3) {
+      constructor(code4) {
         super();
-        this.code = code3;
+        this.code = code4;
       }
       render({ _n }) {
         return `${this.code};` + _n;
@@ -28603,7 +28603,7 @@ var require_codegen = __commonJS({
         this.nodes = nodes;
       }
       render(opts) {
-        return this.nodes.reduce((code3, n) => code3 + n.render(opts), "");
+        return this.nodes.reduce((code4, n) => code4 + n.render(opts), "");
       }
       optimizeNodes() {
         const { nodes } = this;
@@ -28651,10 +28651,10 @@ var require_codegen = __commonJS({
         this.condition = condition;
       }
       render(opts) {
-        let code3 = `if(${this.condition})` + super.render(opts);
+        let code4 = `if(${this.condition})` + super.render(opts);
         if (this.else)
-          code3 += "else " + this.else.render(opts);
-        return code3;
+          code4 += "else " + this.else.render(opts);
+        return code4;
       }
       optimizeNodes() {
         super.optimizeNodes();
@@ -28775,12 +28775,12 @@ var require_codegen = __commonJS({
     Return.kind = "return";
     var Try = class extends BlockNode {
       render(opts) {
-        let code3 = "try" + super.render(opts);
+        let code4 = "try" + super.render(opts);
         if (this.catch)
-          code3 += this.catch.render(opts);
+          code4 += this.catch.render(opts);
         if (this.finally)
-          code3 += this.finally.render(opts);
-        return code3;
+          code4 += this.finally.render(opts);
+        return code4;
       }
       optimizeNodes() {
         var _a2, _b;
@@ -28897,18 +28897,18 @@ var require_codegen = __commonJS({
       }
       // returns code for object literal for the passed argument list of key-value pairs
       object(...keyValues) {
-        const code3 = ["{"];
+        const code4 = ["{"];
         for (const [key, value] of keyValues) {
-          if (code3.length > 1)
-            code3.push(",");
-          code3.push(key);
+          if (code4.length > 1)
+            code4.push(",");
+          code4.push(key);
           if (key !== value || this.opts.es5) {
-            code3.push(":");
-            (0, code_1.addCodeArg)(code3, value);
+            code4.push(":");
+            (0, code_1.addCodeArg)(code4, value);
           }
         }
-        code3.push("}");
-        return new code_1._Code(code3);
+        code4.push("}");
+        return new code_1._Code(code4);
       }
       // `if` clause (or statement if `thenBody` and, optionally, `elseBody` are passed)
       if(condition, thenBody, elseBody) {
@@ -31205,22 +31205,22 @@ var require_utils2 = __commonJS({
     var isIPv4 = RegExp.prototype.test.bind(/^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/u);
     function stringArrayToHexStripped(input) {
       let acc = "";
-      let code3 = 0;
+      let code4 = 0;
       let i = 0;
       for (i = 0; i < input.length; i++) {
-        code3 = input[i].charCodeAt(0);
-        if (code3 === 48) {
+        code4 = input[i].charCodeAt(0);
+        if (code4 === 48) {
           continue;
         }
-        if (!(code3 >= 48 && code3 <= 57 || code3 >= 65 && code3 <= 70 || code3 >= 97 && code3 <= 102)) {
+        if (!(code4 >= 48 && code4 <= 57 || code4 >= 65 && code4 <= 70 || code4 >= 97 && code4 <= 102)) {
           return "";
         }
         acc += input[i];
         break;
       }
       for (i += 1; i < input.length; i++) {
-        code3 = input[i].charCodeAt(0);
-        if (!(code3 >= 48 && code3 <= 57 || code3 >= 65 && code3 <= 70 || code3 >= 97 && code3 <= 102)) {
+        code4 = input[i].charCodeAt(0);
+        if (!(code4 >= 48 && code4 <= 57 || code4 >= 65 && code4 <= 70 || code4 >= 97 && code4 <= 102)) {
           return "";
         }
         acc += input[i];
@@ -31673,10 +31673,10 @@ var require_fast_uri = __commonJS({
     function normalize(uri, options) {
       if (typeof uri === "string") {
         uri = /** @type {T} */
-        serialize2(parse3(uri, options), options);
+        serialize3(parse3(uri, options), options);
       } else if (typeof uri === "object") {
         uri = /** @type {T} */
-        parse3(serialize2(uri, options), options);
+        parse3(serialize3(uri, options), options);
       }
       return uri;
     }
@@ -31684,13 +31684,13 @@ var require_fast_uri = __commonJS({
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse3(baseURI, schemelessOptions), parse3(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
-      return serialize2(resolved, schemelessOptions);
+      return serialize3(resolved, schemelessOptions);
     }
     function resolveComponent(base, relative2, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
-        base = parse3(serialize2(base, options), options);
-        relative2 = parse3(serialize2(relative2, options), options);
+        base = parse3(serialize3(base, options), options);
+        relative2 = parse3(serialize3(relative2, options), options);
       }
       options = options || {};
       if (!options.tolerant && relative2.scheme) {
@@ -31742,19 +31742,19 @@ var require_fast_uri = __commonJS({
     function equal(uriA, uriB, options) {
       if (typeof uriA === "string") {
         uriA = unescape(uriA);
-        uriA = serialize2(normalizeComponentEncoding(parse3(uriA, options), true), { ...options, skipEscape: true });
+        uriA = serialize3(normalizeComponentEncoding(parse3(uriA, options), true), { ...options, skipEscape: true });
       } else if (typeof uriA === "object") {
-        uriA = serialize2(normalizeComponentEncoding(uriA, true), { ...options, skipEscape: true });
+        uriA = serialize3(normalizeComponentEncoding(uriA, true), { ...options, skipEscape: true });
       }
       if (typeof uriB === "string") {
         uriB = unescape(uriB);
-        uriB = serialize2(normalizeComponentEncoding(parse3(uriB, options), true), { ...options, skipEscape: true });
+        uriB = serialize3(normalizeComponentEncoding(parse3(uriB, options), true), { ...options, skipEscape: true });
       } else if (typeof uriB === "object") {
-        uriB = serialize2(normalizeComponentEncoding(uriB, true), { ...options, skipEscape: true });
+        uriB = serialize3(normalizeComponentEncoding(uriB, true), { ...options, skipEscape: true });
       }
       return uriA.toLowerCase() === uriB.toLowerCase();
     }
-    function serialize2(cmpts, opts) {
+    function serialize3(cmpts, opts) {
       const component = {
         host: cmpts.host,
         scheme: cmpts.scheme,
@@ -31910,7 +31910,7 @@ var require_fast_uri = __commonJS({
       resolve: resolve2,
       resolveComponent,
       equal,
-      serialize: serialize2,
+      serialize: serialize3,
       parse: parse3
     };
     module.exports = fastUri;
@@ -34155,8 +34155,8 @@ var require_format = __commonJS({
             }
           }
           function getFormat(fmtDef) {
-            const code3 = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema)}` : void 0;
-            const fmt = gen.scopeValue("formats", { key: schema, ref: fmtDef, code: code3 });
+            const code4 = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema)}` : void 0;
+            const fmt = gen.scopeValue("formats", { key: schema, ref: fmtDef, code: code4 });
             if (typeof fmtDef == "object" && !(fmtDef instanceof RegExp)) {
               return [fmtDef.type || "string", fmtDef.validate, (0, codegen_1._)`${fmt}.validate`];
             }
@@ -35238,10 +35238,10 @@ var require_errors3 = __commonJS({
     };
     var kHTTPParserError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_HTTP_PARSER");
     var HTTPParserError = class extends Error {
-      constructor(message, code3, data) {
+      constructor(message, code4, data) {
         super(message);
         this.name = "HTTPParserError";
-        this.code = code3 ? `HPE_${code3}` : void 0;
+        this.code = code4 ? `HPE_${code4}` : void 0;
         this.data = data ? data.toString() : void 0;
       }
       static [Symbol.hasInstance](instance) {
@@ -35268,12 +35268,12 @@ var require_errors3 = __commonJS({
     };
     var kRequestRetryError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_REQ_RETRY");
     var RequestRetryError = class extends UndiciError {
-      constructor(message, code3, { headers, data }) {
+      constructor(message, code4, { headers, data }) {
         super(message);
         this.name = "RequestRetryError";
         this.message = message || "Request retry error";
         this.code = "UND_ERR_REQ_RETRY";
-        this.statusCode = code3;
+        this.statusCode = code4;
         this.data = data;
         this.headers = headers;
       }
@@ -35286,12 +35286,12 @@ var require_errors3 = __commonJS({
     };
     var kResponseError = /* @__PURE__ */ Symbol.for("undici.error.UND_ERR_RESPONSE");
     var ResponseError = class extends UndiciError {
-      constructor(message, code3, { headers, body }) {
+      constructor(message, code4, { headers, body }) {
         super(message);
         this.name = "ResponseError";
         this.message = message || "Response error";
         this.code = "UND_ERR_RESPONSE";
-        this.statusCode = code3;
+        this.statusCode = code4;
         this.body = body;
         this.headers = headers;
       }
@@ -35517,8 +35517,8 @@ var require_tree2 = __commonJS({
         if (index2 === void 0 || index2 >= key.length) {
           throw new TypeError("Unreachable");
         }
-        const code3 = this.code = key.charCodeAt(index2);
-        if (code3 > 127) {
+        const code4 = this.code = key.charCodeAt(index2);
+        if (code4 > 127) {
           throw new TypeError("key must be ascii string");
         }
         if (key.length !== ++index2) {
@@ -35540,11 +35540,11 @@ var require_tree2 = __commonJS({
         let index2 = 0;
         let node2 = this;
         while (true) {
-          const code3 = key.charCodeAt(index2);
-          if (code3 > 127) {
+          const code4 = key.charCodeAt(index2);
+          if (code4 > 127) {
             throw new TypeError("key must be ascii string");
           }
-          if (node2.code === code3) {
+          if (node2.code === code4) {
             if (length === ++index2) {
               node2.value = value;
               break;
@@ -35554,7 +35554,7 @@ var require_tree2 = __commonJS({
               node2.middle = new _TstNode(key, value, index2);
               break;
             }
-          } else if (node2.code < code3) {
+          } else if (node2.code < code4) {
             if (node2.left !== null) {
               node2 = node2.left;
             } else {
@@ -35578,19 +35578,19 @@ var require_tree2 = __commonJS({
         let index2 = 0;
         let node2 = this;
         while (node2 !== null && index2 < keylength) {
-          let code3 = key[index2];
-          if (code3 <= 90 && code3 >= 65) {
-            code3 |= 32;
+          let code4 = key[index2];
+          if (code4 <= 90 && code4 >= 65) {
+            code4 |= 32;
           }
           while (node2 !== null) {
-            if (code3 === node2.code) {
+            if (code4 === node2.code) {
               if (keylength === ++index2) {
                 return node2;
               }
               node2 = node2.middle;
               break;
             }
-            node2 = node2.code < code3 ? node2.left : node2.right;
+            node2 = node2.code < code4 ? node2.left : node2.right;
           }
         }
         return null;
@@ -36389,11 +36389,11 @@ var require_diagnostics2 = __commonJS({
       diagnosticsChannel.subscribe(
         "undici:websocket:close",
         (evt) => {
-          const { websocket, code: code3, reason } = evt;
+          const { websocket, code: code4, reason } = evt;
           debugLog(
             "closed connection to %s - %s %s",
             websocket.url,
-            code3,
+            code4,
             reason
           );
         }
@@ -39114,9 +39114,9 @@ var require_util11 = __commonJS({
     }
     function isValidEncodedURL(url) {
       for (let i = 0; i < url.length; ++i) {
-        const code3 = url.charCodeAt(i);
-        if (code3 > 126 || // Non-US-ASCII + DEL
-        code3 < 32) {
+        const code4 = url.charCodeAt(i);
+        if (code4 > 126 || // Non-US-ASCII + DEL
+        code4 < 32) {
           return false;
         }
       }
@@ -39630,8 +39630,8 @@ var require_util11 = __commonJS({
       }
       const rangeStart = collectASequenceOfCodePoints(
         (char) => {
-          const code3 = char.charCodeAt(0);
-          return code3 >= 48 && code3 <= 57;
+          const code4 = char.charCodeAt(0);
+          return code4 >= 48 && code4 <= 57;
         },
         data,
         position2
@@ -39657,8 +39657,8 @@ var require_util11 = __commonJS({
       }
       const rangeEnd = collectASequenceOfCodePoints(
         (char) => {
-          const code3 = char.charCodeAt(0);
-          return code3 >= 48 && code3 <= 57;
+          const code4 = char.charCodeAt(0);
+          return code4 >= 48 && code4 <= 57;
         },
         data,
         position2
@@ -41903,9 +41903,9 @@ var require_client_h22 = __commonJS({
       this[kSocket][kError] = err;
       this[kClient][kOnError](err);
     }
-    function onHttp2FrameError(type, code3, id) {
+    function onHttp2FrameError(type, code4, id) {
       if (id === 0) {
-        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code3}`);
+        const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code4}`);
         this[kSocket][kError] = err;
         this[kClient][kOnError](err);
       }
@@ -42158,9 +42158,9 @@ var require_client_h22 = __commonJS({
         stream.removeAllListeners("data");
         abort(err);
       });
-      stream.once("frameError", (type, code3) => {
+      stream.once("frameError", (type, code4) => {
         stream.removeAllListeners("data");
-        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code3}`));
+        abort(new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code4}`));
       });
       stream.on("aborted", () => {
         stream.removeAllListeners("data");
@@ -43939,7 +43939,7 @@ var require_retry_handler2 = __commonJS({
         this.handler.onRequestUpgrade?.(controller, statusCode, headers, socket);
       }
       static [kRetryHandlerDefaultRetry](err, { state, opts }, cb) {
-        const { statusCode, code: code3, headers } = err;
+        const { statusCode, code: code4, headers } = err;
         const { method, retryOptions } = opts;
         const {
           maxRetries,
@@ -43951,7 +43951,7 @@ var require_retry_handler2 = __commonJS({
           methods
         } = retryOptions;
         const { counter } = state;
-        if (code3 && code3 !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code3)) {
+        if (code4 && code4 !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code4)) {
           cb(err);
           return;
         }
@@ -48414,11 +48414,11 @@ var require_date = __commonJS({
       }
       let day = 0;
       if (date[5] === "0") {
-        const code3 = date.charCodeAt(6);
-        if (code3 < 49 || code3 > 57) {
+        const code4 = date.charCodeAt(6);
+        if (code4 < 49 || code4 > 57) {
           return void 0;
         }
-        day = code3 - 48;
+        day = code4 - 48;
       } else {
         const code1 = date.charCodeAt(5);
         if (code1 < 49 || code1 > 51) {
@@ -48495,11 +48495,11 @@ var require_date = __commonJS({
       const year = (yearDigit1 - 48) * 1e3 + (yearDigit2 - 48) * 100 + (yearDigit3 - 48) * 10 + (yearDigit4 - 48);
       let hour = 0;
       if (date[17] === "0") {
-        const code3 = date.charCodeAt(18);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(18);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        hour = code3 - 48;
+        hour = code4 - 48;
       } else {
         const code1 = date.charCodeAt(17);
         if (code1 < 48 || code1 > 50) {
@@ -48516,11 +48516,11 @@ var require_date = __commonJS({
       }
       let minute = 0;
       if (date[20] === "0") {
-        const code3 = date.charCodeAt(21);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(21);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        minute = code3 - 48;
+        minute = code4 - 48;
       } else {
         const code1 = date.charCodeAt(20);
         if (code1 < 48 || code1 > 53) {
@@ -48534,11 +48534,11 @@ var require_date = __commonJS({
       }
       let second = 0;
       if (date[23] === "0") {
-        const code3 = date.charCodeAt(24);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(24);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        second = code3 - 48;
+        second = code4 - 48;
       } else {
         const code1 = date.charCodeAt(23);
         if (code1 < 48 || code1 > 53) {
@@ -48623,11 +48623,11 @@ var require_date = __commonJS({
       }
       let day = 0;
       if (date[8] === " ") {
-        const code3 = date.charCodeAt(9);
-        if (code3 < 49 || code3 > 57) {
+        const code4 = date.charCodeAt(9);
+        if (code4 < 49 || code4 > 57) {
           return void 0;
         }
-        day = code3 - 48;
+        day = code4 - 48;
       } else {
         const code1 = date.charCodeAt(8);
         if (code1 < 49 || code1 > 51) {
@@ -48641,11 +48641,11 @@ var require_date = __commonJS({
       }
       let hour = 0;
       if (date[11] === "0") {
-        const code3 = date.charCodeAt(12);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(12);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        hour = code3 - 48;
+        hour = code4 - 48;
       } else {
         const code1 = date.charCodeAt(11);
         if (code1 < 48 || code1 > 50) {
@@ -48662,11 +48662,11 @@ var require_date = __commonJS({
       }
       let minute = 0;
       if (date[14] === "0") {
-        const code3 = date.charCodeAt(15);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(15);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        minute = code3 - 48;
+        minute = code4 - 48;
       } else {
         const code1 = date.charCodeAt(14);
         if (code1 < 48 || code1 > 53) {
@@ -48680,11 +48680,11 @@ var require_date = __commonJS({
       }
       let second = 0;
       if (date[17] === "0") {
-        const code3 = date.charCodeAt(18);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(18);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        second = code3 - 48;
+        second = code4 - 48;
       } else {
         const code1 = date.charCodeAt(17);
         if (code1 < 48 || code1 > 53) {
@@ -48752,11 +48752,11 @@ var require_date = __commonJS({
       }
       let day = 0;
       if (date[commaIndex + 2] === "0") {
-        const code3 = date.charCodeAt(commaIndex + 3);
-        if (code3 < 49 || code3 > 57) {
+        const code4 = date.charCodeAt(commaIndex + 3);
+        if (code4 < 49 || code4 > 57) {
           return void 0;
         }
-        day = code3 - 48;
+        day = code4 - 48;
       } else {
         const code1 = date.charCodeAt(commaIndex + 2);
         if (code1 < 49 || code1 > 51) {
@@ -48808,11 +48808,11 @@ var require_date = __commonJS({
       year += year < 70 ? 2e3 : 1900;
       let hour = 0;
       if (date[commaIndex + 12] === "0") {
-        const code3 = date.charCodeAt(commaIndex + 13);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(commaIndex + 13);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        hour = code3 - 48;
+        hour = code4 - 48;
       } else {
         const code1 = date.charCodeAt(commaIndex + 12);
         if (code1 < 48 || code1 > 50) {
@@ -48829,11 +48829,11 @@ var require_date = __commonJS({
       }
       let minute = 0;
       if (date[commaIndex + 15] === "0") {
-        const code3 = date.charCodeAt(commaIndex + 16);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(commaIndex + 16);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        minute = code3 - 48;
+        minute = code4 - 48;
       } else {
         const code1 = date.charCodeAt(commaIndex + 15);
         if (code1 < 48 || code1 > 53) {
@@ -48847,11 +48847,11 @@ var require_date = __commonJS({
       }
       let second = 0;
       if (date[commaIndex + 18] === "0") {
-        const code3 = date.charCodeAt(commaIndex + 19);
-        if (code3 < 48 || code3 > 57) {
+        const code4 = date.charCodeAt(commaIndex + 19);
+        if (code4 < 48 || code4 > 57) {
           return void 0;
         }
-        second = code3 - 48;
+        second = code4 - 48;
       } else {
         const code1 = date.charCodeAt(commaIndex + 18);
         if (code1 < 48 || code1 > 53) {
@@ -50326,8 +50326,8 @@ var require_headers2 = __commonJS({
     var { webidl } = require_webidl2();
     var assert4 = __require("node:assert");
     var util = __require("node:util");
-    function isHTTPWhiteSpaceCharCode(code3) {
-      return code3 === 10 || code3 === 13 || code3 === 9 || code3 === 32;
+    function isHTTPWhiteSpaceCharCode(code4) {
+      return code4 === 10 || code4 === 13 || code4 === 9 || code4 === 32;
     }
     function headerValueNormalize(potentialValue) {
       let i = 0;
@@ -53852,8 +53852,8 @@ var require_util13 = __commonJS({
     "use strict";
     function isCTLExcludingHtab(value) {
       for (let i = 0; i < value.length; ++i) {
-        const code3 = value.charCodeAt(i);
-        if (code3 >= 0 && code3 <= 8 || code3 >= 10 && code3 <= 31 || code3 === 127) {
+        const code4 = value.charCodeAt(i);
+        if (code4 >= 0 && code4 <= 8 || code4 >= 10 && code4 <= 31 || code4 === 127) {
           return true;
         }
       }
@@ -53861,26 +53861,26 @@ var require_util13 = __commonJS({
     }
     function validateCookieName(name) {
       for (let i = 0; i < name.length; ++i) {
-        const code3 = name.charCodeAt(i);
-        if (code3 < 33 || // exclude CTLs (0-31), SP and HT
-        code3 > 126 || // exclude non-ascii and DEL
-        code3 === 34 || // "
-        code3 === 40 || // (
-        code3 === 41 || // )
-        code3 === 60 || // <
-        code3 === 62 || // >
-        code3 === 64 || // @
-        code3 === 44 || // ,
-        code3 === 59 || // ;
-        code3 === 58 || // :
-        code3 === 92 || // \
-        code3 === 47 || // /
-        code3 === 91 || // [
-        code3 === 93 || // ]
-        code3 === 63 || // ?
-        code3 === 61 || // =
-        code3 === 123 || // {
-        code3 === 125) {
+        const code4 = name.charCodeAt(i);
+        if (code4 < 33 || // exclude CTLs (0-31), SP and HT
+        code4 > 126 || // exclude non-ascii and DEL
+        code4 === 34 || // "
+        code4 === 40 || // (
+        code4 === 41 || // )
+        code4 === 60 || // <
+        code4 === 62 || // >
+        code4 === 64 || // @
+        code4 === 44 || // ,
+        code4 === 59 || // ;
+        code4 === 58 || // :
+        code4 === 92 || // \
+        code4 === 47 || // /
+        code4 === 91 || // [
+        code4 === 93 || // ]
+        code4 === 63 || // ?
+        code4 === 61 || // =
+        code4 === 123 || // {
+        code4 === 125) {
           throw new Error("Invalid cookie name");
         }
       }
@@ -53896,23 +53896,23 @@ var require_util13 = __commonJS({
         ++i;
       }
       while (i < len) {
-        const code3 = value.charCodeAt(i++);
-        if (code3 < 33 || // exclude CTLs (0-31)
-        code3 > 126 || // non-ascii and DEL (127)
-        code3 === 34 || // "
-        code3 === 44 || // ,
-        code3 === 59 || // ;
-        code3 === 92) {
+        const code4 = value.charCodeAt(i++);
+        if (code4 < 33 || // exclude CTLs (0-31)
+        code4 > 126 || // non-ascii and DEL (127)
+        code4 === 34 || // "
+        code4 === 44 || // ,
+        code4 === 59 || // ;
+        code4 === 92) {
           throw new Error("Invalid cookie value");
         }
       }
     }
     function validateCookiePath(path10) {
       for (let i = 0; i < path10.length; ++i) {
-        const code3 = path10.charCodeAt(i);
-        if (code3 < 32 || // exclude CTLs (0-31)
-        code3 === 127 || // DEL
-        code3 === 59) {
+        const code4 = path10.charCodeAt(i);
+        if (code4 < 32 || // exclude CTLs (0-31)
+        code4 === 127 || // DEL
+        code4 === 59) {
           throw new Error("Invalid cookie path");
         }
       }
@@ -54200,7 +54200,7 @@ var require_cookies2 = __commonJS({
       if (!cookies) {
         return [];
       }
-      return cookies.map((pair) => parseSetCookie(pair));
+      return cookies.map((pair2) => parseSetCookie(pair2));
     }
     function parseCookie(cookie) {
       cookie = webidl.converters.DOMString(cookie);
@@ -54653,37 +54653,37 @@ var require_util14 = __commonJS({
         return false;
       }
       for (let i = 0; i < protocol.length; ++i) {
-        const code3 = protocol.charCodeAt(i);
-        if (code3 < 33 || // CTL, contains SP (0x20) and HT (0x09)
-        code3 > 126 || code3 === 34 || // "
-        code3 === 40 || // (
-        code3 === 41 || // )
-        code3 === 44 || // ,
-        code3 === 47 || // /
-        code3 === 58 || // :
-        code3 === 59 || // ;
-        code3 === 60 || // <
-        code3 === 61 || // =
-        code3 === 62 || // >
-        code3 === 63 || // ?
-        code3 === 64 || // @
-        code3 === 91 || // [
-        code3 === 92 || // \
-        code3 === 93 || // ]
-        code3 === 123 || // {
-        code3 === 125) {
+        const code4 = protocol.charCodeAt(i);
+        if (code4 < 33 || // CTL, contains SP (0x20) and HT (0x09)
+        code4 > 126 || code4 === 34 || // "
+        code4 === 40 || // (
+        code4 === 41 || // )
+        code4 === 44 || // ,
+        code4 === 47 || // /
+        code4 === 58 || // :
+        code4 === 59 || // ;
+        code4 === 60 || // <
+        code4 === 61 || // =
+        code4 === 62 || // >
+        code4 === 63 || // ?
+        code4 === 64 || // @
+        code4 === 91 || // [
+        code4 === 92 || // \
+        code4 === 93 || // ]
+        code4 === 123 || // {
+        code4 === 125) {
           return false;
         }
       }
       return true;
     }
-    function isValidStatusCode(code3) {
-      if (code3 >= 1e3 && code3 < 1015) {
-        return code3 !== 1004 && // reserved
-        code3 !== 1005 && // "MUST NOT be set as a status code"
-        code3 !== 1006;
+    function isValidStatusCode(code4) {
+      if (code4 >= 1e3 && code4 < 1015) {
+        return code4 !== 1004 && // reserved
+        code4 !== 1005 && // "MUST NOT be set as a status code"
+        code4 !== 1006;
       }
-      return code3 >= 3e3 && code3 <= 4999;
+      return code4 >= 3e3 && code4 <= 4999;
     }
     function isControlFrame(opcode) {
       return opcode === opcodes.CLOSE || opcode === opcodes.PING || opcode === opcodes.PONG;
@@ -54701,8 +54701,8 @@ var require_util14 = __commonJS({
       const position2 = { position: 0 };
       const extensionList = /* @__PURE__ */ new Map();
       while (position2.position < extensions.length) {
-        const pair = collectASequenceOfCodePointsFast(";", extensions, position2);
-        const [name, value = ""] = pair.split("=", 2);
+        const pair2 = collectASequenceOfCodePointsFast(";", extensions, position2);
+        const [name, value = ""] = pair2.split("=", 2);
         extensionList.set(
           removeHTTPWhitespace(name, true, false),
           removeHTTPWhitespace(value, false, true)
@@ -54740,9 +54740,9 @@ var require_util14 = __commonJS({
       }
       return urlRecord;
     }
-    function validateCloseCodeAndReason(code3, reason) {
-      if (code3 !== null) {
-        if (code3 !== 1e3 && (code3 < 3e3 || code3 > 4999)) {
+    function validateCloseCodeAndReason(code4, reason) {
+      if (code4 !== null) {
+        if (code4 !== 1e3 && (code4 < 3e3 || code4 > 4999)) {
           throw new DOMException("invalid code", "InvalidAccessError");
         }
       }
@@ -54998,28 +54998,28 @@ var require_connection2 = __commonJS({
       });
       return controller;
     }
-    function closeWebSocketConnection(object, code3, reason, validate = false) {
-      code3 ??= null;
+    function closeWebSocketConnection(object, code4, reason, validate = false) {
+      code4 ??= null;
       reason ??= "";
-      if (validate) validateCloseCodeAndReason(code3, reason);
+      if (validate) validateCloseCodeAndReason(code4, reason);
       if (isClosed(object.readyState) || isClosing(object.readyState)) {
       } else if (!isEstablished(object.readyState)) {
         failWebsocketConnection(object);
         object.readyState = states.CLOSING;
       } else if (!object.closeState.has(sentCloseFrameState.SENT) && !object.closeState.has(sentCloseFrameState.RECEIVED)) {
         const frame = new WebsocketFrameSend();
-        if (reason.length !== 0 && code3 === null) {
-          code3 = 1e3;
+        if (reason.length !== 0 && code4 === null) {
+          code4 = 1e3;
         }
-        assert4(code3 === null || Number.isInteger(code3));
-        if (code3 === null && reason.length === 0) {
+        assert4(code4 === null || Number.isInteger(code4));
+        if (code4 === null && reason.length === 0) {
           frame.frameData = emptyBuffer;
-        } else if (code3 !== null && reason === null) {
+        } else if (code4 !== null && reason === null) {
           frame.frameData = Buffer.allocUnsafe(2);
-          frame.frameData.writeUInt16BE(code3, 0);
-        } else if (code3 !== null && reason !== null) {
+          frame.frameData.writeUInt16BE(code4, 0);
+        } else if (code4 !== null && reason !== null) {
           frame.frameData = Buffer.allocUnsafe(2 + Buffer.byteLength(reason));
-          frame.frameData.writeUInt16BE(code3, 0);
+          frame.frameData.writeUInt16BE(code4, 0);
           frame.frameData.write(reason, 2, "utf-8");
         } else {
           frame.frameData = emptyBuffer;
@@ -55031,9 +55031,9 @@ var require_connection2 = __commonJS({
         object.readyState = states.CLOSING;
       }
     }
-    function failWebsocketConnection(handler2, code3, reason, cause) {
+    function failWebsocketConnection(handler2, code4, reason, cause) {
       if (isEstablished(handler2.readyState)) {
-        closeWebSocketConnection(handler2, code3, reason, false);
+        closeWebSocketConnection(handler2, code4, reason, false);
       }
       handler2.controller.abort();
       if (!handler2.socket) {
@@ -55348,11 +55348,11 @@ var require_receiver2 = __commonJS({
       }
       parseCloseBody(data) {
         assert4(data.length !== 1);
-        let code3;
+        let code4;
         if (data.length >= 2) {
-          code3 = data.readUInt16BE(0);
+          code4 = data.readUInt16BE(0);
         }
-        if (code3 !== void 0 && !isValidStatusCode(code3)) {
+        if (code4 !== void 0 && !isValidStatusCode(code4)) {
           return { code: 1002, reason: "Invalid status code", error: true };
         }
         let reason = data.subarray(2);
@@ -55364,7 +55364,7 @@ var require_receiver2 = __commonJS({
         } catch {
           return { code: 1007, reason: "Invalid UTF-8", error: true };
         }
-        return { code: code3, reason, error: false };
+        return { code: code4, reason, error: false };
       }
       /**
        * Parses control frames.
@@ -55379,8 +55379,8 @@ var require_receiver2 = __commonJS({
           }
           this.#info.closeInfo = this.parseCloseBody(body);
           if (this.#info.closeInfo.error) {
-            const { code: code3, reason } = this.#info.closeInfo;
-            failWebsocketConnection(this.#handler, code3, reason);
+            const { code: code4, reason } = this.#info.closeInfo;
+            failWebsocketConnection(this.#handler, code4, reason);
             return false;
           }
           if (!this.#handler.closeState.has(sentCloseFrameState.SENT) && !this.#handler.closeState.has(sentCloseFrameState.RECEIVED)) {
@@ -55629,18 +55629,18 @@ var require_websocket2 = __commonJS({
        * @param {number|undefined} code
        * @param {string|undefined} reason
        */
-      close(code3 = void 0, reason = void 0) {
+      close(code4 = void 0, reason = void 0) {
         webidl.brandCheck(this, _WebSocket);
         const prefix = "WebSocket.close";
-        if (code3 !== void 0) {
-          code3 = webidl.converters["unsigned short"](code3, prefix, "code", webidl.attributes.Clamp);
+        if (code4 !== void 0) {
+          code4 = webidl.converters["unsigned short"](code4, prefix, "code", webidl.attributes.Clamp);
         }
         if (reason !== void 0) {
           reason = webidl.converters.USVString(reason);
         }
-        code3 ??= null;
+        code4 ??= null;
         reason ??= "";
-        closeWebSocketConnection(this.#handler, code3, reason, true);
+        closeWebSocketConnection(this.#handler, code4, reason, true);
       }
       /**
        * @see https://websockets.spec.whatwg.org/#dom-websocket-send
@@ -55848,29 +55848,29 @@ var require_websocket2 = __commonJS({
        */
       #onSocketClose() {
         const wasClean = this.#handler.closeState.has(sentCloseFrameState.SENT) && this.#handler.closeState.has(sentCloseFrameState.RECEIVED);
-        let code3 = 1005;
+        let code4 = 1005;
         let reason = "";
         const result = this.#parser?.closingInfo;
         if (result && !result.error) {
-          code3 = result.code ?? 1005;
+          code4 = result.code ?? 1005;
           reason = result.reason;
         }
         this.#handler.readyState = states.CLOSED;
         if (!this.#handler.closeState.has(sentCloseFrameState.RECEIVED)) {
-          code3 = 1006;
+          code4 = 1006;
           fireEvent("error", this, (type, init) => new ErrorEvent(type, init), {
             error: new TypeError(reason)
           });
         }
         fireEvent("close", this, (type, init) => new CloseEvent(type, init), {
           wasClean,
-          code: code3,
+          code: code4,
           reason
         });
         if (channels.close.hasSubscribers) {
           channels.close.publish({
             websocket: this,
-            code: code3,
+            code: code4,
             reason
           });
         }
@@ -56015,13 +56015,13 @@ var require_websocketerror = __commonJS({
         } else if (init !== null) {
           init = webidl.converters.WebSocketCloseInfo(init);
         }
-        let code3 = init.closeCode ?? null;
+        let code4 = init.closeCode ?? null;
         const reason = init.reason ?? "";
-        validateCloseCodeAndReason(code3, reason);
-        if (reason.length !== 0 && code3 === null) {
-          code3 = 1e3;
+        validateCloseCodeAndReason(code4, reason);
+        if (reason.length !== 0 && code4 === null) {
+          code4 = 1e3;
         }
-        this.#closeCode = code3;
+        this.#closeCode = code4;
         this.#reason = reason;
       }
       get closeCode() {
@@ -56035,9 +56035,9 @@ var require_websocketerror = __commonJS({
        * @param {number|null} code
        * @param {string} reason
        */
-      static createUnvalidatedWebSocketError(message, code3, reason) {
+      static createUnvalidatedWebSocketError(message, code4, reason) {
         const error2 = new _WebSocketError(message, kConstruct);
-        error2.#closeCode = code3;
+        error2.#closeCode = code4;
         error2.#reason = reason;
         return error2;
       }
@@ -56195,9 +56195,9 @@ var require_websocketstream = __commonJS({
         if (closeInfo !== null) {
           closeInfo = webidl.converters.WebSocketCloseInfo(closeInfo);
         }
-        const code3 = closeInfo.closeCode ?? null;
+        const code4 = closeInfo.closeCode ?? null;
         const reason = closeInfo.reason;
-        closeWebSocketConnection(this.#handler, code3, reason, true);
+        closeWebSocketConnection(this.#handler, code4, reason, true);
       }
       #write(chunk) {
         chunk = webidl.converters.WebSocketStreamWrite(chunk);
@@ -56291,9 +56291,9 @@ var require_websocketstream = __commonJS({
           this.#openedPromise.reject(new WebSocketError("Socket never opened"));
         }
         const result = this.#parser.closingInfo;
-        let code3 = result?.code ?? 1005;
+        let code4 = result?.code ?? 1005;
         if (!this.#handler.closeState.has(sentCloseFrameState.SENT) && !this.#handler.closeState.has(sentCloseFrameState.RECEIVED)) {
-          code3 = 1006;
+          code4 = 1006;
         }
         const reason = result?.reason == null ? "" : utf8DecodeBytes(Buffer.from(result.reason));
         if (wasClean) {
@@ -56302,24 +56302,24 @@ var require_websocketstream = __commonJS({
             this.#writableStream.abort(new DOMException("A closed WebSocketStream cannot be written to", "InvalidStateError"));
           }
           this.#closedPromise.resolve({
-            closeCode: code3,
+            closeCode: code4,
             reason
           });
         } else {
-          const error2 = createUnvalidatedWebSocketError("unclean close", code3, reason);
+          const error2 = createUnvalidatedWebSocketError("unclean close", code4, reason);
           this.#readableStreamController.error(error2);
           this.#writableStream.abort(error2);
           this.#closedPromise.reject(error2);
         }
       }
       #closeUsingReason(reason) {
-        let code3 = null;
+        let code4 = null;
         let reasonString = "";
         if (webidl.is.WebSocketError(reason)) {
-          code3 = reason.closeCode;
+          code4 = reason.closeCode;
           reasonString = reason.reason;
         }
-        closeWebSocketConnection(this.#handler, code3, reasonString);
+        closeWebSocketConnection(this.#handler, code4, reasonString);
       }
       //  To cancel a WebSocketStream stream given reason , close using reason giving stream and reason .
       #cancel(reason) {
@@ -58868,9 +58868,9 @@ var Summary = class {
    *
    * @returns {Summary} summary instance
    */
-  addCodeBlock(code3, lang) {
+  addCodeBlock(code4, lang) {
     const attrs = Object.assign({}, lang && { lang });
-    const element = this.wrap("pre", this.wrap("code", code3), attrs);
+    const element = this.wrap("pre", this.wrap("code", code4), attrs);
     return this.addRaw(element).addEOL();
   }
   /**
@@ -59167,12 +59167,12 @@ var __awaiter3 = function(thisArg, _arguments, P, generator) {
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 };
-function which(tool, check) {
+function which(tool, check2) {
   return __awaiter3(this, void 0, void 0, function* () {
     if (!tool) {
       throw new Error("parameter 'tool' is required");
     }
-    if (check) {
+    if (check2) {
       const result = yield which(tool, false);
       if (!result) {
         if (IS_WINDOWS) {
@@ -59534,14 +59534,14 @@ var ToolRunner = class extends events.EventEmitter {
           state.processClosed = true;
           state.CheckComplete();
         });
-        cp.on("exit", (code3) => {
-          state.processExitCode = code3;
+        cp.on("exit", (code4) => {
+          state.processExitCode = code4;
           state.processExited = true;
-          this._debug(`Exit code ${code3} received from tool '${this.toolPath}'`);
+          this._debug(`Exit code ${code4} received from tool '${this.toolPath}'`);
           state.CheckComplete();
         });
-        cp.on("close", (code3) => {
-          state.processExitCode = code3;
+        cp.on("close", (code4) => {
+          state.processExitCode = code4;
           state.processExited = true;
           state.processClosed = true;
           this._debug(`STDIO streams have closed for tool '${this.toolPath}'`);
@@ -64949,14 +64949,14 @@ function syntaxExtension(all2, extension2) {
     const maybe = hasOwnProperty.call(all2, hook2) ? all2[hook2] : void 0;
     const left = maybe || (all2[hook2] = {});
     const right = extension2[hook2];
-    let code3;
+    let code4;
     if (right) {
-      for (code3 in right) {
-        if (!hasOwnProperty.call(left, code3)) left[code3] = [];
-        const value = right[code3];
+      for (code4 in right) {
+        if (!hasOwnProperty.call(left, code4)) left[code4] = [];
+        const value = right[code4];
         constructs(
           // @ts-expect-error Looks like a list.
-          left[code3],
+          left[code4],
           Array.isArray(value) ? value : value ? [value] : []
         );
       }
@@ -64975,20 +64975,20 @@ function constructs(existing, list4) {
 
 // node_modules/micromark-util-decode-numeric-character-reference/index.js
 function decodeNumericCharacterReference(value, base) {
-  const code3 = Number.parseInt(value, base);
+  const code4 = Number.parseInt(value, base);
   if (
     // C0 except for HT, LF, FF, CR, space.
-    code3 < 9 || code3 === 11 || code3 > 13 && code3 < 32 || // Control character (DEL) of C0, and C1 controls.
-    code3 > 126 && code3 < 160 || // Lone high surrogates and low surrogates.
-    code3 > 55295 && code3 < 57344 || // Noncharacters.
-    code3 > 64975 && code3 < 65008 || /* eslint-disable no-bitwise */
-    (code3 & 65535) === 65535 || (code3 & 65535) === 65534 || /* eslint-enable no-bitwise */
+    code4 < 9 || code4 === 11 || code4 > 13 && code4 < 32 || // Control character (DEL) of C0, and C1 controls.
+    code4 > 126 && code4 < 160 || // Lone high surrogates and low surrogates.
+    code4 > 55295 && code4 < 57344 || // Noncharacters.
+    code4 > 64975 && code4 < 65008 || /* eslint-disable no-bitwise */
+    (code4 & 65535) === 65535 || (code4 & 65535) === 65534 || /* eslint-enable no-bitwise */
     // Out of range
-    code3 > 1114111
+    code4 > 1114111
   ) {
     return "\uFFFD";
   }
-  return String.fromCodePoint(code3);
+  return String.fromCodePoint(code4);
 }
 
 // node_modules/micromark-util-normalize-identifier/index.js
@@ -65000,31 +65000,31 @@ function normalizeIdentifier(value) {
 var asciiAlpha = regexCheck(/[A-Za-z]/);
 var asciiAlphanumeric = regexCheck(/[\dA-Za-z]/);
 var asciiAtext = regexCheck(/[#-'*+\--9=?A-Z^-~]/);
-function asciiControl(code3) {
+function asciiControl(code4) {
   return (
     // Special whitespace codes (which have negative values), C0 and Control
     // character DEL
-    code3 !== null && (code3 < 32 || code3 === 127)
+    code4 !== null && (code4 < 32 || code4 === 127)
   );
 }
 var asciiDigit = regexCheck(/\d/);
 var asciiHexDigit = regexCheck(/[\dA-Fa-f]/);
 var asciiPunctuation = regexCheck(/[!-/:-@[-`{-~]/);
-function markdownLineEnding(code3) {
-  return code3 !== null && code3 < -2;
+function markdownLineEnding(code4) {
+  return code4 !== null && code4 < -2;
 }
-function markdownLineEndingOrSpace(code3) {
-  return code3 !== null && (code3 < 0 || code3 === 32);
+function markdownLineEndingOrSpace(code4) {
+  return code4 !== null && (code4 < 0 || code4 === 32);
 }
-function markdownSpace(code3) {
-  return code3 === -2 || code3 === -1 || code3 === 32;
+function markdownSpace(code4) {
+  return code4 === -2 || code4 === -1 || code4 === 32;
 }
 var unicodePunctuation = regexCheck(new RegExp("\\p{P}|\\p{S}", "u"));
 var unicodeWhitespace = regexCheck(/\s/);
 function regexCheck(regex2) {
-  return check;
-  function check(code3) {
-    return code3 !== null && code3 > -1 && regex2.test(String.fromCharCode(code3));
+  return check2;
+  function check2(code4) {
+    return code4 !== null && code4 > -1 && regex2.test(String.fromCharCode(code4));
   }
 }
 
@@ -65033,20 +65033,20 @@ function factorySpace(effects, ok3, type, max) {
   const limit = max ? max - 1 : Number.POSITIVE_INFINITY;
   let size = 0;
   return start;
-  function start(code3) {
-    if (markdownSpace(code3)) {
+  function start(code4) {
+    if (markdownSpace(code4)) {
       effects.enter(type);
-      return prefix(code3);
+      return prefix(code4);
     }
-    return ok3(code3);
+    return ok3(code4);
   }
-  function prefix(code3) {
-    if (markdownSpace(code3) && size++ < limit) {
-      effects.consume(code3);
+  function prefix(code4) {
+    if (markdownSpace(code4) && size++ < limit) {
+      effects.consume(code4);
       return prefix;
     }
     effects.exit(type);
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 
@@ -65058,21 +65058,21 @@ function initializeContent(effects) {
   const contentStart = effects.attempt(this.parser.constructs.contentInitial, afterContentStartConstruct, paragraphInitial);
   let previous3;
   return contentStart;
-  function afterContentStartConstruct(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function afterContentStartConstruct(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(effects, contentStart, "linePrefix");
   }
-  function paragraphInitial(code3) {
+  function paragraphInitial(code4) {
     effects.enter("paragraph");
-    return lineStart(code3);
+    return lineStart(code4);
   }
-  function lineStart(code3) {
+  function lineStart(code4) {
     const token = effects.enter("chunkText", {
       contentType: "text",
       previous: previous3
@@ -65081,21 +65081,21 @@ function initializeContent(effects) {
       previous3.next = token;
     }
     previous3 = token;
-    return data(code3);
+    return data(code4);
   }
-  function data(code3) {
-    if (code3 === null) {
+  function data(code4) {
+    if (code4 === null) {
       effects.exit("chunkText");
       effects.exit("paragraph");
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
-    if (markdownLineEnding(code3)) {
-      effects.consume(code3);
+    if (markdownLineEnding(code4)) {
+      effects.consume(code4);
       effects.exit("chunkText");
       return lineStart;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
 }
@@ -65115,15 +65115,15 @@ function initializeDocument(effects) {
   let childToken;
   let lineStartOffset;
   return start;
-  function start(code3) {
+  function start(code4) {
     if (continued < stack.length) {
       const item = stack[continued];
       self2.containerState = item[1];
-      return effects.attempt(item[0].continuation, documentContinue, checkNewContainers)(code3);
+      return effects.attempt(item[0].continuation, documentContinue, checkNewContainers)(code4);
     }
-    return checkNewContainers(code3);
+    return checkNewContainers(code4);
   }
-  function documentContinue(code3) {
+  function documentContinue(code4) {
     continued++;
     if (self2.containerState._closeFlow) {
       self2.containerState._closeFlow = void 0;
@@ -65149,47 +65149,47 @@ function initializeDocument(effects) {
       }
       splice(self2.events, indexBeforeFlow + 1, 0, self2.events.slice(indexBeforeExits));
       self2.events.length = index2;
-      return checkNewContainers(code3);
+      return checkNewContainers(code4);
     }
-    return start(code3);
+    return start(code4);
   }
-  function checkNewContainers(code3) {
+  function checkNewContainers(code4) {
     if (continued === stack.length) {
       if (!childFlow) {
-        return documentContinued(code3);
+        return documentContinued(code4);
       }
       if (childFlow.currentConstruct && childFlow.currentConstruct.concrete) {
-        return flowStart(code3);
+        return flowStart(code4);
       }
       self2.interrupt = Boolean(childFlow.currentConstruct && !childFlow._gfmTableDynamicInterruptHack);
     }
     self2.containerState = {};
-    return effects.check(containerConstruct, thereIsANewContainer, thereIsNoNewContainer)(code3);
+    return effects.check(containerConstruct, thereIsANewContainer, thereIsNoNewContainer)(code4);
   }
-  function thereIsANewContainer(code3) {
+  function thereIsANewContainer(code4) {
     if (childFlow) closeFlow();
     exitContainers(continued);
-    return documentContinued(code3);
+    return documentContinued(code4);
   }
-  function thereIsNoNewContainer(code3) {
+  function thereIsNoNewContainer(code4) {
     self2.parser.lazy[self2.now().line] = continued !== stack.length;
     lineStartOffset = self2.now().offset;
-    return flowStart(code3);
+    return flowStart(code4);
   }
-  function documentContinued(code3) {
+  function documentContinued(code4) {
     self2.containerState = {};
-    return effects.attempt(containerConstruct, containerContinue, flowStart)(code3);
+    return effects.attempt(containerConstruct, containerContinue, flowStart)(code4);
   }
-  function containerContinue(code3) {
+  function containerContinue(code4) {
     continued++;
     stack.push([self2.currentConstruct, self2.containerState]);
-    return documentContinued(code3);
+    return documentContinued(code4);
   }
-  function flowStart(code3) {
-    if (code3 === null) {
+  function flowStart(code4) {
+    if (code4 === null) {
       if (childFlow) closeFlow();
       exitContainers(0);
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
     childFlow = childFlow || self2.parser.flow(self2.now());
@@ -65198,23 +65198,23 @@ function initializeDocument(effects) {
       contentType: "flow",
       previous: childToken
     });
-    return flowContinue(code3);
+    return flowContinue(code4);
   }
-  function flowContinue(code3) {
-    if (code3 === null) {
+  function flowContinue(code4) {
+    if (code4 === null) {
       writeToChild(effects.exit("chunkFlow"), true);
       exitContainers(0);
-      effects.consume(code3);
+      effects.consume(code4);
       return;
     }
-    if (markdownLineEnding(code3)) {
-      effects.consume(code3);
+    if (markdownLineEnding(code4)) {
+      effects.consume(code4);
       writeToChild(effects.exit("chunkFlow"));
       continued = 0;
       self2.interrupt = void 0;
       return start;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return flowContinue;
   }
   function writeToChild(token, endOfFile) {
@@ -65283,11 +65283,11 @@ function tokenizeContainer(effects, ok3, nok) {
 }
 
 // node_modules/micromark-util-classify-character/index.js
-function classifyCharacter(code3) {
-  if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
+function classifyCharacter(code4) {
+  if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
     return 1;
   }
-  if (unicodePunctuation(code3)) {
+  if (unicodePunctuation(code4)) {
     return 2;
   }
 }
@@ -65412,23 +65412,23 @@ function tokenizeAttention(effects, ok3) {
   const before = classifyCharacter(previous3);
   let marker;
   return start;
-  function start(code3) {
-    marker = code3;
+  function start(code4) {
+    marker = code4;
     effects.enter("attentionSequence");
-    return inside(code3);
+    return inside(code4);
   }
-  function inside(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function inside(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       return inside;
     }
     const token = effects.exit("attentionSequence");
-    const after = classifyCharacter(code3);
-    const open2 = !after || after === 2 && before || attentionMarkers2.includes(code3);
+    const after = classifyCharacter(code4);
+    const open2 = !after || after === 2 && before || attentionMarkers2.includes(code4);
     const close = !before || before === 2 && after || attentionMarkers2.includes(previous3);
     token._open = Boolean(marker === 42 ? open2 : open2 && (before || !close));
     token._close = Boolean(marker === 42 ? close : close && (after || !open2));
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function movePoint(point3, offset) {
@@ -65445,96 +65445,96 @@ var autolink = {
 function tokenizeAutolink(effects, ok3, nok) {
   let size = 0;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("autolink");
     effects.enter("autolinkMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("autolinkMarker");
     effects.enter("autolinkProtocol");
     return open2;
   }
-  function open2(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+  function open2(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return schemeOrEmailAtext;
     }
-    if (code3 === 64) {
-      return nok(code3);
+    if (code4 === 64) {
+      return nok(code4);
     }
-    return emailAtext(code3);
+    return emailAtext(code4);
   }
-  function schemeOrEmailAtext(code3) {
-    if (code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3)) {
+  function schemeOrEmailAtext(code4) {
+    if (code4 === 43 || code4 === 45 || code4 === 46 || asciiAlphanumeric(code4)) {
       size = 1;
-      return schemeInsideOrEmailAtext(code3);
+      return schemeInsideOrEmailAtext(code4);
     }
-    return emailAtext(code3);
+    return emailAtext(code4);
   }
-  function schemeInsideOrEmailAtext(code3) {
-    if (code3 === 58) {
-      effects.consume(code3);
+  function schemeInsideOrEmailAtext(code4) {
+    if (code4 === 58) {
+      effects.consume(code4);
       size = 0;
       return urlInside;
     }
-    if ((code3 === 43 || code3 === 45 || code3 === 46 || asciiAlphanumeric(code3)) && size++ < 32) {
-      effects.consume(code3);
+    if ((code4 === 43 || code4 === 45 || code4 === 46 || asciiAlphanumeric(code4)) && size++ < 32) {
+      effects.consume(code4);
       return schemeInsideOrEmailAtext;
     }
     size = 0;
-    return emailAtext(code3);
+    return emailAtext(code4);
   }
-  function urlInside(code3) {
-    if (code3 === 62) {
+  function urlInside(code4) {
+    if (code4 === 62) {
       effects.exit("autolinkProtocol");
       effects.enter("autolinkMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("autolinkMarker");
       effects.exit("autolink");
       return ok3;
     }
-    if (code3 === null || code3 === 32 || code3 === 60 || asciiControl(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 32 || code4 === 60 || asciiControl(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return urlInside;
   }
-  function emailAtext(code3) {
-    if (code3 === 64) {
-      effects.consume(code3);
+  function emailAtext(code4) {
+    if (code4 === 64) {
+      effects.consume(code4);
       return emailAtSignOrDot;
     }
-    if (asciiAtext(code3)) {
-      effects.consume(code3);
+    if (asciiAtext(code4)) {
+      effects.consume(code4);
       return emailAtext;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function emailAtSignOrDot(code3) {
-    return asciiAlphanumeric(code3) ? emailLabel(code3) : nok(code3);
+  function emailAtSignOrDot(code4) {
+    return asciiAlphanumeric(code4) ? emailLabel(code4) : nok(code4);
   }
-  function emailLabel(code3) {
-    if (code3 === 46) {
-      effects.consume(code3);
+  function emailLabel(code4) {
+    if (code4 === 46) {
+      effects.consume(code4);
       size = 0;
       return emailAtSignOrDot;
     }
-    if (code3 === 62) {
+    if (code4 === 62) {
       effects.exit("autolinkProtocol").type = "autolinkEmail";
       effects.enter("autolinkMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("autolinkMarker");
       effects.exit("autolink");
       return ok3;
     }
-    return emailValue(code3);
+    return emailValue(code4);
   }
-  function emailValue(code3) {
-    if ((code3 === 45 || asciiAlphanumeric(code3)) && size++ < 63) {
-      const next = code3 === 45 ? emailValue : emailLabel;
-      effects.consume(code3);
+  function emailValue(code4) {
+    if ((code4 === 45 || asciiAlphanumeric(code4)) && size++ < 63) {
+      const next = code4 === 45 ? emailValue : emailLabel;
+      effects.consume(code4);
       return next;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -65545,11 +65545,11 @@ var blankLine = {
 };
 function tokenizeBlankLine(effects, ok3, nok) {
   return start;
-  function start(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, after, "linePrefix")(code3) : after(code3);
+  function start(code4) {
+    return markdownSpace(code4) ? factorySpace(effects, after, "linePrefix")(code4) : after(code4);
   }
-  function after(code3) {
-    return code3 === null || markdownLineEnding(code3) ? ok3(code3) : nok(code3);
+  function after(code4) {
+    return code4 === null || markdownLineEnding(code4) ? ok3(code4) : nok(code4);
   }
 }
 
@@ -65565,8 +65565,8 @@ var blockQuote = {
 function tokenizeBlockQuoteStart(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
-    if (code3 === 62) {
+  function start(code4) {
+    if (code4 === 62) {
       const state = self2.containerState;
       if (!state.open) {
         effects.enter("blockQuote", {
@@ -65576,35 +65576,35 @@ function tokenizeBlockQuoteStart(effects, ok3, nok) {
       }
       effects.enter("blockQuotePrefix");
       effects.enter("blockQuoteMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("blockQuoteMarker");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    if (markdownSpace(code3)) {
+  function after(code4) {
+    if (markdownSpace(code4)) {
       effects.enter("blockQuotePrefixWhitespace");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("blockQuotePrefixWhitespace");
       effects.exit("blockQuotePrefix");
       return ok3;
     }
     effects.exit("blockQuotePrefix");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeBlockQuoteContinuation(effects, ok3, nok) {
   const self2 = this;
   return contStart;
-  function contStart(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, contBefore, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code3);
+  function contStart(code4) {
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, contBefore, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code4);
     }
-    return contBefore(code3);
+    return contBefore(code4);
   }
-  function contBefore(code3) {
-    return effects.attempt(blockQuote, ok3, nok)(code3);
+  function contBefore(code4) {
+    return effects.attempt(blockQuote, ok3, nok)(code4);
   }
 }
 function exit(effects) {
@@ -65618,22 +65618,22 @@ var characterEscape = {
 };
 function tokenizeCharacterEscape(effects, ok3, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("characterEscape");
     effects.enter("escapeMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("escapeMarker");
     return inside;
   }
-  function inside(code3) {
-    if (asciiPunctuation(code3)) {
+  function inside(code4) {
+    if (asciiPunctuation(code4)) {
       effects.enter("characterEscapeValue");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterEscapeValue");
       effects.exit("characterEscape");
       return ok3;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -65648,29 +65648,29 @@ function tokenizeCharacterReference(effects, ok3, nok) {
   let max;
   let test;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("characterReference");
     effects.enter("characterReferenceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("characterReferenceMarker");
     return open2;
   }
-  function open2(code3) {
-    if (code3 === 35) {
+  function open2(code4) {
+    if (code4 === 35) {
       effects.enter("characterReferenceMarkerNumeric");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarkerNumeric");
       return numeric2;
     }
     effects.enter("characterReferenceValue");
     max = 31;
     test = asciiAlphanumeric;
-    return value(code3);
+    return value(code4);
   }
-  function numeric2(code3) {
-    if (code3 === 88 || code3 === 120) {
+  function numeric2(code4) {
+    if (code4 === 88 || code4 === 120) {
       effects.enter("characterReferenceMarkerHexadecimal");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarkerHexadecimal");
       effects.enter("characterReferenceValue");
       max = 6;
@@ -65680,25 +65680,25 @@ function tokenizeCharacterReference(effects, ok3, nok) {
     effects.enter("characterReferenceValue");
     max = 7;
     test = asciiDigit;
-    return value(code3);
+    return value(code4);
   }
-  function value(code3) {
-    if (code3 === 59 && size) {
+  function value(code4) {
+    if (code4 === 59 && size) {
       const token = effects.exit("characterReferenceValue");
       if (test === asciiAlphanumeric && !decodeNamedCharacterReference(self2.sliceSerialize(token))) {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("characterReferenceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("characterReferenceMarker");
       effects.exit("characterReference");
       return ok3;
     }
-    if (test(code3) && size++ < max) {
-      effects.consume(code3);
+    if (test(code4) && size++ < max) {
+      effects.consume(code4);
       return value;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -65722,166 +65722,166 @@ function tokenizeCodeFenced(effects, ok3, nok) {
   let sizeOpen = 0;
   let marker;
   return start;
-  function start(code3) {
-    return beforeSequenceOpen(code3);
+  function start(code4) {
+    return beforeSequenceOpen(code4);
   }
-  function beforeSequenceOpen(code3) {
+  function beforeSequenceOpen(code4) {
     const tail = self2.events[self2.events.length - 1];
     initialPrefix = tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
-    marker = code3;
+    marker = code4;
     effects.enter("codeFenced");
     effects.enter("codeFencedFence");
     effects.enter("codeFencedFenceSequence");
-    return sequenceOpen(code3);
+    return sequenceOpen(code4);
   }
-  function sequenceOpen(code3) {
-    if (code3 === marker) {
+  function sequenceOpen(code4) {
+    if (code4 === marker) {
       sizeOpen++;
-      effects.consume(code3);
+      effects.consume(code4);
       return sequenceOpen;
     }
     if (sizeOpen < 3) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.exit("codeFencedFenceSequence");
-    return markdownSpace(code3) ? factorySpace(effects, infoBefore, "whitespace")(code3) : infoBefore(code3);
+    return markdownSpace(code4) ? factorySpace(effects, infoBefore, "whitespace")(code4) : infoBefore(code4);
   }
-  function infoBefore(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function infoBefore(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("codeFencedFence");
-      return self2.interrupt ? ok3(code3) : effects.check(nonLazyContinuation, atNonLazyBreak, after)(code3);
+      return self2.interrupt ? ok3(code4) : effects.check(nonLazyContinuation, atNonLazyBreak, after)(code4);
     }
     effects.enter("codeFencedFenceInfo");
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return info2(code3);
+    return info2(code4);
   }
-  function info2(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function info2(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceInfo");
-      return infoBefore(code3);
+      return infoBefore(code4);
     }
-    if (markdownSpace(code3)) {
+    if (markdownSpace(code4)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceInfo");
-      return factorySpace(effects, metaBefore, "whitespace")(code3);
+      return factorySpace(effects, metaBefore, "whitespace")(code4);
     }
-    if (code3 === 96 && code3 === marker) {
-      return nok(code3);
+    if (code4 === 96 && code4 === marker) {
+      return nok(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return info2;
   }
-  function metaBefore(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return infoBefore(code3);
+  function metaBefore(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return infoBefore(code4);
     }
     effects.enter("codeFencedFenceMeta");
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return meta(code3);
+    return meta(code4);
   }
-  function meta(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function meta(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("chunkString");
       effects.exit("codeFencedFenceMeta");
-      return infoBefore(code3);
+      return infoBefore(code4);
     }
-    if (code3 === 96 && code3 === marker) {
-      return nok(code3);
+    if (code4 === 96 && code4 === marker) {
+      return nok(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return meta;
   }
-  function atNonLazyBreak(code3) {
-    return effects.attempt(closeStart, after, contentBefore)(code3);
+  function atNonLazyBreak(code4) {
+    return effects.attempt(closeStart, after, contentBefore)(code4);
   }
-  function contentBefore(code3) {
+  function contentBefore(code4) {
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return contentStart;
   }
-  function contentStart(code3) {
-    return initialPrefix > 0 && markdownSpace(code3) ? factorySpace(effects, beforeContentChunk, "linePrefix", initialPrefix + 1)(code3) : beforeContentChunk(code3);
+  function contentStart(code4) {
+    return initialPrefix > 0 && markdownSpace(code4) ? factorySpace(effects, beforeContentChunk, "linePrefix", initialPrefix + 1)(code4) : beforeContentChunk(code4);
   }
-  function beforeContentChunk(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return effects.check(nonLazyContinuation, atNonLazyBreak, after)(code3);
+  function beforeContentChunk(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return effects.check(nonLazyContinuation, atNonLazyBreak, after)(code4);
     }
     effects.enter("codeFlowValue");
-    return contentChunk(code3);
+    return contentChunk(code4);
   }
-  function contentChunk(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function contentChunk(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("codeFlowValue");
-      return beforeContentChunk(code3);
+      return beforeContentChunk(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return contentChunk;
   }
-  function after(code3) {
+  function after(code4) {
     effects.exit("codeFenced");
-    return ok3(code3);
+    return ok3(code4);
   }
   function tokenizeCloseStart(effects2, ok4, nok2) {
     let size = 0;
     return startBefore;
-    function startBefore(code3) {
+    function startBefore(code4) {
       effects2.enter("lineEnding");
-      effects2.consume(code3);
+      effects2.consume(code4);
       effects2.exit("lineEnding");
       return start2;
     }
-    function start2(code3) {
+    function start2(code4) {
       effects2.enter("codeFencedFence");
-      return markdownSpace(code3) ? factorySpace(effects2, beforeSequenceClose, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code3) : beforeSequenceClose(code3);
+      return markdownSpace(code4) ? factorySpace(effects2, beforeSequenceClose, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code4) : beforeSequenceClose(code4);
     }
-    function beforeSequenceClose(code3) {
-      if (code3 === marker) {
+    function beforeSequenceClose(code4) {
+      if (code4 === marker) {
         effects2.enter("codeFencedFenceSequence");
-        return sequenceClose(code3);
+        return sequenceClose(code4);
       }
-      return nok2(code3);
+      return nok2(code4);
     }
-    function sequenceClose(code3) {
-      if (code3 === marker) {
+    function sequenceClose(code4) {
+      if (code4 === marker) {
         size++;
-        effects2.consume(code3);
+        effects2.consume(code4);
         return sequenceClose;
       }
       if (size >= sizeOpen) {
         effects2.exit("codeFencedFenceSequence");
-        return markdownSpace(code3) ? factorySpace(effects2, sequenceCloseAfter, "whitespace")(code3) : sequenceCloseAfter(code3);
+        return markdownSpace(code4) ? factorySpace(effects2, sequenceCloseAfter, "whitespace")(code4) : sequenceCloseAfter(code4);
       }
-      return nok2(code3);
+      return nok2(code4);
     }
-    function sequenceCloseAfter(code3) {
-      if (code3 === null || markdownLineEnding(code3)) {
+    function sequenceCloseAfter(code4) {
+      if (code4 === null || markdownLineEnding(code4)) {
         effects2.exit("codeFencedFence");
-        return ok4(code3);
+        return ok4(code4);
       }
-      return nok2(code3);
+      return nok2(code4);
     }
   }
 }
 function tokenizeNonLazyContinuation(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function start(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return lineStart;
   }
-  function lineStart(code3) {
-    return self2.parser.lazy[self2.now().line] ? nok(code3) : ok3(code3);
+  function lineStart(code4) {
+    return self2.parser.lazy[self2.now().line] ? nok(code4) : ok3(code4);
   }
 }
 
@@ -65897,55 +65897,55 @@ var furtherStart = {
 function tokenizeCodeIndented(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("codeIndented");
-    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code3);
+    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code4);
   }
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? atBreak(code3) : nok(code3);
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? atBreak(code4) : nok(code4);
   }
-  function atBreak(code3) {
-    if (code3 === null) {
-      return after(code3);
+  function atBreak(code4) {
+    if (code4 === null) {
+      return after(code4);
     }
-    if (markdownLineEnding(code3)) {
-      return effects.attempt(furtherStart, atBreak, after)(code3);
+    if (markdownLineEnding(code4)) {
+      return effects.attempt(furtherStart, atBreak, after)(code4);
     }
     effects.enter("codeFlowValue");
-    return inside(code3);
+    return inside(code4);
   }
-  function inside(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function inside(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("codeFlowValue");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return inside;
   }
-  function after(code3) {
+  function after(code4) {
     effects.exit("codeIndented");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeFurtherStart(effects, ok3, nok) {
   const self2 = this;
   return furtherStart2;
-  function furtherStart2(code3) {
+  function furtherStart2(code4) {
     if (self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return furtherStart2;
     }
-    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code3);
+    return factorySpace(effects, afterPrefix, "linePrefix", 4 + 1)(code4);
   }
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok3(code3) : markdownLineEnding(code3) ? furtherStart2(code3) : nok(code3);
+    return tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4 ? ok3(code4) : markdownLineEnding(code4) ? furtherStart2(code4) : nok(code4);
   }
 }
 
@@ -65993,8 +65993,8 @@ function resolveCodeText(events2) {
   }
   return events2;
 }
-function previous(code3) {
-  return code3 !== 96 || this.events[this.events.length - 1][1].type === "characterEscape";
+function previous(code4) {
+  return code4 !== 96 || this.events[this.events.length - 1][1].type === "characterEscape";
 }
 function tokenizeCodeText(effects, ok3, nok) {
   const self2 = this;
@@ -66002,65 +66002,65 @@ function tokenizeCodeText(effects, ok3, nok) {
   let size;
   let token;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("codeText");
     effects.enter("codeTextSequence");
-    return sequenceOpen(code3);
+    return sequenceOpen(code4);
   }
-  function sequenceOpen(code3) {
-    if (code3 === 96) {
-      effects.consume(code3);
+  function sequenceOpen(code4) {
+    if (code4 === 96) {
+      effects.consume(code4);
       sizeOpen++;
       return sequenceOpen;
     }
     effects.exit("codeTextSequence");
-    return between2(code3);
+    return between2(code4);
   }
-  function between2(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function between2(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 32) {
+    if (code4 === 32) {
       effects.enter("space");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("space");
       return between2;
     }
-    if (code3 === 96) {
+    if (code4 === 96) {
       token = effects.enter("codeTextSequence");
       size = 0;
-      return sequenceClose(code3);
+      return sequenceClose(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return between2;
     }
     effects.enter("codeTextData");
-    return data(code3);
+    return data(code4);
   }
-  function data(code3) {
-    if (code3 === null || code3 === 32 || code3 === 96 || markdownLineEnding(code3)) {
+  function data(code4) {
+    if (code4 === null || code4 === 32 || code4 === 96 || markdownLineEnding(code4)) {
       effects.exit("codeTextData");
-      return between2(code3);
+      return between2(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
-  function sequenceClose(code3) {
-    if (code3 === 96) {
-      effects.consume(code3);
+  function sequenceClose(code4) {
+    if (code4 === 96) {
+      effects.consume(code4);
       size++;
       return sequenceClose;
     }
     if (size === sizeOpen) {
       effects.exit("codeTextSequence");
       effects.exit("codeText");
-      return ok3(code3);
+      return ok3(code4);
     }
     token.type = "codeTextData";
-    return data(code3);
+    return data(code4);
   }
 }
 
@@ -66426,30 +66426,30 @@ function resolveContent(events2) {
 function tokenizeContent(effects, ok3) {
   let previous3;
   return chunkStart;
-  function chunkStart(code3) {
+  function chunkStart(code4) {
     effects.enter("content");
     previous3 = effects.enter("chunkContent", {
       contentType: "content"
     });
-    return chunkInside(code3);
+    return chunkInside(code4);
   }
-  function chunkInside(code3) {
-    if (code3 === null) {
-      return contentEnd(code3);
+  function chunkInside(code4) {
+    if (code4 === null) {
+      return contentEnd(code4);
     }
-    if (markdownLineEnding(code3)) {
-      return effects.check(continuationConstruct, contentContinue, contentEnd)(code3);
+    if (markdownLineEnding(code4)) {
+      return effects.check(continuationConstruct, contentContinue, contentEnd)(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return chunkInside;
   }
-  function contentEnd(code3) {
+  function contentEnd(code4) {
     effects.exit("chunkContent");
     effects.exit("content");
-    return ok3(code3);
+    return ok3(code4);
   }
-  function contentContinue(code3) {
-    effects.consume(code3);
+  function contentContinue(code4) {
+    effects.consume(code4);
     effects.exit("chunkContent");
     previous3.next = effects.enter("chunkContent", {
       contentType: "content",
@@ -66462,22 +66462,22 @@ function tokenizeContent(effects, ok3) {
 function tokenizeContinuation(effects, ok3, nok) {
   const self2 = this;
   return startLookahead;
-  function startLookahead(code3) {
+  function startLookahead(code4) {
     effects.exit("chunkContent");
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(effects, prefixed, "linePrefix");
   }
-  function prefixed(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return nok(code3);
+  function prefixed(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return nok(code4);
     }
     const tail = self2.events[self2.events.length - 1];
     if (!self2.parser.constructs.disable.null.includes("codeIndented") && tail && tail[1].type === "linePrefix" && tail[2].sliceSerialize(tail[1], true).length >= 4) {
-      return ok3(code3);
+      return ok3(code4);
     }
-    return effects.interrupt(self2.parser.constructs.flow, nok, ok3)(code3);
+    return effects.interrupt(self2.parser.constructs.flow, nok, ok3)(code4);
   }
 }
 
@@ -66486,17 +66486,17 @@ function factoryDestination(effects, ok3, nok, type, literalType, literalMarkerT
   const limit = max || Number.POSITIVE_INFINITY;
   let balance = 0;
   return start;
-  function start(code3) {
-    if (code3 === 60) {
+  function start(code4) {
+    if (code4 === 60) {
       effects.enter(type);
       effects.enter(literalType);
       effects.enter(literalMarkerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(literalMarkerType);
       return enclosedBefore;
     }
-    if (code3 === null || code3 === 32 || code3 === 41 || asciiControl(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 32 || code4 === 41 || asciiControl(code4)) {
+      return nok(code4);
     }
     effects.enter(type);
     effects.enter(rawType);
@@ -66504,12 +66504,12 @@ function factoryDestination(effects, ok3, nok, type, literalType, literalMarkerT
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return raw(code3);
+    return raw(code4);
   }
-  function enclosedBefore(code3) {
-    if (code3 === 62) {
+  function enclosedBefore(code4) {
+    if (code4 === 62) {
       effects.enter(literalMarkerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(literalMarkerType);
       effects.exit(literalType);
       effects.exit(type);
@@ -66519,57 +66519,57 @@ function factoryDestination(effects, ok3, nok, type, literalType, literalMarkerT
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return enclosed(code3);
+    return enclosed(code4);
   }
-  function enclosed(code3) {
-    if (code3 === 62) {
+  function enclosed(code4) {
+    if (code4 === 62) {
       effects.exit("chunkString");
       effects.exit(stringType);
-      return enclosedBefore(code3);
+      return enclosedBefore(code4);
     }
-    if (code3 === null || code3 === 60 || markdownLineEnding(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 60 || markdownLineEnding(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? enclosedEscape : enclosed;
+    effects.consume(code4);
+    return code4 === 92 ? enclosedEscape : enclosed;
   }
-  function enclosedEscape(code3) {
-    if (code3 === 60 || code3 === 62 || code3 === 92) {
-      effects.consume(code3);
+  function enclosedEscape(code4) {
+    if (code4 === 60 || code4 === 62 || code4 === 92) {
+      effects.consume(code4);
       return enclosed;
     }
-    return enclosed(code3);
+    return enclosed(code4);
   }
-  function raw(code3) {
-    if (!balance && (code3 === null || code3 === 41 || markdownLineEndingOrSpace(code3))) {
+  function raw(code4) {
+    if (!balance && (code4 === null || code4 === 41 || markdownLineEndingOrSpace(code4))) {
       effects.exit("chunkString");
       effects.exit(stringType);
       effects.exit(rawType);
       effects.exit(type);
-      return ok3(code3);
+      return ok3(code4);
     }
-    if (balance < limit && code3 === 40) {
-      effects.consume(code3);
+    if (balance < limit && code4 === 40) {
+      effects.consume(code4);
       balance++;
       return raw;
     }
-    if (code3 === 41) {
-      effects.consume(code3);
+    if (code4 === 41) {
+      effects.consume(code4);
       balance--;
       return raw;
     }
-    if (code3 === null || code3 === 32 || code3 === 40 || asciiControl(code3)) {
-      return nok(code3);
+    if (code4 === null || code4 === 32 || code4 === 40 || asciiControl(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? rawEscape : raw;
+    effects.consume(code4);
+    return code4 === 92 ? rawEscape : raw;
   }
-  function rawEscape(code3) {
-    if (code3 === 40 || code3 === 41 || code3 === 92) {
-      effects.consume(code3);
+  function rawEscape(code4) {
+    if (code4 === 40 || code4 === 41 || code4 === 92) {
+      effects.consume(code4);
       return raw;
     }
-    return raw(code3);
+    return raw(code4);
   }
 }
 
@@ -66579,58 +66579,58 @@ function factoryLabel(effects, ok3, nok, type, markerType, stringType) {
   let size = 0;
   let seen;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter(type);
     effects.enter(markerType);
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit(markerType);
     effects.enter(stringType);
     return atBreak;
   }
-  function atBreak(code3) {
-    if (size > 999 || code3 === null || code3 === 91 || code3 === 93 && !seen || // To do: remove in the future once we’ve switched from
+  function atBreak(code4) {
+    if (size > 999 || code4 === null || code4 === 91 || code4 === 93 && !seen || // To do: remove in the future once we’ve switched from
     // `micromark-extension-footnote` to `micromark-extension-gfm-footnote`,
     // which doesn’t need this.
     // Hidden footnotes hook.
     /* c8 ignore next 3 */
-    code3 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs) {
-      return nok(code3);
+    code4 === 94 && !size && "_hiddenFootnoteSupport" in self2.parser.constructs) {
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit(stringType);
       effects.enter(markerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(markerType);
       effects.exit(type);
       return ok3;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return atBreak;
     }
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return labelInside(code3);
+    return labelInside(code4);
   }
-  function labelInside(code3) {
-    if (code3 === null || code3 === 91 || code3 === 93 || markdownLineEnding(code3) || size++ > 999) {
+  function labelInside(code4) {
+    if (code4 === null || code4 === 91 || code4 === 93 || markdownLineEnding(code4) || size++ > 999) {
       effects.exit("chunkString");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    effects.consume(code3);
-    if (!seen) seen = !markdownSpace(code3);
-    return code3 === 92 ? labelEscape : labelInside;
+    effects.consume(code4);
+    if (!seen) seen = !markdownSpace(code4);
+    return code4 === 92 ? labelEscape : labelInside;
   }
-  function labelEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function labelEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return labelInside;
     }
-    return labelInside(code3);
+    return labelInside(code4);
   }
 }
 
@@ -66638,61 +66638,61 @@ function factoryLabel(effects, ok3, nok, type, markerType, stringType) {
 function factoryTitle(effects, ok3, nok, type, markerType, stringType) {
   let marker;
   return start;
-  function start(code3) {
-    if (code3 === 34 || code3 === 39 || code3 === 40) {
+  function start(code4) {
+    if (code4 === 34 || code4 === 39 || code4 === 40) {
       effects.enter(type);
       effects.enter(markerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(markerType);
-      marker = code3 === 40 ? 41 : code3;
+      marker = code4 === 40 ? 41 : code4;
       return begin;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function begin(code3) {
-    if (code3 === marker) {
+  function begin(code4) {
+    if (code4 === marker) {
       effects.enter(markerType);
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit(markerType);
       effects.exit(type);
       return ok3;
     }
     effects.enter(stringType);
-    return atBreak(code3);
+    return atBreak(code4);
   }
-  function atBreak(code3) {
-    if (code3 === marker) {
+  function atBreak(code4) {
+    if (code4 === marker) {
       effects.exit(stringType);
       return begin(marker);
     }
-    if (code3 === null) {
-      return nok(code3);
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return factorySpace(effects, atBreak, "linePrefix");
     }
     effects.enter("chunkString", {
       contentType: "string"
     });
-    return inside(code3);
+    return inside(code4);
   }
-  function inside(code3) {
-    if (code3 === marker || code3 === null || markdownLineEnding(code3)) {
+  function inside(code4) {
+    if (code4 === marker || code4 === null || markdownLineEnding(code4)) {
       effects.exit("chunkString");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? escape3 : inside;
+    effects.consume(code4);
+    return code4 === 92 ? escape3 : inside;
   }
-  function escape3(code3) {
-    if (code3 === marker || code3 === 92) {
-      effects.consume(code3);
+  function escape3(code4) {
+    if (code4 === marker || code4 === 92) {
+      effects.consume(code4);
       return inside;
     }
-    return inside(code3);
+    return inside(code4);
   }
 }
 
@@ -66700,18 +66700,18 @@ function factoryTitle(effects, ok3, nok, type, markerType, stringType) {
 function factoryWhitespace(effects, ok3) {
   let seen;
   return start;
-  function start(code3) {
-    if (markdownLineEnding(code3)) {
+  function start(code4) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       seen = true;
       return start;
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, start, seen ? "linePrefix" : "lineSuffix")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, start, seen ? "linePrefix" : "lineSuffix")(code4);
     }
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 
@@ -66728,11 +66728,11 @@ function tokenizeDefinition(effects, ok3, nok) {
   const self2 = this;
   let identifier;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("definition");
-    return before(code3);
+    return before(code4);
   }
-  function before(code3) {
+  function before(code4) {
     return factoryLabel.call(
       self2,
       effects,
@@ -66742,22 +66742,22 @@ function tokenizeDefinition(effects, ok3, nok) {
       "definitionLabel",
       "definitionLabelMarker",
       "definitionLabelString"
-    )(code3);
+    )(code4);
   }
-  function labelAfter(code3) {
+  function labelAfter(code4) {
     identifier = normalizeIdentifier(self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1));
-    if (code3 === 58) {
+    if (code4 === 58) {
       effects.enter("definitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("definitionMarker");
       return markerAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function markerAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, destinationBefore)(code3) : destinationBefore(code3);
+  function markerAfter(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, destinationBefore)(code4) : destinationBefore(code4);
   }
-  function destinationBefore(code3) {
+  function destinationBefore(code4) {
     return factoryDestination(
       effects,
       destinationAfter,
@@ -66768,36 +66768,36 @@ function tokenizeDefinition(effects, ok3, nok) {
       "definitionDestinationLiteralMarker",
       "definitionDestinationRaw",
       "definitionDestinationString"
-    )(code3);
+    )(code4);
   }
-  function destinationAfter(code3) {
-    return effects.attempt(titleBefore, after, after)(code3);
+  function destinationAfter(code4) {
+    return effects.attempt(titleBefore, after, after)(code4);
   }
-  function after(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, afterWhitespace, "whitespace")(code3) : afterWhitespace(code3);
+  function after(code4) {
+    return markdownSpace(code4) ? factorySpace(effects, afterWhitespace, "whitespace")(code4) : afterWhitespace(code4);
   }
-  function afterWhitespace(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function afterWhitespace(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("definition");
       self2.parser.defined.push(identifier);
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 function tokenizeTitleBefore(effects, ok3, nok) {
   return titleBefore2;
-  function titleBefore2(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, beforeMarker)(code3) : nok(code3);
+  function titleBefore2(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, beforeMarker)(code4) : nok(code4);
   }
-  function beforeMarker(code3) {
-    return factoryTitle(effects, titleAfter, nok, "definitionTitle", "definitionTitleMarker", "definitionTitleString")(code3);
+  function beforeMarker(code4) {
+    return factoryTitle(effects, titleAfter, nok, "definitionTitle", "definitionTitleMarker", "definitionTitleString")(code4);
   }
-  function titleAfter(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, titleAfterOptionalWhitespace, "whitespace")(code3) : titleAfterOptionalWhitespace(code3);
+  function titleAfter(code4) {
+    return markdownSpace(code4) ? factorySpace(effects, titleAfterOptionalWhitespace, "whitespace")(code4) : titleAfterOptionalWhitespace(code4);
   }
-  function titleAfterOptionalWhitespace(code3) {
-    return code3 === null || markdownLineEnding(code3) ? ok3(code3) : nok(code3);
+  function titleAfterOptionalWhitespace(code4) {
+    return code4 === null || markdownLineEnding(code4) ? ok3(code4) : nok(code4);
   }
 }
 
@@ -66808,17 +66808,17 @@ var hardBreakEscape = {
 };
 function tokenizeHardBreakEscape(effects, ok3, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("hardBreakEscape");
-    effects.consume(code3);
+    effects.consume(code4);
     return after;
   }
-  function after(code3) {
-    if (markdownLineEnding(code3)) {
+  function after(code4) {
+    if (markdownLineEnding(code4)) {
       effects.exit("hardBreakEscape");
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -66861,54 +66861,54 @@ function resolveHeadingAtx(events2, context) {
 function tokenizeHeadingAtx(effects, ok3, nok) {
   let size = 0;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("atxHeading");
-    return before(code3);
+    return before(code4);
   }
-  function before(code3) {
+  function before(code4) {
     effects.enter("atxHeadingSequence");
-    return sequenceOpen(code3);
+    return sequenceOpen(code4);
   }
-  function sequenceOpen(code3) {
-    if (code3 === 35 && size++ < 6) {
-      effects.consume(code3);
+  function sequenceOpen(code4) {
+    if (code4 === 35 && size++ < 6) {
+      effects.consume(code4);
       return sequenceOpen;
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3)) {
+    if (code4 === null || markdownLineEndingOrSpace(code4)) {
       effects.exit("atxHeadingSequence");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function atBreak(code3) {
-    if (code3 === 35) {
+  function atBreak(code4) {
+    if (code4 === 35) {
       effects.enter("atxHeadingSequence");
-      return sequenceFurther(code3);
+      return sequenceFurther(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("atxHeading");
-      return ok3(code3);
+      return ok3(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, atBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, atBreak, "whitespace")(code4);
     }
     effects.enter("atxHeadingText");
-    return data(code3);
+    return data(code4);
   }
-  function sequenceFurther(code3) {
-    if (code3 === 35) {
-      effects.consume(code3);
+  function sequenceFurther(code4) {
+    if (code4 === 35) {
+      effects.consume(code4);
       return sequenceFurther;
     }
     effects.exit("atxHeadingSequence");
-    return atBreak(code3);
+    return atBreak(code4);
   }
-  function data(code3) {
-    if (code3 === null || code3 === 35 || markdownLineEndingOrSpace(code3)) {
+  function data(code4) {
+    if (code4 === null || code4 === 35 || markdownLineEndingOrSpace(code4)) {
       effects.exit("atxHeadingText");
-      return atBreak(code3);
+      return atBreak(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return data;
   }
 }
@@ -67017,343 +67017,343 @@ function tokenizeHtmlFlow(effects, ok3, nok) {
   let index2;
   let markerB;
   return start;
-  function start(code3) {
-    return before(code3);
+  function start(code4) {
+    return before(code4);
   }
-  function before(code3) {
+  function before(code4) {
     effects.enter("htmlFlow");
     effects.enter("htmlFlowData");
-    effects.consume(code3);
+    effects.consume(code4);
     return open2;
   }
-  function open2(code3) {
-    if (code3 === 33) {
-      effects.consume(code3);
+  function open2(code4) {
+    if (code4 === 33) {
+      effects.consume(code4);
       return declarationOpen;
     }
-    if (code3 === 47) {
-      effects.consume(code3);
+    if (code4 === 47) {
+      effects.consume(code4);
       closingTag = true;
       return tagCloseStart;
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       marker = 3;
       return self2.interrupt ? ok3 : continuationDeclarationInside;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
-      buffer = String.fromCharCode(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
+      buffer = String.fromCharCode(code4);
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function declarationOpen(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function declarationOpen(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       marker = 2;
       return commentOpenInside;
     }
-    if (code3 === 91) {
-      effects.consume(code3);
+    if (code4 === 91) {
+      effects.consume(code4);
       marker = 5;
       index2 = 0;
       return cdataOpenInside;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       marker = 4;
       return self2.interrupt ? ok3 : continuationDeclarationInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function commentOpenInside(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function commentOpenInside(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return self2.interrupt ? ok3 : continuationDeclarationInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function cdataOpenInside(code3) {
+  function cdataOpenInside(code4) {
     const value = "CDATA[";
-    if (code3 === value.charCodeAt(index2++)) {
-      effects.consume(code3);
+    if (code4 === value.charCodeAt(index2++)) {
+      effects.consume(code4);
       if (index2 === value.length) {
         return self2.interrupt ? ok3 : continuation;
       }
       return cdataOpenInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagCloseStart(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
-      buffer = String.fromCharCode(code3);
+  function tagCloseStart(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
+      buffer = String.fromCharCode(code4);
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagName(code3) {
-    if (code3 === null || code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      const slash = code3 === 47;
+  function tagName(code4) {
+    if (code4 === null || code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      const slash = code4 === 47;
       const name = buffer.toLowerCase();
       if (!slash && !closingTag && htmlRawNames.includes(name)) {
         marker = 1;
-        return self2.interrupt ? ok3(code3) : continuation(code3);
+        return self2.interrupt ? ok3(code4) : continuation(code4);
       }
       if (htmlBlockNames.includes(buffer.toLowerCase())) {
         marker = 6;
         if (slash) {
-          effects.consume(code3);
+          effects.consume(code4);
           return basicSelfClosing;
         }
-        return self2.interrupt ? ok3(code3) : continuation(code3);
+        return self2.interrupt ? ok3(code4) : continuation(code4);
       }
       marker = 7;
-      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code3) : closingTag ? completeClosingTagAfter(code3) : completeAttributeNameBefore(code3);
+      return self2.interrupt && !self2.parser.lazy[self2.now().line] ? nok(code4) : closingTag ? completeClosingTagAfter(code4) : completeAttributeNameBefore(code4);
     }
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
-      buffer += String.fromCharCode(code3);
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
+      buffer += String.fromCharCode(code4);
       return tagName;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function basicSelfClosing(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function basicSelfClosing(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       return self2.interrupt ? ok3 : continuation;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeClosingTagAfter(code3) {
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+  function completeClosingTagAfter(code4) {
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeClosingTagAfter;
     }
-    return completeEnd(code3);
+    return completeEnd(code4);
   }
-  function completeAttributeNameBefore(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function completeAttributeNameBefore(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       return completeEnd;
     }
-    if (code3 === 58 || code3 === 95 || asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (code4 === 58 || code4 === 95 || asciiAlpha(code4)) {
+      effects.consume(code4);
       return completeAttributeName;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeNameBefore;
     }
-    return completeEnd(code3);
+    return completeEnd(code4);
   }
-  function completeAttributeName(code3) {
-    if (code3 === 45 || code3 === 46 || code3 === 58 || code3 === 95 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function completeAttributeName(code4) {
+    if (code4 === 45 || code4 === 46 || code4 === 58 || code4 === 95 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return completeAttributeName;
     }
-    return completeAttributeNameAfter(code3);
+    return completeAttributeNameAfter(code4);
   }
-  function completeAttributeNameAfter(code3) {
-    if (code3 === 61) {
-      effects.consume(code3);
+  function completeAttributeNameAfter(code4) {
+    if (code4 === 61) {
+      effects.consume(code4);
       return completeAttributeValueBefore;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeNameAfter;
     }
-    return completeAttributeNameBefore(code3);
+    return completeAttributeNameBefore(code4);
   }
-  function completeAttributeValueBefore(code3) {
-    if (code3 === null || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96) {
-      return nok(code3);
+  function completeAttributeValueBefore(code4) {
+    if (code4 === null || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 34 || code3 === 39) {
-      effects.consume(code3);
-      markerB = code3;
+    if (code4 === 34 || code4 === 39) {
+      effects.consume(code4);
+      markerB = code4;
       return completeAttributeValueQuoted;
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAttributeValueBefore;
     }
-    return completeAttributeValueUnquoted(code3);
+    return completeAttributeValueUnquoted(code4);
   }
-  function completeAttributeValueQuoted(code3) {
-    if (code3 === markerB) {
-      effects.consume(code3);
+  function completeAttributeValueQuoted(code4) {
+    if (code4 === markerB) {
+      effects.consume(code4);
       markerB = null;
       return completeAttributeValueQuotedAfter;
     }
-    if (code3 === null || markdownLineEnding(code3)) {
-      return nok(code3);
+    if (code4 === null || markdownLineEnding(code4)) {
+      return nok(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return completeAttributeValueQuoted;
   }
-  function completeAttributeValueUnquoted(code3) {
-    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 47 || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96 || markdownLineEndingOrSpace(code3)) {
-      return completeAttributeNameAfter(code3);
+  function completeAttributeValueUnquoted(code4) {
+    if (code4 === null || code4 === 34 || code4 === 39 || code4 === 47 || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96 || markdownLineEndingOrSpace(code4)) {
+      return completeAttributeNameAfter(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return completeAttributeValueUnquoted;
   }
-  function completeAttributeValueQuotedAfter(code3) {
-    if (code3 === 47 || code3 === 62 || markdownSpace(code3)) {
-      return completeAttributeNameBefore(code3);
+  function completeAttributeValueQuotedAfter(code4) {
+    if (code4 === 47 || code4 === 62 || markdownSpace(code4)) {
+      return completeAttributeNameBefore(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeEnd(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function completeEnd(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       return completeAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function completeAfter(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return continuation(code3);
+  function completeAfter(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return continuation(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return completeAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function continuation(code3) {
-    if (code3 === 45 && marker === 2) {
-      effects.consume(code3);
+  function continuation(code4) {
+    if (code4 === 45 && marker === 2) {
+      effects.consume(code4);
       return continuationCommentInside;
     }
-    if (code3 === 60 && marker === 1) {
-      effects.consume(code3);
+    if (code4 === 60 && marker === 1) {
+      effects.consume(code4);
       return continuationRawTagOpen;
     }
-    if (code3 === 62 && marker === 4) {
-      effects.consume(code3);
+    if (code4 === 62 && marker === 4) {
+      effects.consume(code4);
       return continuationClose;
     }
-    if (code3 === 63 && marker === 3) {
-      effects.consume(code3);
+    if (code4 === 63 && marker === 3) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    if (code3 === 93 && marker === 5) {
-      effects.consume(code3);
+    if (code4 === 93 && marker === 5) {
+      effects.consume(code4);
       return continuationCdataInside;
     }
-    if (markdownLineEnding(code3) && (marker === 6 || marker === 7)) {
+    if (markdownLineEnding(code4) && (marker === 6 || marker === 7)) {
       effects.exit("htmlFlowData");
-      return effects.check(blankLineBefore, continuationAfter, continuationStart)(code3);
+      return effects.check(blankLineBefore, continuationAfter, continuationStart)(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("htmlFlowData");
-      return continuationStart(code3);
+      return continuationStart(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return continuation;
   }
-  function continuationStart(code3) {
-    return effects.check(nonLazyContinuationStart, continuationStartNonLazy, continuationAfter)(code3);
+  function continuationStart(code4) {
+    return effects.check(nonLazyContinuationStart, continuationStartNonLazy, continuationAfter)(code4);
   }
-  function continuationStartNonLazy(code3) {
+  function continuationStartNonLazy(code4) {
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return continuationBefore;
   }
-  function continuationBefore(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
-      return continuationStart(code3);
+  function continuationBefore(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
+      return continuationStart(code4);
     }
     effects.enter("htmlFlowData");
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationCommentInside(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function continuationCommentInside(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationRawTagOpen(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function continuationRawTagOpen(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       buffer = "";
       return continuationRawEndTag;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationRawEndTag(code3) {
-    if (code3 === 62) {
+  function continuationRawEndTag(code4) {
+    if (code4 === 62) {
       const name = buffer.toLowerCase();
       if (htmlRawNames.includes(name)) {
-        effects.consume(code3);
+        effects.consume(code4);
         return continuationClose;
       }
-      return continuation(code3);
+      return continuation(code4);
     }
-    if (asciiAlpha(code3) && buffer.length < 8) {
-      effects.consume(code3);
-      buffer += String.fromCharCode(code3);
+    if (asciiAlpha(code4) && buffer.length < 8) {
+      effects.consume(code4);
+      buffer += String.fromCharCode(code4);
       return continuationRawEndTag;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationCdataInside(code3) {
-    if (code3 === 93) {
-      effects.consume(code3);
+  function continuationCdataInside(code4) {
+    if (code4 === 93) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationDeclarationInside(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function continuationDeclarationInside(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       return continuationClose;
     }
-    if (code3 === 45 && marker === 2) {
-      effects.consume(code3);
+    if (code4 === 45 && marker === 2) {
+      effects.consume(code4);
       return continuationDeclarationInside;
     }
-    return continuation(code3);
+    return continuation(code4);
   }
-  function continuationClose(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function continuationClose(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("htmlFlowData");
-      return continuationAfter(code3);
+      return continuationAfter(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return continuationClose;
   }
-  function continuationAfter(code3) {
+  function continuationAfter(code4) {
     effects.exit("htmlFlow");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeNonLazyContinuationStart(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
-    if (markdownLineEnding(code3)) {
+  function start(code4) {
+    if (markdownLineEnding(code4)) {
       effects.enter("lineEnding");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("lineEnding");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    return self2.parser.lazy[self2.now().line] ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return self2.parser.lazy[self2.now().line] ? nok(code4) : ok3(code4);
   }
 }
 function tokenizeBlankLineBefore(effects, ok3, nok) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return effects.attempt(blankLine, ok3, nok);
   }
@@ -67370,298 +67370,298 @@ function tokenizeHtmlText(effects, ok3, nok) {
   let index2;
   let returnState;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("htmlText");
     effects.enter("htmlTextData");
-    effects.consume(code3);
+    effects.consume(code4);
     return open2;
   }
-  function open2(code3) {
-    if (code3 === 33) {
-      effects.consume(code3);
+  function open2(code4) {
+    if (code4 === 33) {
+      effects.consume(code4);
       return declarationOpen;
     }
-    if (code3 === 47) {
-      effects.consume(code3);
+    if (code4 === 47) {
+      effects.consume(code4);
       return tagCloseStart;
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       return instruction;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagOpen;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function declarationOpen(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function declarationOpen(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentOpenInside;
     }
-    if (code3 === 91) {
-      effects.consume(code3);
+    if (code4 === 91) {
+      effects.consume(code4);
       index2 = 0;
       return cdataOpenInside;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return declaration;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function commentOpenInside(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function commentOpenInside(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentEnd;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function comment(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function comment(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 45) {
-      effects.consume(code3);
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = comment;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return comment;
   }
-  function commentClose(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function commentClose(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return commentEnd;
     }
-    return comment(code3);
+    return comment(code4);
   }
-  function commentEnd(code3) {
-    return code3 === 62 ? end(code3) : code3 === 45 ? commentClose(code3) : comment(code3);
+  function commentEnd(code4) {
+    return code4 === 62 ? end(code4) : code4 === 45 ? commentClose(code4) : comment(code4);
   }
-  function cdataOpenInside(code3) {
+  function cdataOpenInside(code4) {
     const value = "CDATA[";
-    if (code3 === value.charCodeAt(index2++)) {
-      effects.consume(code3);
+    if (code4 === value.charCodeAt(index2++)) {
+      effects.consume(code4);
       return index2 === value.length ? cdata : cdataOpenInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function cdata(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function cdata(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = cdata;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return cdata;
   }
-  function cdataClose(code3) {
-    if (code3 === 93) {
-      effects.consume(code3);
+  function cdataClose(code4) {
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataEnd;
     }
-    return cdata(code3);
+    return cdata(code4);
   }
-  function cdataEnd(code3) {
-    if (code3 === 62) {
-      return end(code3);
+  function cdataEnd(code4) {
+    if (code4 === 62) {
+      return end(code4);
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return cdataEnd;
     }
-    return cdata(code3);
+    return cdata(code4);
   }
-  function declaration(code3) {
-    if (code3 === null || code3 === 62) {
-      return end(code3);
+  function declaration(code4) {
+    if (code4 === null || code4 === 62) {
+      return end(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = declaration;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return declaration;
   }
-  function instruction(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function instruction(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (code3 === 63) {
-      effects.consume(code3);
+    if (code4 === 63) {
+      effects.consume(code4);
       return instructionClose;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = instruction;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return instruction;
   }
-  function instructionClose(code3) {
-    return code3 === 62 ? end(code3) : instruction(code3);
+  function instructionClose(code4) {
+    return code4 === 62 ? end(code4) : instruction(code4);
   }
-  function tagCloseStart(code3) {
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+  function tagCloseStart(code4) {
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagClose;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagClose(code3) {
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagClose(code4) {
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagClose;
     }
-    return tagCloseBetween(code3);
+    return tagCloseBetween(code4);
   }
-  function tagCloseBetween(code3) {
-    if (markdownLineEnding(code3)) {
+  function tagCloseBetween(code4) {
+    if (markdownLineEnding(code4)) {
       returnState = tagCloseBetween;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagCloseBetween;
     }
-    return end(code3);
+    return end(code4);
   }
-  function tagOpen(code3) {
-    if (code3 === 45 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagOpen(code4) {
+    if (code4 === 45 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagOpen;
     }
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+    if (code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function tagOpenBetween(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function tagOpenBetween(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       return end;
     }
-    if (code3 === 58 || code3 === 95 || asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (code4 === 58 || code4 === 95 || asciiAlpha(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeName;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenBetween;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenBetween;
     }
-    return end(code3);
+    return end(code4);
   }
-  function tagOpenAttributeName(code3) {
-    if (code3 === 45 || code3 === 46 || code3 === 58 || code3 === 95 || asciiAlphanumeric(code3)) {
-      effects.consume(code3);
+  function tagOpenAttributeName(code4) {
+    if (code4 === 45 || code4 === 46 || code4 === 58 || code4 === 95 || asciiAlphanumeric(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeName;
     }
-    return tagOpenAttributeNameAfter(code3);
+    return tagOpenAttributeNameAfter(code4);
   }
-  function tagOpenAttributeNameAfter(code3) {
-    if (code3 === 61) {
-      effects.consume(code3);
+  function tagOpenAttributeNameAfter(code4) {
+    if (code4 === 61) {
+      effects.consume(code4);
       return tagOpenAttributeValueBefore;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeNameAfter;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeNameAfter;
     }
-    return tagOpenBetween(code3);
+    return tagOpenBetween(code4);
   }
-  function tagOpenAttributeValueBefore(code3) {
-    if (code3 === null || code3 === 60 || code3 === 61 || code3 === 62 || code3 === 96) {
-      return nok(code3);
+  function tagOpenAttributeValueBefore(code4) {
+    if (code4 === null || code4 === 60 || code4 === 61 || code4 === 62 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 34 || code3 === 39) {
-      effects.consume(code3);
-      marker = code3;
+    if (code4 === 34 || code4 === 39) {
+      effects.consume(code4);
+      marker = code4;
       return tagOpenAttributeValueQuoted;
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeValueBefore;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    if (markdownSpace(code3)) {
-      effects.consume(code3);
+    if (markdownSpace(code4)) {
+      effects.consume(code4);
       return tagOpenAttributeValueBefore;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return tagOpenAttributeValueUnquoted;
   }
-  function tagOpenAttributeValueQuoted(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function tagOpenAttributeValueQuoted(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       marker = void 0;
       return tagOpenAttributeValueQuotedAfter;
     }
-    if (code3 === null) {
-      return nok(code3);
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       returnState = tagOpenAttributeValueQuoted;
-      return lineEndingBefore(code3);
+      return lineEndingBefore(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return tagOpenAttributeValueQuoted;
   }
-  function tagOpenAttributeValueUnquoted(code3) {
-    if (code3 === null || code3 === 34 || code3 === 39 || code3 === 60 || code3 === 61 || code3 === 96) {
-      return nok(code3);
+  function tagOpenAttributeValueUnquoted(code4) {
+    if (code4 === null || code4 === 34 || code4 === 39 || code4 === 60 || code4 === 61 || code4 === 96) {
+      return nok(code4);
     }
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+    if (code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return tagOpenAttributeValueUnquoted;
   }
-  function tagOpenAttributeValueQuotedAfter(code3) {
-    if (code3 === 47 || code3 === 62 || markdownLineEndingOrSpace(code3)) {
-      return tagOpenBetween(code3);
+  function tagOpenAttributeValueQuotedAfter(code4) {
+    if (code4 === 47 || code4 === 62 || markdownLineEndingOrSpace(code4)) {
+      return tagOpenBetween(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function end(code3) {
-    if (code3 === 62) {
-      effects.consume(code3);
+  function end(code4) {
+    if (code4 === 62) {
+      effects.consume(code4);
       effects.exit("htmlTextData");
       effects.exit("htmlText");
       return ok3;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function lineEndingBefore(code3) {
+  function lineEndingBefore(code4) {
     effects.exit("htmlTextData");
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return lineEndingAfter;
   }
-  function lineEndingAfter(code3) {
-    return markdownSpace(code3) ? factorySpace(effects, lineEndingAfterPrefix, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code3) : lineEndingAfterPrefix(code3);
+  function lineEndingAfter(code4) {
+    return markdownSpace(code4) ? factorySpace(effects, lineEndingAfterPrefix, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code4) : lineEndingAfterPrefix(code4);
   }
-  function lineEndingAfterPrefix(code3) {
+  function lineEndingAfterPrefix(code4) {
     effects.enter("htmlTextData");
-    return returnState(code3);
+    return returnState(code4);
   }
 }
 
@@ -67775,12 +67775,12 @@ function tokenizeLabelEnd(effects, ok3, nok) {
     }
   }
   return start;
-  function start(code3) {
+  function start(code4) {
     if (!labelStart) {
-      return nok(code3);
+      return nok(code4);
     }
     if (labelStart._inactive) {
-      return labelEndNok(code3);
+      return labelEndNok(code4);
     }
     defined = self2.parser.defined.includes(normalizeIdentifier(self2.sliceSerialize({
       start: labelStart.end,
@@ -67788,106 +67788,106 @@ function tokenizeLabelEnd(effects, ok3, nok) {
     })));
     effects.enter("labelEnd");
     effects.enter("labelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelMarker");
     effects.exit("labelEnd");
     return after;
   }
-  function after(code3) {
-    if (code3 === 40) {
-      return effects.attempt(resourceConstruct, labelEndOk, defined ? labelEndOk : labelEndNok)(code3);
+  function after(code4) {
+    if (code4 === 40) {
+      return effects.attempt(resourceConstruct, labelEndOk, defined ? labelEndOk : labelEndNok)(code4);
     }
-    if (code3 === 91) {
-      return effects.attempt(referenceFullConstruct, labelEndOk, defined ? referenceNotFull : labelEndNok)(code3);
+    if (code4 === 91) {
+      return effects.attempt(referenceFullConstruct, labelEndOk, defined ? referenceNotFull : labelEndNok)(code4);
     }
-    return defined ? labelEndOk(code3) : labelEndNok(code3);
+    return defined ? labelEndOk(code4) : labelEndNok(code4);
   }
-  function referenceNotFull(code3) {
-    return effects.attempt(referenceCollapsedConstruct, labelEndOk, labelEndNok)(code3);
+  function referenceNotFull(code4) {
+    return effects.attempt(referenceCollapsedConstruct, labelEndOk, labelEndNok)(code4);
   }
-  function labelEndOk(code3) {
-    return ok3(code3);
+  function labelEndOk(code4) {
+    return ok3(code4);
   }
-  function labelEndNok(code3) {
+  function labelEndNok(code4) {
     labelStart._balanced = true;
-    return nok(code3);
+    return nok(code4);
   }
 }
 function tokenizeResource(effects, ok3, nok) {
   return resourceStart;
-  function resourceStart(code3) {
+  function resourceStart(code4) {
     effects.enter("resource");
     effects.enter("resourceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("resourceMarker");
     return resourceBefore;
   }
-  function resourceBefore(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceOpen)(code3) : resourceOpen(code3);
+  function resourceBefore(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, resourceOpen)(code4) : resourceOpen(code4);
   }
-  function resourceOpen(code3) {
-    if (code3 === 41) {
-      return resourceEnd(code3);
+  function resourceOpen(code4) {
+    if (code4 === 41) {
+      return resourceEnd(code4);
     }
-    return factoryDestination(effects, resourceDestinationAfter, resourceDestinationMissing, "resourceDestination", "resourceDestinationLiteral", "resourceDestinationLiteralMarker", "resourceDestinationRaw", "resourceDestinationString", 32)(code3);
+    return factoryDestination(effects, resourceDestinationAfter, resourceDestinationMissing, "resourceDestination", "resourceDestinationLiteral", "resourceDestinationLiteralMarker", "resourceDestinationRaw", "resourceDestinationString", 32)(code4);
   }
-  function resourceDestinationAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceBetween)(code3) : resourceEnd(code3);
+  function resourceDestinationAfter(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, resourceBetween)(code4) : resourceEnd(code4);
   }
-  function resourceDestinationMissing(code3) {
-    return nok(code3);
+  function resourceDestinationMissing(code4) {
+    return nok(code4);
   }
-  function resourceBetween(code3) {
-    if (code3 === 34 || code3 === 39 || code3 === 40) {
-      return factoryTitle(effects, resourceTitleAfter, nok, "resourceTitle", "resourceTitleMarker", "resourceTitleString")(code3);
+  function resourceBetween(code4) {
+    if (code4 === 34 || code4 === 39 || code4 === 40) {
+      return factoryTitle(effects, resourceTitleAfter, nok, "resourceTitle", "resourceTitleMarker", "resourceTitleString")(code4);
     }
-    return resourceEnd(code3);
+    return resourceEnd(code4);
   }
-  function resourceTitleAfter(code3) {
-    return markdownLineEndingOrSpace(code3) ? factoryWhitespace(effects, resourceEnd)(code3) : resourceEnd(code3);
+  function resourceTitleAfter(code4) {
+    return markdownLineEndingOrSpace(code4) ? factoryWhitespace(effects, resourceEnd)(code4) : resourceEnd(code4);
   }
-  function resourceEnd(code3) {
-    if (code3 === 41) {
+  function resourceEnd(code4) {
+    if (code4 === 41) {
       effects.enter("resourceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("resourceMarker");
       effects.exit("resource");
       return ok3;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 function tokenizeReferenceFull(effects, ok3, nok) {
   const self2 = this;
   return referenceFull;
-  function referenceFull(code3) {
-    return factoryLabel.call(self2, effects, referenceFullAfter, referenceFullMissing, "reference", "referenceMarker", "referenceString")(code3);
+  function referenceFull(code4) {
+    return factoryLabel.call(self2, effects, referenceFullAfter, referenceFullMissing, "reference", "referenceMarker", "referenceString")(code4);
   }
-  function referenceFullAfter(code3) {
-    return self2.parser.defined.includes(normalizeIdentifier(self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1))) ? ok3(code3) : nok(code3);
+  function referenceFullAfter(code4) {
+    return self2.parser.defined.includes(normalizeIdentifier(self2.sliceSerialize(self2.events[self2.events.length - 1][1]).slice(1, -1))) ? ok3(code4) : nok(code4);
   }
-  function referenceFullMissing(code3) {
-    return nok(code3);
+  function referenceFullMissing(code4) {
+    return nok(code4);
   }
 }
 function tokenizeReferenceCollapsed(effects, ok3, nok) {
   return referenceCollapsedStart;
-  function referenceCollapsedStart(code3) {
+  function referenceCollapsedStart(code4) {
     effects.enter("reference");
     effects.enter("referenceMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("referenceMarker");
     return referenceCollapsedOpen;
   }
-  function referenceCollapsedOpen(code3) {
-    if (code3 === 93) {
+  function referenceCollapsedOpen(code4) {
+    if (code4 === 93) {
       effects.enter("referenceMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("referenceMarker");
       effects.exit("reference");
       return ok3;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -67900,25 +67900,25 @@ var labelStartImage = {
 function tokenizeLabelStartImage(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("labelImage");
     effects.enter("labelImageMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelImageMarker");
     return open2;
   }
-  function open2(code3) {
-    if (code3 === 91) {
+  function open2(code4) {
+    if (code4 === 91) {
       effects.enter("labelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("labelMarker");
       effects.exit("labelImage");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    return code3 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code4) : ok3(code4);
   }
 }
 
@@ -67931,16 +67931,16 @@ var labelStartLink = {
 function tokenizeLabelStartLink(effects, ok3, nok) {
   const self2 = this;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("labelLink");
     effects.enter("labelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("labelMarker");
     effects.exit("labelLink");
     return after;
   }
-  function after(code3) {
-    return code3 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === 94 && "_hiddenFootnoteSupport" in self2.parser.constructs ? nok(code4) : ok3(code4);
   }
 }
 
@@ -67951,9 +67951,9 @@ var lineEnding = {
 };
 function tokenizeLineEnding(effects, ok3) {
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     return factorySpace(effects, ok3, "linePrefix");
   }
@@ -67968,33 +67968,33 @@ function tokenizeThematicBreak(effects, ok3, nok) {
   let size = 0;
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("thematicBreak");
-    return before(code3);
+    return before(code4);
   }
-  function before(code3) {
-    marker = code3;
-    return atBreak(code3);
+  function before(code4) {
+    marker = code4;
+    return atBreak(code4);
   }
-  function atBreak(code3) {
-    if (code3 === marker) {
+  function atBreak(code4) {
+    if (code4 === marker) {
       effects.enter("thematicBreakSequence");
-      return sequence(code3);
+      return sequence(code4);
     }
-    if (size >= 3 && (code3 === null || markdownLineEnding(code3))) {
+    if (size >= 3 && (code4 === null || markdownLineEnding(code4))) {
       effects.exit("thematicBreak");
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function sequence(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function sequence(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       size++;
       return sequence;
     }
     effects.exit("thematicBreakSequence");
-    return markdownSpace(code3) ? factorySpace(effects, atBreak, "whitespace")(code3) : atBreak(code3);
+    return markdownSpace(code4) ? factorySpace(effects, atBreak, "whitespace")(code4) : atBreak(code4);
   }
 }
 
@@ -68021,9 +68021,9 @@ function tokenizeListStart(effects, ok3, nok) {
   let initialSize = tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
   let size = 0;
   return start;
-  function start(code3) {
-    const kind = self2.containerState.type || (code3 === 42 || code3 === 43 || code3 === 45 ? "listUnordered" : "listOrdered");
-    if (kind === "listUnordered" ? !self2.containerState.marker || code3 === self2.containerState.marker : asciiDigit(code3)) {
+  function start(code4) {
+    const kind = self2.containerState.type || (code4 === 42 || code4 === 43 || code4 === 45 ? "listUnordered" : "listOrdered");
+    if (kind === "listUnordered" ? !self2.containerState.marker || code4 === self2.containerState.marker : asciiDigit(code4)) {
       if (!self2.containerState.type) {
         self2.containerState.type = kind;
         effects.enter(kind, {
@@ -68032,32 +68032,32 @@ function tokenizeListStart(effects, ok3, nok) {
       }
       if (kind === "listUnordered") {
         effects.enter("listItemPrefix");
-        return code3 === 42 || code3 === 45 ? effects.check(thematicBreak, nok, atMarker)(code3) : atMarker(code3);
+        return code4 === 42 || code4 === 45 ? effects.check(thematicBreak, nok, atMarker)(code4) : atMarker(code4);
       }
-      if (!self2.interrupt || code3 === 49) {
+      if (!self2.interrupt || code4 === 49) {
         effects.enter("listItemPrefix");
         effects.enter("listItemValue");
-        return inside(code3);
+        return inside(code4);
       }
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function inside(code3) {
-    if (asciiDigit(code3) && ++size < 10) {
-      effects.consume(code3);
+  function inside(code4) {
+    if (asciiDigit(code4) && ++size < 10) {
+      effects.consume(code4);
       return inside;
     }
-    if ((!self2.interrupt || size < 2) && (self2.containerState.marker ? code3 === self2.containerState.marker : code3 === 41 || code3 === 46)) {
+    if ((!self2.interrupt || size < 2) && (self2.containerState.marker ? code4 === self2.containerState.marker : code4 === 41 || code4 === 46)) {
       effects.exit("listItemValue");
-      return atMarker(code3);
+      return atMarker(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function atMarker(code3) {
+  function atMarker(code4) {
     effects.enter("listItemMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("listItemMarker");
-    self2.containerState.marker = self2.containerState.marker || code3;
+    self2.containerState.marker = self2.containerState.marker || code4;
     return effects.check(
       blankLine,
       // Can’t be empty when interrupting.
@@ -68065,55 +68065,55 @@ function tokenizeListStart(effects, ok3, nok) {
       effects.attempt(listItemPrefixWhitespaceConstruct, endOfPrefix, otherPrefix)
     );
   }
-  function onBlank(code3) {
+  function onBlank(code4) {
     self2.containerState.initialBlankLine = true;
     initialSize++;
-    return endOfPrefix(code3);
+    return endOfPrefix(code4);
   }
-  function otherPrefix(code3) {
-    if (markdownSpace(code3)) {
+  function otherPrefix(code4) {
+    if (markdownSpace(code4)) {
       effects.enter("listItemPrefixWhitespace");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("listItemPrefixWhitespace");
       return endOfPrefix;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function endOfPrefix(code3) {
+  function endOfPrefix(code4) {
     self2.containerState.size = initialSize + self2.sliceSerialize(effects.exit("listItemPrefix"), true).length;
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeListContinuation(effects, ok3, nok) {
   const self2 = this;
   self2.containerState._closeFlow = void 0;
   return effects.check(blankLine, onBlank, notBlank);
-  function onBlank(code3) {
+  function onBlank(code4) {
     self2.containerState.furtherBlankLines = self2.containerState.furtherBlankLines || self2.containerState.initialBlankLine;
-    return factorySpace(effects, ok3, "listItemIndent", self2.containerState.size + 1)(code3);
+    return factorySpace(effects, ok3, "listItemIndent", self2.containerState.size + 1)(code4);
   }
-  function notBlank(code3) {
-    if (self2.containerState.furtherBlankLines || !markdownSpace(code3)) {
+  function notBlank(code4) {
+    if (self2.containerState.furtherBlankLines || !markdownSpace(code4)) {
       self2.containerState.furtherBlankLines = void 0;
       self2.containerState.initialBlankLine = void 0;
-      return notInCurrentItem(code3);
+      return notInCurrentItem(code4);
     }
     self2.containerState.furtherBlankLines = void 0;
     self2.containerState.initialBlankLine = void 0;
-    return effects.attempt(indentConstruct, ok3, notInCurrentItem)(code3);
+    return effects.attempt(indentConstruct, ok3, notInCurrentItem)(code4);
   }
-  function notInCurrentItem(code3) {
+  function notInCurrentItem(code4) {
     self2.containerState._closeFlow = true;
     self2.interrupt = void 0;
-    return factorySpace(effects, effects.attempt(list, ok3, nok), "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code3);
+    return factorySpace(effects, effects.attempt(list, ok3, nok), "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code4);
   }
 }
 function tokenizeIndent(effects, ok3, nok) {
   const self2 = this;
   return factorySpace(effects, afterPrefix, "listItemIndent", self2.containerState.size + 1);
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "listItemIndent" && tail[2].sliceSerialize(tail[1], true).length === self2.containerState.size ? ok3(code3) : nok(code3);
+    return tail && tail[1].type === "listItemIndent" && tail[2].sliceSerialize(tail[1], true).length === self2.containerState.size ? ok3(code4) : nok(code4);
   }
 }
 function tokenizeListEnd(effects) {
@@ -68122,9 +68122,9 @@ function tokenizeListEnd(effects) {
 function tokenizeListItemPrefixWhitespace(effects, ok3, nok) {
   const self2 = this;
   return factorySpace(effects, afterPrefix, "listItemPrefixWhitespace", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4 + 1);
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return !markdownSpace(code3) && tail && tail[1].type === "listItemPrefixWhitespace" ? ok3(code3) : nok(code3);
+    return !markdownSpace(code4) && tail && tail[1].type === "listItemPrefixWhitespace" ? ok3(code4) : nok(code4);
   }
 }
 
@@ -68183,7 +68183,7 @@ function tokenizeSetextUnderline(effects, ok3, nok) {
   const self2 = this;
   let marker;
   return start;
-  function start(code3) {
+  function start(code4) {
     let index2 = self2.events.length;
     let paragraph2;
     while (index2--) {
@@ -68194,29 +68194,29 @@ function tokenizeSetextUnderline(effects, ok3, nok) {
     }
     if (!self2.parser.lazy[self2.now().line] && (self2.interrupt || paragraph2)) {
       effects.enter("setextHeadingLine");
-      marker = code3;
-      return before(code3);
+      marker = code4;
+      return before(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function before(code3) {
+  function before(code4) {
     effects.enter("setextHeadingLineSequence");
-    return inside(code3);
+    return inside(code4);
   }
-  function inside(code3) {
-    if (code3 === marker) {
-      effects.consume(code3);
+  function inside(code4) {
+    if (code4 === marker) {
+      effects.consume(code4);
       return inside;
     }
     effects.exit("setextHeadingLineSequence");
-    return markdownSpace(code3) ? factorySpace(effects, after, "lineSuffix")(code3) : after(code3);
+    return markdownSpace(code4) ? factorySpace(effects, after, "lineSuffix")(code4) : after(code4);
   }
-  function after(code3) {
-    if (code3 === null || markdownLineEnding(code3)) {
+  function after(code4) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("setextHeadingLine");
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 
@@ -68234,24 +68234,24 @@ function initializeFlow(effects) {
     effects.attempt(this.parser.constructs.flowInitial, afterConstruct, factorySpace(effects, effects.attempt(this.parser.constructs.flow, afterConstruct, effects.attempt(content2, afterConstruct)), "linePrefix"))
   );
   return initial;
-  function atBlankEnding(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function atBlankEnding(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEndingBlank");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEndingBlank");
     self2.currentConstruct = void 0;
     return initial;
   }
-  function afterConstruct(code3) {
-    if (code3 === null) {
-      effects.consume(code3);
+  function afterConstruct(code4) {
+    if (code4 === null) {
+      effects.consume(code4);
       return;
     }
     effects.enter("lineEnding");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("lineEnding");
     self2.currentConstruct = void 0;
     return initial;
@@ -68274,31 +68274,31 @@ function initializeFactory(field) {
     const constructs2 = this.parser.constructs[field];
     const text5 = effects.attempt(constructs2, start, notText);
     return start;
-    function start(code3) {
-      return atBreak(code3) ? text5(code3) : notText(code3);
+    function start(code4) {
+      return atBreak(code4) ? text5(code4) : notText(code4);
     }
-    function notText(code3) {
-      if (code3 === null) {
-        effects.consume(code3);
+    function notText(code4) {
+      if (code4 === null) {
+        effects.consume(code4);
         return;
       }
       effects.enter("data");
-      effects.consume(code3);
+      effects.consume(code4);
       return data;
     }
-    function data(code3) {
-      if (atBreak(code3)) {
+    function data(code4) {
+      if (atBreak(code4)) {
         effects.exit("data");
-        return text5(code3);
+        return text5(code4);
       }
-      effects.consume(code3);
+      effects.consume(code4);
       return data;
     }
-    function atBreak(code3) {
-      if (code3 === null) {
+    function atBreak(code4) {
+      if (code4 === null) {
         return true;
       }
-      const list4 = constructs2[code3];
+      const list4 = constructs2[code4];
       let index2 = -1;
       if (list4) {
         while (++index2 < list4.length) {
@@ -68567,18 +68567,18 @@ function createTokenizer(parser, initialize, from) {
       }
     }
   }
-  function go(code3) {
+  function go(code4) {
     consumed = void 0;
-    expectedCode = code3;
-    state = state(code3);
+    expectedCode = code4;
+    state = state(code4);
   }
-  function consume(code3) {
-    if (markdownLineEnding(code3)) {
+  function consume(code4) {
+    if (markdownLineEnding(code4)) {
       point3.line++;
       point3.column = 1;
-      point3.offset += code3 === -3 ? 2 : 1;
+      point3.offset += code4 === -3 ? 2 : 1;
       accountForPotentialSkip();
-    } else if (code3 !== -1) {
+    } else if (code4 !== -1) {
       point3.column++;
       point3.offset++;
     }
@@ -68594,7 +68594,7 @@ function createTokenizer(parser, initialize, from) {
         point3._index++;
       }
     }
-    context.previous = code3;
+    context.previous = code4;
     consumed = true;
   }
   function enter(type, fields) {
@@ -68636,16 +68636,16 @@ function createTokenizer(parser, initialize, from) {
       ) : handleMapOfConstructs(constructs2);
       function handleMapOfConstructs(map4) {
         return start;
-        function start(code3) {
-          const left = code3 !== null && map4[code3];
-          const all2 = code3 !== null && map4.null;
+        function start(code4) {
+          const left = code4 !== null && map4[code4];
+          const all2 = code4 !== null && map4.null;
           const list4 = [
             // To do: add more extension tests.
             /* c8 ignore next 2 */
             ...Array.isArray(left) ? left : left ? [left] : [],
             ...Array.isArray(all2) ? all2 : all2 ? [all2] : []
           ];
-          return handleListOfConstructs(list4)(code3);
+          return handleListOfConstructs(list4)(code4);
         }
       }
       function handleListOfConstructs(list4) {
@@ -68658,14 +68658,14 @@ function createTokenizer(parser, initialize, from) {
       }
       function handleConstruct(construct) {
         return start;
-        function start(code3) {
+        function start(code4) {
           info2 = store();
           currentConstruct = construct;
           if (!construct.partial) {
             context.currentConstruct = construct;
           }
           if (construct.name && context.parser.constructs.disable.null.includes(construct.name)) {
-            return nok(code3);
+            return nok(code4);
           }
           return construct.tokenize.call(
             // If we do have fields, create an object w/ `context` as its
@@ -68675,15 +68675,15 @@ function createTokenizer(parser, initialize, from) {
             effects,
             ok3,
             nok
-          )(code3);
+          )(code4);
         }
       }
-      function ok3(code3) {
+      function ok3(code4) {
         consumed = true;
         onreturn(currentConstruct, info2);
         return returnState;
       }
-      function nok(code3) {
+      function nok(code4) {
         consumed = true;
         info2.restore();
         if (++constructIndex < listOfConstructs.length) {
@@ -68842,7 +68842,7 @@ function preprocess() {
     let next;
     let startPosition;
     let endPosition;
-    let code3;
+    let code4;
     value = buffer + (typeof value === "string" ? value.toString() : new TextDecoder(encoding || void 0).decode(value));
     startPosition = 0;
     buffer = "";
@@ -68856,12 +68856,12 @@ function preprocess() {
       search.lastIndex = startPosition;
       match3 = search.exec(value);
       endPosition = match3 && match3.index !== void 0 ? match3.index : value.length;
-      code3 = value.charCodeAt(endPosition);
+      code4 = value.charCodeAt(endPosition);
       if (!match3) {
         buffer = value.slice(startPosition);
         break;
       }
-      if (code3 === 10 && startPosition === endPosition && atCarriageReturn) {
+      if (code4 === 10 && startPosition === endPosition && atCarriageReturn) {
         chunks.push(-3);
         atCarriageReturn = void 0;
       } else {
@@ -68873,7 +68873,7 @@ function preprocess() {
           chunks.push(value.slice(startPosition, endPosition));
           column += endPosition - startPosition;
         }
-        switch (code3) {
+        switch (code4) {
           case 0: {
             chunks.push(65533);
             column++;
@@ -69677,6 +69677,126 @@ function remarkParse(options) {
   }
 }
 
+// node_modules/unist-util-is/lib/index.js
+var convert = (
+  // Note: overloads in JSDoc can’t yet use different `@template`s.
+  /**
+   * @type {(
+   *   (<Condition extends string>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & {type: Condition}) &
+   *   (<Condition extends Props>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Condition) &
+   *   (<Condition extends TestFunction>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Predicate<Condition, Node>) &
+   *   ((test?: null | undefined) => (node?: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node) &
+   *   ((test?: Test) => Check)
+   * )}
+   */
+  /**
+   * @param {Test} [test]
+   * @returns {Check}
+   */
+  (function(test) {
+    if (test === null || test === void 0) {
+      return ok;
+    }
+    if (typeof test === "function") {
+      return castFactory(test);
+    }
+    if (typeof test === "object") {
+      return Array.isArray(test) ? anyFactory(test) : propsFactory(test);
+    }
+    if (typeof test === "string") {
+      return typeFactory(test);
+    }
+    throw new Error("Expected function, string, or object as test");
+  })
+);
+function anyFactory(tests) {
+  const checks = [];
+  let index2 = -1;
+  while (++index2 < tests.length) {
+    checks[index2] = convert(tests[index2]);
+  }
+  return castFactory(any);
+  function any(...parameters) {
+    let index3 = -1;
+    while (++index3 < checks.length) {
+      if (checks[index3].apply(this, parameters)) return true;
+    }
+    return false;
+  }
+}
+function propsFactory(check2) {
+  const checkAsRecord = (
+    /** @type {Record<string, unknown>} */
+    check2
+  );
+  return castFactory(all2);
+  function all2(node2) {
+    const nodeAsRecord = (
+      /** @type {Record<string, unknown>} */
+      /** @type {unknown} */
+      node2
+    );
+    let key;
+    for (key in check2) {
+      if (nodeAsRecord[key] !== checkAsRecord[key]) return false;
+    }
+    return true;
+  }
+}
+function typeFactory(check2) {
+  return castFactory(type);
+  function type(node2) {
+    return node2 && node2.type === check2;
+  }
+}
+function castFactory(testFunction) {
+  return check2;
+  function check2(value, index2, parent) {
+    return Boolean(
+      looksLikeANode(value) && testFunction.call(
+        this,
+        value,
+        typeof index2 === "number" ? index2 : void 0,
+        parent || void 0
+      )
+    );
+  }
+}
+function ok() {
+  return true;
+}
+function looksLikeANode(value) {
+  return value !== null && typeof value === "object" && "type" in value;
+}
+
+// node_modules/mdast-util-phrasing/lib/index.js
+var phrasing = (
+  /** @type {(node?: unknown) => node is Exclude<PhrasingContent, Html>} */
+  convert([
+    "break",
+    "delete",
+    "emphasis",
+    // To do: next major: removed since footnotes were added to GFM.
+    "footnote",
+    "footnoteReference",
+    "image",
+    "imageReference",
+    "inlineCode",
+    // Enabled by `mdast-util-math`:
+    "inlineMath",
+    "link",
+    "linkReference",
+    // Enabled by `mdast-util-mdx`:
+    "mdxJsxTextElement",
+    // Enabled by `mdast-util-mdx`:
+    "mdxTextExpression",
+    "strong",
+    "text",
+    // Enabled by `mdast-util-directive`:
+    "textDirective"
+  ])
+);
+
 // node_modules/zwitch/index.js
 var own4 = {}.hasOwnProperty;
 function zwitch(key, options) {
@@ -69787,8 +69907,9 @@ function listInScope(stack, list4, none) {
 function hardBreak(_, _1, state, info2) {
   let index2 = -1;
   while (++index2 < state.unsafe.length) {
-    if (state.unsafe[index2].character === "\n" && patternInScope(state.stack, state.unsafe[index2])) {
-      return /[ \t]/.test(info2.before) ? "" : " ";
+    const pattern = state.unsafe[index2];
+    if (pattern.character === "\n" && !pattern.before && !pattern.after && patternInScope(state.stack, pattern)) {
+      return /[\t ]/.test(info2.before) ? "" : " ";
     }
   }
   return "\\\n";
@@ -69823,8 +69944,8 @@ function formatCodeAsIndented(node2, state) {
   return Boolean(
     state.options.fences === false && node2.value && // If there’s no info…
     !node2.lang && // And there’s a non-whitespace character…
-    /[^ \r\n]/.test(node2.value) && // And the value doesn’t start or end in a blank…
-    !/^[\t ]*(?:[\r\n]|$)|(?:^|[\r\n])[\t ]*$/.test(node2.value)
+    /[^\n\r ]/.test(node2.value) && // And the value doesn’t start or end in a blank…
+    !/^[\t ]*(?:[\n\r]|$)|(?:^|[\n\r])[\t ]*$/.test(node2.value)
   );
 }
 
@@ -69843,7 +69964,6 @@ function checkFence(state) {
 function code(node2, _, state, info2) {
   const marker = checkFence(state);
   const raw = node2.value || "";
-  const suffix = marker === "`" ? "GraveAccent" : "Tilde";
   if (formatCodeAsIndented(node2, state)) {
     const exit4 = state.enter("codeIndented");
     const value2 = state.indentLines(raw, map3);
@@ -69853,6 +69973,7 @@ function code(node2, _, state, info2) {
   const tracker = state.createTracker(info2);
   const sequence = marker.repeat(Math.max(longestStreak(raw, marker) + 1, 3));
   const exit3 = state.enter("codeFenced");
+  const suffix = marker === "`" ? "GraveAccent" : "Tilde";
   let value = tracker.move(sequence);
   if (node2.lang) {
     const subexit = state.enter(`codeFencedLang${suffix}`);
@@ -69969,183 +70090,30 @@ function checkEmphasis(state) {
   return marker;
 }
 
-// node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
-function encodeCharacterReference(code3) {
-  return "&#x" + code3.toString(16).toUpperCase() + ";";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/encode-info.js
-function encodeInfo(outside, inside, marker) {
-  const outsideKind = classifyCharacter(outside);
-  const insideKind = classifyCharacter(inside);
-  if (outsideKind === void 0) {
-    return insideKind === void 0 ? (
-      // Letter inside:
-      // we have to encode *both* letters for `_` as it is looser.
-      // it already forms for `*` (and GFMs `~`).
-      marker === "_" ? { inside: true, outside: true } : { inside: false, outside: false }
-    ) : insideKind === 1 ? (
-      // Whitespace inside: encode both (letter, whitespace).
-      { inside: true, outside: true }
-    ) : (
-      // Punctuation inside: encode outer (letter)
-      { inside: false, outside: true }
-    );
-  }
-  if (outsideKind === 1) {
-    return insideKind === void 0 ? (
-      // Letter inside: already forms.
-      { inside: false, outside: false }
-    ) : insideKind === 1 ? (
-      // Whitespace inside: encode both (whitespace).
-      { inside: true, outside: true }
-    ) : (
-      // Punctuation inside: already forms.
-      { inside: false, outside: false }
-    );
-  }
-  return insideKind === void 0 ? (
-    // Letter inside: already forms.
-    { inside: false, outside: false }
-  ) : insideKind === 1 ? (
-    // Whitespace inside: encode inner (whitespace).
-    { inside: true, outside: false }
-  ) : (
-    // Punctuation inside: already forms.
-    { inside: false, outside: false }
-  );
-}
-
 // node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
-emphasis.peek = emphasisPeek;
+emphasis.attention = attention2;
+emphasis.peek = peek;
 function emphasis(node2, _, state, info2) {
-  const marker = checkEmphasis(state);
-  const exit3 = state.enter("emphasis");
-  const tracker = state.createTracker(info2);
-  const before = tracker.move(marker);
-  let between2 = tracker.move(
-    state.containerPhrasing(node2, {
-      after: marker,
-      before,
-      ...tracker.current()
-    })
-  );
-  const betweenHead = between2.charCodeAt(0);
-  const open2 = encodeInfo(
-    info2.before.charCodeAt(info2.before.length - 1),
-    betweenHead,
-    marker
-  );
-  if (open2.inside) {
-    between2 = encodeCharacterReference(betweenHead) + between2.slice(1);
-  }
-  const betweenTail = between2.charCodeAt(between2.length - 1);
-  const close = encodeInfo(info2.after.charCodeAt(0), betweenTail, marker);
-  if (close.inside) {
-    between2 = between2.slice(0, -1) + encodeCharacterReference(betweenTail);
-  }
-  const after = tracker.move(marker);
+  const exit3 = state.enter("phrasing");
+  const value = state.containerPhrasing({ type: "root", children: [node2] }, info2);
   exit3();
-  state.attentionEncodeSurroundingInfo = {
-    after: close.outside,
-    before: open2.outside
-  };
-  return before + between2 + after;
+  return value;
 }
-function emphasisPeek(_, _1, state) {
+function attention2(_, state) {
+  const marker = checkEmphasis(state);
+  return {
+    construct: "emphasis",
+    markers: marker === "*" ? ["*", "_"] : ["_", "*"],
+    sizes: [1]
+  };
+}
+function peek(_, _1, state) {
   return state.options.emphasis || "*";
 }
 
-// node_modules/unist-util-is/lib/index.js
-var convert = (
-  // Note: overloads in JSDoc can’t yet use different `@template`s.
-  /**
-   * @type {(
-   *   (<Condition extends string>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & {type: Condition}) &
-   *   (<Condition extends Props>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Condition) &
-   *   (<Condition extends TestFunction>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Predicate<Condition, Node>) &
-   *   ((test?: null | undefined) => (node?: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node) &
-   *   ((test?: Test) => Check)
-   * )}
-   */
-  /**
-   * @param {Test} [test]
-   * @returns {Check}
-   */
-  (function(test) {
-    if (test === null || test === void 0) {
-      return ok;
-    }
-    if (typeof test === "function") {
-      return castFactory(test);
-    }
-    if (typeof test === "object") {
-      return Array.isArray(test) ? anyFactory(test) : propsFactory(test);
-    }
-    if (typeof test === "string") {
-      return typeFactory(test);
-    }
-    throw new Error("Expected function, string, or object as test");
-  })
-);
-function anyFactory(tests) {
-  const checks = [];
-  let index2 = -1;
-  while (++index2 < tests.length) {
-    checks[index2] = convert(tests[index2]);
-  }
-  return castFactory(any);
-  function any(...parameters) {
-    let index3 = -1;
-    while (++index3 < checks.length) {
-      if (checks[index3].apply(this, parameters)) return true;
-    }
-    return false;
-  }
-}
-function propsFactory(check) {
-  const checkAsRecord = (
-    /** @type {Record<string, unknown>} */
-    check
-  );
-  return castFactory(all2);
-  function all2(node2) {
-    const nodeAsRecord = (
-      /** @type {Record<string, unknown>} */
-      /** @type {unknown} */
-      node2
-    );
-    let key;
-    for (key in check) {
-      if (nodeAsRecord[key] !== checkAsRecord[key]) return false;
-    }
-    return true;
-  }
-}
-function typeFactory(check) {
-  return castFactory(type);
-  function type(node2) {
-    return node2 && node2.type === check;
-  }
-}
-function castFactory(testFunction) {
-  return check;
-  function check(value, index2, parent) {
-    return Boolean(
-      looksLikeANode(value) && testFunction.call(
-        this,
-        value,
-        typeof index2 === "number" ? index2 : void 0,
-        parent || void 0
-      )
-    );
-  }
-}
-function ok() {
-  return true;
-}
-function looksLikeANode(value) {
-  return value !== null && typeof value === "object" && "type" in value;
+// node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
+function encodeCharacterReference(code4) {
+  return "&#x" + code4.toString(16).toUpperCase() + ";";
 }
 
 // node_modules/unist-util-visit-parents/lib/color.node.js
@@ -70159,14 +70127,14 @@ var CONTINUE = true;
 var EXIT = false;
 var SKIP = "skip";
 function visitParents(tree, test, visitor, reverse) {
-  let check;
+  let check2;
   if (typeof test === "function" && typeof visitor !== "function") {
     reverse = visitor;
     visitor = test;
   } else {
-    check = test;
+    check2 = test;
   }
-  const is2 = convert(check);
+  const is2 = convert(check2);
   const step = reverse ? -1 : 1;
   factory(tree, void 0, [])();
   function factory(node2, index2, parents) {
@@ -70296,8 +70264,9 @@ function heading(node2, _, state, info2) {
     after: "\n",
     ...tracker.current()
   });
-  if (/^[\t ]/.test(value)) {
-    value = encodeCharacterReference(value.charCodeAt(0)) + value.slice(1);
+  const head = value.charCodeAt(0);
+  if (head === 9 || head === 32) {
+    value = encodeCharacterReference(head) + value.slice(1);
   }
   value = value ? sequence + " " + value : sequence;
   if (state.options.closeAtx) {
@@ -70390,7 +70359,9 @@ function imageReference(node2, _, state, info2) {
   value += tracker.move(alt + "][");
   subexit();
   const stack = state.stack;
-  state.stack = [];
+  state.stack = stack.filter(function(d) {
+    return d !== "phrasing";
+  });
   subexit = state.enter("reference");
   const reference = state.safe(state.associationId(node2), {
     before: value,
@@ -70422,14 +70393,14 @@ function inlineCode(node2, _, state) {
   while (new RegExp("(^|[^`])" + sequence + "([^`]|$)").test(value)) {
     sequence += "`";
   }
-  if (/[^ \r\n]/.test(value) && (/^[ \r\n]/.test(value) && /[ \r\n]$/.test(value) || /^`|`$/.test(value))) {
+  if (/[^\n\r ]/.test(value) && (/^[\n\r ]/.test(value) && /[\n\r ]$/.test(value) || /^`|`$/.test(value))) {
     value = " " + value + " ";
   }
   while (++index2 < state.unsafe.length) {
     const pattern = state.unsafe[index2];
     const expression = state.compilePattern(pattern);
-    let match3;
     if (!pattern.atBreak) continue;
+    let match3;
     while (match3 = expression.exec(value)) {
       let position2 = match3.index;
       if (value.charCodeAt(position2) === 10 && value.charCodeAt(position2 - 1) === 13) {
@@ -70449,11 +70420,11 @@ function formatLinkAsAutolink(node2, state) {
   const raw = toString(node2);
   return Boolean(
     !state.options.resourceLink && // If there’s a url…
-    node2.url && // And there’s a no title…
+    node2.url && // And there’s no title…
     !node2.title && // And the content of `node` is a single text node…
     node2.children && node2.children.length === 1 && node2.children[0].type === "text" && // And if the url is the same as the content…
     (raw === node2.url || "mailto:" + raw === node2.url) && // And that starts w/ a protocol…
-    /^[a-z][a-z+.-]+:/i.test(node2.url) && // And that doesn’t contain ASCII control codes (character escapes and
+    /^[a-z][+\-.a-z]+:/i.test(node2.url) && // And that doesn’t contain ASCII control codes (character escapes and
     // references don’t work), space, or angle brackets…
     !/[\0- <>\u007F]/.test(node2.url)
   );
@@ -70465,12 +70436,12 @@ function link(node2, _, state, info2) {
   const quote = checkQuote(state);
   const suffix = quote === '"' ? "Quote" : "Apostrophe";
   const tracker = state.createTracker(info2);
-  let exit3;
-  let subexit;
   if (formatLinkAsAutolink(node2, state)) {
     const stack = state.stack;
-    state.stack = [];
-    exit3 = state.enter("autolink");
+    state.stack = stack.filter(function(d) {
+      return d !== "phrasing";
+    });
+    const exit4 = state.enter("autolink");
     let value2 = tracker.move("<");
     value2 += tracker.move(
       state.containerPhrasing(node2, {
@@ -70480,12 +70451,12 @@ function link(node2, _, state, info2) {
       })
     );
     value2 += tracker.move(">");
-    exit3();
+    exit4();
     state.stack = stack;
     return value2;
   }
-  exit3 = state.enter("link");
-  subexit = state.enter("label");
+  const exit3 = state.enter("link");
+  let subexit = state.enter("label");
   let value = tracker.move("[");
   value += tracker.move(
     state.containerPhrasing(node2, {
@@ -70555,7 +70526,9 @@ function linkReference(node2, _, state, info2) {
   value += tracker.move(text5 + "][");
   subexit();
   const stack = state.stack;
-  state.stack = [];
+  state.stack = stack.filter(function(d) {
+    return d !== "phrasing";
+  });
   subexit = state.enter("reference");
   const reference = state.safe(state.associationId(node2), {
     before: value,
@@ -70721,41 +70694,16 @@ function paragraph(node2, _, state, info2) {
   return value;
 }
 
-// node_modules/mdast-util-phrasing/lib/index.js
-var phrasing = (
-  /** @type {(node?: unknown) => node is Exclude<PhrasingContent, Html>} */
-  convert([
-    "break",
-    "delete",
-    "emphasis",
-    // To do: next major: removed since footnotes were added to GFM.
-    "footnote",
-    "footnoteReference",
-    "image",
-    "imageReference",
-    "inlineCode",
-    // Enabled by `mdast-util-math`:
-    "inlineMath",
-    "link",
-    "linkReference",
-    // Enabled by `mdast-util-mdx`:
-    "mdxJsxTextElement",
-    // Enabled by `mdast-util-mdx`:
-    "mdxTextExpression",
-    "strong",
-    "text",
-    // Enabled by `mdast-util-directive`:
-    "textDirective"
-  ])
-);
-
 // node_modules/mdast-util-to-markdown/lib/handle/root.js
 function root(node2, _, state, info2) {
   const hasPhrasing = node2.children.some(function(d) {
     return phrasing(d);
   });
-  const container = hasPhrasing ? state.containerPhrasing : state.containerFlow;
-  return container.call(state, node2, info2);
+  if (!hasPhrasing) return state.containerFlow(node2, info2);
+  const exit3 = state.enter("phrasing");
+  const value = state.containerPhrasing(node2, info2);
+  exit3();
+  return value;
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/check-strong.js
@@ -70770,42 +70718,23 @@ function checkStrong(state) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/handle/strong.js
-strong.peek = strongPeek;
+strong.attention = attention3;
+strong.peek = peek2;
 function strong(node2, _, state, info2) {
-  const marker = checkStrong(state);
-  const exit3 = state.enter("strong");
-  const tracker = state.createTracker(info2);
-  const before = tracker.move(marker + marker);
-  let between2 = tracker.move(
-    state.containerPhrasing(node2, {
-      after: marker,
-      before,
-      ...tracker.current()
-    })
-  );
-  const betweenHead = between2.charCodeAt(0);
-  const open2 = encodeInfo(
-    info2.before.charCodeAt(info2.before.length - 1),
-    betweenHead,
-    marker
-  );
-  if (open2.inside) {
-    between2 = encodeCharacterReference(betweenHead) + between2.slice(1);
-  }
-  const betweenTail = between2.charCodeAt(between2.length - 1);
-  const close = encodeInfo(info2.after.charCodeAt(0), betweenTail, marker);
-  if (close.inside) {
-    between2 = between2.slice(0, -1) + encodeCharacterReference(betweenTail);
-  }
-  const after = tracker.move(marker + marker);
+  const exit3 = state.enter("phrasing");
+  const value = state.containerPhrasing({ type: "root", children: [node2] }, info2);
   exit3();
-  state.attentionEncodeSurroundingInfo = {
-    after: close.outside,
-    before: open2.outside
-  };
-  return before + between2 + after;
+  return value;
 }
-function strongPeek(_, _1, state) {
+function attention3(_, state) {
+  const marker = checkStrong(state);
+  return {
+    construct: "strong",
+    markers: marker === "*" ? ["*", "_"] : ["_", "*"],
+    sizes: [2]
+  };
+}
+function peek2(_, _1, state) {
   return state.options.strong || "*";
 }
 
@@ -70855,6 +70784,33 @@ var handle = {
   thematicBreak: thematicBreak2
 };
 
+// node_modules/mdast-util-to-markdown/lib/util/html-kind.js
+function htmlKind(value) {
+  if (value.charCodeAt(0) !== 60) return;
+  const next = value.charCodeAt(1);
+  if (next === 33) {
+    const code5 = value.charCodeAt(2);
+    if (code5 === 45) return 2;
+    if (code5 === 91) return 5;
+    if (asciiAlpha(code5)) return 4;
+    return;
+  }
+  if (next === 63) return 3;
+  const closing = next === 47;
+  const start = closing ? 2 : 1;
+  let end = start;
+  let code4 = value.charCodeAt(end);
+  if (!asciiAlpha(code4)) return;
+  while (code4 === 45 || asciiAlphanumeric(code4)) {
+    code4 = value.charCodeAt(++end);
+  }
+  const name = value.slice(start, end).toLowerCase();
+  if (!closing && code4 !== 47 && htmlRawNames.includes(name)) {
+    return 1;
+  }
+  return htmlBlockNames.includes(name) ? 6 : 7;
+}
+
 // node_modules/mdast-util-to-markdown/lib/join.js
 var join4 = [joinDefaults];
 function joinDefaults(left, right, parent, state) {
@@ -70866,6 +70822,14 @@ function joinDefaults(left, right, parent, state) {
     (left.type === right.type || right.type === "definition" || // Paragraph followed by a setext heading.
     right.type === "heading" && formatHeadingAsSetext(right, state))) {
       return;
+    }
+    if (left.type === "html") {
+      const kind = htmlKind(left.value);
+      if (kind === void 0 || kind === 6 || kind === 7) return 1;
+    }
+    if (left.type === "paragraph" && right.type === "html") {
+      const kind = htmlKind(right.value);
+      if (kind === void 0 || kind === 7) return 1;
     }
     return parent.spread ? 1 : 0;
   }
@@ -70909,6 +70873,10 @@ var unsafe = [
       "headingAtx"
     ]
   },
+  { character: "\r", before: "[\\r\\n]", inConstruct: "phrasing" },
+  { character: "\r", after: "\\r", inConstruct: "phrasing" },
+  { character: "\n", before: "\\n", inConstruct: "phrasing" },
+  { character: "\n", after: "[\\r\\n]", inConstruct: "phrasing" },
   { character: " ", after: "[\\r\\n]", inConstruct: "phrasing" },
   { character: " ", before: "[\\r\\n]", inConstruct: "phrasing" },
   {
@@ -71002,8 +70970,15 @@ var unsafe = [
   // Left brace, vertical bar, right brace are not used in markdown for
   // constructs.
   // A tilde can start code (fenced).
-  { atBreak: true, character: "~" }
+  { atBreak: true, character: "~" },
+  { character: "<", inConstruct: "autolink" },
+  { character: ">", inConstruct: "autolink" },
+  { character: "\x7F", inConstruct: "autolink" }
 ];
+var code2 = -1;
+while (++code2 < 33) {
+  unsafe.push({ character: String.fromCharCode(code2), inConstruct: "autolink" });
+}
 
 // node_modules/mdast-util-to-markdown/lib/util/association.js
 function association(node2) {
@@ -71018,21 +70993,257 @@ function compilePattern(pattern) {
   if (!pattern._compiled) {
     const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
     pattern._compiled = new RegExp(
-      (before ? "(" + before + ")" : "") + (/[|\\{}()[\]^$+*?.-]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
+      (before ? "(" + before + ")" : "") + (/[$()*+\-.?[\\\]^{|}]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
       "g"
     );
   }
   return pattern._compiled;
 }
 
+// node_modules/mdast-util-to-markdown/lib/util/character.js
+function firstCharacter(value) {
+  const code4 = value.codePointAt(0);
+  return code4 === void 0 ? "" : String.fromCodePoint(code4);
+}
+function lastCharacter(value) {
+  const code4 = value.codePointAt(value.length - 2);
+  return code4 !== void 0 && code4 > 65535 ? value.slice(-2) : value.slice(-1);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/encode-info.js
+function encodeInfo(outside, inside, marker) {
+  const outsideKind = classifyCharacter(outside);
+  const insideKind = classifyCharacter(inside);
+  if (outsideKind === void 0) {
+    return insideKind === void 0 ? (
+      // Letter inside:
+      // we have to encode *both* letters for `_` as it is looser.
+      // it already forms for `*` (and GFMs `~`).
+      marker === "_" ? { inside: true, outside: true } : { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (letter, whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: encode outer (letter)
+      { inside: false, outside: true }
+    );
+  }
+  if (outsideKind === 1) {
+    return insideKind === void 0 ? (
+      // Letter inside: already forms.
+      { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: already forms.
+      { inside: false, outside: false }
+    );
+  }
+  return insideKind === void 0 ? (
+    // Letter inside: already forms.
+    { inside: false, outside: false }
+  ) : insideKind === 1 ? (
+    // Whitespace inside: encode inner (whitespace).
+    { inside: true, outside: false }
+  ) : (
+    // Punctuation inside: already forms.
+    { inside: false, outside: false }
+  );
+}
+
 // node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+var builtins = /* @__PURE__ */ new Map([
+  ["*", false],
+  ["_", true]
+]);
+function candidates(tokens, involved, runOf) {
+  const related = /* @__PURE__ */ new Set();
+  for (const token of tokens) {
+    const siblings = runOf.get(token);
+    if (siblings && token.attention && involved.some((d) => d.attention === token.attention)) {
+      for (const sibling of siblings.tokens) {
+        related.add(sibling.attention);
+      }
+    }
+  }
+  const ordered = [];
+  for (const token of tokens) {
+    if (token.attention && related.delete(token.attention)) {
+      ordered.push(token.attention);
+    }
+  }
+  ordered.reverse();
+  return ordered;
+}
+function check(tokens, before, after) {
+  const runs = [];
+  const wrong = /* @__PURE__ */ new Map();
+  const runOf = /* @__PURE__ */ new Map();
+  let index2 = 0;
+  while (index2 < tokens.length) {
+    if (!tokens[index2].attention) {
+      index2++;
+      continue;
+    }
+    const marker = tokens[index2].value.charAt(0);
+    const strict = builtins.get(marker);
+    let end = index2 + 1;
+    while (end < tokens.length && tokens[end].attention && tokens[end].value.charAt(0) === marker) {
+      end++;
+    }
+    const head = index2 ? tokens[index2 - 1].value : before;
+    const previous3 = classifyCharacter(head.charCodeAt(head.length - 1));
+    const next = classifyCharacter(
+      (end < tokens.length ? tokens[end].value : after).charCodeAt(0)
+    );
+    const open2 = !next || next === 2 && Boolean(previous3);
+    const close = !previous3 || previous3 === 2 && Boolean(next);
+    const run = {
+      tokens: tokens.slice(index2, end),
+      markers: [],
+      start: 0,
+      end: 0,
+      // Underscores are strict, they cannot open or close inside words.
+      open: strict ? open2 && (Boolean(previous3) || !close) : open2,
+      close: strict ? close && (Boolean(next) || !open2) : close,
+      // All builtins can split runs.
+      split: strict !== void 0
+    };
+    for (const token of run.tokens) {
+      wrong.set(token, [...run.tokens]);
+      runOf.set(token, run);
+      let size = token.value.length;
+      while (size--) run.markers.push(token);
+    }
+    run.end = run.markers.length;
+    runs.push(run);
+    index2 = end;
+  }
+  pair(runs, wrong);
+  index2 = -1;
+  while (++index2 < tokens.length) {
+    const involved = wrong.get(tokens[index2]);
+    if (involved) return { attention: candidates(tokens, involved, runOf), index: index2 };
+  }
+}
 function containerPhrasing(parent, state, info2) {
+  return serialize(phrasing2(parent, state, info2), info2.before, info2.after);
+}
+function encode(tokens, start) {
+  const token = tokens[start ? 0 : tokens.length - 1];
+  if (!token || token.attention) return;
+  const character = start ? firstCharacter(token.value) : lastCharacter(token.value);
+  const reference = encodeCharacterReference(
+    /** @type {number} */
+    character.codePointAt(0)
+  );
+  token.value = start ? reference + token.value.slice(character.length) : token.value.slice(0, token.value.length - character.length) + reference;
+}
+function improve(items, chosen, mistake, before, after) {
+  for (const attention4 of mistake.attention) {
+    const current = chosen.get(attention4) || attention4.sequences[0];
+    for (const sequence of attention4.sequences) {
+      if (sequence === current) continue;
+      const trial = new Map(chosen);
+      trial.set(attention4, sequence);
+      const tokens = render(items, trial, before, after);
+      const next = check(tokens, before, after);
+      if (!next || next.index > mistake.index) {
+        return { chosen: trial, mistake: next, tokens };
+      }
+    }
+  }
+}
+function pair(runs, wrong) {
+  let index2 = 0;
+  while (index2 < runs.length) {
+    const closer = runs[index2];
+    const marker = closer.tokens[0].value.charAt(0);
+    const closerSize = closer.end - closer.start;
+    let open2 = closer.close && closerSize ? index2 : 0;
+    while (open2--) {
+      const opener = runs[open2];
+      const openerSize = opener.end - opener.start;
+      if (opener.tokens[0].value.charAt(0) === marker && opener.open && openerSize && (closer.split ? (
+        // The rule of 3, on the sizes that are left.
+        !((opener.close || closer.open) && closerSize % 3) || (openerSize + closerSize) % 3
+      ) : (
+        // Others pair whole runs of the same size.
+        openerSize === opener.markers.length && openerSize === closerSize
+      ))) {
+        const size = closer.split ? openerSize > 1 && closerSize > 1 ? 2 : 1 : closerSize;
+        const opening = opener.markers.slice(opener.end - size, opener.end);
+        const closing = closer.markers.slice(closer.start, closer.start + size);
+        const openToken = opening[0];
+        const closeToken = closing[0];
+        if (
+          // Whole sequences:
+          // the markers of a sequence are next to each other,
+          // so if the first and last marker are of one sequence of that size,
+          // all markers are exactly that sequence.
+          openToken === opening[size - 1] && openToken.value.length === size && closeToken === closing[size - 1] && closeToken.value.length === size && // Of the same attention, so its opening and closing sequence.
+          openToken.attention === closeToken.attention
+        ) {
+          wrong.delete(openToken);
+          wrong.delete(closeToken);
+        } else {
+          const involved = [.../* @__PURE__ */ new Set([...opening, ...closing])];
+          for (const token of involved) {
+            const list4 = wrong.get(token);
+            if (list4) list4.push(...involved);
+          }
+        }
+        opener.end -= size;
+        closer.start += size;
+        break;
+      }
+    }
+    if (open2 === -1 || closer.start === closer.end) index2++;
+  }
+}
+function attentionSequences(type, markers, sizes) {
+  if (markers.length === 0) {
+    throw new Error(
+      "Cannot serialize `" + type + "` as attention without markers, expected one or more markers"
+    );
+  }
+  if (sizes.length === 0) {
+    throw new Error(
+      "Cannot serialize `" + type + "` as attention without sizes, expected one or more sizes"
+    );
+  }
+  for (const size of sizes) {
+    if (!Number.isSafeInteger(size) || size < 1) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + size + "` as size, expected positive integer"
+      );
+    }
+  }
+  const sequences = [];
+  for (const marker of markers) {
+    if (marker.length !== 1) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected a single ascii character"
+      );
+    }
+    if (!asciiPunctuation(marker.charCodeAt(0))) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected ascii punctuation"
+      );
+    }
+    for (const size of sizes) {
+      sequences.push(marker.repeat(size));
+    }
+  }
+  return sequences;
+}
+function phrasing2(parent, state, info2) {
   const indexStack = state.indexStack;
   const children = parent.children || [];
   const results = [];
   let index2 = -1;
   let before = info2.before;
-  let encodeAfter;
   indexStack.push(-1);
   let tracker = state.createTracker(info2);
   while (++index2 < children.length) {
@@ -71040,48 +71251,131 @@ function containerPhrasing(parent, state, info2) {
     let after;
     indexStack[indexStack.length - 1] = index2;
     if (index2 + 1 < children.length) {
-      let handle2 = state.handle.handlers[children[index2 + 1].type];
-      if (handle2 && handle2.peek) handle2 = handle2.peek;
-      after = handle2 ? handle2(children[index2 + 1], parent, state, {
-        before: "",
-        after: "",
-        ...tracker.current()
-      }).charAt(0) : "";
+      let handle3 = state.handle.handlers[children[index2 + 1].type];
+      if (handle3 && handle3.peek) handle3 = handle3.peek;
+      after = handle3 ? firstCharacter(
+        handle3(children[index2 + 1], parent, state, {
+          before: "",
+          after: "",
+          ...tracker.current()
+        })
+      ) : "";
     } else {
       after = info2.after;
     }
-    if (results.length > 0 && (before === "\r" || before === "\n") && child2.type === "html") {
-      results[results.length - 1] = results[results.length - 1].replace(
-        /(\r?\n|\r)$/,
-        " "
-      );
+    const previous3 = results[results.length - 1];
+    if (typeof previous3 === "string" && (before === "\r" || before === "\n") && child2.type === "html" && htmlKind(child2.value) !== 7) {
+      results[results.length - 1] = previous3.replace(/(\r?\n|\r)$/, " ");
       before = " ";
       tracker = state.createTracker(info2);
-      tracker.move(results.join(""));
+      tracker.move(serialize(results, info2.before, info2.after));
     }
-    let value = state.handle(child2, parent, state, {
-      ...tracker.current(),
-      after,
-      before
-    });
-    if (encodeAfter && encodeAfter === value.slice(0, 1)) {
-      value = encodeCharacterReference(encodeAfter.charCodeAt(0)) + value.slice(1);
+    const handle2 = state.handle.handlers[child2.type];
+    if (handle2 && handle2.attention) {
+      const { construct, markers, sizes } = handle2.attention(child2, state);
+      const sequences = attentionSequences(child2.type, markers, sizes);
+      const sequence = sequences[0];
+      const exit3 = state.enter(construct);
+      tracker.move(sequence);
+      const inside = phrasing2(
+        /** @type {PhrasingParents} */
+        child2,
+        state,
+        {
+          ...tracker.current(),
+          before: sequence,
+          after: sequence
+        }
+      );
+      tracker.move(serialize(inside, sequence, sequence));
+      tracker.move(sequence);
+      exit3();
+      results.push({ children: inside, sequences });
+      before = sequence.charAt(sequence.length - 1);
+    } else {
+      const value = state.handle(child2, parent, state, {
+        ...tracker.current(),
+        after,
+        before
+      });
+      if (!value) continue;
+      tracker.move(value);
+      results.push(value);
+      before = lastCharacter(value);
     }
-    const encodingInfo = state.attentionEncodeSurroundingInfo;
-    state.attentionEncodeSurroundingInfo = void 0;
-    encodeAfter = void 0;
-    if (encodingInfo) {
-      if (results.length > 0 && encodingInfo.before && before === results[results.length - 1].slice(-1)) {
-        results[results.length - 1] = results[results.length - 1].slice(0, -1) + encodeCharacterReference(before.charCodeAt(0));
-      }
-      if (encodingInfo.after) encodeAfter = after;
-    }
-    tracker.move(value);
-    results.push(value);
-    before = value.slice(-1);
   }
   indexStack.pop();
-  return results.join("");
+  return results;
+}
+function render(items, chosen, before, after) {
+  const tokens = [];
+  let encodeAfter;
+  let previous3 = lastCharacter(before);
+  let index2 = -1;
+  while (++index2 < items.length) {
+    const item = items[index2];
+    if (typeof item === "string") {
+      const token = { value: item, attention: void 0 };
+      if (encodeAfter && encodeAfter === firstCharacter(item)) {
+        encode([token], true);
+      }
+      encodeAfter = void 0;
+      tokens.push(token);
+      if (token.value) previous3 = lastCharacter(token.value);
+      continue;
+    }
+    const sequence = chosen.get(item) || item.sequences[0];
+    const marker = sequence.charAt(0);
+    const next = items[index2 + 1];
+    const outsideBefore = previous3;
+    const outsideAfter = firstCharacter(
+      next === void 0 ? after : typeof next === "string" ? next : chosen.get(next) || next.sequences[0]
+    );
+    const inside = render(item.children, chosen, sequence, sequence);
+    const head = inside.length > 0 ? inside[0].value : "";
+    const open2 = encodeInfo(
+      outsideBefore.charCodeAt(outsideBefore.length - 1),
+      head.charCodeAt(0),
+      marker
+    );
+    if (open2.inside) encode(inside, true);
+    const tail = inside.length > 0 ? lastCharacter(inside[inside.length - 1].value) : "";
+    const close = encodeInfo(
+      outsideAfter.charCodeAt(0),
+      tail.charCodeAt(tail.length - 1),
+      marker
+    );
+    if (close.inside) encode(inside, false);
+    if (open2.outside && outsideBefore !== "\n" && outsideBefore !== "\r") {
+      encode(tokens, false);
+    }
+    if (close.outside) encodeAfter = outsideAfter;
+    tokens.push({ value: sequence, attention: item }, ...inside, {
+      value: sequence,
+      attention: item
+    });
+    previous3 = sequence.charAt(sequence.length - 1);
+  }
+  return tokens;
+}
+function serialize(items, before, after) {
+  let chosen = /* @__PURE__ */ new Map();
+  const initial = render(items, chosen, before, after);
+  let tokens = initial;
+  let mistake = check(tokens, before, after);
+  while (mistake) {
+    const next = improve(items, chosen, mistake, before, after);
+    if (!next) {
+      tokens = initial;
+      break;
+    }
+    chosen = next.chosen;
+    tokens = next.tokens;
+    mistake = next.mistake;
+  }
+  let result = "";
+  for (const token of tokens) result += token.value;
+  return result;
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/container-flow.js
@@ -71154,11 +71448,13 @@ function indentLines(value, map4) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/safe.js
+var own6 = {}.hasOwnProperty;
 function safe(state, input, config) {
   const value = (config.before || "") + (input || "") + (config.after || "");
   const positions = [];
   const result = [];
   const infos = {};
+  const percentEncode = state.stack.includes("autolink");
   let index2 = -1;
   while (++index2 < state.unsafe.length) {
     const pattern = state.unsafe[index2];
@@ -71171,7 +71467,7 @@ function safe(state, input, config) {
       const before = "before" in pattern || Boolean(pattern.atBreak);
       const after = "after" in pattern;
       const position2 = match3.index + (before ? match3[1].length : 0);
-      if (positions.includes(position2)) {
+      if (own6.call(infos, position2)) {
         if (infos[position2].before && !before) {
           infos[position2].before = false;
         }
@@ -71185,29 +71481,56 @@ function safe(state, input, config) {
     }
   }
   positions.sort(numerical);
-  let start = config.before ? config.before.length : 0;
+  const offset = config.before ? config.before.length : 0;
   const end = value.length - (config.after ? config.after.length : 0);
+  let start = offset;
   index2 = -1;
   while (++index2 < positions.length) {
     const position2 = positions[index2];
     if (position2 < start || position2 >= end) {
       continue;
     }
+    if (value.charAt(position2) === "_" && // Preceded by an unescaped character that is not punctuation or whitespace:
+    position2 > 0 && classifyCharacter(value.charCodeAt(position2 - 1)) === void 0 && !own6.call(infos, position2 - 1) && // Characters next to attention markers can become character references
+    // later, turning `a` into `&#x61;`, so those do not count.
+    !(position2 - 1 === offset && /[*_]/.test(value.charAt(offset - 1)))) {
+      let sequenceEnd = position2 + 1;
+      while (sequenceEnd < end && value.charAt(sequenceEnd) === "_") {
+        sequenceEnd++;
+      }
+      const skip = sequenceEnd - position2 - 1;
+      if (
+        // All underscores in the run are unsafe positions, so they can be
+        // skipped.
+        positions[index2 + skip] === sequenceEnd - 1 && // Rest as above.
+        sequenceEnd < value.length && classifyCharacter(value.charCodeAt(sequenceEnd)) === void 0 && !own6.call(infos, sequenceEnd) && !(sequenceEnd === end - 1 && /[*_]/.test(value.charAt(end)))
+      ) {
+        index2 += skip;
+        continue;
+      }
+    }
     if (position2 + 1 < end && positions[index2 + 1] === position2 + 1 && infos[position2].after && !infos[position2 + 1].before && !infos[position2 + 1].after || positions[index2 - 1] === position2 - 1 && infos[position2].before && !infos[position2 - 1].before && !infos[position2 - 1].after) {
       continue;
     }
     if (start !== position2) {
-      result.push(escapeBackslashes(value.slice(start, position2), "\\"));
+      const slice = value.slice(start, position2);
+      result.push(percentEncode ? slice : escapeBackslashes(slice, "\\"));
     }
     start = position2;
-    if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config.encode || !config.encode.includes(value.charAt(position2)))) {
+    if (percentEncode) {
+      result.push(
+        "%" + value.charCodeAt(position2).toString(16).toUpperCase().padStart(2, "0")
+      );
+      start++;
+    } else if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config.encode || !config.encode.includes(value.charAt(position2)))) {
       result.push("\\");
     } else {
       result.push(encodeCharacterReference(value.charCodeAt(position2)));
       start++;
     }
   }
-  result.push(escapeBackslashes(value.slice(start, end), config.after));
+  const rest = value.slice(start, end);
+  result.push(percentEncode ? rest : escapeBackslashes(rest, config.after));
   return result.join("");
 }
 function numerical(a, b) {
@@ -71264,6 +71587,8 @@ function toMarkdown(tree, options) {
   const settings = options || {};
   const state = {
     associationId: association,
+    bulletCurrent: void 0,
+    bulletLastUsed: void 0,
     containerPhrasing: containerPhrasingBound,
     containerFlow: containerFlowBound,
     createTracker: track,
@@ -71291,12 +71616,12 @@ function toMarkdown(tree, options) {
     unknown,
     handlers: state.handlers
   });
-  let result = state.handle(tree, void 0, state, {
-    before: "\n",
-    after: "\n",
-    now: { line: 1, column: 1 },
-    lineShift: 0
-  });
+  let result = state.handle(
+    phrasing(tree) ? { type: "root", children: [tree] } : tree,
+    void 0,
+    state,
+    { before: "\n", after: "\n", now: { line: 1, column: 1 }, lineShift: 0 }
+  );
   if (result && result.charCodeAt(result.length - 1) !== 10 && result.charCodeAt(result.length - 1) !== 13) {
     result += "\n";
   }
@@ -72096,7 +72421,7 @@ var CallableInstance = (
 );
 
 // node_modules/unified/lib/index.js
-var own6 = {}.hasOwnProperty;
+var own7 = {}.hasOwnProperty;
 var Processor = class _Processor extends CallableInstance {
   /**
    * Create a processor.
@@ -72203,7 +72528,7 @@ var Processor = class _Processor extends CallableInstance {
         this.namespace[key] = value;
         return this;
       }
-      return own6.call(this.namespace, key) && this.namespace[key] || void 0;
+      return own7.call(this.namespace, key) && this.namespace[key] || void 0;
     }
     if (key) {
       assertUnfrozen("data", this.frozen);
@@ -73007,9 +73332,9 @@ function splitUrl(url) {
   return [url, trail2];
 }
 function previous2(match3, email) {
-  const code3 = match3.input.charCodeAt(match3.index - 1);
-  return (match3.index === 0 || unicodeWhitespace(code3) || unicodePunctuation(code3)) && // If it’s an email, the previous character should not be a slash.
-  (!email || code3 !== 47);
+  const code4 = match3.input.charCodeAt(match3.index - 1);
+  return (match3.index === 0 || unicodeWhitespace(code4) || unicodePunctuation(code4)) && // If it’s an email, the previous character should not be a slash.
+  (!email || code4 !== 47);
 }
 
 // node_modules/mdast-util-gfm-footnote/lib/index.js
@@ -73199,7 +73524,7 @@ function markdownTable(table, options) {
       mostCellsPerRow = table[rowIndex].length;
     }
     while (++columnIndex2 < table[rowIndex].length) {
-      const cell = serialize(table[rowIndex][columnIndex2]);
+      const cell = serialize2(table[rowIndex][columnIndex2]);
       if (settings.alignDelimiters !== false) {
         const size = stringLength(cell);
         sizes2[columnIndex2] = size;
@@ -73218,24 +73543,24 @@ function markdownTable(table, options) {
       alignments[columnIndex] = toAlignment(align[columnIndex]);
     }
   } else {
-    const code3 = toAlignment(align);
+    const code4 = toAlignment(align);
     while (++columnIndex < mostCellsPerRow) {
-      alignments[columnIndex] = code3;
+      alignments[columnIndex] = code4;
     }
   }
   columnIndex = -1;
   const row = [];
   const sizes = [];
   while (++columnIndex < mostCellsPerRow) {
-    const code3 = alignments[columnIndex];
+    const code4 = alignments[columnIndex];
     let before = "";
     let after = "";
-    if (code3 === 99) {
+    if (code4 === 99) {
       before = ":";
       after = ":";
-    } else if (code3 === 108) {
+    } else if (code4 === 108) {
       before = ":";
-    } else if (code3 === 114) {
+    } else if (code4 === 114) {
       after = ":";
     }
     let size = settings.alignDelimiters === false ? 1 : Math.max(
@@ -73267,10 +73592,10 @@ function markdownTable(table, options) {
       let after = "";
       if (settings.alignDelimiters !== false) {
         const size = longestCellByColumn[columnIndex] - (sizes2[columnIndex] || 0);
-        const code3 = alignments[columnIndex];
-        if (code3 === 114) {
+        const code4 = alignments[columnIndex];
+        if (code4 === 114) {
           before = " ".repeat(size);
-        } else if (code3 === 99) {
+        } else if (code4 === 99) {
           if (size % 2) {
             before = " ".repeat(size / 2 + 0.5);
             after = " ".repeat(size / 2 - 0.5);
@@ -73310,12 +73635,12 @@ function markdownTable(table, options) {
   }
   return lines.join("\n");
 }
-function serialize(value) {
+function serialize2(value) {
   return value === null || value === void 0 ? "" : String(value);
 }
 function toAlignment(value) {
-  const code3 = typeof value === "string" ? value.codePointAt(0) : 0;
-  return code3 === 67 || code3 === 99 ? 99 : code3 === 76 || code3 === 108 ? 108 : code3 === 82 || code3 === 114 ? 114 : 0;
+  const code4 = typeof value === "string" ? value.codePointAt(0) : 0;
+  return code4 === 67 || code4 === 99 ? 99 : code4 === 76 || code4 === 108 ? 108 : code4 === 82 || code4 === 114 ? 114 : 0;
 }
 
 // node_modules/mdast-util-gfm-table/lib/index.js
@@ -73536,10 +73861,10 @@ function listItemWithTaskListItem(node2, parent, state, info2) {
     ...tracker.current()
   });
   if (checkable) {
-    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check);
+    value = value.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/, check2);
   }
   return value;
-  function check($0) {
+  function check2($0) {
     return $0 + checkbox;
   }
 }
@@ -73608,12 +73933,12 @@ function gfmAutolinkLiteral() {
     text: text4
   };
 }
-var code2 = 48;
-while (code2 < 123) {
-  text4[code2] = emailAutolink;
-  code2++;
-  if (code2 === 58) code2 = 65;
-  else if (code2 === 91) code2 = 97;
+var code3 = 48;
+while (code3 < 123) {
+  text4[code3] = emailAutolink;
+  code3++;
+  if (code3 === 58) code3 = 65;
+  else if (code3 === 91) code3 = 97;
 }
 text4[43] = emailAutolink;
 text4[45] = emailAutolink;
@@ -73628,65 +73953,65 @@ function tokenizeEmailAutolink(effects, ok3, nok) {
   let dot;
   let data;
   return start;
-  function start(code3) {
-    if (!gfmAtext(code3) || !previousEmail.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
-      return nok(code3);
+  function start(code4) {
+    if (!gfmAtext(code4) || !previousEmail.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
+      return nok(code4);
     }
     effects.enter("literalAutolink");
     effects.enter("literalAutolinkEmail");
-    return atext(code3);
+    return atext(code4);
   }
-  function atext(code3) {
-    if (gfmAtext(code3)) {
-      effects.consume(code3);
+  function atext(code4) {
+    if (gfmAtext(code4)) {
+      effects.consume(code4);
       return atext;
     }
-    if (code3 === 64) {
-      effects.consume(code3);
+    if (code4 === 64) {
+      effects.consume(code4);
       return emailDomain;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function emailDomain(code3) {
-    if (code3 === 46) {
-      return effects.check(emailDomainDotTrail, emailDomainAfter, emailDomainDot)(code3);
+  function emailDomain(code4) {
+    if (code4 === 46) {
+      return effects.check(emailDomainDotTrail, emailDomainAfter, emailDomainDot)(code4);
     }
-    if (code3 === 45 || code3 === 95 || asciiAlphanumeric(code3)) {
+    if (code4 === 45 || code4 === 95 || asciiAlphanumeric(code4)) {
       data = true;
-      effects.consume(code3);
+      effects.consume(code4);
       return emailDomain;
     }
-    return emailDomainAfter(code3);
+    return emailDomainAfter(code4);
   }
-  function emailDomainDot(code3) {
-    effects.consume(code3);
+  function emailDomainDot(code4) {
+    effects.consume(code4);
     dot = true;
     return emailDomain;
   }
-  function emailDomainAfter(code3) {
+  function emailDomainAfter(code4) {
     if (data && dot && asciiAlpha(self2.previous)) {
       effects.exit("literalAutolinkEmail");
       effects.exit("literalAutolink");
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 function tokenizeWwwAutolink(effects, ok3, nok) {
   const self2 = this;
   return wwwStart;
-  function wwwStart(code3) {
-    if (code3 !== 87 && code3 !== 119 || !previousWww.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
-      return nok(code3);
+  function wwwStart(code4) {
+    if (code4 !== 87 && code4 !== 119 || !previousWww.call(self2, self2.previous) || previousUnbalanced(self2.events)) {
+      return nok(code4);
     }
     effects.enter("literalAutolink");
     effects.enter("literalAutolinkWww");
-    return effects.check(wwwPrefix, effects.attempt(domain, effects.attempt(path9, wwwAfter), nok), nok)(code3);
+    return effects.check(wwwPrefix, effects.attempt(domain, effects.attempt(path9, wwwAfter), nok), nok)(code4);
   }
-  function wwwAfter(code3) {
+  function wwwAfter(code4) {
     effects.exit("literalAutolinkWww");
     effects.exit("literalAutolink");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeProtocolAutolink(effects, ok3, nok) {
@@ -73694,68 +74019,68 @@ function tokenizeProtocolAutolink(effects, ok3, nok) {
   let buffer = "";
   let seen = false;
   return protocolStart;
-  function protocolStart(code3) {
-    if ((code3 === 72 || code3 === 104) && previousProtocol.call(self2, self2.previous) && !previousUnbalanced(self2.events)) {
+  function protocolStart(code4) {
+    if ((code4 === 72 || code4 === 104) && previousProtocol.call(self2, self2.previous) && !previousUnbalanced(self2.events)) {
       effects.enter("literalAutolink");
       effects.enter("literalAutolinkHttp");
-      buffer += String.fromCodePoint(code3);
-      effects.consume(code3);
+      buffer += String.fromCodePoint(code4);
+      effects.consume(code4);
       return protocolPrefixInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function protocolPrefixInside(code3) {
-    if (asciiAlpha(code3) && buffer.length < 5) {
-      buffer += String.fromCodePoint(code3);
-      effects.consume(code3);
+  function protocolPrefixInside(code4) {
+    if (asciiAlpha(code4) && buffer.length < 5) {
+      buffer += String.fromCodePoint(code4);
+      effects.consume(code4);
       return protocolPrefixInside;
     }
-    if (code3 === 58) {
+    if (code4 === 58) {
       const protocol = buffer.toLowerCase();
       if (protocol === "http" || protocol === "https") {
-        effects.consume(code3);
+        effects.consume(code4);
         return protocolSlashesInside;
       }
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function protocolSlashesInside(code3) {
-    if (code3 === 47) {
-      effects.consume(code3);
+  function protocolSlashesInside(code4) {
+    if (code4 === 47) {
+      effects.consume(code4);
       if (seen) {
         return afterProtocol;
       }
       seen = true;
       return protocolSlashesInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function afterProtocol(code3) {
-    return code3 === null || asciiControl(code3) || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || unicodePunctuation(code3) ? nok(code3) : effects.attempt(domain, effects.attempt(path9, protocolAfter), nok)(code3);
+  function afterProtocol(code4) {
+    return code4 === null || asciiControl(code4) || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4) || unicodePunctuation(code4) ? nok(code4) : effects.attempt(domain, effects.attempt(path9, protocolAfter), nok)(code4);
   }
-  function protocolAfter(code3) {
+  function protocolAfter(code4) {
     effects.exit("literalAutolinkHttp");
     effects.exit("literalAutolink");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizeWwwPrefix(effects, ok3, nok) {
   let size = 0;
   return wwwPrefixInside;
-  function wwwPrefixInside(code3) {
-    if ((code3 === 87 || code3 === 119) && size < 3) {
+  function wwwPrefixInside(code4) {
+    if ((code4 === 87 || code4 === 119) && size < 3) {
       size++;
-      effects.consume(code3);
+      effects.consume(code4);
       return wwwPrefixInside;
     }
-    if (code3 === 46 && size === 3) {
-      effects.consume(code3);
+    if (code4 === 46 && size === 3) {
+      effects.consume(code4);
       return wwwPrefixAfter;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function wwwPrefixAfter(code3) {
-    return code3 === null ? nok(code3) : ok3(code3);
+  function wwwPrefixAfter(code4) {
+    return code4 === null ? nok(code4) : ok3(code4);
   }
 }
 function tokenizeDomain(effects, ok3, nok) {
@@ -73763,130 +74088,130 @@ function tokenizeDomain(effects, ok3, nok) {
   let underscoreInLastLastSegment;
   let seen;
   return domainInside;
-  function domainInside(code3) {
-    if (code3 === 46 || code3 === 95) {
-      return effects.check(trail, domainAfter, domainAtPunctuation)(code3);
+  function domainInside(code4) {
+    if (code4 === 46 || code4 === 95) {
+      return effects.check(trail, domainAfter, domainAtPunctuation)(code4);
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3) || code3 !== 45 && unicodePunctuation(code3)) {
-      return domainAfter(code3);
+    if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4) || code4 !== 45 && unicodePunctuation(code4)) {
+      return domainAfter(code4);
     }
     seen = true;
-    effects.consume(code3);
+    effects.consume(code4);
     return domainInside;
   }
-  function domainAtPunctuation(code3) {
-    if (code3 === 95) {
+  function domainAtPunctuation(code4) {
+    if (code4 === 95) {
       underscoreInLastSegment = true;
     } else {
       underscoreInLastLastSegment = underscoreInLastSegment;
       underscoreInLastSegment = void 0;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return domainInside;
   }
-  function domainAfter(code3) {
+  function domainAfter(code4) {
     if (underscoreInLastLastSegment || underscoreInLastSegment || !seen) {
-      return nok(code3);
+      return nok(code4);
     }
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function tokenizePath(effects, ok3) {
   let sizeOpen = 0;
   let sizeClose = 0;
   return pathInside;
-  function pathInside(code3) {
-    if (code3 === 40) {
+  function pathInside(code4) {
+    if (code4 === 40) {
       sizeOpen++;
-      effects.consume(code3);
+      effects.consume(code4);
       return pathInside;
     }
-    if (code3 === 41 && sizeClose < sizeOpen) {
-      return pathAtPunctuation(code3);
+    if (code4 === 41 && sizeClose < sizeOpen) {
+      return pathAtPunctuation(code4);
     }
-    if (code3 === 33 || code3 === 34 || code3 === 38 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 60 || code3 === 63 || code3 === 93 || code3 === 95 || code3 === 126) {
-      return effects.check(trail, ok3, pathAtPunctuation)(code3);
+    if (code4 === 33 || code4 === 34 || code4 === 38 || code4 === 39 || code4 === 41 || code4 === 42 || code4 === 44 || code4 === 46 || code4 === 58 || code4 === 59 || code4 === 60 || code4 === 63 || code4 === 93 || code4 === 95 || code4 === 126) {
+      return effects.check(trail, ok3, pathAtPunctuation)(code4);
     }
-    if (code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
-      return ok3(code3);
+    if (code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
+      return ok3(code4);
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return pathInside;
   }
-  function pathAtPunctuation(code3) {
-    if (code3 === 41) {
+  function pathAtPunctuation(code4) {
+    if (code4 === 41) {
       sizeClose++;
     }
-    effects.consume(code3);
+    effects.consume(code4);
     return pathInside;
   }
 }
 function tokenizeTrail(effects, ok3, nok) {
   return trail2;
-  function trail2(code3) {
-    if (code3 === 33 || code3 === 34 || code3 === 39 || code3 === 41 || code3 === 42 || code3 === 44 || code3 === 46 || code3 === 58 || code3 === 59 || code3 === 63 || code3 === 95 || code3 === 126) {
-      effects.consume(code3);
+  function trail2(code4) {
+    if (code4 === 33 || code4 === 34 || code4 === 39 || code4 === 41 || code4 === 42 || code4 === 44 || code4 === 46 || code4 === 58 || code4 === 59 || code4 === 63 || code4 === 95 || code4 === 126) {
+      effects.consume(code4);
       return trail2;
     }
-    if (code3 === 38) {
-      effects.consume(code3);
+    if (code4 === 38) {
+      effects.consume(code4);
       return trailCharacterReferenceStart;
     }
-    if (code3 === 93) {
-      effects.consume(code3);
+    if (code4 === 93) {
+      effects.consume(code4);
       return trailBracketAfter;
     }
     if (
       // `<` is an end.
-      code3 === 60 || // So is whitespace.
-      code3 === null || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)
+      code4 === 60 || // So is whitespace.
+      code4 === null || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)
     ) {
-      return ok3(code3);
+      return ok3(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function trailBracketAfter(code3) {
-    if (code3 === null || code3 === 40 || code3 === 91 || markdownLineEndingOrSpace(code3) || unicodeWhitespace(code3)) {
-      return ok3(code3);
+  function trailBracketAfter(code4) {
+    if (code4 === null || code4 === 40 || code4 === 91 || markdownLineEndingOrSpace(code4) || unicodeWhitespace(code4)) {
+      return ok3(code4);
     }
-    return trail2(code3);
+    return trail2(code4);
   }
-  function trailCharacterReferenceStart(code3) {
-    return asciiAlpha(code3) ? trailCharacterReferenceInside(code3) : nok(code3);
+  function trailCharacterReferenceStart(code4) {
+    return asciiAlpha(code4) ? trailCharacterReferenceInside(code4) : nok(code4);
   }
-  function trailCharacterReferenceInside(code3) {
-    if (code3 === 59) {
-      effects.consume(code3);
+  function trailCharacterReferenceInside(code4) {
+    if (code4 === 59) {
+      effects.consume(code4);
       return trail2;
     }
-    if (asciiAlpha(code3)) {
-      effects.consume(code3);
+    if (asciiAlpha(code4)) {
+      effects.consume(code4);
       return trailCharacterReferenceInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 function tokenizeEmailDomainDotTrail(effects, ok3, nok) {
   return start;
-  function start(code3) {
-    effects.consume(code3);
+  function start(code4) {
+    effects.consume(code4);
     return after;
   }
-  function after(code3) {
-    return asciiAlphanumeric(code3) ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return asciiAlphanumeric(code4) ? nok(code4) : ok3(code4);
   }
 }
-function previousWww(code3) {
-  return code3 === null || code3 === 40 || code3 === 42 || code3 === 95 || code3 === 91 || code3 === 93 || code3 === 126 || markdownLineEndingOrSpace(code3);
+function previousWww(code4) {
+  return code4 === null || code4 === 40 || code4 === 42 || code4 === 95 || code4 === 91 || code4 === 93 || code4 === 126 || markdownLineEndingOrSpace(code4);
 }
-function previousProtocol(code3) {
-  return !asciiAlpha(code3);
+function previousProtocol(code4) {
+  return !asciiAlpha(code4);
 }
-function previousEmail(code3) {
-  return !(code3 === 47 || gfmAtext(code3));
+function previousEmail(code4) {
+  return !(code4 === 47 || gfmAtext(code4));
 }
-function gfmAtext(code3) {
-  return code3 === 43 || code3 === 45 || code3 === 46 || code3 === 95 || asciiAlphanumeric(code3);
+function gfmAtext(code4) {
+  return code4 === 43 || code4 === 45 || code4 === 46 || code4 === 95 || asciiAlphanumeric(code4);
 }
 function previousUnbalanced(events2) {
   let index2 = events2.length;
@@ -73955,21 +74280,21 @@ function tokenizePotentialGfmFootnoteCall(effects, ok3, nok) {
     }
   }
   return start;
-  function start(code3) {
+  function start(code4) {
     if (!labelStart || !labelStart._balanced) {
-      return nok(code3);
+      return nok(code4);
     }
     const id = normalizeIdentifier(self2.sliceSerialize({
       start: labelStart.end,
       end: self2.now()
     }));
     if (id.codePointAt(0) !== 94 || !defined.includes(id.slice(1))) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("gfmFootnoteCallLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallLabelMarker");
-    return ok3(code3);
+    return ok3(code4);
   }
 }
 function resolveToPotentialGfmFootnoteCall(events2, context) {
@@ -74037,58 +74362,58 @@ function tokenizeGfmFootnoteCall(effects, ok3, nok) {
   let size = 0;
   let data;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("gfmFootnoteCall");
     effects.enter("gfmFootnoteCallLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallLabelMarker");
     return callStart;
   }
-  function callStart(code3) {
-    if (code3 !== 94) return nok(code3);
+  function callStart(code4) {
+    if (code4 !== 94) return nok(code4);
     effects.enter("gfmFootnoteCallMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteCallMarker");
     effects.enter("gfmFootnoteCallString");
     effects.enter("chunkString").contentType = "string";
     return callData;
   }
-  function callData(code3) {
+  function callData(code4) {
     if (
       // Too long.
       size > 999 || // Closing brace with nothing.
-      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace(code4)
     ) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit("chunkString");
       const token = effects.exit("gfmFootnoteCallString");
       if (!defined.includes(normalizeIdentifier(self2.sliceSerialize(token)))) {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("gfmFootnoteCallLabelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteCallLabelMarker");
       effects.exit("gfmFootnoteCall");
       return ok3;
     }
-    if (!markdownLineEndingOrSpace(code3)) {
+    if (!markdownLineEndingOrSpace(code4)) {
       data = true;
     }
     size++;
-    effects.consume(code3);
-    return code3 === 92 ? callEscape : callData;
+    effects.consume(code4);
+    return code4 === 92 ? callEscape : callData;
   }
-  function callEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function callEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return callData;
     }
-    return callData(code3);
+    return callData(code4);
   }
 }
 function tokenizeDefinitionStart(effects, ok3, nok) {
@@ -74098,74 +74423,74 @@ function tokenizeDefinitionStart(effects, ok3, nok) {
   let size = 0;
   let data;
   return start;
-  function start(code3) {
+  function start(code4) {
     effects.enter("gfmFootnoteDefinition")._container = true;
     effects.enter("gfmFootnoteDefinitionLabel");
     effects.enter("gfmFootnoteDefinitionLabelMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("gfmFootnoteDefinitionLabelMarker");
     return labelAtMarker;
   }
-  function labelAtMarker(code3) {
-    if (code3 === 94) {
+  function labelAtMarker(code4) {
+    if (code4 === 94) {
       effects.enter("gfmFootnoteDefinitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteDefinitionMarker");
       effects.enter("gfmFootnoteDefinitionLabelString");
       effects.enter("chunkString").contentType = "string";
       return labelInside;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function labelInside(code3) {
+  function labelInside(code4) {
     if (
       // Too long.
       size > 999 || // Closing brace with nothing.
-      code3 === 93 && !data || // Space or tab is not supported by GFM for some reason.
+      code4 === 93 && !data || // Space or tab is not supported by GFM for some reason.
       // `\n` and `[` not being supported makes sense.
-      code3 === null || code3 === 91 || markdownLineEndingOrSpace(code3)
+      code4 === null || code4 === 91 || markdownLineEndingOrSpace(code4)
     ) {
-      return nok(code3);
+      return nok(code4);
     }
-    if (code3 === 93) {
+    if (code4 === 93) {
       effects.exit("chunkString");
       const token = effects.exit("gfmFootnoteDefinitionLabelString");
       identifier = normalizeIdentifier(self2.sliceSerialize(token));
       effects.enter("gfmFootnoteDefinitionLabelMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("gfmFootnoteDefinitionLabelMarker");
       effects.exit("gfmFootnoteDefinitionLabel");
       return labelAfter;
     }
-    if (!markdownLineEndingOrSpace(code3)) {
+    if (!markdownLineEndingOrSpace(code4)) {
       data = true;
     }
     size++;
-    effects.consume(code3);
-    return code3 === 92 ? labelEscape : labelInside;
+    effects.consume(code4);
+    return code4 === 92 ? labelEscape : labelInside;
   }
-  function labelEscape(code3) {
-    if (code3 === 91 || code3 === 92 || code3 === 93) {
-      effects.consume(code3);
+  function labelEscape(code4) {
+    if (code4 === 91 || code4 === 92 || code4 === 93) {
+      effects.consume(code4);
       size++;
       return labelInside;
     }
-    return labelInside(code3);
+    return labelInside(code4);
   }
-  function labelAfter(code3) {
-    if (code3 === 58) {
+  function labelAfter(code4) {
+    if (code4 === 58) {
       effects.enter("definitionMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("definitionMarker");
       if (!defined.includes(identifier)) {
         defined.push(identifier);
       }
       return factorySpace(effects, whitespaceAfter, "gfmFootnoteDefinitionWhitespace");
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function whitespaceAfter(code3) {
-    return ok3(code3);
+  function whitespaceAfter(code4) {
+    return ok3(code4);
   }
 }
 function tokenizeDefinitionContinuation(effects, ok3, nok) {
@@ -74177,9 +74502,9 @@ function gfmFootnoteDefinitionEnd(effects) {
 function tokenizeIndent2(effects, ok3, nok) {
   const self2 = this;
   return factorySpace(effects, afterPrefix, "gfmFootnoteDefinitionIndent", 4 + 1);
-  function afterPrefix(code3) {
+  function afterPrefix(code4) {
     const tail = self2.events[self2.events.length - 1];
-    return tail && tail[1].type === "gfmFootnoteDefinitionIndent" && tail[2].sliceSerialize(tail[1], true).length === 4 ? ok3(code3) : nok(code3);
+    return tail && tail[1].type === "gfmFootnoteDefinitionIndent" && tail[2].sliceSerialize(tail[1], true).length === 4 ? ok3(code4) : nok(code4);
   }
 }
 
@@ -74252,27 +74577,27 @@ function gfmStrikethrough(options) {
     const events2 = this.events;
     let size = 0;
     return start;
-    function start(code3) {
+    function start(code4) {
       if (previous3 === 126 && events2[events2.length - 1][1].type !== "characterEscape") {
-        return nok(code3);
+        return nok(code4);
       }
       effects.enter("strikethroughSequenceTemporary");
-      return more(code3);
+      return more(code4);
     }
-    function more(code3) {
+    function more(code4) {
       const before = classifyCharacter(previous3);
-      if (code3 === 126) {
-        if (size > 1) return nok(code3);
-        effects.consume(code3);
+      if (code4 === 126) {
+        if (size > 1) return nok(code4);
+        effects.consume(code4);
         size++;
         return more;
       }
-      if (size < 2 && !single) return nok(code3);
+      if (size < 2 && !single) return nok(code4);
       const token = effects.exit("strikethroughSequenceTemporary");
-      const after = classifyCharacter(code3);
+      const after = classifyCharacter(code4);
       token._open = !after || after === 2 && Boolean(before);
       token._close = !before || before === 2 && Boolean(after);
-      return ok3(code3);
+      return ok3(code4);
     }
   }
 }
@@ -74401,7 +74726,7 @@ function tokenizeTable(effects, ok3, nok) {
   let sizeB = 0;
   let seen;
   return start;
-  function start(code3) {
+  function start(code4) {
     let index2 = self2.events.length - 1;
     while (index2 > -1) {
       const type = self2.events[index2][1].type;
@@ -74412,202 +74737,202 @@ function tokenizeTable(effects, ok3, nok) {
     const tail = index2 > -1 ? self2.events[index2][1].type : null;
     const next = tail === "tableHead" || tail === "tableRow" ? bodyRowStart : headRowBefore;
     if (next === bodyRowStart && self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
-    return next(code3);
+    return next(code4);
   }
-  function headRowBefore(code3) {
+  function headRowBefore(code4) {
     effects.enter("tableHead");
     effects.enter("tableRow");
-    return headRowStart(code3);
+    return headRowStart(code4);
   }
-  function headRowStart(code3) {
-    if (code3 === 124) {
-      return headRowBreak(code3);
+  function headRowStart(code4) {
+    if (code4 === 124) {
+      return headRowBreak(code4);
     }
     seen = true;
     sizeB += 1;
-    return headRowBreak(code3);
+    return headRowBreak(code4);
   }
-  function headRowBreak(code3) {
-    if (code3 === null) {
-      return nok(code3);
+  function headRowBreak(code4) {
+    if (code4 === null) {
+      return nok(code4);
     }
-    if (markdownLineEnding(code3)) {
+    if (markdownLineEnding(code4)) {
       if (sizeB > 1) {
         sizeB = 0;
         self2.interrupt = true;
         effects.exit("tableRow");
         effects.enter("lineEnding");
-        effects.consume(code3);
+        effects.consume(code4);
         effects.exit("lineEnding");
         return headDelimiterStart;
       }
-      return nok(code3);
+      return nok(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headRowBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headRowBreak, "whitespace")(code4);
     }
     sizeB += 1;
     if (seen) {
       seen = false;
       size += 1;
     }
-    if (code3 === 124) {
+    if (code4 === 124) {
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       seen = true;
       return headRowBreak;
     }
     effects.enter("data");
-    return headRowData(code3);
+    return headRowData(code4);
   }
-  function headRowData(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+  function headRowData(code4) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace(code4)) {
       effects.exit("data");
-      return headRowBreak(code3);
+      return headRowBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? headRowEscape : headRowData;
+    effects.consume(code4);
+    return code4 === 92 ? headRowEscape : headRowData;
   }
-  function headRowEscape(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
+  function headRowEscape(code4) {
+    if (code4 === 92 || code4 === 124) {
+      effects.consume(code4);
       return headRowData;
     }
-    return headRowData(code3);
+    return headRowData(code4);
   }
-  function headDelimiterStart(code3) {
+  function headDelimiterStart(code4) {
     self2.interrupt = false;
     if (self2.parser.lazy[self2.now().line]) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("tableDelimiterRow");
     seen = false;
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headDelimiterBefore, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headDelimiterBefore, "linePrefix", self2.parser.constructs.disable.null.includes("codeIndented") ? void 0 : 4)(code4);
     }
-    return headDelimiterBefore(code3);
+    return headDelimiterBefore(code4);
   }
-  function headDelimiterBefore(code3) {
-    if (code3 === 45 || code3 === 58) {
-      return headDelimiterValueBefore(code3);
+  function headDelimiterBefore(code4) {
+    if (code4 === 45 || code4 === 58) {
+      return headDelimiterValueBefore(code4);
     }
-    if (code3 === 124) {
+    if (code4 === 124) {
       seen = true;
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       return headDelimiterCellBefore;
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterCellBefore(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headDelimiterValueBefore, "whitespace")(code3);
+  function headDelimiterCellBefore(code4) {
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headDelimiterValueBefore, "whitespace")(code4);
     }
-    return headDelimiterValueBefore(code3);
+    return headDelimiterValueBefore(code4);
   }
-  function headDelimiterValueBefore(code3) {
-    if (code3 === 58) {
+  function headDelimiterValueBefore(code4) {
+    if (code4 === 58) {
       sizeB += 1;
       seen = true;
       effects.enter("tableDelimiterMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableDelimiterMarker");
       return headDelimiterLeftAlignmentAfter;
     }
-    if (code3 === 45) {
+    if (code4 === 45) {
       sizeB += 1;
-      return headDelimiterLeftAlignmentAfter(code3);
+      return headDelimiterLeftAlignmentAfter(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
-      return headDelimiterCellAfter(code3);
+    if (code4 === null || markdownLineEnding(code4)) {
+      return headDelimiterCellAfter(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterLeftAlignmentAfter(code3) {
-    if (code3 === 45) {
+  function headDelimiterLeftAlignmentAfter(code4) {
+    if (code4 === 45) {
       effects.enter("tableDelimiterFiller");
-      return headDelimiterFiller(code3);
+      return headDelimiterFiller(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterFiller(code3) {
-    if (code3 === 45) {
-      effects.consume(code3);
+  function headDelimiterFiller(code4) {
+    if (code4 === 45) {
+      effects.consume(code4);
       return headDelimiterFiller;
     }
-    if (code3 === 58) {
+    if (code4 === 58) {
       seen = true;
       effects.exit("tableDelimiterFiller");
       effects.enter("tableDelimiterMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableDelimiterMarker");
       return headDelimiterRightAlignmentAfter;
     }
     effects.exit("tableDelimiterFiller");
-    return headDelimiterRightAlignmentAfter(code3);
+    return headDelimiterRightAlignmentAfter(code4);
   }
-  function headDelimiterRightAlignmentAfter(code3) {
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, headDelimiterCellAfter, "whitespace")(code3);
+  function headDelimiterRightAlignmentAfter(code4) {
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, headDelimiterCellAfter, "whitespace")(code4);
     }
-    return headDelimiterCellAfter(code3);
+    return headDelimiterCellAfter(code4);
   }
-  function headDelimiterCellAfter(code3) {
-    if (code3 === 124) {
-      return headDelimiterBefore(code3);
+  function headDelimiterCellAfter(code4) {
+    if (code4 === 124) {
+      return headDelimiterBefore(code4);
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       if (!seen || size !== sizeB) {
-        return headDelimiterNok(code3);
+        return headDelimiterNok(code4);
       }
       effects.exit("tableDelimiterRow");
       effects.exit("tableHead");
-      return ok3(code3);
+      return ok3(code4);
     }
-    return headDelimiterNok(code3);
+    return headDelimiterNok(code4);
   }
-  function headDelimiterNok(code3) {
-    return nok(code3);
+  function headDelimiterNok(code4) {
+    return nok(code4);
   }
-  function bodyRowStart(code3) {
+  function bodyRowStart(code4) {
     effects.enter("tableRow");
-    return bodyRowBreak(code3);
+    return bodyRowBreak(code4);
   }
-  function bodyRowBreak(code3) {
-    if (code3 === 124) {
+  function bodyRowBreak(code4) {
+    if (code4 === 124) {
       effects.enter("tableCellDivider");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("tableCellDivider");
       return bodyRowBreak;
     }
-    if (code3 === null || markdownLineEnding(code3)) {
+    if (code4 === null || markdownLineEnding(code4)) {
       effects.exit("tableRow");
-      return ok3(code3);
+      return ok3(code4);
     }
-    if (markdownSpace(code3)) {
-      return factorySpace(effects, bodyRowBreak, "whitespace")(code3);
+    if (markdownSpace(code4)) {
+      return factorySpace(effects, bodyRowBreak, "whitespace")(code4);
     }
     effects.enter("data");
-    return bodyRowData(code3);
+    return bodyRowData(code4);
   }
-  function bodyRowData(code3) {
-    if (code3 === null || code3 === 124 || markdownLineEndingOrSpace(code3)) {
+  function bodyRowData(code4) {
+    if (code4 === null || code4 === 124 || markdownLineEndingOrSpace(code4)) {
       effects.exit("data");
-      return bodyRowBreak(code3);
+      return bodyRowBreak(code4);
     }
-    effects.consume(code3);
-    return code3 === 92 ? bodyRowEscape : bodyRowData;
+    effects.consume(code4);
+    return code4 === 92 ? bodyRowEscape : bodyRowData;
   }
-  function bodyRowEscape(code3) {
-    if (code3 === 92 || code3 === 124) {
-      effects.consume(code3);
+  function bodyRowEscape(code4) {
+    if (code4 === 92 || code4 === 124) {
+      effects.consume(code4);
       return bodyRowData;
     }
-    return bodyRowData(code3);
+    return bodyRowData(code4);
   }
 }
 function resolveTable(events2, context) {
@@ -74784,62 +75109,62 @@ function gfmTaskListItem() {
 function tokenizeTasklistCheck(effects, ok3, nok) {
   const self2 = this;
   return open2;
-  function open2(code3) {
+  function open2(code4) {
     if (
       // Exit if there’s stuff before.
       self2.previous !== null || // Exit if not in the first content that is the first child of a list
       // item.
       !self2._gfmTasklistFirstContentOfListItem
     ) {
-      return nok(code3);
+      return nok(code4);
     }
     effects.enter("taskListCheck");
     effects.enter("taskListCheckMarker");
-    effects.consume(code3);
+    effects.consume(code4);
     effects.exit("taskListCheckMarker");
     return inside;
   }
-  function inside(code3) {
-    if (markdownLineEndingOrSpace(code3)) {
+  function inside(code4) {
+    if (markdownLineEndingOrSpace(code4)) {
       effects.enter("taskListCheckValueUnchecked");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckValueUnchecked");
       return close;
     }
-    if (code3 === 88 || code3 === 120) {
+    if (code4 === 88 || code4 === 120) {
       effects.enter("taskListCheckValueChecked");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckValueChecked");
       return close;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function close(code3) {
-    if (code3 === 93) {
+  function close(code4) {
+    if (code4 === 93) {
       effects.enter("taskListCheckMarker");
-      effects.consume(code3);
+      effects.consume(code4);
       effects.exit("taskListCheckMarker");
       effects.exit("taskListCheck");
       return after;
     }
-    return nok(code3);
+    return nok(code4);
   }
-  function after(code3) {
-    if (markdownLineEnding(code3)) {
-      return ok3(code3);
+  function after(code4) {
+    if (markdownLineEnding(code4)) {
+      return ok3(code4);
     }
-    if (markdownSpace(code3)) {
+    if (markdownSpace(code4)) {
       return effects.check({
         tokenize: spaceThenNonSpace
-      }, ok3, nok)(code3);
+      }, ok3, nok)(code4);
     }
-    return nok(code3);
+    return nok(code4);
   }
 }
 function spaceThenNonSpace(effects, ok3, nok) {
   return factorySpace(effects, after, "whitespace");
-  function after(code3) {
-    return code3 === null ? nok(code3) : ok3(code3);
+  function after(code4) {
+    return code4 === null ? nok(code4) : ok3(code4);
   }
 }
 
@@ -75648,8 +75973,8 @@ var Schema = class Schema2 {
   }
   /** @internal */
   resolveImplicitScalarTag(source) {
-    const candidates = this.implicitScalarByFirstChar.get(source.charAt(0)) ?? this.implicitScalarAnyFirstChar;
-    for (const tag2 of candidates) {
+    const candidates2 = this.implicitScalarByFirstChar.get(source.charAt(0)) ?? this.implicitScalarAnyFirstChar;
+    for (const tag2 of candidates2) {
       const value = tag2.resolve(source, false, tag2.tagName);
       if (value !== NOT_RESOLVED) return {
         value,
@@ -77780,8 +78105,8 @@ function isDiscussionReaction(reaction) {
 }
 function isFileNotFoundError(value) {
   if (!isObject(value)) return false;
-  const code3 = value.code;
-  return code3 === "ENOENT";
+  const code4 = value.code;
+  return code4 === "ENOENT";
 }
 function isReleaseReaction(reaction) {
   return config_v6_schema_default.properties.reactions.items.enum.includes(reaction);
@@ -81868,7 +82193,7 @@ async function createOrUpdateRelease({
         if (!isRequestError2(error2)) throw error2;
         const errors = error2.response.data.errors ?? [];
         const isExisting = errors.some(
-          ({ resource, code: code3 }) => resource === "Release" && code3 === "already_exists"
+          ({ resource, code: code4 }) => resource === "Release" && code4 === "already_exists"
         );
         if (!isExisting) throw error2;
         info2(JSON.stringify(error2.response.data, null, 2));
