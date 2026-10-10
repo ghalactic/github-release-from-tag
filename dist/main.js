@@ -70739,8 +70739,14 @@ function peek2(_, _1, state) {
 }
 
 // node_modules/mdast-util-to-markdown/lib/handle/text.js
-function text3(node2, _, state, info2) {
-  return state.safe(node2.value, info2);
+function text3(node2, parent, state, info2) {
+  const siblings = parent ? parent.children : [];
+  const index2 = siblings.indexOf(node2);
+  return state.safe(node2.value, {
+    ...info2,
+    afterNode: siblings[index2 + 1],
+    beforeNode: siblings[index2 - 1]
+  });
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/check-rule-repetition.js
@@ -70993,8 +70999,8 @@ function compilePattern(pattern) {
   if (!pattern._compiled) {
     const before = (pattern.atBreak ? "[\\r\\n][\\t ]*" : "") + (pattern.before ? "(?:" + pattern.before + ")" : "");
     pattern._compiled = new RegExp(
-      (before ? "(" + before + ")" : "") + (/[$()*+\-.?[\\\]^{|}]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.after ? "(?:" + pattern.after + ")" : ""),
-      "g"
+      (pattern.beforeNode ? "^" : before ? "(" + before + ")" : "") + (/[$()*+.?[\\\]^{|}]/.test(pattern.character) ? "\\" : "") + pattern.character + (pattern.afterNode ? "$" : pattern.after ? "(?:" + pattern.after + ")" : ""),
+      pattern.unicode ? "gu" : "g"
     );
   }
   return pattern._compiled;
@@ -71455,18 +71461,22 @@ function safe(state, input, config) {
   const result = [];
   const infos = {};
   const percentEncode = state.stack.includes("autolink");
+  const offset = config.before ? config.before.length : 0;
+  const end = value.length - (config.after ? config.after.length : 0);
   let index2 = -1;
   while (++index2 < state.unsafe.length) {
     const pattern = state.unsafe[index2];
-    if (!patternInScope(state.stack, pattern)) {
+    if (!patternInScope(state.stack, pattern) || !nodeInScope(pattern.beforeNode, config.beforeNode) || !nodeInScope(pattern.afterNode, config.afterNode)) {
       continue;
     }
     const expression = state.compilePattern(pattern);
+    const from = pattern.beforeNode ? offset : 0;
+    const subject = value.slice(from, pattern.afterNode ? end : void 0);
     let match3;
-    while (match3 = expression.exec(value)) {
+    while (match3 = expression.exec(subject)) {
       const before = "before" in pattern || Boolean(pattern.atBreak);
       const after = "after" in pattern;
-      const position2 = match3.index + (before ? match3[1].length : 0);
+      const position2 = from + match3.index + (before ? match3[1].length : 0);
       if (own6.call(infos, position2)) {
         if (infos[position2].before && !before) {
           infos[position2].before = false;
@@ -71481,8 +71491,6 @@ function safe(state, input, config) {
     }
   }
   positions.sort(numerical);
-  const offset = config.before ? config.before.length : 0;
-  const end = value.length - (config.after ? config.after.length : 0);
   let start = offset;
   index2 = -1;
   while (++index2 < positions.length) {
@@ -71532,6 +71540,11 @@ function safe(state, input, config) {
   const rest = value.slice(start, end);
   result.push(percentEncode ? rest : escapeBackslashes(rest, config.after));
   return result.join("");
+}
+function nodeInScope(types2, node2) {
+  if (!types2) return true;
+  if (!node2) return false;
+  return typeof types2 === "string" ? types2 === node2.type : types2.includes(node2.type);
 }
 function numerical(a, b) {
   return a - b;
