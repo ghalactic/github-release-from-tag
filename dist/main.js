@@ -70126,16 +70126,50 @@ var empty = [];
 var CONTINUE = true;
 var EXIT = false;
 var SKIP = "skip";
-function visitParents(tree, test, visitor, reverse) {
+function visitParents(tree, testOrEnterOrVisitors, enterOrVisitorsOrReverse, reverse) {
+  if (!tree || typeof tree !== "object") {
+    throw new Error("Unexpected value `" + tree + "` for `tree`, expected node");
+  }
+  let preorder = true;
   let check2;
-  if (typeof test === "function" && typeof visitor !== "function") {
-    reverse = visitor;
-    visitor = test;
+  let visitors;
+  let enter;
+  let exit3;
+  if (typeof enterOrVisitorsOrReverse === "function" || enterOrVisitorsOrReverse && typeof enterOrVisitorsOrReverse === "object") {
+    check2 = /** @type {Test} */
+    testOrEnterOrVisitors;
+    visitors = enterOrVisitorsOrReverse;
+    if (reverse) preorder = false;
   } else {
-    check2 = test;
+    visitors = /** @type {Visitors | Visitor} */
+    testOrEnterOrVisitors;
+    if (enterOrVisitorsOrReverse) preorder = false;
+  }
+  if (typeof visitors === "function") {
+    enter = visitors;
+  } else if (visitors && typeof visitors === "object") {
+    if (visitors.enter === null || visitors.enter === void 0) {
+    } else if (typeof visitors.enter === "function") {
+      enter = visitors.enter;
+    } else {
+      throw new Error(
+        "Unexpected value `" + visitors.enter + "` for `visitors.enter`, expected optional visitor"
+      );
+    }
+    if (typeof visitors.exit === "function") {
+      exit3 = visitors.exit;
+    } else {
+      throw new Error(
+        "Unexpected value `" + visitors.exit + "` for `visitors.exit`, expected visitor (pass a visitor directly if you only want an enter visitor)"
+      );
+    }
+  } else {
+    throw new Error(
+      "Unexpected value `" + visitors + "` for `enter` or `visitors`, expected visitor or object with visitors"
+    );
   }
   const is2 = convert(check2);
-  const step = reverse ? -1 : 1;
+  const step = preorder ? 1 : -1;
   factory(tree, void 0, [])();
   function factory(node2, index2, parents) {
     const value = (
@@ -70156,12 +70190,10 @@ function visitParents(tree, test, visitor, reverse) {
     }
     return visit2;
     function visit2() {
+      const matches = !check2 || is2(node2, index2, parents[parents.length - 1] || void 0);
       let result = empty;
-      let subresult;
-      let offset;
-      let grandparents;
-      if (!test || is2(node2, index2, parents[parents.length - 1] || void 0)) {
-        result = toResult(visitor(node2, parents));
+      if (enter && matches) {
+        result = toResult(enter(node2, parents, index2));
         if (result[0] === EXIT) {
           return result;
         }
@@ -70172,16 +70204,27 @@ function visitParents(tree, test, visitor, reverse) {
           node2
         );
         if (nodeAsParent.children && result[0] !== SKIP) {
-          offset = (reverse ? nodeAsParent.children.length : -1) + step;
-          grandparents = parents.concat(nodeAsParent);
+          let offset = (preorder ? -1 : nodeAsParent.children.length) + step;
+          const grandparents = [...parents, nodeAsParent];
           while (offset > -1 && offset < nodeAsParent.children.length) {
             const child2 = nodeAsParent.children[offset];
-            subresult = factory(child2, offset, grandparents)();
+            const subresult = factory(child2, offset, grandparents)();
             if (subresult[0] === EXIT) {
               return subresult;
             }
             offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
           }
+        }
+      }
+      if (exit3 && matches) {
+        const exitResult = toResult(exit3(node2, parents, index2));
+        if (exitResult[0] === SKIP) {
+          throw new Error(
+            "Unexpected value `" + exitResult[0] + "` from `exit`, expected `CONTINUE`, `EXIT`, index, or nothing"
+          );
+        }
+        if (exitResult[0] === EXIT || typeof exitResult[1] === "number") {
+          return exitResult;
         }
       }
       return result;
@@ -70199,24 +70242,37 @@ function toResult(value) {
 }
 
 // node_modules/unist-util-visit/lib/index.js
-function visit(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
+function visit(tree, testOrEnterOrVisitors, enterOrVisitorsOrReverse, maybeReverse) {
+  let check2;
+  let visitors;
   let reverse;
-  let test;
-  let visitor;
-  if (typeof testOrVisitor === "function" && typeof visitorOrReverse !== "function") {
-    test = void 0;
-    visitor = testOrVisitor;
-    reverse = visitorOrReverse;
-  } else {
-    test = testOrVisitor;
-    visitor = visitorOrReverse;
+  if (typeof enterOrVisitorsOrReverse === "function" || enterOrVisitorsOrReverse && typeof enterOrVisitorsOrReverse === "object") {
+    check2 = /** @type {Test} */
+    testOrEnterOrVisitors;
+    visitors = enterOrVisitorsOrReverse;
     reverse = maybeReverse;
+  } else {
+    visitors = /** @type {Visitor | Visitors} */
+    testOrEnterOrVisitors;
+    reverse = enterOrVisitorsOrReverse;
   }
-  visitParents(tree, test, overload, reverse);
-  function overload(node2, parents) {
-    const parent = parents[parents.length - 1];
-    const index2 = parent ? parent.children.indexOf(node2) : void 0;
-    return visitor(node2, index2, parent);
+  if (typeof visitors === "function") {
+    visitParents(tree, check2, wrap(visitors), reverse);
+  } else {
+    visitParents(tree, check2, wrapVisitors(visitors), reverse);
+  }
+}
+function wrapVisitors(visitors) {
+  if (!visitors || typeof visitors !== "object") return visitors;
+  return {
+    enter: typeof visitors.enter === "function" ? wrap(visitors.enter) : visitors.enter,
+    exit: typeof visitors.exit === "function" ? wrap(visitors.exit) : visitors.exit
+  };
+}
+function wrap(visitor) {
+  return overload;
+  function overload(node2, parents, index2) {
+    return visitor(node2, index2, parents[parents.length - 1]);
   }
 }
 
@@ -71737,7 +71793,7 @@ function trough() {
       }
       values = output;
       if (fn) {
-        wrap(fn, next)(...output);
+        wrap2(fn, next)(...output);
       } else {
         callback(null, ...output);
       }
@@ -71753,7 +71809,7 @@ function trough() {
     return pipeline;
   }
 }
-function wrap(middleware, callback) {
+function wrap2(middleware, callback) {
   let called;
   return wrapped;
   function wrapped(...parameters) {
