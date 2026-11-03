@@ -70090,12 +70090,444 @@ function checkEmphasis(state) {
   return marker;
 }
 
+// node_modules/mdast-util-to-markdown/lib/util/character.js
+function firstCharacter(value) {
+  const code4 = value.codePointAt(0);
+  return code4 === void 0 ? "" : String.fromCodePoint(code4);
+}
+function lastCharacter(value) {
+  const code4 = value.codePointAt(value.length - 2);
+  return code4 !== void 0 && code4 > 65535 ? value.slice(-2) : value.slice(-1);
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
+function encodeCharacterReference(code4) {
+  return "&#x" + code4.toString(16).toUpperCase() + ";";
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/encode-info.js
+function encodeInfo(outside, inside, marker) {
+  const outsideKind = classifyCharacter(outside);
+  const insideKind = classifyCharacter(inside);
+  if (outsideKind === void 0) {
+    return insideKind === void 0 ? (
+      // Letter inside:
+      // we have to encode *both* letters for `_` as it is looser.
+      // it already forms for `*` (and GFMs `~`).
+      marker === "_" ? { inside: true, outside: true } : { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (letter, whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: encode outer (letter)
+      { inside: false, outside: true }
+    );
+  }
+  if (outsideKind === 1) {
+    return insideKind === void 0 ? (
+      // Letter inside: already forms.
+      { inside: false, outside: false }
+    ) : insideKind === 1 ? (
+      // Whitespace inside: encode both (whitespace).
+      { inside: true, outside: true }
+    ) : (
+      // Punctuation inside: already forms.
+      { inside: false, outside: false }
+    );
+  }
+  return insideKind === void 0 ? (
+    // Letter inside: already forms.
+    { inside: false, outside: false }
+  ) : insideKind === 1 ? (
+    // Whitespace inside: encode inner (whitespace).
+    { inside: true, outside: false }
+  ) : (
+    // Punctuation inside: already forms.
+    { inside: false, outside: false }
+  );
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/html-kind.js
+function htmlKind(value) {
+  if (value.charCodeAt(0) !== 60) return;
+  const next = value.charCodeAt(1);
+  if (next === 33) {
+    const code5 = value.charCodeAt(2);
+    if (code5 === 45) return 2;
+    if (code5 === 91) return 5;
+    if (asciiAlpha(code5)) return 4;
+    return;
+  }
+  if (next === 63) return 3;
+  const closing = next === 47;
+  const start = closing ? 2 : 1;
+  let end = start;
+  let code4 = value.charCodeAt(end);
+  if (!asciiAlpha(code4)) return;
+  while (code4 === 45 || asciiAlphanumeric(code4)) {
+    code4 = value.charCodeAt(++end);
+  }
+  const name = value.slice(start, end).toLowerCase();
+  if (!closing && code4 !== 47 && htmlRawNames.includes(name)) {
+    return 1;
+  }
+  return htmlBlockNames.includes(name) ? 6 : 7;
+}
+
+// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
+var builtins = /* @__PURE__ */ new Map([
+  ["*", false],
+  ["_", true]
+]);
+function candidates(tokens, involved, runOf) {
+  const related = /* @__PURE__ */ new Set();
+  for (const token of tokens) {
+    const siblings = runOf.get(token);
+    if (siblings && token.attention && involved.some((d) => d.attention === token.attention)) {
+      for (const sibling of siblings.tokens) {
+        related.add(sibling.attention);
+      }
+    }
+  }
+  const ordered = [];
+  for (const token of tokens) {
+    if (token.attention && related.delete(token.attention)) {
+      ordered.push(token.attention);
+    }
+  }
+  ordered.reverse();
+  return ordered;
+}
+function check(tokens, before, after) {
+  const runs = [];
+  const wrong = /* @__PURE__ */ new Map();
+  const runOf = /* @__PURE__ */ new Map();
+  let index2 = 0;
+  while (index2 < tokens.length) {
+    if (!tokens[index2].attention) {
+      index2++;
+      continue;
+    }
+    const marker = tokens[index2].value.charAt(0);
+    const strict = builtins.get(marker);
+    let end = index2 + 1;
+    while (end < tokens.length && tokens[end].attention && tokens[end].value.charAt(0) === marker) {
+      end++;
+    }
+    const head = index2 ? tokens[index2 - 1].value : before;
+    const previous3 = classifyCharacter(head.charCodeAt(head.length - 1));
+    const next = classifyCharacter(
+      (end < tokens.length ? tokens[end].value : after).charCodeAt(0)
+    );
+    const open2 = !next || next === 2 && Boolean(previous3);
+    const close = !previous3 || previous3 === 2 && Boolean(next);
+    const run = {
+      tokens: tokens.slice(index2, end),
+      markers: [],
+      start: 0,
+      end: 0,
+      // Underscores are strict, they cannot open or close inside words.
+      open: strict ? open2 && (Boolean(previous3) || !close) : open2,
+      close: strict ? close && (Boolean(next) || !open2) : close,
+      // All builtins can split runs.
+      split: strict !== void 0
+    };
+    for (const token of run.tokens) {
+      wrong.set(token, [...run.tokens]);
+      runOf.set(token, run);
+      let size = token.value.length;
+      while (size--) run.markers.push(token);
+    }
+    run.end = run.markers.length;
+    runs.push(run);
+    index2 = end;
+  }
+  pair(runs, wrong);
+  index2 = -1;
+  while (++index2 < tokens.length) {
+    const involved = wrong.get(tokens[index2]);
+    if (involved) return { attention: candidates(tokens, involved, runOf), index: index2 };
+  }
+}
+function containerPhrasing(parent, state, info2) {
+  return serialize(phrasing2(parent, state, info2), info2.before, info2.after);
+}
+function encode(tokens, start) {
+  const token = tokens[start ? 0 : tokens.length - 1];
+  if (!token || token.attention) return;
+  const character = start ? firstCharacter(token.value) : lastCharacter(token.value);
+  const reference = encodeCharacterReference(
+    /** @type {number} */
+    character.codePointAt(0)
+  );
+  if (start) {
+    token.value = reference + token.value.slice(character.length);
+  } else {
+    let value = token.value.slice(0, token.value.length - character.length);
+    let escapes = 0;
+    while (value.charCodeAt(value.length - 1 - escapes) === 92) {
+      escapes++;
+    }
+    if (escapes % 2) value += "\\";
+    token.value = value + reference;
+  }
+}
+function improve(items, chosen, mistake, before, after) {
+  for (const attention4 of mistake.attention) {
+    const current = chosen.get(attention4) || attention4.sequences[0];
+    for (const sequence of attention4.sequences) {
+      if (sequence === current) continue;
+      const trial = new Map(chosen);
+      trial.set(attention4, sequence);
+      const tokens = render(items, trial, before, after);
+      const next = check(tokens, before, after);
+      if (!next || next.index > mistake.index) {
+        return { chosen: trial, mistake: next, tokens };
+      }
+    }
+  }
+}
+function pair(runs, wrong) {
+  const openersByMarker = /* @__PURE__ */ new Map();
+  for (const closer of runs) {
+    const marker = closer.tokens[0].value.charAt(0);
+    let openers = openersByMarker.get(marker);
+    if (!openers) {
+      openers = [];
+      openersByMarker.set(marker, openers);
+    }
+    let open2 = closer.close ? openers.length : 0;
+    while (open2-- && closer.start < closer.end) {
+      const opener = openers[open2];
+      const openerSize = opener.end - opener.start;
+      const closerSize = closer.end - closer.start;
+      if (closer.split ? (
+        // The rule of 3, on the sizes that are left.
+        (opener.close || closer.open) && closerSize % 3 && !((openerSize + closerSize) % 3)
+      ) : (
+        // Others pair whole runs of the same size.
+        openerSize !== opener.markers.length || openerSize !== closerSize
+      )) {
+        continue;
+      }
+      const size = closer.split ? openerSize > 1 && closerSize > 1 ? 2 : 1 : closerSize;
+      const opening = opener.markers.slice(opener.end - size, opener.end);
+      const closing = closer.markers.slice(closer.start, closer.start + size);
+      const openToken = opening[0];
+      const closeToken = closing[0];
+      if (
+        // Whole sequences:
+        // the markers of a sequence are next to each other,
+        // so if the first and last marker are of one sequence of that size,
+        // all markers are exactly that sequence.
+        openToken === opening[size - 1] && openToken.value.length === size && closeToken === closing[size - 1] && closeToken.value.length === size && // Of the same attention, so its opening and closing sequence.
+        openToken.attention === closeToken.attention
+      ) {
+        wrong.delete(openToken);
+        wrong.delete(closeToken);
+      } else {
+        const involved = [.../* @__PURE__ */ new Set([...opening, ...closing])];
+        for (const token of involved) {
+          const list4 = wrong.get(token);
+          if (list4) list4.push(...involved);
+        }
+      }
+      opener.end -= size;
+      closer.start += size;
+      if (opener.start === opener.end) openers.splice(open2, 1);
+      open2 = openers.length;
+    }
+    if (closer.open && closer.start < closer.end) openers.push(closer);
+  }
+}
+function attentionSequences(type, markers, sizes) {
+  if (markers.length === 0) {
+    throw new Error(
+      "Cannot serialize `" + type + "` as attention without markers, expected one or more markers"
+    );
+  }
+  if (sizes.length === 0) {
+    throw new Error(
+      "Cannot serialize `" + type + "` as attention without sizes, expected one or more sizes"
+    );
+  }
+  for (const size of sizes) {
+    if (!Number.isSafeInteger(size) || size < 1) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + size + "` as size, expected positive integer"
+      );
+    }
+  }
+  const sequences = [];
+  for (const marker of markers) {
+    if (marker.length !== 1) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected a single ascii character"
+      );
+    }
+    if (!asciiPunctuation(marker.charCodeAt(0))) {
+      throw new Error(
+        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected ascii punctuation"
+      );
+    }
+    for (const size of sizes) {
+      sequences.push(marker.repeat(size));
+    }
+  }
+  return sequences;
+}
+function phrasing2(parent, state, info2) {
+  const indexStack = state.indexStack;
+  const children = parent.children || [];
+  const results = [];
+  let index2 = -1;
+  let before = info2.before;
+  indexStack.push(-1);
+  let tracker = state.createTracker(info2);
+  while (++index2 < children.length) {
+    const child2 = children[index2];
+    let after;
+    indexStack[indexStack.length - 1] = index2;
+    if (index2 + 1 < children.length) {
+      let handle3 = state.handle.handlers[children[index2 + 1].type];
+      if (handle3 && handle3.peek) handle3 = handle3.peek;
+      after = handle3 ? firstCharacter(
+        handle3(children[index2 + 1], parent, state, {
+          before: "",
+          after: "",
+          ...tracker.current()
+        })
+      ) : "";
+    } else {
+      after = info2.after;
+    }
+    const previous3 = results[results.length - 1];
+    if (typeof previous3 === "string" && (before === "\r" || before === "\n") && child2.type === "html" && htmlKind(child2.value) !== 7) {
+      results[results.length - 1] = previous3.replace(/(\r?\n|\r)$/, " ");
+      before = " ";
+      tracker = state.createTracker(info2);
+      tracker.move(serialize(results, info2.before, info2.after));
+    }
+    const handle2 = state.handle.handlers[child2.type];
+    if (handle2 && handle2.attention) {
+      const item = attentionItem(
+        /** @type {PhrasingParents} */
+        child2,
+        handle2.attention,
+        state,
+        tracker
+      );
+      results.push(item);
+      before = lastCharacter(item.sequences[0]);
+    } else {
+      const value = state.handle(child2, parent, state, {
+        ...tracker.current(),
+        after,
+        before
+      });
+      if (!value) continue;
+      tracker.move(value);
+      results.push(value);
+      before = lastCharacter(value);
+    }
+  }
+  indexStack.pop();
+  return results;
+}
+function attentionItem(node2, attention4, state, tracker) {
+  const { construct, markers, sizes } = attention4(node2, state);
+  const sequences = attentionSequences(node2.type, markers, sizes);
+  const sequence = sequences[0];
+  const exit3 = state.enter(construct);
+  tracker.move(sequence);
+  const children = phrasing2(node2, state, {
+    ...tracker.current(),
+    before: sequence,
+    after: sequence
+  });
+  tracker.move(serialize(children, sequence, sequence));
+  tracker.move(sequence);
+  exit3();
+  return { children, sequences };
+}
+function render(items, chosen, before, after) {
+  const tokens = [];
+  let encodeAfter;
+  let previous3 = lastCharacter(before);
+  let index2 = -1;
+  while (++index2 < items.length) {
+    const item = items[index2];
+    if (typeof item === "string") {
+      const token = { value: item, attention: void 0 };
+      if (encodeAfter && encodeAfter === firstCharacter(item)) {
+        encode([token], true);
+      }
+      encodeAfter = void 0;
+      tokens.push(token);
+      if (token.value) previous3 = lastCharacter(token.value);
+      continue;
+    }
+    const sequence = chosen.get(item) || item.sequences[0];
+    const marker = sequence.charAt(0);
+    const next = items[index2 + 1];
+    const outsideBefore = previous3;
+    const outsideAfter = firstCharacter(
+      next === void 0 ? after : typeof next === "string" ? next : chosen.get(next) || next.sequences[0]
+    );
+    const inside = render(item.children, chosen, sequence, sequence);
+    const head = inside.length > 0 ? inside[0].value : "";
+    const open2 = encodeInfo(
+      outsideBefore.charCodeAt(outsideBefore.length - 1),
+      head.charCodeAt(0),
+      marker
+    );
+    if (open2.inside) encode(inside, true);
+    const tail = inside.length > 0 ? lastCharacter(inside[inside.length - 1].value) : "";
+    const close = encodeInfo(
+      outsideAfter.charCodeAt(0),
+      tail.charCodeAt(tail.length - 1),
+      marker
+    );
+    if (close.inside) encode(inside, false);
+    if (open2.outside && outsideBefore !== "\n" && outsideBefore !== "\r") {
+      encode(tokens, false);
+    }
+    if (close.outside) encodeAfter = outsideAfter;
+    tokens.push({ value: sequence, attention: item }, ...inside, {
+      value: sequence,
+      attention: item
+    });
+    previous3 = sequence.charAt(sequence.length - 1);
+  }
+  return tokens;
+}
+function serialize(items, before, after) {
+  let chosen = /* @__PURE__ */ new Map();
+  const initial = render(items, chosen, before, after);
+  let tokens = initial;
+  let mistake = check(tokens, before, after);
+  while (mistake) {
+    const next = improve(items, chosen, mistake, before, after);
+    if (!next) {
+      tokens = initial;
+      break;
+    }
+    chosen = next.chosen;
+    tokens = next.tokens;
+    mistake = next.mistake;
+  }
+  let result = "";
+  for (const token of tokens) result += token.value;
+  return result;
+}
+
 // node_modules/mdast-util-to-markdown/lib/handle/emphasis.js
 emphasis.attention = attention2;
 emphasis.peek = peek;
 function emphasis(node2, _, state, info2) {
   const exit3 = state.enter("phrasing");
-  const value = state.containerPhrasing({ type: "root", children: [node2] }, info2);
+  const item = attentionItem(node2, attention2, state, state.createTracker(info2));
+  const value = serialize([item], info2.before, info2.after);
   exit3();
   return value;
 }
@@ -70109,11 +70541,6 @@ function attention2(_, state) {
 }
 function peek(_, _1, state) {
   return state.options.emphasis || "*";
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/encode-character-reference.js
-function encodeCharacterReference(code4) {
-  return "&#x" + code4.toString(16).toUpperCase() + ";";
 }
 
 // node_modules/unist-util-visit-parents/lib/color.node.js
@@ -70514,19 +70941,28 @@ function link(node2, _, state, info2) {
   const exit3 = state.enter("link");
   let subexit = state.enter("label");
   let value = tracker.move("[");
-  value += tracker.move(
-    state.containerPhrasing(node2, {
-      before: value,
-      after: "](",
-      ...tracker.current()
-    })
-  );
-  value += tracker.move("](");
+  const text5 = state.containerPhrasing(node2, {
+    before: value,
+    after: "](",
+    ...tracker.current()
+  });
+  value += tracker.move(text5);
   subexit();
+  value += tracker.move("](");
+  const enclose = /[\0- \u007F]/.test(node2.url);
+  const last = info2.before.charAt(info2.before.length - 1);
+  let title = node2.title || void 0;
+  if (!title && !enclose && (last === "\n" || last === "\r")) {
+    let index2 = 0;
+    while (index2 < text5.length && text5.charCodeAt(index2) !== 93) {
+      index2 += text5.charCodeAt(index2) === 92 ? 2 : 1;
+    }
+    if (text5.charCodeAt(index2 + 1) === 58) title = "";
+  }
   if (
     // If there’s no url but there is a title…
-    !node2.url && node2.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node2.url && typeof title === "string" || // If there are control characters or whitespace.
+    enclose
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
@@ -70539,17 +70975,17 @@ function link(node2, _, state, info2) {
     value += tracker.move(
       state.safe(node2.url, {
         before: value,
-        after: node2.title ? " " : ")",
+        after: typeof title === "string" ? " " : ")",
         ...tracker.current()
       })
     );
   }
   subexit();
-  if (node2.title) {
+  if (typeof title === "string") {
     subexit = state.enter(`title${suffix}`);
     value += tracker.move(" " + quote);
     value += tracker.move(
-      state.safe(node2.title, {
+      state.safe(title, {
         before: value,
         after: quote,
         ...tracker.current()
@@ -70778,7 +71214,8 @@ strong.attention = attention3;
 strong.peek = peek2;
 function strong(node2, _, state, info2) {
   const exit3 = state.enter("phrasing");
-  const value = state.containerPhrasing({ type: "root", children: [node2] }, info2);
+  const item = attentionItem(node2, attention3, state, state.createTracker(info2));
+  const value = serialize([item], info2.before, info2.after);
   exit3();
   return value;
 }
@@ -70797,7 +71234,7 @@ function peek2(_, _1, state) {
 // node_modules/mdast-util-to-markdown/lib/handle/text.js
 function text3(node2, parent, state, info2) {
   const siblings = parent ? parent.children : [];
-  const index2 = siblings.indexOf(node2);
+  const index2 = state.indexStack[state.indexStack.length - 1];
   return state.safe(node2.value, {
     ...info2,
     afterNode: siblings[index2 + 1],
@@ -70846,33 +71283,6 @@ var handle = {
   thematicBreak: thematicBreak2
 };
 
-// node_modules/mdast-util-to-markdown/lib/util/html-kind.js
-function htmlKind(value) {
-  if (value.charCodeAt(0) !== 60) return;
-  const next = value.charCodeAt(1);
-  if (next === 33) {
-    const code5 = value.charCodeAt(2);
-    if (code5 === 45) return 2;
-    if (code5 === 91) return 5;
-    if (asciiAlpha(code5)) return 4;
-    return;
-  }
-  if (next === 63) return 3;
-  const closing = next === 47;
-  const start = closing ? 2 : 1;
-  let end = start;
-  let code4 = value.charCodeAt(end);
-  if (!asciiAlpha(code4)) return;
-  while (code4 === 45 || asciiAlphanumeric(code4)) {
-    code4 = value.charCodeAt(++end);
-  }
-  const name = value.slice(start, end).toLowerCase();
-  if (!closing && code4 !== 47 && htmlRawNames.includes(name)) {
-    return 1;
-  }
-  return htmlBlockNames.includes(name) ? 6 : 7;
-}
-
 // node_modules/mdast-util-to-markdown/lib/join.js
 var join4 = [joinDefaults];
 function joinDefaults(left, right, parent, state) {
@@ -70880,20 +71290,32 @@ function joinDefaults(left, right, parent, state) {
     return false;
   }
   if ("spread" in parent && typeof parent.spread === "boolean") {
-    if (left.type === "paragraph" && // Two paragraphs.
-    (left.type === right.type || right.type === "definition" || // Paragraph followed by a setext heading.
-    right.type === "heading" && formatHeadingAsSetext(right, state))) {
-      return;
-    }
+    if (parent.spread) return 1;
     if (left.type === "html") {
       const kind = htmlKind(left.value);
       if (kind === void 0 || kind === 6 || kind === 7) return 1;
     }
-    if (left.type === "paragraph" && right.type === "html") {
+    if (left.type === "blockquote" && right.type === "blockquote") return 1;
+    if ((left.type === "definition" || left.type === "paragraph") && right.type === "list" && (right.ordered && typeof right.start === "number" && right.start !== 1 || right.children.length > 0 && right.children[0].children.length === 0)) {
+      return 1;
+    }
+    if (left.type === "paragraph" && right.type === "thematicBreak" && checkRule(state) === "-" && !state.options.ruleSpaces) {
+      return 1;
+    }
+    let tail = left;
+    while ((tail.type === "blockquote" || tail.type === "list" || tail.type === "listItem") && tail.children.length > 0) {
+      tail = tail.children[tail.children.length - 1];
+    }
+    if (tail.type !== "definition" && tail.type !== "paragraph") return 0;
+    if (right.type === "code" && formatCodeAsIndented(right, state)) return 1;
+    if (right.type === "html") {
       const kind = htmlKind(right.value);
       if (kind === void 0 || kind === 7) return 1;
     }
-    return parent.spread ? 1 : 0;
+    if ((left.type === "paragraph" || left !== tail) && (right.type === "definition" || right.type === "heading" && formatHeadingAsSetext(right, state) || right.type === "paragraph")) {
+      return 1;
+    }
+    return 0;
   }
 }
 
@@ -70960,7 +71382,22 @@ var unsafe = [
   { character: "#", inConstruct: "headingAtx", after: "(?:[\r\n]|$)" },
   // Dollar sign and percentage are not used in markdown.
   // An ampersand could start a character reference.
-  { character: "&", after: "[#A-Za-z]", inConstruct: "phrasing" },
+  // Labels match on their source.
+  {
+    character: "&",
+    after: "[#A-Za-z]",
+    inConstruct: [
+      "codeFencedLangGraveAccent",
+      "codeFencedLangTilde",
+      "codeFencedMetaGraveAccent",
+      "codeFencedMetaTilde",
+      "destinationLiteral",
+      "destinationRaw",
+      "phrasing",
+      "titleApostrophe",
+      "titleQuote"
+    ]
+  },
   // An apostrophe can break out of a title.
   { character: "'", inConstruct: "titleApostrophe" },
   // A left paren could break out of a destination raw.
@@ -71060,384 +71497,6 @@ function compilePattern(pattern) {
     );
   }
   return pattern._compiled;
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/character.js
-function firstCharacter(value) {
-  const code4 = value.codePointAt(0);
-  return code4 === void 0 ? "" : String.fromCodePoint(code4);
-}
-function lastCharacter(value) {
-  const code4 = value.codePointAt(value.length - 2);
-  return code4 !== void 0 && code4 > 65535 ? value.slice(-2) : value.slice(-1);
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/encode-info.js
-function encodeInfo(outside, inside, marker) {
-  const outsideKind = classifyCharacter(outside);
-  const insideKind = classifyCharacter(inside);
-  if (outsideKind === void 0) {
-    return insideKind === void 0 ? (
-      // Letter inside:
-      // we have to encode *both* letters for `_` as it is looser.
-      // it already forms for `*` (and GFMs `~`).
-      marker === "_" ? { inside: true, outside: true } : { inside: false, outside: false }
-    ) : insideKind === 1 ? (
-      // Whitespace inside: encode both (letter, whitespace).
-      { inside: true, outside: true }
-    ) : (
-      // Punctuation inside: encode outer (letter)
-      { inside: false, outside: true }
-    );
-  }
-  if (outsideKind === 1) {
-    return insideKind === void 0 ? (
-      // Letter inside: already forms.
-      { inside: false, outside: false }
-    ) : insideKind === 1 ? (
-      // Whitespace inside: encode both (whitespace).
-      { inside: true, outside: true }
-    ) : (
-      // Punctuation inside: already forms.
-      { inside: false, outside: false }
-    );
-  }
-  return insideKind === void 0 ? (
-    // Letter inside: already forms.
-    { inside: false, outside: false }
-  ) : insideKind === 1 ? (
-    // Whitespace inside: encode inner (whitespace).
-    { inside: true, outside: false }
-  ) : (
-    // Punctuation inside: already forms.
-    { inside: false, outside: false }
-  );
-}
-
-// node_modules/mdast-util-to-markdown/lib/util/container-phrasing.js
-var builtins = /* @__PURE__ */ new Map([
-  ["*", false],
-  ["_", true]
-]);
-function candidates(tokens, involved, runOf) {
-  const related = /* @__PURE__ */ new Set();
-  for (const token of tokens) {
-    const siblings = runOf.get(token);
-    if (siblings && token.attention && involved.some((d) => d.attention === token.attention)) {
-      for (const sibling of siblings.tokens) {
-        related.add(sibling.attention);
-      }
-    }
-  }
-  const ordered = [];
-  for (const token of tokens) {
-    if (token.attention && related.delete(token.attention)) {
-      ordered.push(token.attention);
-    }
-  }
-  ordered.reverse();
-  return ordered;
-}
-function check(tokens, before, after) {
-  const runs = [];
-  const wrong = /* @__PURE__ */ new Map();
-  const runOf = /* @__PURE__ */ new Map();
-  let index2 = 0;
-  while (index2 < tokens.length) {
-    if (!tokens[index2].attention) {
-      index2++;
-      continue;
-    }
-    const marker = tokens[index2].value.charAt(0);
-    const strict = builtins.get(marker);
-    let end = index2 + 1;
-    while (end < tokens.length && tokens[end].attention && tokens[end].value.charAt(0) === marker) {
-      end++;
-    }
-    const head = index2 ? tokens[index2 - 1].value : before;
-    const previous3 = classifyCharacter(head.charCodeAt(head.length - 1));
-    const next = classifyCharacter(
-      (end < tokens.length ? tokens[end].value : after).charCodeAt(0)
-    );
-    const open2 = !next || next === 2 && Boolean(previous3);
-    const close = !previous3 || previous3 === 2 && Boolean(next);
-    const run = {
-      tokens: tokens.slice(index2, end),
-      markers: [],
-      start: 0,
-      end: 0,
-      // Underscores are strict, they cannot open or close inside words.
-      open: strict ? open2 && (Boolean(previous3) || !close) : open2,
-      close: strict ? close && (Boolean(next) || !open2) : close,
-      // All builtins can split runs.
-      split: strict !== void 0
-    };
-    for (const token of run.tokens) {
-      wrong.set(token, [...run.tokens]);
-      runOf.set(token, run);
-      let size = token.value.length;
-      while (size--) run.markers.push(token);
-    }
-    run.end = run.markers.length;
-    runs.push(run);
-    index2 = end;
-  }
-  pair(runs, wrong);
-  index2 = -1;
-  while (++index2 < tokens.length) {
-    const involved = wrong.get(tokens[index2]);
-    if (involved) return { attention: candidates(tokens, involved, runOf), index: index2 };
-  }
-}
-function containerPhrasing(parent, state, info2) {
-  return serialize(phrasing2(parent, state, info2), info2.before, info2.after);
-}
-function encode(tokens, start) {
-  const token = tokens[start ? 0 : tokens.length - 1];
-  if (!token || token.attention) return;
-  const character = start ? firstCharacter(token.value) : lastCharacter(token.value);
-  const reference = encodeCharacterReference(
-    /** @type {number} */
-    character.codePointAt(0)
-  );
-  token.value = start ? reference + token.value.slice(character.length) : token.value.slice(0, token.value.length - character.length) + reference;
-}
-function improve(items, chosen, mistake, before, after) {
-  for (const attention4 of mistake.attention) {
-    const current = chosen.get(attention4) || attention4.sequences[0];
-    for (const sequence of attention4.sequences) {
-      if (sequence === current) continue;
-      const trial = new Map(chosen);
-      trial.set(attention4, sequence);
-      const tokens = render(items, trial, before, after);
-      const next = check(tokens, before, after);
-      if (!next || next.index > mistake.index) {
-        return { chosen: trial, mistake: next, tokens };
-      }
-    }
-  }
-}
-function pair(runs, wrong) {
-  let index2 = 0;
-  while (index2 < runs.length) {
-    const closer = runs[index2];
-    const marker = closer.tokens[0].value.charAt(0);
-    const closerSize = closer.end - closer.start;
-    let open2 = closer.close && closerSize ? index2 : 0;
-    while (open2--) {
-      const opener = runs[open2];
-      const openerSize = opener.end - opener.start;
-      if (opener.tokens[0].value.charAt(0) === marker && opener.open && openerSize && (closer.split ? (
-        // The rule of 3, on the sizes that are left.
-        !((opener.close || closer.open) && closerSize % 3) || (openerSize + closerSize) % 3
-      ) : (
-        // Others pair whole runs of the same size.
-        openerSize === opener.markers.length && openerSize === closerSize
-      ))) {
-        const size = closer.split ? openerSize > 1 && closerSize > 1 ? 2 : 1 : closerSize;
-        const opening = opener.markers.slice(opener.end - size, opener.end);
-        const closing = closer.markers.slice(closer.start, closer.start + size);
-        const openToken = opening[0];
-        const closeToken = closing[0];
-        if (
-          // Whole sequences:
-          // the markers of a sequence are next to each other,
-          // so if the first and last marker are of one sequence of that size,
-          // all markers are exactly that sequence.
-          openToken === opening[size - 1] && openToken.value.length === size && closeToken === closing[size - 1] && closeToken.value.length === size && // Of the same attention, so its opening and closing sequence.
-          openToken.attention === closeToken.attention
-        ) {
-          wrong.delete(openToken);
-          wrong.delete(closeToken);
-        } else {
-          const involved = [.../* @__PURE__ */ new Set([...opening, ...closing])];
-          for (const token of involved) {
-            const list4 = wrong.get(token);
-            if (list4) list4.push(...involved);
-          }
-        }
-        opener.end -= size;
-        closer.start += size;
-        break;
-      }
-    }
-    if (open2 === -1 || closer.start === closer.end) index2++;
-  }
-}
-function attentionSequences(type, markers, sizes) {
-  if (markers.length === 0) {
-    throw new Error(
-      "Cannot serialize `" + type + "` as attention without markers, expected one or more markers"
-    );
-  }
-  if (sizes.length === 0) {
-    throw new Error(
-      "Cannot serialize `" + type + "` as attention without sizes, expected one or more sizes"
-    );
-  }
-  for (const size of sizes) {
-    if (!Number.isSafeInteger(size) || size < 1) {
-      throw new Error(
-        "Cannot serialize `" + type + "` as attention with `" + size + "` as size, expected positive integer"
-      );
-    }
-  }
-  const sequences = [];
-  for (const marker of markers) {
-    if (marker.length !== 1) {
-      throw new Error(
-        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected a single ascii character"
-      );
-    }
-    if (!asciiPunctuation(marker.charCodeAt(0))) {
-      throw new Error(
-        "Cannot serialize `" + type + "` as attention with `" + marker + "` as marker, expected ascii punctuation"
-      );
-    }
-    for (const size of sizes) {
-      sequences.push(marker.repeat(size));
-    }
-  }
-  return sequences;
-}
-function phrasing2(parent, state, info2) {
-  const indexStack = state.indexStack;
-  const children = parent.children || [];
-  const results = [];
-  let index2 = -1;
-  let before = info2.before;
-  indexStack.push(-1);
-  let tracker = state.createTracker(info2);
-  while (++index2 < children.length) {
-    const child2 = children[index2];
-    let after;
-    indexStack[indexStack.length - 1] = index2;
-    if (index2 + 1 < children.length) {
-      let handle3 = state.handle.handlers[children[index2 + 1].type];
-      if (handle3 && handle3.peek) handle3 = handle3.peek;
-      after = handle3 ? firstCharacter(
-        handle3(children[index2 + 1], parent, state, {
-          before: "",
-          after: "",
-          ...tracker.current()
-        })
-      ) : "";
-    } else {
-      after = info2.after;
-    }
-    const previous3 = results[results.length - 1];
-    if (typeof previous3 === "string" && (before === "\r" || before === "\n") && child2.type === "html" && htmlKind(child2.value) !== 7) {
-      results[results.length - 1] = previous3.replace(/(\r?\n|\r)$/, " ");
-      before = " ";
-      tracker = state.createTracker(info2);
-      tracker.move(serialize(results, info2.before, info2.after));
-    }
-    const handle2 = state.handle.handlers[child2.type];
-    if (handle2 && handle2.attention) {
-      const { construct, markers, sizes } = handle2.attention(child2, state);
-      const sequences = attentionSequences(child2.type, markers, sizes);
-      const sequence = sequences[0];
-      const exit3 = state.enter(construct);
-      tracker.move(sequence);
-      const inside = phrasing2(
-        /** @type {PhrasingParents} */
-        child2,
-        state,
-        {
-          ...tracker.current(),
-          before: sequence,
-          after: sequence
-        }
-      );
-      tracker.move(serialize(inside, sequence, sequence));
-      tracker.move(sequence);
-      exit3();
-      results.push({ children: inside, sequences });
-      before = sequence.charAt(sequence.length - 1);
-    } else {
-      const value = state.handle(child2, parent, state, {
-        ...tracker.current(),
-        after,
-        before
-      });
-      if (!value) continue;
-      tracker.move(value);
-      results.push(value);
-      before = lastCharacter(value);
-    }
-  }
-  indexStack.pop();
-  return results;
-}
-function render(items, chosen, before, after) {
-  const tokens = [];
-  let encodeAfter;
-  let previous3 = lastCharacter(before);
-  let index2 = -1;
-  while (++index2 < items.length) {
-    const item = items[index2];
-    if (typeof item === "string") {
-      const token = { value: item, attention: void 0 };
-      if (encodeAfter && encodeAfter === firstCharacter(item)) {
-        encode([token], true);
-      }
-      encodeAfter = void 0;
-      tokens.push(token);
-      if (token.value) previous3 = lastCharacter(token.value);
-      continue;
-    }
-    const sequence = chosen.get(item) || item.sequences[0];
-    const marker = sequence.charAt(0);
-    const next = items[index2 + 1];
-    const outsideBefore = previous3;
-    const outsideAfter = firstCharacter(
-      next === void 0 ? after : typeof next === "string" ? next : chosen.get(next) || next.sequences[0]
-    );
-    const inside = render(item.children, chosen, sequence, sequence);
-    const head = inside.length > 0 ? inside[0].value : "";
-    const open2 = encodeInfo(
-      outsideBefore.charCodeAt(outsideBefore.length - 1),
-      head.charCodeAt(0),
-      marker
-    );
-    if (open2.inside) encode(inside, true);
-    const tail = inside.length > 0 ? lastCharacter(inside[inside.length - 1].value) : "";
-    const close = encodeInfo(
-      outsideAfter.charCodeAt(0),
-      tail.charCodeAt(tail.length - 1),
-      marker
-    );
-    if (close.inside) encode(inside, false);
-    if (open2.outside && outsideBefore !== "\n" && outsideBefore !== "\r") {
-      encode(tokens, false);
-    }
-    if (close.outside) encodeAfter = outsideAfter;
-    tokens.push({ value: sequence, attention: item }, ...inside, {
-      value: sequence,
-      attention: item
-    });
-    previous3 = sequence.charAt(sequence.length - 1);
-  }
-  return tokens;
-}
-function serialize(items, before, after) {
-  let chosen = /* @__PURE__ */ new Map();
-  const initial = render(items, chosen, before, after);
-  let tokens = initial;
-  let mistake = check(tokens, before, after);
-  while (mistake) {
-    const next = improve(items, chosen, mistake, before, after);
-    if (!next) {
-      tokens = initial;
-      break;
-    }
-    chosen = next.chosen;
-    tokens = next.tokens;
-    mistake = next.mistake;
-  }
-  let result = "";
-  for (const token of tokens) result += token.value;
-  return result;
 }
 
 // node_modules/mdast-util-to-markdown/lib/util/container-flow.js
@@ -71573,24 +71632,22 @@ function safe(state, input, config) {
         continue;
       }
     }
-    if (position2 + 1 < end && positions[index2 + 1] === position2 + 1 && infos[position2].after && !infos[position2 + 1].before && !infos[position2 + 1].after || positions[index2 - 1] === position2 - 1 && infos[position2].before && !infos[position2 - 1].before && !infos[position2 - 1].after) {
+    if (position2 + 1 < end && positions[index2 + 1] === position2 + 1 && infos[position2].after && !infos[position2 + 1].before && !infos[position2 + 1].after || position2 - 1 >= offset && positions[index2 - 1] === position2 - 1 && infos[position2].before && !infos[position2 - 1].before && !infos[position2 - 1].after) {
       continue;
     }
     if (start !== position2) {
       const slice = value.slice(start, position2);
       result.push(percentEncode ? slice : escapeBackslashes(slice, "\\"));
     }
-    start = position2;
+    start = position2 + 1;
     if (percentEncode) {
       result.push(
         "%" + value.charCodeAt(position2).toString(16).toUpperCase().padStart(2, "0")
       );
-      start++;
     } else if (/[!-/:-@[-`{-~]/.test(value.charAt(position2)) && (!config.encode || !config.encode.includes(value.charAt(position2)))) {
-      result.push("\\");
+      result.push("\\" + value.charAt(position2));
     } else {
       result.push(encodeCharacterReference(value.charCodeAt(position2)));
-      start++;
     }
   }
   const rest = value.slice(start, end);
