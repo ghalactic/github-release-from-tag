@@ -1,4 +1,4 @@
-GENERATED_FILES += dist/main.js dist/main.js.map
+GENERATED_BYPRODUCT_FILES += dist/main.js dist/main.js.map
 JS_TSC_TYPECHECK_SKIP_LIB := true
 
 -include .makefiles/Makefile
