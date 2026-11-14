@@ -70417,6 +70417,7 @@ function phrasing2(parent, state, info2) {
         state,
         tracker
       );
+      if (!item) continue;
       results.push(item);
       before = lastCharacter(item.sequences[0]);
     } else {
@@ -70439,16 +70440,50 @@ function attentionItem(node2, attention4, state, tracker) {
   const sequences = attentionSequences(node2.type, markers, sizes);
   const sequence = sequences[0];
   const exit3 = state.enter(construct);
-  tracker.move(sequence);
+  const inside = state.createTracker(tracker.current());
+  inside.move(sequence);
   const children = phrasing2(node2, state, {
-    ...tracker.current(),
+    ...inside.current(),
     before: sequence,
     after: sequence
   });
+  exit3();
+  if (children.length === 0) return;
+  tracker.move(sequence);
   tracker.move(serialize(children, sequence, sequence));
   tracker.move(sequence);
-  exit3();
   return { children, sequences };
+}
+function fix(items, chosen, before, after) {
+  let tokens = render(items, chosen, before, after);
+  let mistake = check(tokens, before, after);
+  while (mistake) {
+    const next = improve(items, chosen, mistake, before, after);
+    if (!next) return;
+    chosen = next.chosen;
+    tokens = next.tokens;
+    mistake = next.mistake;
+  }
+  return tokens;
+}
+function guess(items, chosen, before, after) {
+  let previous3 = before;
+  let index2 = -1;
+  while (++index2 < items.length) {
+    const item = items[index2];
+    if (typeof item === "string") {
+      previous3 = "";
+      continue;
+    }
+    const next = index2 === items.length - 1 ? after : "";
+    const sequence = item.sequences.find(function(value) {
+      const marker = value.charAt(0);
+      return marker !== previous3.charAt(0) && marker !== next.charAt(0) || items.length === 1 && builtins.has(marker) && value.length > before.length;
+    }) || item.sequences[0];
+    if (sequence !== item.sequences[0]) chosen.set(item, sequence);
+    guess(item.children, chosen, sequence, sequence);
+    previous3 = sequence;
+  }
 }
 function render(items, chosen, before, after) {
   const tokens = [];
@@ -70475,14 +70510,14 @@ function render(items, chosen, before, after) {
       next === void 0 ? after : typeof next === "string" ? next : chosen.get(next) || next.sequences[0]
     );
     const inside = render(item.children, chosen, sequence, sequence);
-    const head = inside.length > 0 ? inside[0].value : "";
+    const head = inside[0].value;
     const open2 = encodeInfo(
       outsideBefore.charCodeAt(outsideBefore.length - 1),
       head.charCodeAt(0),
       marker
     );
     if (open2.inside) encode(inside, true);
-    const tail = inside.length > 0 ? lastCharacter(inside[inside.length - 1].value) : "";
+    const tail = lastCharacter(inside[inside.length - 1].value);
     const close = encodeInfo(
       outsideAfter.charCodeAt(0),
       tail.charCodeAt(tail.length - 1),
@@ -70502,20 +70537,14 @@ function render(items, chosen, before, after) {
   return tokens;
 }
 function serialize(items, before, after) {
-  let chosen = /* @__PURE__ */ new Map();
-  const initial = render(items, chosen, before, after);
-  let tokens = initial;
-  let mistake = check(tokens, before, after);
-  while (mistake) {
-    const next = improve(items, chosen, mistake, before, after);
-    if (!next) {
-      tokens = initial;
-      break;
-    }
-    chosen = next.chosen;
-    tokens = next.tokens;
-    mistake = next.mistake;
-  }
+  const guessed = /* @__PURE__ */ new Map();
+  guess(items, guessed, before, after);
+  const tokens = (
+    // Start from guesses (based on the preferred sequences).
+    (guessed.size > 0 ? fix(items, guessed, before, after) : void 0) || // If stuck, start from the preferred sequences instead.
+    fix(items, /* @__PURE__ */ new Map(), before, after) || // If stuck again, use the preferred sequences as they are.
+    render(items, /* @__PURE__ */ new Map(), before, after)
+  );
   let result = "";
   for (const token of tokens) result += token.value;
   return result;
@@ -70527,7 +70556,7 @@ emphasis.peek = peek;
 function emphasis(node2, _, state, info2) {
   const exit3 = state.enter("phrasing");
   const item = attentionItem(node2, attention2, state, state.createTracker(info2));
-  const value = serialize([item], info2.before, info2.after);
+  const value = item ? serialize([item], info2.before, info2.after) : "";
   exit3();
   return value;
 }
@@ -71215,7 +71244,7 @@ strong.peek = peek2;
 function strong(node2, _, state, info2) {
   const exit3 = state.enter("phrasing");
   const item = attentionItem(node2, attention3, state, state.createTracker(info2));
-  const value = serialize([item], info2.before, info2.after);
+  const value = item ? serialize([item], info2.before, info2.after) : "";
   exit3();
   return value;
 }
@@ -71589,8 +71618,8 @@ function safe(state, input, config) {
     const subject = value.slice(from, pattern.afterNode ? end : void 0);
     let match3;
     while (match3 = expression.exec(subject)) {
-      const before = "before" in pattern || Boolean(pattern.atBreak);
-      const after = "after" in pattern;
+      const before = Boolean(pattern.before || pattern.atBreak);
+      const after = Boolean(pattern.after);
       const position2 = from + match3.index + (before ? match3[1].length : 0);
       if (own6.call(infos, position2)) {
         if (infos[position2].before && !before) {
