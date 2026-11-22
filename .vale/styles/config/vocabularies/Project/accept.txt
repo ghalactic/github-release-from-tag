@@ -1,0 +1,7 @@
+GitHub
+GitHub Enterprise Server
+GitHub Release from Tag
+repo
+SemVer
+Semantic Release
+Release Please
