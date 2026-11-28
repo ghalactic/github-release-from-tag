@@ -70042,8 +70042,8 @@ function definition2(node2, _, state, info2) {
   subexit();
   if (
     // If there’s no url, or…
-    !node2.url || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node2.url || // If there are control characters, whitespace, or a leading `<`.
+    /^<|[\0- \u007F]/.test(node2.url)
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
@@ -70814,8 +70814,8 @@ function image(node2, _, state, info2) {
   subexit();
   if (
     // If there’s no url but there is a title…
-    !node2.url && node2.title || // If there are control characters or whitespace.
-    /[\0- \u007F]/.test(node2.url)
+    !node2.url && node2.title || // If there are control characters, whitespace, or a leading `<`.
+    /^<|[\0- \u007F]/.test(node2.url)
   ) {
     subexit = state.enter("destinationLiteral");
     value += tracker.move("<");
@@ -70978,7 +70978,7 @@ function link(node2, _, state, info2) {
   value += tracker.move(text5);
   subexit();
   value += tracker.move("](");
-  const enclose = /[\0- \u007F]/.test(node2.url);
+  const enclose = /^<|[\0- \u007F]/.test(node2.url);
   const last = info2.before.charAt(info2.before.length - 1);
   let title = node2.title || void 0;
   if (!title && !enclose && (last === "\n" || last === "\r")) {
@@ -71457,7 +71457,8 @@ var unsafe = [
   // HTML could start with an exclamation mark (declaration, cdata, comment),
   // slash (closing tag), question mark (instruction), or a letter (tag).
   // An autolink also starts with a letter.
-  // Finally, it could break out of a destination literal.
+  // It could break out of a destination literal,
+  // or start one at the start of a destination raw.
   { atBreak: true, character: "<", after: "[!/?A-Za-z]" },
   {
     character: "<",
@@ -71466,6 +71467,7 @@ var unsafe = [
     notInConstruct: fullPhrasingSpans
   },
   { character: "<", inConstruct: "destinationLiteral" },
+  { character: "<", before: "[( ]", inConstruct: "destinationRaw" },
   // An equals to can start setext heading underlines.
   { atBreak: true, character: "=" },
   // A greater than can start block quotes and it can break out of a
